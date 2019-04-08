@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>2e5edbbc-fa9e-41b7-84f2-72a59eb8aafd</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>SPG.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ClassTemplate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Global\Game.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Global\GameManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Global\Globals.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Global\Util.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Map\GameMap.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Map\Tile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Map\TileSet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Object\CollisionInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Object\GameObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Object\ObjectManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\Draw.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\Structs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\Xml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\Maths.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Content\" />
+  </ItemGroup>
+  <ItemGroup>
+    <MonoGameContentReference Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
+  </ItemGroup>
+</Project>
