@@ -7,13 +7,15 @@ namespace SPG.Util
     {
         private T[][] data;
 
-        private int w;
-        private int h;
+        public int Width { get; }
+        public int Height { get; }
 
+        public int Count { get => Width * Height; }
+        
         public Grid(int w, int h)
         {
-            this.w = w;
-            this.h = h;
+            this.Width = w;
+            this.Height = h;
 
             data = new T[w][];
             for (var i = 0; i < w; i++)
@@ -24,8 +26,8 @@ namespace SPG.Util
 
         public void Set(int i, T value)
         {
-            var x = i % w;
-            var y = (int)Math.Floor((double)(i / w));
+            var x = i % Width;
+            var y = (int)Math.Floor((double)(i / Width));
 
             data[x][y] = value;
         }
@@ -37,8 +39,8 @@ namespace SPG.Util
 
         public T Get(int i)
         {
-            var x = i % w;
-            var y = (int)Math.Floor((double)(i / w));
+            var x = i % Width;
+            var y = (int)Math.Floor((double)(i / Width));
 
             return data[x][y];
         }

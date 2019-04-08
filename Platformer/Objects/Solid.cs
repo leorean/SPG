@@ -11,6 +11,7 @@ namespace Platformer
             Name = "solid";
             Position = new Vector2(x, y);
             BoundingBox = new SPG.Util.RectF(0, 0, Globals.TILE, Globals.TILE);
+            Visible = false;
         }
     }
 }

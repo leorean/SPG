@@ -6,6 +6,7 @@ namespace SPG.Util
 {
     public static class Draw
     {
+        [Obsolete("TODO: find a better implementation to draw a primitive rectangle!")]
         public static void DrawRectangle(Rectangle rect, Color color, float depth)
         {
             Texture2D texRect = new Texture2D(GameManager.Game.GraphicsDevice, rect.Width, rect.Height, false, SurfaceFormat.Color);

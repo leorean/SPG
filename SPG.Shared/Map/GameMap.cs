@@ -36,19 +36,7 @@ namespace SPG.Map
             return nodeList;
         }
     }
-
-    public struct LayerInfo
-    {
-        public string Name;
-        public float Depth;
-
-        public LayerInfo(string name, float depth)
-        {
-            Name = name;
-            Depth = depth;
-        }
-    }
-
+    
     /// <summary>
     /// The GameMap holds all data of the level. Interpreting layers, object types from tiles etc. should be done elsewhere.
     /// </summary>
@@ -57,9 +45,9 @@ namespace SPG.Map
         public int Width { get; private set; }
         public int Height { get; private set; }
         
-        private List<Grid<Tile>> layerData; //BG2, BG, WATER, FG
+        public List<Grid<Tile>> LayerData { get; set; } //BG2, BG, WATER, FG
 
-        private List<LayerInfo> layerInfo;
+        public Dictionary<string, float> LayerInfo { get; set; }
 
         public TileSet TileSet { get; set; }
 
@@ -73,19 +61,19 @@ namespace SPG.Map
                 Width = int.Parse(mapElement.Attributes["width"].Value);
                 Height = int.Parse(mapElement.Attributes["height"].Value);
 
-                layerData = new List<Grid<Tile>>();
-                layerInfo = new List<LayerInfo>();
+                LayerData = new List<Grid<Tile>>();
+                LayerInfo = new Dictionary<string, float>();
 
                 var layers = mapElement.ToList().Where(x => x.Name == "layer");
                 
                 foreach (var layer in layers)
                 {
                     var list = layer["data"].ToList();
-                    layerData.Add(ParseTileDataFromElementArray(list));
+                    LayerData.Add(ParseTileDataFromElementArray(list));
 
                     var name = layer.Attributes["name"].Value;
 
-                    layerInfo.Add(new LayerInfo(name, 0.0f));
+                    LayerInfo.Add(name, 0.0f);
                 }
             }
             catch (Exception e)
@@ -94,27 +82,27 @@ namespace SPG.Map
                 throw;
             }
         }
-
+        
         public void Draw()
         {
 
             if (TileSet == null)
                 throw new InvalidOperationException("The map cannot be drawn without a tileset!");
 
-            for (var l = 0; l < layerData.Count; l++)
+            for (var l = 0; l < LayerData.Count; l++)
             {
                 for (var i = 0; i < Width; i++)
                 {
                     for (var j = 0; j < Height; j++)
                     {
-                        var tile = layerData[l].Get(i, j);
+                        var tile = LayerData[l].Get(i, j);
 
                         if (tile == null)
                             continue;
 
                         var texture = TileSet.ElementAt(tile.ID);
                         
-                        GameManager.Game.SpriteBatch.Draw(texture, new Vector2(i * Globals.TILE, j * Globals.TILE), null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, layerInfo[l].Depth);                        
+                        GameManager.Game.SpriteBatch.Draw(texture, new Vector2(i * Globals.TILE, j * Globals.TILE), null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerInfo.ElementAt(l).Value);                        
                     }
                 }
             }
@@ -136,7 +124,7 @@ namespace SPG.Map
                 {
                     var id = int.Parse(value) - 1;
 
-                    TileType type = TileType.Block;
+                    TileType type = TileType.Solid;
 
                     // todo: refactor
                     switch (id)
