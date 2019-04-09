@@ -9,6 +9,7 @@ using System.Xml;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using SPG.View;
 
 namespace Platformer
 {
@@ -20,17 +21,18 @@ namespace Platformer
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        private Matrix scaleMatrix;
+        //private Matrix scaleMatrix;
 
         
-        private Size renderSize;
-        private Size windowSize;
+        private Size viewSize;
+        private Size screenSize;
         private float scale;
         
         private GameMap map;
         private GameObject player;
 
-        Viewport viewPort;
+        private ResolutionRenderer resolutionRenderer;
+        private Camera2D camera;
 
         public override GraphicsDeviceManager GraphicsDeviceManager { get => graphics; }
         public override SpriteBatch SpriteBatch { get => spriteBatch; }
@@ -44,15 +46,15 @@ namespace Platformer
 
             IsMouseVisible = true;
 
-            renderSize = new Size(480, 288);
+            viewSize = new Size(256, 144);
             scale = 3.0f;
 
-            windowSize = new Size((int)(renderSize.Width * scale), (int)(renderSize.Height * scale));
+            screenSize = new Size((int)(viewSize.Width * scale), (int)(viewSize.Height * scale));
 
-            GraphicsDeviceManager.PreferredBackBufferWidth = windowSize.Width;
-            GraphicsDeviceManager.PreferredBackBufferHeight = windowSize.Height;
+            GraphicsDeviceManager.PreferredBackBufferWidth = screenSize.Width;
+            GraphicsDeviceManager.PreferredBackBufferHeight = screenSize.Height;
 
-            scaleMatrix = Matrix.CreateScale(new Vector3(scale, scale, 1));
+            //scaleMatrix = Matrix.CreateScale(new Vector3(scale, scale, 1));
 
             
         }
@@ -73,12 +75,16 @@ namespace Platformer
                         if (t == null || t.ID == -1)
                             continue;
 
-                        switch(t.TileType)
+                        switch(t.ID)
                         {
-                            case TileType.Solid:
-                                var block = new Solid(x * Globals.TILE, y * Globals.TILE);
-                                //block.Visible = true;
-                                //block.Texture = map.TileSet[28];
+                            case 7:
+                                t.TileType = TileType.Platform;
+                                break;
+                            default:
+                                t.TileType = TileType.Solid;
+                                var solid = new Solid(x * Globals.TILE, y * Globals.TILE);
+                                //solid.Visible = true;
+                                //solid.Texture = map.TileSet[28];
                                 break;
                         }
                     }
@@ -94,19 +100,14 @@ namespace Platformer
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
 
-            viewPort = new Viewport();            
-            viewPort.X = 50;
-            viewPort.Y = 50;
-            viewPort.Width = 400;
-            viewPort.Height = 240;
-            viewPort.MinDepth = 0;
-            viewPort.MaxDepth = 1;
+            resolutionRenderer = new ResolutionRenderer(viewSize.Width, viewSize.Height, screenSize.Width, screenSize.Height);
+            
+            camera = new Camera2D(resolutionRenderer) { MaxZoom = 10f, MinZoom = .4f, Zoom = 1f };
+            camera.SetPosition(Vector2.Zero);
 
-            GraphicsDevice.Viewport = viewPort;
+            //camera.Target = player;
         }
 
         /// <summary>
@@ -128,7 +129,7 @@ namespace Platformer
             map.LayerInfo["WATER"] = Globals.LAYER_WATER;
             map.LayerInfo["BG"] = Globals.LAYER_BG;
             map.LayerInfo["BG2"] = Globals.LAYER_BG2;
-
+            
             LoadObjectsFromMap();
 
             // player
@@ -179,10 +180,10 @@ namespace Platformer
             ObjectManager.UpdateObjects();
 
             KeyboardState keyboard = Keyboard.GetState();
-            if (keyboard.IsKeyDown(Keys.Up)) { player.Position += new Vector2(0, -.1f); }
-            if (keyboard.IsKeyDown(Keys.Down)) { player.Position += new Vector2(0, .1f); }
-            if (keyboard.IsKeyDown(Keys.Left)) { player.Position += new Vector2(-.1f, 0); }
-            if (keyboard.IsKeyDown(Keys.Right)) { player.Position += new Vector2(.1f, 0); ; }
+            if (keyboard.IsKeyDown(Keys.Up)) { player.Position += new Vector2(0, -.3f); }
+            if (keyboard.IsKeyDown(Keys.Down)) { player.Position += new Vector2(0, .3f); }
+            if (keyboard.IsKeyDown(Keys.Left)) { player.Position += new Vector2(-.3f, 0); }
+            if (keyboard.IsKeyDown(Keys.Right)) { player.Position += new Vector2(.3f, 0); ; }
 
             if (keyboard.IsKeyDown(Keys.D0)) { player.Angle += .05f; }
 
@@ -192,10 +193,14 @@ namespace Platformer
             {
                 //var v3 = viewPort.Project(new Vector3(mouse.Position.X, mouse.Position.Y, 0), scaleMatrix, Matrix.Identity, Matrix.Identity);
 
-                //player.Position = mouse.Position.ToVector2() / scale;
-
-                player.Position = mouse.Position.ToVector2();
+                //player.Position = mouse.Position.ToVector2();
+                
+                player.Position = camera.ToViewCoordinates(mouse.Position.ToVector2());
             }
+
+            camera.Position = player.Position;
+
+            //camera.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -206,17 +211,23 @@ namespace Platformer
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            //GameManager.Game.GraphicsDevice.SetRenderTarget(camera.RenderTarget);
 
-            SpriteBatch.Begin(SpriteSortMode.FrontToBack, null, SamplerState.PointClamp, null, null, null, scaleMatrix);
+            resolutionRenderer.SetupDraw();
+            
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+            
+            SpriteBatch.BeginCamera(camera);
             
             map.Draw();
-
             ObjectManager.DrawObjects();
-
+            
             SpriteBatch.End();
-
+            
             base.Draw(gameTime);
+
+            
+
         }
     }
 }

@@ -9,6 +9,8 @@
     <Import_RootNamespace>SPG.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)View\Camera2D.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)View\Camera.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ClassTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Global\Game.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Global\GameManager.cs" />
@@ -24,6 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Util\Structs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\Xml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\Maths.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)View\ResolutionRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Content\" />

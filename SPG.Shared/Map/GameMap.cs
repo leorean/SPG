@@ -38,7 +38,7 @@ namespace SPG.Map
     }
     
     /// <summary>
-    /// The GameMap holds all data of the level. Interpreting layers, object types from tiles etc. should be done elsewhere.
+    /// The GameMap holds all data of a level. Interpreting layers, object types from tiles etc. should be done elsewhere.
     /// </summary>
     public class GameMap
     {
@@ -50,6 +50,9 @@ namespace SPG.Map
         public Dictionary<string, float> LayerInfo { get; set; }
 
         public TileSet TileSet { get; set; }
+
+        //public delegate void ParseDelegate(Tile t);
+        //public ParseDelegate ParseFunction;
 
         public GameMap(XmlDocument xml)
         {
@@ -124,8 +127,8 @@ namespace SPG.Map
                 {
                     var id = int.Parse(value) - 1;
 
-                    TileType type = TileType.Solid;
-
+                    /*TileType type = TileType.Solid;
+                    
                     // todo: refactor
                     switch (id)
                     {
@@ -133,9 +136,9 @@ namespace SPG.Map
                         case 7:
                             type = TileType.Platform;
                             break;
-                    }
+                    }*/
 
-                    tile = new Tile(id, type);
+                    tile = new Tile(id);
                 }
 
                 data.Set(i, tile);

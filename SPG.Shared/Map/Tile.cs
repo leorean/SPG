@@ -14,8 +14,9 @@ namespace SPG.Map
 
     public enum TileType
     {
-        Solid = 0,
-        Platform = 1,
+        Unknown,
+        Solid,
+        Platform,
         NonBlockable = 2
     }
     // an object at a certain position in a tilemap
@@ -23,10 +24,10 @@ namespace SPG.Map
     {
         
         public int ID { get; private set; }
-        public TileType TileType { get; private set; }
-        public TileOptions TileOptions { get; private set; }
+        public TileType TileType { get; set; }
+        public TileOptions TileOptions { get; set; }
 
-        public Tile(int id, TileType type, TileOptions options = null)
+        public Tile(int id, TileType type = TileType.Unknown, TileOptions options = null)
         {
             ID = id;
             TileType = type;
