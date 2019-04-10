@@ -90,7 +90,7 @@ namespace SPG.Objects
             //candidates.SortByY();
             candidates = candidates.Where(o => o.Bottom >= y + self.BoundingBox.Y && o.Top <= y + self.BoundingBox.Y + self.BoundingBox.Height && o != self).ToList();
 
-            Debug.WriteLine($"Found {candidates.Count} candidates after {sw.ElapsedMilliseconds}ms.");
+            //Debug.WriteLine($"Found {candidates.Count} candidates after {sw.ElapsedMilliseconds}ms.");
 
             return candidates;
         }

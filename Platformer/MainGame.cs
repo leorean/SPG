@@ -28,7 +28,6 @@ namespace Platformer
         private Size screenSize;
         private float scale;
         
-        private GameMap map;
         private GameObject player;
 
         private ResolutionRenderer resolutionRenderer;
@@ -62,9 +61,9 @@ namespace Platformer
         void LoadObjectsFromMap()
         {
 
-            var index = map.LayerInfo.ToList().IndexOf(map.LayerInfo.First(x => x.Key.ToLower() == "fg"));
+            var index = Map.LayerInfo.ToList().IndexOf(Map.LayerInfo.First(x => x.Key.ToLower() == "fg"));
 
-            var data = map.LayerData.ElementAt(index);
+            var data = Map.LayerData.ElementAt(index);
             {
                 for(var x = 0; x < data.Width; x++)
                 {
@@ -107,6 +106,8 @@ namespace Platformer
             camera = new Camera2D(resolutionRenderer) { MaxZoom = 10f, MinZoom = .4f, Zoom = 1f };
             camera.SetPosition(Vector2.Zero);
 
+            camera.EnableBounds(new Rectangle(0, 0, Map.Width * Globals.TILE, Map.Height * Globals.TILE));
+
             //camera.Target = player;
         }
 
@@ -122,13 +123,13 @@ namespace Platformer
             var tileSet = TileSet.Load("tiles");
 
             XmlDocument xml = SPG.Util.Xml.Load("testMap.tmx");
-            map = new GameMap(xml);
+            Map = new GameMap(xml);
 
-            map.TileSet = tileSet;
-            map.LayerInfo["FG"] = Globals.LAYER_FG;
-            map.LayerInfo["WATER"] = Globals.LAYER_WATER;
-            map.LayerInfo["BG"] = Globals.LAYER_BG;
-            map.LayerInfo["BG2"] = Globals.LAYER_BG2;
+            Map.TileSet = tileSet;
+            Map.LayerInfo["FG"] = Globals.LAYER_FG;
+            Map.LayerInfo["WATER"] = Globals.LAYER_WATER;
+            Map.LayerInfo["BG"] = Globals.LAYER_BG;
+            Map.LayerInfo["BG2"] = Globals.LAYER_BG2;
             
             LoadObjectsFromMap();
 
@@ -180,10 +181,10 @@ namespace Platformer
             ObjectManager.UpdateObjects();
 
             KeyboardState keyboard = Keyboard.GetState();
-            if (keyboard.IsKeyDown(Keys.Up)) { player.Position += new Vector2(0, -.3f); }
-            if (keyboard.IsKeyDown(Keys.Down)) { player.Position += new Vector2(0, .3f); }
-            if (keyboard.IsKeyDown(Keys.Left)) { player.Position += new Vector2(-.3f, 0); }
-            if (keyboard.IsKeyDown(Keys.Right)) { player.Position += new Vector2(.3f, 0); ; }
+            if (keyboard.IsKeyDown(Keys.Up)) { player.Position += new Vector2(0, -1f); }
+            if (keyboard.IsKeyDown(Keys.Down)) { player.Position += new Vector2(0, 1f); }
+            if (keyboard.IsKeyDown(Keys.Left)) { player.Position += new Vector2(-1f, 0); }
+            if (keyboard.IsKeyDown(Keys.Right)) { player.Position += new Vector2(1f, 0); ; }
 
             if (keyboard.IsKeyDown(Keys.D0)) { player.Angle += .05f; }
 
@@ -195,7 +196,7 @@ namespace Platformer
 
                 //player.Position = mouse.Position.ToVector2();
                 
-                player.Position = camera.ToViewCoordinates(mouse.Position.ToVector2());
+                player.Position = camera.MouseToMapCoordinates(mouse.Position.ToVector2());
             }
 
             camera.Position = player.Position;
@@ -218,8 +219,8 @@ namespace Platformer
             GraphicsDevice.Clear(Color.CornflowerBlue);
             
             SpriteBatch.BeginCamera(camera);
-            
-            map.Draw();
+
+            Map.Draw();
             ObjectManager.DrawObjects();
             
             SpriteBatch.End();

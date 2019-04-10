@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Diagnostics;
 
 namespace SPG.View
 {
@@ -74,6 +75,15 @@ namespace SPG.View
         private Vector3 _camScaleVector = Vector3.Zero;
         private Vector3 _resTranslationVector = Vector3.Zero;
 
+        private bool _boundsEnabled = false;
+        private Rectangle _bounds;
+        
+        public void EnableBounds(Rectangle rect)
+        {
+            _bounds = rect;
+            _boundsEnabled = true;
+        }
+        
         /// <summary>
         /// Current camera position
         /// </summary>
@@ -82,7 +92,20 @@ namespace SPG.View
             get { return _position; }
             set
             {
-                _position = value;
+                if (_boundsEnabled)
+                {
+                    _position = new Vector2(
+                        Math.Min(
+                            Math.Max(value.X, _bounds.X + ResolutionRenderer.ViewWidth * .5f),
+                            _bounds.Width - ResolutionRenderer.ViewWidth * .5f),
+                        Math.Min(
+                            Math.Max(value.Y, _bounds.Y + ResolutionRenderer.ViewHeight * .5f),
+                            _bounds.Height - ResolutionRenderer.ViewHeight * .5f)
+                        );
+                } else
+                {
+                    _position = value;
+                }
                 _isViewTransformationDirty = true;
             }
         }
@@ -140,13 +163,30 @@ namespace SPG.View
             MaxZoom = 999f;
         }
 
-        public Vector2 ToViewCoordinates(Vector2 position)
+        public Vector2 MouseToMapCoordinates(Vector2 mousePos)
         {
-            //var relX = (position.X / ResolutionRenderer.ScreenWidth) * ResolutionRenderer.ViewWidth;
-            //var relY = (position.Y / ResolutionRenderer.ScreenHeight) * ResolutionRenderer.ViewHeight;
 
-            var relX = position.X * ((float)ResolutionRenderer.ViewWidth / (float)ResolutionRenderer.ScreenWidth) / 2;
-            var relY = position.Y * ((float)ResolutionRenderer.ViewHeight / (float)ResolutionRenderer.ScreenHeight) / 2;
+            var pos = ToDisplay(mousePos);
+
+            var viewSize = new Vector2(ResolutionRenderer.Viewport.Width, ResolutionRenderer.Viewport.Height);
+            var screenSize = new Vector2(ResolutionRenderer.ScreenWidth, ResolutionRenderer.ScreenHeight);
+
+            var relX = (pos / viewSize).X * _bounds.Width;
+            var relY = (pos / viewSize).Y * _bounds.Height;
+
+            relX = pos.X;
+            relY = pos.Y;
+
+            //var relX = Math.Max(mousePos.X, Position.X * (viewSize / screenSize).X * .5f);
+            //var relY = Math.Max(mousePos.Y, Position.Y * (viewSize / screenSize).Y * .5f);
+
+            //relX = Math.Min(relX, (GameManager.Game.Map.Width * Globals.TILE) - viewSize.X);
+            //relY = Math.Min(relY, (GameManager.Game.Map.Height * Globals.TILE) - viewSize.Y);
+
+            //var relX = this.Position.X + ResolutionRenderer.ViewWidth *.5f + mouseOnScreen.X * ((float)ResolutionRenderer.ViewWidth / (float)ResolutionRenderer.ScreenWidth) / 2;
+            //var relY = this.Position.Y + ResolutionRenderer.ViewHeight * .5f + mouseOnScreen.Y * ((float)ResolutionRenderer.ViewHeight / (float)ResolutionRenderer.ScreenHeight) / 2;
+
+            Debug.WriteLine($"position: {mousePos.X}, {mousePos.Y} - rel: {relX}, {relY}");
 
             return new Vector2(relX, relY);
         }
