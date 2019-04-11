@@ -82,15 +82,11 @@ namespace SPG.Objects
             List<GameObject> candidates = Objects.Where(o => o.Enabled == true).ToList();
 
             if (candidates.Count == 0) return candidates;
-
-            //candidates.SortByX();
             
             candidates = Objects.Where(o => o.Right >= x + self.BoundingBox.X && o.Left <= x + self.BoundingBox.X + self.BoundingBox.Width && o != self).ToList();
-
-            //candidates.SortByY();
             candidates = candidates.Where(o => o.Bottom >= y + self.BoundingBox.Y && o.Top <= y + self.BoundingBox.Y + self.BoundingBox.Height && o != self).ToList();
 
-            //Debug.WriteLine($"Found {candidates.Count} candidates after {sw.ElapsedMilliseconds}ms.");
+            Debug.WriteLine($"Found {candidates.Count} candidates after {sw.ElapsedMilliseconds}ms.");
 
             return candidates;
         }
@@ -98,19 +94,19 @@ namespace SPG.Objects
         /// <summary>
         /// Call this in your game Update method.
         /// </summary>
-        public static void UpdateObjects()
+        public static void UpdateObjects(GameTime gameTime)
         {
 
-            Objects.Where(o => o.Enabled).ToList().ForEach(o => o.Update());
+            Objects.Where(o => o.Enabled).ToList().ForEach(o => o.Update(gameTime));
         }
 
         /// <summary>
         /// Call this between the SpriteBatch.Begin and SpriteBatch.End in your game Draw method.
         /// </summary>
-        public static void DrawObjects()
+        public static void DrawObjects(GameTime gameTime)
         {
             SortByID();
-            Objects.Where(o => o.Enabled && o.Visible).ToList().ForEach(o => o.Draw());
+            Objects.Where(o => o.Enabled && o.Visible).ToList().ForEach(o => o.Draw(gameTime));
         }
     }
 }

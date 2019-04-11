@@ -9,7 +9,7 @@
     <Import_RootNamespace>SPG.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)View\Camera2D.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Draw\Primitives.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)View\Camera.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ClassTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Global\Game.cs" />
@@ -22,7 +22,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Object\CollisionInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Object\GameObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Object\ObjectManager.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Util\Draw.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\Structs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\Xml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\Maths.cs" />

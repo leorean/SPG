@@ -86,7 +86,7 @@ namespace SPG.Map
             }
         }
         
-        public void Draw()
+        public void Draw(GameTime gameTime)
         {
 
             if (TileSet == null)

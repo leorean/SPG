@@ -92,12 +92,12 @@ namespace SPG.Objects
 
         // methods
         
-        public virtual void Update()
+        public virtual void Update(GameTime gameTime)
         {
             
         }
 
-        public virtual void Draw()
+        public virtual void Draw(GameTime gameTime)
         {
             if (Texture == null)
             {
@@ -112,8 +112,8 @@ namespace SPG.Objects
                 var rect = new Rectangle((int)(Position.X + BoundingBox.X),
                     (int)(Position.Y + BoundingBox.Y),
                     (int)BoundingBox.Width, (int)BoundingBox.Height);
-                
-                SPG.Util.Draw.DrawRectangle(rect, Color.Black, Depth);                
+
+                SPG.Draw.Primitives2D.DrawRectangle(rect, Color.Black, false);
             }
         }
 

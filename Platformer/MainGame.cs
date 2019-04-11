@@ -31,7 +31,7 @@ namespace Platformer
         private GameObject player;
 
         private ResolutionRenderer resolutionRenderer;
-        private Camera2D camera;
+        private Camera camera;
 
         public override GraphicsDeviceManager GraphicsDeviceManager { get => graphics; }
         public override SpriteBatch SpriteBatch { get => spriteBatch; }
@@ -103,7 +103,7 @@ namespace Platformer
 
             resolutionRenderer = new ResolutionRenderer(viewSize.Width, viewSize.Height, screenSize.Width, screenSize.Height);
             
-            camera = new Camera2D(resolutionRenderer) { MaxZoom = 10f, MinZoom = .4f, Zoom = 1f };
+            camera = new Camera(resolutionRenderer) { MaxZoom = 10f, MinZoom = .4f, Zoom = 1f };
             camera.SetPosition(Vector2.Zero);
 
             camera.EnableBounds(new Rectangle(0, 0, Map.Width * Globals.TILE, Map.Height * Globals.TILE));
@@ -135,10 +135,10 @@ namespace Platformer
 
             // player
 
-            player = new Player(0, 0);
+            player = new Player(20 * Globals.TILE, 5 * Globals.TILE);
             player.Texture = Content.Load<Texture2D>("player");
             player.DrawOffset = new Vector2(8, 8);
-            player.BoundingBox = new RectF(-8, -8, 16, 16);
+            player.BoundingBox = new RectF(-4, -4, 8, 12);
             player.Depth = Globals.LAYER_FG + 0.0010f;
             player.Debug = true;
             /*
@@ -178,30 +178,27 @@ namespace Platformer
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            ObjectManager.UpdateObjects();
 
             KeyboardState keyboard = Keyboard.GetState();
-            if (keyboard.IsKeyDown(Keys.Up)) { player.Position += new Vector2(0, -1f); }
-            if (keyboard.IsKeyDown(Keys.Down)) { player.Position += new Vector2(0, 1f); }
-            if (keyboard.IsKeyDown(Keys.Left)) { player.Position += new Vector2(-1f, 0); }
-            if (keyboard.IsKeyDown(Keys.Right)) { player.Position += new Vector2(1f, 0); ; }
+            if (keyboard.IsKeyDown(Keys.Up)) { player.YVel = -2f; }
+            //if (keyboard.IsKeyDown(Keys.Down)) { player.YVel += new Vector2(0, 1f); }
+            if (keyboard.IsKeyDown(Keys.Left)) { player.XVel = -1f; }
+            if (keyboard.IsKeyDown(Keys.Right)) { player.XVel = 1f; }
 
             if (keyboard.IsKeyDown(Keys.D0)) { player.Angle += .05f; }
 
             MouseState mouse = Mouse.GetState();
 
             if (mouse.LeftButton == ButtonState.Pressed)
-            {
-                //var v3 = viewPort.Project(new Vector3(mouse.Position.X, mouse.Position.Y, 0), scaleMatrix, Matrix.Identity, Matrix.Identity);
-
-                //player.Position = mouse.Position.ToVector2();
-                
-                player.Position = camera.MouseToMapCoordinates(mouse.Position.ToVector2());
+            {                
+                player.Position = camera.ToVirtual(mouse.Position.ToVector2());
             }
 
             camera.Position = player.Position;
 
             //camera.Update(gameTime);
+
+            ObjectManager.UpdateObjects(gameTime);
 
             base.Update(gameTime);
         }
@@ -213,15 +210,15 @@ namespace Platformer
         protected override void Draw(GameTime gameTime)
         {
             //GameManager.Game.GraphicsDevice.SetRenderTarget(camera.RenderTarget);
-
+            
             resolutionRenderer.SetupDraw();
             
             GraphicsDevice.Clear(Color.CornflowerBlue);
             
             SpriteBatch.BeginCamera(camera);
 
-            Map.Draw();
-            ObjectManager.DrawObjects();
+            Map.Draw(gameTime);
+            ObjectManager.DrawObjects(gameTime);
             
             SpriteBatch.End();
             
