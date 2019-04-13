@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using SPG.View;
+using System.Diagnostics;
 
 namespace Platformer
 {
@@ -61,7 +62,7 @@ namespace Platformer
         void LoadObjectsFromMap()
         {
 
-            var index = Map.LayerInfo.ToList().IndexOf(Map.LayerInfo.First(x => x.Key.ToLower() == "fg"));
+            var index = Map.LayerDepth.ToList().IndexOf(Map.LayerDepth.First(x => x.Key.ToLower() == "fg"));
 
             var data = Map.LayerData.ElementAt(index);
             {
@@ -120,24 +121,24 @@ namespace Platformer
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            var tileSet = TileSet.Load("tiles");
+            var tileSet = TextureSet.Load("tiles");
 
             XmlDocument xml = SPG.Util.Xml.Load("testMap.tmx");
             Map = new GameMap(xml);
 
             Map.TileSet = tileSet;
-            Map.LayerInfo["FG"] = Globals.LAYER_FG;
-            Map.LayerInfo["WATER"] = Globals.LAYER_WATER;
-            Map.LayerInfo["BG"] = Globals.LAYER_BG;
-            Map.LayerInfo["BG2"] = Globals.LAYER_BG2;
+            Map.LayerDepth["FG"] = Globals.LAYER_FG;
+            Map.LayerDepth["WATER"] = Globals.LAYER_WATER;
+            Map.LayerDepth["BG"] = Globals.LAYER_BG;
+            Map.LayerDepth["BG2"] = Globals.LAYER_BG2;
             
             LoadObjectsFromMap();
 
             // player
 
-            player = new Player(10 * Globals.TILE, 2 * Globals.TILE);
-            player.Texture = Content.Load<Texture2D>("player");
-            player.DebugEnabled = true;
+            player = new Player(10 * Globals.TILE, 2 * Globals.TILE);            
+            player.AnimationTexture = TextureSet.Load("player", 16, 32);
+            
             /*
             var block = new Solid(128, 128);
             block.Texture = tileSet[28];
@@ -178,9 +179,15 @@ namespace Platformer
             KeyboardState keyboard = Keyboard.GetState();
 
             if (keyboard.IsKeyDown(Keys.Space))
+            {
                 ObjectManager.GameSpeed = 120;
+                player.DebugEnabled = true;
+            }
             else
+            {
                 ObjectManager.GameSpeed = 0;
+                player.DebugEnabled = false;
+            }
 
             MouseState mouse = Mouse.GetState();
 

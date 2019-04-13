@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using SPG;
+using SPG.Map;
 using SPG.Util;
 
 namespace SPG.Objects
@@ -30,8 +31,39 @@ namespace SPG.Objects
 
         // draw/visual
 
-        public Texture2D Texture { get; set; } = null;
+        private TextureSet _frames;
 
+        private double _currentFrame = 0;
+        public int AnimationFrame
+        {
+            get
+            {
+                return MinFrame + (int)Math.Floor(_currentFrame);
+            }
+        }
+        public int MinFrame { get; private set; }
+        public int MaxFrame { get; private set; }
+        public double AnimationSpeed { get; private set; }
+        private bool _isLooped = false;
+        //private bool _isAnimated = false;
+        public Texture2D Texture
+        {
+            get
+            {
+                return (_frames != null) ? _frames[AnimationFrame] : null;
+            }
+            set
+            {
+                if (_frames == null)
+                    _frames = TextureSet.FromTexture(value);
+                _currentFrame = 0;
+            }
+        }
+
+        public event EventHandler AnimationComplete;
+
+        public TextureSet AnimationTexture { get { return _frames; } set { _frames = value; } }
+        
         public int Width { get => Texture != null ? Texture.Width : 0; }
         public int Height { get => Texture != null ? Texture.Height : 0; }
 
@@ -42,13 +74,7 @@ namespace SPG.Objects
         public Color Color { get; set; } = Color.White;
 
         public float Depth { get; set; } = 1f;
-
         
-        /*
-         * TODO:
-         * animation
-         */
-
         // world/position/collision
 
         public Vector2 Position { get; set; } = Vector2.Zero;
@@ -92,6 +118,14 @@ namespace SPG.Objects
 
         // methods
         
+        public void SetAnimation(int minFrame, int maxFrame, double animationSpeed, bool loop)
+        {
+            MinFrame = minFrame;
+            MaxFrame = maxFrame;
+            AnimationSpeed = animationSpeed;
+            _isLooped = loop;
+        }
+
         public void Move(float x, float y)
         {
             Position = new Vector2(Position.X + x, Position.Y + y);
@@ -99,11 +133,20 @@ namespace SPG.Objects
 
         public virtual void Update(GameTime gameTime)
         {
-            
+            if (MaxFrame > MinFrame && MaxFrame > 0)
+            {
+                var last = _currentFrame;
+                _currentFrame = _currentFrame + AnimationSpeed;
+                if (_currentFrame > (MaxFrame - MinFrame) + 1)
+                {
+                    _currentFrame -= ((MaxFrame - MinFrame) + 1);
+                    AnimationComplete?.Invoke(this, new EventArgs());
+                }                
+            }
         }
 
         public virtual void Draw(GameTime gameTime)
-        {
+        {            
             if (Texture == null)
             {
                 System.Diagnostics.Debug.WriteLine($"Warning: object '{Name}'({ID}) has no texture!");                

@@ -90,11 +90,11 @@ namespace SPG.View
                 {
                     _position = new Vector2(
                         Math.Min(
-                            Math.Max(value.X, _bounds.X + ResolutionRenderer.ViewWidth * .5f),
-                            _bounds.Width - ResolutionRenderer.ViewWidth * .5f),
+                            Math.Max(value.X, _bounds.X + ResolutionRenderer.ViewWidth * .5f / Zoom),
+                            _bounds.Width - ResolutionRenderer.ViewWidth * .5f / Zoom),
                         Math.Min(
-                            Math.Max(value.Y, _bounds.Y + ResolutionRenderer.ViewHeight * .5f),
-                            _bounds.Height - ResolutionRenderer.ViewHeight * .5f)
+                            Math.Max(value.Y, _bounds.Y + ResolutionRenderer.ViewHeight * .5f / Zoom),
+                            _bounds.Height - ResolutionRenderer.ViewHeight * .5f / Zoom)
                         );
                 } else
                 {

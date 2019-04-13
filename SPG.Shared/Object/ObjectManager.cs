@@ -42,12 +42,13 @@ namespace SPG.Objects
 
         public static void SortByID()
         {
-            Objects.Sort(delegate (GameObject o1, GameObject o2)
-            {
-                if (o1.ID < o2.ID) return -1;
-                if (o1.ID > o2.ID) return 1;
-                return 0;
-            }
+            Objects.Sort(
+                delegate (GameObject o1, GameObject o2)
+                {
+                    if (o1.ID < o2.ID) return -1;
+                    if (o1.ID > o2.ID) return 1;
+                    return 0;
+                }
             );
         }
 

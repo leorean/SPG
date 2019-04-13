@@ -18,7 +18,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Global\Util.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Map\GameMap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Map\Tile.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Map\TileSet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Map\TextureSet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Object\CollisionInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Object\GameObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Object\ObjectManager.cs" />

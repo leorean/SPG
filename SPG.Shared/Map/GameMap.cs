@@ -47,25 +47,21 @@ namespace SPG.Map
         
         public List<Grid<Tile>> LayerData { get; set; } //BG2, BG, WATER, FG
 
-        public Dictionary<string, float> LayerInfo { get; set; }
+        public Dictionary<string, float> LayerDepth { get; set; }
 
-        public TileSet TileSet { get; set; }
-
-        //public delegate void ParseDelegate(Tile t);
-        //public ParseDelegate ParseFunction;
-
+        public TextureSet TileSet { get; set; }
+        
         public GameMap(XmlDocument xml)
         {
             try
             {
-                //var mapElement = xml.Element("map").Elements();
                 var mapElement = xml.GetElementsByTagName("map")[0];
                 
                 Width = int.Parse(mapElement.Attributes["width"].Value);
                 Height = int.Parse(mapElement.Attributes["height"].Value);
 
                 LayerData = new List<Grid<Tile>>();
-                LayerInfo = new Dictionary<string, float>();
+                LayerDepth = new Dictionary<string, float>();
 
                 var layers = mapElement.ToList().Where(x => x.Name == "layer");
                 
@@ -76,7 +72,7 @@ namespace SPG.Map
 
                     var name = layer.Attributes["name"].Value;
 
-                    LayerInfo.Add(name, 0.0f);
+                    LayerDepth.Add(name, 0.0f);
                 }
             }
             catch (Exception e)
@@ -105,7 +101,7 @@ namespace SPG.Map
 
                         var texture = TileSet.ElementAt(tile.ID);
                         
-                        GameManager.Game.SpriteBatch.Draw(texture, new Vector2(i * Globals.TILE, j * Globals.TILE), null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerInfo.ElementAt(l).Value);                        
+                        GameManager.Game.SpriteBatch.Draw(texture, new Vector2(i * Globals.TILE, j * Globals.TILE), null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.ElementAt(l).Value);                        
                     }
                 }
             }
@@ -126,18 +122,6 @@ namespace SPG.Map
                 if (value != null)
                 {
                     var id = int.Parse(value) - 1;
-
-                    /*TileType type = TileType.Solid;
-                    
-                    // todo: refactor
-                    switch (id)
-                    {
-                        case 0:
-                        case 7:
-                            type = TileType.Platform;
-                            break;
-                    }*/
-
                     tile = new Tile(id);
                 }
 

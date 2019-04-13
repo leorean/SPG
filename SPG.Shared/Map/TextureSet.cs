@@ -7,21 +7,42 @@ using System.Diagnostics;
 
 namespace SPG.Map
 {    
-    public class TileSet : List<Texture2D>
+    /// <summary>
+    /// A texture set is a set of equally big textures
+    /// </summary>
+    public class TextureSet : List<Texture2D>
     {
-        public static TileSet Load(string fileName)
+        private TextureSet()
         {
+
+        }
+
+        public static TextureSet FromTexture(Texture2D texture)
+        {
+            var tileSet = new TextureSet();
+
+            tileSet.Add(texture);
+
+            return tileSet;
+        }
+
+        public static TextureSet Load(string fileName, int? tileWidth = null, int? tileHeight = null)
+        {
+
+            if (tileWidth == null) tileWidth = Globals.TILE;
+            if (tileHeight == null) tileHeight = Globals.TILE;
+
             try
             {
                 var texture = GameManager.Game.Content.Load<Texture2D>(fileName);
 
-                var tileSet = new TileSet();
+                var tileSet = new TextureSet();
 
-                for (var j = 0; j < texture.Height / Globals.TILE; j++)
+                for (var j = 0; j < texture.Height / tileHeight; j++)
                 {
-                    for (var i = 0; i < texture.Width / Globals.TILE; i++)
+                    for (var i = 0; i < texture.Width / tileWidth; i++)
                     {
-                        Rectangle sourceRectangle = new Rectangle(i * Globals.TILE, j * Globals.TILE, Globals.TILE, Globals.TILE);
+                        Rectangle sourceRectangle = new Rectangle(i * (int)tileWidth, j * (int)tileHeight, (int)tileWidth, (int)tileHeight);
                         var newTexture = new Texture2D(GameManager.Game.GraphicsDeviceManager.GraphicsDevice, sourceRectangle.Width, sourceRectangle.Height);
                         Color[] data = new Color[sourceRectangle.Width * sourceRectangle.Height];
 
