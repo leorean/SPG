@@ -27,7 +27,7 @@ namespace SPG.Util
         public void Set(int i, T value)
         {
             var x = i % Width;
-            var y = (int)Math.Floor((double)(i / Width));
+            var y = (int)MathUtil.Floor((double)(i / Width));
 
             data[x][y] = value;
         }
@@ -40,7 +40,7 @@ namespace SPG.Util
         public T Get(int i)
         {
             var x = i % Width;
-            var y = (int)Math.Floor((double)(i / Width));
+            var y = (int)MathUtil.Floor((double)(i / Width));
 
             return data[x][y];
         }

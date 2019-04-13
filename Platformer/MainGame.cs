@@ -135,12 +135,9 @@ namespace Platformer
 
             // player
 
-            player = new Player(20 * Globals.TILE, 5 * Globals.TILE);
+            player = new Player(10 * Globals.TILE, 2 * Globals.TILE);
             player.Texture = Content.Load<Texture2D>("player");
-            player.DrawOffset = new Vector2(8, 8);
-            player.BoundingBox = new RectF(-4, -4, 8, 12);
-            player.Depth = Globals.LAYER_FG + 0.0010f;
-            player.Debug = true;
+            player.DebugEnabled = true;
             /*
             var block = new Solid(128, 128);
             block.Texture = tileSet[28];
@@ -177,15 +174,13 @@ namespace Platformer
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-
+            
             KeyboardState keyboard = Keyboard.GetState();
-            if (keyboard.IsKeyDown(Keys.Up)) { player.YVel = -2f; }
-            //if (keyboard.IsKeyDown(Keys.Down)) { player.YVel += new Vector2(0, 1f); }
-            if (keyboard.IsKeyDown(Keys.Left)) { player.XVel = -1f; }
-            if (keyboard.IsKeyDown(Keys.Right)) { player.XVel = 1f; }
 
-            if (keyboard.IsKeyDown(Keys.D0)) { player.Angle += .05f; }
+            if (keyboard.IsKeyDown(Keys.Space))
+                ObjectManager.GameSpeed = 120;
+            else
+                ObjectManager.GameSpeed = 0;
 
             MouseState mouse = Mouse.GetState();
 

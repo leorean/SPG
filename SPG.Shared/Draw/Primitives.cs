@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SPG.Util;
 using System;
 
 namespace SPG.Draw
@@ -18,17 +19,17 @@ namespace SPG.Draw
             pixel = new Texture2D(gd, 1, 1);
             pixel.SetData(new Color[] { Color.White });
         }
+
         //draws a pixel
-        public static void DrawPixel(int x, int y, Color col)
-        {
-            //GameManager.Game.SpriteBatch.Draw(pixel, new Vector2(x, y), col);            
+        public static void DrawPixel(float x, float y, Color col)
+        {            
             GameManager.Game.SpriteBatch.Draw(pixel, new Vector2(x, y), null, col, 0, Vector2.Zero, 1f, SpriteEffects.None, 1);
         }
 
         //draws a line obviously :)/>
-        public static void DrawLine(int x1, int y1, int x2, int y2, Color col)
+        public static void DrawLine(float x1, float y1, float x2, float y2, Color col)
         {
-            int deltax, deltay, x, y, xinc1, xinc2, yinc1, yinc2, den, num, numadd, numpixels, curpixel;
+            float deltax, deltay, x, y, xinc1, xinc2, yinc1, yinc2, den, num, numadd, numpixels, curpixel;
             deltax = Math.Abs(x2 - x1);        // The difference between the x's
             deltay = Math.Abs(y2 - y1);        // The difference between the y's
             x = x1;                       // Start x off at the first pixel
@@ -90,11 +91,11 @@ namespace SPG.Draw
             }
         }
 
-        public static void DrawRectangle(Rectangle rect, Color col, Boolean filled)
+        public static void DrawRectangle(RectF rect, Color col, Boolean filled)
         {
             if (filled)
             {
-                GameManager.Game.SpriteBatch.Draw(pixel, rect, col);
+                GameManager.Game.SpriteBatch.Draw(pixel, new Rectangle((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height), col);
             }
             else
             {

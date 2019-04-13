@@ -70,7 +70,7 @@ namespace SPG.Objects
                 
         // debug
 
-        public bool Debug { get; set; }
+        public bool DebugEnabled { get; set; }
 
         // constructor
 
@@ -92,6 +92,11 @@ namespace SPG.Objects
 
         // methods
         
+        public void Move(float x, float y)
+        {
+            Position = new Vector2(Position.X + x, Position.Y + y);
+        }
+
         public virtual void Update(GameTime gameTime)
         {
             
@@ -107,11 +112,11 @@ namespace SPG.Objects
                 GameManager.Game.SpriteBatch.Draw(Texture, Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
             }
 
-            if (Debug)
+            if (DebugEnabled)
             {
-                var rect = new Rectangle((int)(Position.X + BoundingBox.X),
-                    (int)(Position.Y + BoundingBox.Y),
-                    (int)BoundingBox.Width, (int)BoundingBox.Height);
+                var rect = new RectF((Position.X + BoundingBox.X) - .5f,
+                    (Position.Y + BoundingBox.Y) - .5f,
+                    BoundingBox.Width, BoundingBox.Height);
 
                 SPG.Draw.Primitives2D.DrawRectangle(rect, Color.Black, false);
             }

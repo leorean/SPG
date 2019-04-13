@@ -24,7 +24,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Object\ObjectManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\Structs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\Xml.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Util\Maths.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\MathUtil.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)View\ResolutionRenderer.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -3,14 +3,11 @@ using System;
 
 namespace SPG.Util
 {
-    public static class Math
+    public static class MathUtil
     {
-        public static int Div<T, V>(T v1, V v2)
-        {
-            float f = (float)(object)v1;
-            float s = (float)(object)v2;
-
-            return Floor(f / s);
+        public static int Div(double v1, double v2)
+        {            
+            return Floor(v1 / v2);
         }
 
         public static int Floor<T>(T value)

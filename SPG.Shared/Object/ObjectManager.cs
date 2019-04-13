@@ -17,6 +17,10 @@ namespace SPG.Objects
 
         private static int idCounter;
 
+        private static double elapsedTime = 0;
+        
+        public static double GameSpeed { get; set; }
+
         public static int Add(GameObject o)
         {
             if (!Objects.Contains(o))
@@ -86,7 +90,7 @@ namespace SPG.Objects
             candidates = Objects.Where(o => o.Right >= x + self.BoundingBox.X && o.Left <= x + self.BoundingBox.X + self.BoundingBox.Width && o != self).ToList();
             candidates = candidates.Where(o => o.Bottom >= y + self.BoundingBox.Y && o.Top <= y + self.BoundingBox.Y + self.BoundingBox.Height && o != self).ToList();
 
-            Debug.WriteLine($"Found {candidates.Count} candidates after {sw.ElapsedMilliseconds}ms.");
+            //Debug.WriteLine($"Found {candidates.Count} candidates after {sw.ElapsedMilliseconds}ms.");
 
             return candidates;
         }
@@ -96,8 +100,12 @@ namespace SPG.Objects
         /// </summary>
         public static void UpdateObjects(GameTime gameTime)
         {
-
-            Objects.Where(o => o.Enabled).ToList().ForEach(o => o.Update(gameTime));
+            if (elapsedTime > GameSpeed)
+            {
+                elapsedTime -= GameSpeed;
+                Objects.Where(o => o.Enabled).ToList().ForEach(o => o.Update(gameTime));
+            }
+            elapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;            
         }
 
         /// <summary>
