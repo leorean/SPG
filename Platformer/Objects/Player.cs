@@ -6,20 +6,38 @@ using System;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
+using SPG;
 
 namespace Platformer
 {
     public class Player : GameObject
     {
 
+        // public
+
         public enum PlayerState
         {
             IDLE,
             WALK,
-            JUMP
+            JUMP_UP,
+            JUMP_DOWN,
+            WALL_IDLE,
+            WALL_CLIMB,
+            OBTAIN,
+            DIE
         }
 
-        private enum Direction
+        public PlayerState State { get; set; }
+
+        // flags are: shooting, hurt & invincible, 
+        /*
+         * shooting: angle + projectile
+         * 
+         * shooting can be done during: idle, walk, jump, climb
+         * 
+         */
+
+        public enum Direction
         {
             LEFT = -1,
             RIGHT = 1,
@@ -27,12 +45,15 @@ namespace Platformer
             DOWN = 2
         }
 
+        // private
+
         private Direction _dir = Direction.RIGHT;
-        float _scale = 1f;
-        private int _framesPerRow = 8;
+        float _xScale = 1f;
 
-        public PlayerState State { get; set; }
+        Input input = new Input();
 
+        // constructor
+        
         public Player(int x, int y)
         {
             Name = "Player";
@@ -45,31 +66,45 @@ namespace Platformer
             Gravity = .1f;
         }
 
+        // methods
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
             // Input
 
-            var keyboard = Keyboard.GetState();
-            if (keyboard.IsKeyDown(Keys.Up))
+            input.Update(gameTime);
+
+            var k_leftHolding = input.IsKeyPressed(Keys.Left, Input.State.Holding);
+            var k_rightHolding = input.IsKeyPressed(Keys.Right, Input.State.Holding);
+            var k_upPressed = input.IsKeyPressed(Keys.Up, Input.State.Pressed);
+            
+            if (k_upPressed)
             {
                 YVel = -2f;
-                State = PlayerState.JUMP;
+                State = PlayerState.JUMP_UP;
             }
-            if (keyboard.IsKeyDown(Keys.Left))
+            if (k_leftHolding)
             {
                 _dir = Direction.LEFT;
                 XVel = -1f;
                 State = PlayerState.WALK;
             }
-            if (keyboard.IsKeyDown(Keys.Right))
+            if (k_rightHolding)
             {
                 _dir = Direction.RIGHT;
                 XVel = 1f;
                 State = PlayerState.WALK;
             }
             
+            // state logic
+
+            switch(State)
+            {
+
+            }
+
             // collision & movement
 
             YVel += Gravity;
@@ -127,7 +162,7 @@ namespace Platformer
             base.Draw(gameTime);
 
             // scaling effect
-            _scale = Math.Sign((int)_dir);
+            _xScale = Math.Sign((int)_dir);
             float s = 0;
 
             if (_dir == Direction.RIGHT)

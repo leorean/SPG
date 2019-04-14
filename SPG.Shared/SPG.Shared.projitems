@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Draw\Primitives.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Global\Input.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)View\Camera.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ClassTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Global\Game.cs" />
