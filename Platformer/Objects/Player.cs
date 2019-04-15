@@ -144,11 +144,11 @@ namespace Platformer
                     break;
                 case PlayerState.TURN_AROUND:
                     
-                    XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - .04f, 0);
-
+                    XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - .07f, 0);
+                    
                     if (XVel > 0) dir = Direction.LEFT;
                     if (XVel < 0) dir = Direction.RIGHT;
-
+                    
                     if (XVel == 0)
                         State = PlayerState.IDLE;
                     
@@ -218,8 +218,8 @@ namespace Platformer
                     break;
                 case PlayerState.TURN_AROUND:                    
                     row = 7;
-                    fAmount = 1;
-                    fSpd = 0;
+                    fAmount = 2;
+                    fSpd = 0.1f;
                     loopAnim = false;
                     break;
             }

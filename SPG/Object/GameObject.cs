@@ -33,6 +33,7 @@ namespace SPG.Objects
 
         private TextureSet _frames;
 
+        private double _lastFrame = 0;
         private double _currentFrame = 0;
         public int AnimationFrame
         {
@@ -122,7 +123,10 @@ namespace SPG.Objects
         {
             // reset 
             if (MinFrame != minFrame || MaxFrame != maxFrame)
+            {
+                _lastFrame = 0;
                 _currentFrame = 0;
+            }
 
             MinFrame = minFrame;
             MaxFrame = maxFrame;
@@ -139,14 +143,25 @@ namespace SPG.Objects
         {
             if (MaxFrame > MinFrame && MaxFrame > 0)
             {
-                var last = _currentFrame;
-                _currentFrame = _currentFrame + AnimationSpeed;
-                if (_currentFrame > (MaxFrame - MinFrame) + 1)
+                if (_isLooped)
                 {
-                    _currentFrame -= ((MaxFrame - MinFrame) + 1);
-                    AnimationComplete?.Invoke(this, new EventArgs());
-                }                
+                    var last = _currentFrame;
+                    _currentFrame = _currentFrame + AnimationSpeed;
+                    if (_currentFrame > (MaxFrame - MinFrame) + 1)
+                    {
+                        _currentFrame -= ((MaxFrame - MinFrame) + 1);
+                        AnimationComplete?.Invoke(this, new EventArgs());
+                    }
+                }
+                else
+                {                    
+                    _currentFrame = Math.Min(_currentFrame + AnimationSpeed, MaxFrame - MinFrame);
+
+                    if (_currentFrame == MaxFrame - MinFrame && _currentFrame != _lastFrame)
+                        AnimationComplete?.Invoke(this, new EventArgs());
+                }
             }
+            _lastFrame = _currentFrame;
         }
 
         public virtual void Draw(GameTime gameTime)

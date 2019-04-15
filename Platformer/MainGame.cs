@@ -181,7 +181,7 @@ namespace Platformer
             if (keyboard.IsKeyDown(Keys.Space))
             {
                 ObjectManager.GameSpeed = 120;
-                player.DebugEnabled = true;
+                //player.DebugEnabled = true;
             }
             else
             {
