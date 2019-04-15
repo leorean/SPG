@@ -10,6 +10,14 @@ using SPG;
 
 namespace Platformer
 {
+    public static class PlayerExtensions
+    {
+        public static void Reverse(this Player.Direction dir)
+        {
+            dir = (Player.Direction)(-(int)dir);
+        }
+    }
+
     public class Player : GameObject
     {
 
@@ -24,7 +32,8 @@ namespace Platformer
             WALL_IDLE,
             WALL_CLIMB,
             OBTAIN,
-            DIE
+            DIE,
+            TURN_AROUND
         }
 
         public PlayerState State { get; set; }
@@ -47,8 +56,8 @@ namespace Platformer
 
         // private
 
-        private Direction _dir = Direction.RIGHT;
-        float _xScale = 1f;
+        private Direction dir = Direction.RIGHT;
+        float xScale = 1f;
 
         Input input = new Input();
 
@@ -80,29 +89,70 @@ namespace Platformer
             var k_rightHolding = input.IsKeyPressed(Keys.Right, Input.State.Holding);
             var k_upPressed = input.IsKeyPressed(Keys.Up, Input.State.Pressed);
             
-            if (k_upPressed)
-            {
-                YVel = -2f;
-                State = PlayerState.JUMP_UP;
-            }
-            if (k_leftHolding)
-            {
-                _dir = Direction.LEFT;
-                XVel = -1f;
-                State = PlayerState.WALK;
-            }
-            if (k_rightHolding)
-            {
-                _dir = Direction.RIGHT;
-                XVel = 1f;
-                State = PlayerState.WALK;
-            }
-            
             // state logic
 
+            var maxVel = 1.2f;
+            
             switch(State)
             {
+                case PlayerState.IDLE:
+                    XVel = 0;
+                    if (k_rightHolding)
+                    {
+                        State = PlayerState.WALK;
+                        dir = Direction.RIGHT;
+                    }
+                    if (k_leftHolding)
+                    {
+                        State = PlayerState.WALK;
+                        dir = Direction.LEFT;
+                    }
+                    break;
+                case PlayerState.WALK:
+                    if (k_rightHolding)
+                    {
+                        if (dir == Direction.RIGHT)
+                        {                            
+                            XVel = Math.Min(XVel + .2f, maxVel);                            
+                        }
+                        else
+                        {
+                            //dir.Reverse();
+                            State = PlayerState.TURN_AROUND;
+                        }
+                    }
+                    if (k_leftHolding)
+                    {
+                        if (dir == Direction.LEFT)
+                        {
+                            XVel = Math.Max(XVel - .2f, -maxVel);
+                        }
+                        else
+                        {
+                            //dir.Reverse();
+                            State = PlayerState.TURN_AROUND;
+                        }
+                    }
+                    if (!k_leftHolding && !k_rightHolding)
+                    {                        
+                        XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - .1f, 0);
+                        if (XVel == 0)
+                        {                            
+                            State = PlayerState.IDLE;
+                        }
+                    }
+                    break;
+                case PlayerState.TURN_AROUND:
+                    
+                    XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - .04f, 0);
 
+                    if (XVel > 0) dir = Direction.LEFT;
+                    if (XVel < 0) dir = Direction.RIGHT;
+
+                    if (XVel == 0)
+                        State = PlayerState.IDLE;
+                    
+                    break;
             }
 
             // collision & movement
@@ -146,15 +196,35 @@ namespace Platformer
 
             // draw <-> state logic
 
+            var cols = 8; // how many columns there are in the sheet
+            var row = 0; // which row in the sheet
+            var fSpd = 0f; // frame speed
+            var fAmount = 4; // how many frames
+            var loopAnim = true; // loop animation?
+
             switch (State)
             {
-                case PlayerState.IDLE:
-                    SetAnimation(0, 3, 0.03, true);
+                case PlayerState.IDLE:                    
+                    row = 0;
+                    fSpd = 0.03f;
+                    fAmount = 4;
+                    loopAnim = true;
                     break;
-                case PlayerState.WALK:
-                    SetAnimation(8, 11, 0.1, true);
+                case PlayerState.WALK:                    
+                    row = 1;
+                    fAmount = 4;
+                    fSpd = 0.1f;
+                    loopAnim = true;
+                    break;
+                case PlayerState.TURN_AROUND:                    
+                    row = 7;
+                    fAmount = 1;
+                    fSpd = 0;
+                    loopAnim = false;
                     break;
             }
+
+            SetAnimation(cols * row, cols * row + fAmount - 1, fSpd, loopAnim);
         }
 
         public override void Draw(GameTime gameTime)
@@ -162,14 +232,16 @@ namespace Platformer
             base.Draw(gameTime);
 
             // scaling effect
-            _xScale = Math.Sign((int)_dir);
+            /*xScale = Math.Sign((int)dir);
             float s = 0;
 
-            if (_dir == Direction.RIGHT)
+            if (dir == Direction.RIGHT)
                 s = Math.Min(Scale.X + .3f, 1);
             else
                 s = Math.Max(Scale.X - .3f, -1);
-            Scale = new Vector2(s, 1);
+            Scale = new Vector2(s, 1);*/
+            xScale = Math.Sign((int)dir);
+            Scale = new Vector2(xScale, 1);
         }
     }
 }

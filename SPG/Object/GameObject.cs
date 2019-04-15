@@ -120,6 +120,10 @@ namespace SPG.Objects
         
         public void SetAnimation(int minFrame, int maxFrame, double animationSpeed, bool loop)
         {
+            // reset 
+            if (MinFrame != minFrame || MaxFrame != maxFrame)
+                _currentFrame = 0;
+
             MinFrame = minFrame;
             MaxFrame = maxFrame;
             AnimationSpeed = animationSpeed;
