@@ -6169,7 +6169,7 @@
    <tile gid="46"/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="29"/>
    <tile/>
    <tile/>
    <tile/>
@@ -6233,7 +6233,7 @@
    <tile gid="54"/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="29"/>
    <tile/>
    <tile/>
    <tile/>
@@ -6296,7 +6296,7 @@
    <tile gid="61"/>
    <tile gid="62"/>
    <tile/>
-   <tile/>
+   <tile gid="29"/>
    <tile gid="29"/>
    <tile/>
    <tile/>
@@ -6361,7 +6361,7 @@
    <tile gid="11"/>
    <tile/>
    <tile gid="29"/>
-   <tile/>
+   <tile gid="29"/>
    <tile/>
    <tile/>
    <tile/>

@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using SPG.Util;
 
 namespace SPG.Objects
 {
@@ -80,16 +81,40 @@ namespace SPG.Objects
             }
         }
         
+        public static List<GameObject> CollisionPoint(GameObject self, float x, float y, Type type)
+        {
+            //Stopwatch sw = Stopwatch.StartNew();
+
+            List<GameObject> candidates = Objects.Where(o => o != self && o.GetType() == type && o.Enabled == true).ToList();
+
+            if (candidates.Count == 0) return candidates;
+
+            candidates = candidates.Where(
+                o => 
+                    MathUtil.In(x, o.Left, o.Right) 
+                    && MathUtil.In(y, o.Top, o.Bottom)
+                ).ToList();
+
+            //Debug.WriteLine($"Found {candidates.Count} candidates after {sw.ElapsedMilliseconds}ms.");
+            
+            return candidates;
+        }
+
         public static List<GameObject> Find(GameObject self, float x, float y, Type type)
         {
-            Stopwatch sw = Stopwatch.StartNew();
+            //Stopwatch sw = Stopwatch.StartNew();
 
-            List<GameObject> candidates = Objects.Where(o => o.Enabled == true).ToList();
+            List<GameObject> candidates = Objects.Where(o => o != self && o.GetType() == type && o.Enabled == true).ToList();
 
             if (candidates.Count == 0) return candidates;
             
-            candidates = Objects.Where(o => o.Right >= x + self.BoundingBox.X && o.Left <= x + self.BoundingBox.X + self.BoundingBox.Width && o != self).ToList();
-            candidates = candidates.Where(o => o.Bottom >= y + self.BoundingBox.Y && o.Top <= y + self.BoundingBox.Y + self.BoundingBox.Height && o != self).ToList();
+            candidates = candidates.Where(
+                o => 
+                    o.Right >= x + self.BoundingBox.X && o.Left <= x + self.BoundingBox.X + self.BoundingBox.Width
+                    &&
+                    o.Bottom >= y + self.BoundingBox.Y && o.Top <= y + self.BoundingBox.Y + self.BoundingBox.Height
+                ).ToList();
+            //candidates = candidates.Where(o => o.Bottom >= y + self.BoundingBox.Y && o.Top <= y + self.BoundingBox.Y + self.BoundingBox.Height).ToList();
 
             //Debug.WriteLine($"Found {candidates.Count} candidates after {sw.ElapsedMilliseconds}ms.");
 
