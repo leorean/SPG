@@ -36,7 +36,7 @@ namespace SPG.Map
             return nodeList;
         }
     }
-    
+
     /// <summary>
     /// The GameMap holds all data of a level. Interpreting layers, object types from tiles etc. should be done elsewhere.
     /// </summary>
@@ -44,13 +44,18 @@ namespace SPG.Map
     {
         public int Width { get; private set; }
         public int Height { get; private set; }
-        
+
         public List<Grid<Tile>> LayerData { get; set; } //BG2, BG, WATER, FG
 
         public Dictionary<string, float> LayerDepth { get; set; }
 
         public TextureSet TileSet { get; set; }
-        
+
+        /// <summary>
+        /// Contains a list of each object including their properties (name, x, y, ...)
+        /// </summary>
+        public List<Dictionary<string, object>> Objects { get; set; }
+
         public GameMap(XmlDocument xml)
         {
             try
@@ -74,6 +79,64 @@ namespace SPG.Map
 
                     LayerDepth.Add(name, 0.0f);
                 }
+                
+                Objects = new List<Dictionary<string, object>>();
+
+                var objectNodes = mapElement.ToList().Where(x => x.Name == "objectgroup").First();
+
+                foreach (XmlNode objectNode in objectNodes.ChildNodes)
+                {
+                    var objProperties = new Dictionary<string, object>();
+
+                    var name = objectNode.Attributes["type"].Value;
+                    var x = objectNode.Attributes["x"].Value;
+                    var y = objectNode.Attributes["y"].Value;
+
+                    objProperties.Add("name", name); // is actually the type name!
+                    objProperties.Add("x", x);
+                    objProperties.Add("y", y);
+
+                    if (objectNode.HasChildNodes)
+                    {
+                        foreach (XmlNode node in objectNode.ChildNodes)
+                        {
+                            foreach (XmlNode prop in node.ChildNodes)
+                            {
+                                var propName = prop.Attributes["name"].Value;
+                                var propValueString = prop.Attributes["value"].Value;
+
+                                var propValueType = prop.Attributes["type"].Value;
+
+                                object propValue;
+
+                                switch (propValueType)
+                                {
+                                    case "int":
+                                        propValue = int.Parse(propValueString);
+                                        break;
+                                    case "float":
+                                        float res;
+                                        if (float.TryParse(propValueString, out res))
+                                            propValue = res;
+                                        else
+                                            propValue = float.Parse(propValueString.Replace('.', ','));                                            
+                                        break;
+                                    case "bool":
+                                        propValue = bool.Parse(propValueString);
+                                        break;
+                                    default:
+                                        propValue = propValueString;
+                                        break;
+                                }
+
+                                objProperties.Add(propName, propValue);
+                            }
+                        }
+                    }
+                    Objects.Add(objProperties);
+                }
+
+
             }
             catch (Exception e)
             {

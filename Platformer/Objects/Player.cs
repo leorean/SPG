@@ -64,6 +64,7 @@ namespace Platformer
 
         private bool onGround;
         private float lastGroundY;
+        private float lastGroundYbeforeWall;
 
         Input input = new Input();
 
@@ -98,6 +99,8 @@ namespace Platformer
 
             input.Update(gameTime);
 
+            var k_leftPressed = input.IsKeyPressed(Keys.Left, Input.State.Pressed);
+            var k_rightPressed = input.IsKeyPressed(Keys.Right, Input.State.Pressed);
             var k_leftHolding = input.IsKeyPressed(Keys.Left, Input.State.Holding);
             var k_rightHolding = input.IsKeyPressed(Keys.Right, Input.State.Holding);
             var k_leftReleased = input.IsKeyPressed(Keys.Left, Input.State.Released);
@@ -111,13 +114,20 @@ namespace Platformer
             if (onWall)
             {
                 // transition from jumping to wall performance
-                if (State == PlayerState.JUMP_UP || State == PlayerState.JUMP_DOWN)
+                if (
+                    (State == PlayerState.JUMP_UP && lastGroundY > Y + Globals.TILE)
+                    ||
+                    State == PlayerState.JUMP_DOWN)
                 {
-                    if ((dir == Direction.LEFT && k_leftHolding)
+                    if ((dir == Direction.LEFT)// && k_leftHolding)
                         ||
-                        (dir == Direction.RIGHT && k_rightHolding)
+                        (dir == Direction.RIGHT)// && k_rightHolding)
                     )
+                    {
+                        lastGroundYbeforeWall = lastGroundY;
+                        lastGroundY = Y;
                         State = PlayerState.WALL_IDLE;
+                    }
                 }
             }
 
@@ -128,7 +138,10 @@ namespace Platformer
             if (YVel != 0) onGround = false;
 
             if (onGround)
-                lastGroundY = Y;
+            {
+
+                lastGroundY = Y;                
+            }
 
             // idle
             if (State == PlayerState.IDLE)
@@ -193,9 +206,6 @@ namespace Platformer
             {
                 if (YVel < 0) State = PlayerState.JUMP_UP;
                 if (YVel > 0) State = PlayerState.JUMP_DOWN;
-
-                //if (XVel < -1) dir = Direction.LEFT;
-                //if (XVel > 1) dir = Direction.RIGHT;                
                 
                 if (k_leftHolding)
                 {
@@ -238,12 +248,34 @@ namespace Platformer
 
                 if (dir == Direction.LEFT)
                 {
-                    if (k_leftReleased)
+                    if (k_upPressed)
+                    {
+                        //dir = Direction.RIGHT;
+                        XVel = 1;
+                        YVel = -2.5f;
+                        State = PlayerState.JUMP_UP;
+
+                        // switch back the ground Y
+                        lastGroundY = Math.Min(lastGroundY, lastGroundYbeforeWall);
+                    }
+
+                    if (k_rightPressed)
                         State = PlayerState.JUMP_DOWN;
                 }
-                if (dir == Direction.RIGHT)
+                else if (dir == Direction.RIGHT)
                 {
-                    if (k_rightReleased)
+                    if (k_upPressed)
+                    {
+                        //dir = Direction.LEFT;
+                        XVel = -1;
+                        YVel = -2.5f;
+                        State = PlayerState.JUMP_UP;
+
+                        // switch back the ground Y
+                        lastGroundY = Math.Min(lastGroundY, lastGroundYbeforeWall);
+                    }
+
+                    if (k_leftPressed)
                         State = PlayerState.JUMP_DOWN;
                 }
             }
