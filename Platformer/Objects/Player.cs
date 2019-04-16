@@ -106,10 +106,15 @@ namespace Platformer
             var k_leftReleased = input.IsKeyPressed(Keys.Left, Input.State.Released);
             var k_rightReleased = input.IsKeyPressed(Keys.Right, Input.State.Released);
             var k_upPressed = input.IsKeyPressed(Keys.Up, Input.State.Pressed);
+            var k_upHolding = input.IsKeyPressed(Keys.Up, Input.State.Holding);
+            var k_downPressed = input.IsKeyPressed(Keys.Down, Input.State.Pressed);
+            var k_downHolding = input.IsKeyPressed(Keys.Down, Input.State.Holding);
+
+            var k_jumpPressed = input.IsKeyPressed(Keys.A, Input.State.Pressed);
 
             // ++++ collision flags ++++
 
-            var onWall = ObjectManager.CollisionPoint(this, X + XVel + (.5f * BoundingBox.Width + 1) * Math.Sign((int)dir), Y, typeof(Solid)).Count > 0;
+            var onWall = ObjectManager.CollisionPoint(this, X + (.5f * BoundingBox.Width + 1) * Math.Sign((int)dir), Y + 4, typeof(Solid)).Count > 0;
 
             if (onWall)
             {
@@ -191,11 +196,13 @@ namespace Platformer
                         State = PlayerState.IDLE;
                     }
                 }
+                if (YVel > 0 && !onGround)
+                    State = PlayerState.JUMP_DOWN;
             }
-            // walk/idle -> 
-            if (State == PlayerState.IDLE || State ==  PlayerState.WALK)
+            // walk/idle -> jump
+            if (State == PlayerState.IDLE || State ==  PlayerState.WALK || State == PlayerState.GET_UP)
             {
-                if (k_upPressed)
+                if (k_jumpPressed)
                 {
                     State = PlayerState.JUMP_UP;
                     YVel = -2;
@@ -240,7 +247,7 @@ namespace Platformer
                 if (XVel == 0)
                     State = PlayerState.IDLE;
             }
-            // wall performance
+            // wall
             if (State == PlayerState.WALL_IDLE)
             {
                 XVel = 0;
@@ -248,7 +255,7 @@ namespace Platformer
 
                 if (dir == Direction.LEFT)
                 {
-                    if (k_upPressed)
+                    if (k_jumpPressed)
                     {
                         //dir = Direction.RIGHT;
                         XVel = 1;
@@ -264,7 +271,7 @@ namespace Platformer
                 }
                 else if (dir == Direction.RIGHT)
                 {
-                    if (k_upPressed)
+                    if (k_jumpPressed)
                     {
                         //dir = Direction.LEFT;
                         XVel = -1;
@@ -277,6 +284,32 @@ namespace Platformer
 
                     if (k_leftPressed)
                         State = PlayerState.JUMP_DOWN;
+                }
+
+                if (k_upHolding || k_downHolding)
+                    State = PlayerState.WALL_CLIMB;
+            }
+            // wall climb
+            if (State == PlayerState.WALL_CLIMB)
+            {
+                if (k_upHolding)
+                {
+                    YVel = -1;
+                }
+                else if (k_downHolding)
+                {
+                    YVel = 1;
+                }
+                else
+                    State = PlayerState.WALL_IDLE;
+
+                if (!onWall)
+                {
+                    if (k_upHolding)
+                    {
+                        YVel = -1.5f;
+                    }
+                    State = PlayerState.JUMP_DOWN;
                 }
             }
             
@@ -375,7 +408,12 @@ namespace Platformer
                 case PlayerState.WALL_IDLE:
                     row = 3;
                     fAmount = 4;
-                    fSpd = 0.1f;                    
+                    fSpd = 0.1f;
+                    break;
+                case PlayerState.WALL_CLIMB:
+                    row = 4;
+                    fAmount = 4;
+                    fSpd = 0.15f;
                     break;
 
             }
