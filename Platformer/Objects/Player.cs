@@ -12,9 +12,9 @@ namespace Platformer
 {
     public static class PlayerExtensions
     {
-        public static void Reverse(this Player.Direction dir)
+        public static Player.Direction Reverse(this Player.Direction dir)
         {
-            dir = (Player.Direction)(-(int)dir);
+            return (Player.Direction)(-(int)dir);
         }
     }
 
@@ -35,7 +35,9 @@ namespace Platformer
             OBTAIN = 1 << 6,
             DIE = 1 << 7,
             TURN_AROUND = 1 << 8,
-            GET_UP = 1 << 9
+            GET_UP = 1 << 9,
+            HIT_AIR = 1 << 10,
+            HIT_GROUND = 1 << 11
         }
 
         public PlayerState State { get; set; }
@@ -65,6 +67,10 @@ namespace Platformer
         private bool onGround;
         private float lastGroundY;
         private float lastGroundYbeforeWall;
+
+        private bool hit = false;
+        private int hitDelay = 0;
+        private int maxHitDelay = 60;
 
         Input input = new Input();
 
@@ -100,17 +106,48 @@ namespace Platformer
             input.Update(gameTime);
 
             var k_leftPressed = input.IsKeyPressed(Keys.Left, Input.State.Pressed);
-            var k_rightPressed = input.IsKeyPressed(Keys.Right, Input.State.Pressed);
             var k_leftHolding = input.IsKeyPressed(Keys.Left, Input.State.Holding);
-            var k_rightHolding = input.IsKeyPressed(Keys.Right, Input.State.Holding);
             var k_leftReleased = input.IsKeyPressed(Keys.Left, Input.State.Released);
+
+            var k_rightPressed = input.IsKeyPressed(Keys.Right, Input.State.Pressed);
+            var k_rightHolding = input.IsKeyPressed(Keys.Right, Input.State.Holding);
             var k_rightReleased = input.IsKeyPressed(Keys.Right, Input.State.Released);
+
             var k_upPressed = input.IsKeyPressed(Keys.Up, Input.State.Pressed);
             var k_upHolding = input.IsKeyPressed(Keys.Up, Input.State.Holding);
+
             var k_downPressed = input.IsKeyPressed(Keys.Down, Input.State.Pressed);
             var k_downHolding = input.IsKeyPressed(Keys.Down, Input.State.Holding);
 
             var k_jumpPressed = input.IsKeyPressed(Keys.A, Input.State.Pressed);
+            var k_jumpHolding = input.IsKeyPressed(Keys.A, Input.State.Holding);
+
+            if (input.IsKeyPressed(Keys.H, Input.State.Pressed))
+            {
+                hit = true;                
+            }
+
+            // ++++ getting hit ++++
+            
+            // impulse
+            if (hit)
+            {
+                State = PlayerState.HIT_AIR;
+                XVel = -.7f * Math.Sign((int)dir);
+                YVel = -1.5f;
+                hitDelay = maxHitDelay;
+                hit = false;
+            }
+
+            if (hitDelay > 0)
+            {
+                hitDelay = Math.Max(hitDelay - 1, 0);
+
+                if (hitDelay == 0)
+                {
+                    //hit = false;
+                }
+            }
 
             // ++++ collision flags ++++
 
@@ -124,9 +161,9 @@ namespace Platformer
                     ||
                     State == PlayerState.JUMP_DOWN)
                 {
-                    if ((dir == Direction.LEFT)// && k_leftHolding)
+                    if ((dir == Direction.LEFT && k_leftHolding)
                         ||
-                        (dir == Direction.RIGHT)// && k_rightHolding)
+                        (dir == Direction.RIGHT && k_rightHolding)
                     )
                     {
                         lastGroundYbeforeWall = lastGroundY;
@@ -144,7 +181,6 @@ namespace Platformer
 
             if (onGround)
             {
-
                 lastGroundY = Y;                
             }
 
@@ -195,13 +231,14 @@ namespace Platformer
                     {
                         State = PlayerState.IDLE;
                     }
-                }
-                if (YVel > 0 && !onGround)
-                    State = PlayerState.JUMP_DOWN;
+                }                
             }
             // walk/idle -> jump
             if (State == PlayerState.IDLE || State ==  PlayerState.WALK || State == PlayerState.GET_UP)
             {
+                if (YVel > 0 && !onGround)
+                    State = PlayerState.JUMP_DOWN;
+
                 if (k_jumpPressed)
                 {
                     State = PlayerState.JUMP_UP;
@@ -267,7 +304,10 @@ namespace Platformer
                     }
 
                     if (k_rightPressed)
+                    {
+                        XVel = 1;
                         State = PlayerState.JUMP_DOWN;
+                    }
                 }
                 else if (dir == Direction.RIGHT)
                 {
@@ -283,7 +323,10 @@ namespace Platformer
                     }
 
                     if (k_leftPressed)
+                    {
+                        XVel = -1;
                         State = PlayerState.JUMP_DOWN;
+                    }
                 }
 
                 if (k_upHolding || k_downHolding)
@@ -312,7 +355,37 @@ namespace Platformer
                     State = PlayerState.JUMP_DOWN;
                 }
             }
-            
+            // hit -> ground / stand up
+            if (State == PlayerState.HIT_AIR)
+            {
+
+                if (YVel > 0)
+                {
+                    if (k_jumpPressed)
+                    {
+                        YVel = -1;
+                        State = PlayerState.JUMP_UP;
+                    }
+                }
+
+                if (onGround)
+                {
+                    YVel = -1f;
+                    State = PlayerState.HIT_GROUND;
+                }
+            }
+            if (State == PlayerState.HIT_GROUND)
+            {
+                XVel = Math.Sign(XVel) * Math.Min(Math.Abs(XVel) - .01f, 0);
+                if (YVel == 0)
+                {
+                    if (k_leftHolding || k_rightHolding || k_jumpHolding)
+                    {
+                        State = PlayerState.GET_UP;
+                    }
+                }
+            }
+
             // ++++ collision & movement ++++
 
             YVel += Gravity;
@@ -329,7 +402,7 @@ namespace Platformer
                     onGround = true;
 
                     // transition from falling to getting up again
-                    if (State.HasFlag(PlayerState.JUMP_UP & PlayerState.JUMP_DOWN))
+                    if (State == PlayerState.JUMP_UP || State == PlayerState.JUMP_DOWN || State == PlayerState.WALL_CLIMB)
                     {
                         if (lastGroundY < Y)
                             State = PlayerState.GET_UP;
@@ -415,7 +488,17 @@ namespace Platformer
                     fAmount = 4;
                     fSpd = 0.15f;
                     break;
-
+                case PlayerState.HIT_AIR:
+                    row = 9;
+                    fAmount = 1;
+                    fSpd = 0;
+                    break;
+                case PlayerState.HIT_GROUND:
+                    row = 9;
+                    offset = 1;
+                    fAmount = 1;
+                    fSpd = 0;
+                    break;
             }
 
             SetAnimation(cols * row + offset, cols * row + offset + fAmount - 1, fSpd, loopAnim);
