@@ -35,6 +35,11 @@ namespace SPG.Map
 
             return nodeList;
         }
+
+        public static Dictionary<string, object> FindFirstByTypeName(this List<Dictionary<string, object>> list, string name)
+        {
+            return list.Where(x => x.Values.Contains(name)).First();
+        }
     }
 
     /// <summary>
@@ -54,7 +59,7 @@ namespace SPG.Map
         /// <summary>
         /// Contains a list of each object including their properties (name, x, y, ...)
         /// </summary>
-        public List<Dictionary<string, object>> Objects { get; set; }
+        public List<Dictionary<string, object>> ObjectData { get; set; }
 
         public GameMap(XmlDocument xml)
         {
@@ -80,7 +85,7 @@ namespace SPG.Map
                     LayerDepth.Add(name, 0.0f);
                 }
                 
-                Objects = new List<Dictionary<string, object>>();
+                ObjectData = new List<Dictionary<string, object>>();
 
                 var objectNodes = mapElement.ToList().Where(x => x.Name == "objectgroup").First();
 
@@ -89,8 +94,8 @@ namespace SPG.Map
                     var objProperties = new Dictionary<string, object>();
 
                     var name = objectNode.Attributes["type"].Value;
-                    var x = objectNode.Attributes["x"].Value;
-                    var y = objectNode.Attributes["y"].Value;
+                    int x = int.Parse(objectNode.Attributes["x"].Value);
+                    int y = int.Parse(objectNode.Attributes["y"].Value);
 
                     objProperties.Add("name", name); // is actually the type name!
                     objProperties.Add("x", x);
@@ -133,7 +138,7 @@ namespace SPG.Map
                             }
                         }
                     }
-                    Objects.Add(objProperties);
+                    ObjectData.Add(objProperties);
                 }
 
 

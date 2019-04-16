@@ -136,7 +136,12 @@ namespace Platformer
 
             // player
 
-            player = new Player(10 * Globals.TILE, 2 * Globals.TILE);            
+            var playerData = Map.ObjectData.FindFirstByTypeName("player");
+
+            var playerX = (int)playerData["x"] + 8;
+            var playerY = (int)playerData["y"] + 8;
+
+            player = new Player(playerX, playerY);
             player.AnimationTexture = TextureSet.Load("player", 16, 32);
             
             /*

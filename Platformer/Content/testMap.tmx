@@ -8220,12 +8220,5 @@
    </properties>
   </object>
   <object id="823" name="Blub" type="blub" x="272" y="144" width="16" height="16"/>
-  <object id="824" name="Player" type="player" x="304" y="112" width="16" height="16">
-   <properties>
-    <property name="hello" type="bool" value="true"/>
-    <property name="somefloat" type="float" value="1.56"/>
-    <property name="test" type="int" value="1"/>
-   </properties>
-  </object>
  </objectgroup>
 </map>
