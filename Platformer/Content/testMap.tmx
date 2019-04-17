@@ -6623,9 +6623,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="29"/>
+   <tile gid="29"/>
+   <tile gid="29"/>
    <tile gid="29"/>
    <tile/>
    <tile/>
@@ -6693,20 +6693,20 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile gid="29"/>
    <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile gid="29"/>
-   <tile gid="29"/>
-   <tile/>
-   <tile/>
-   <tile gid="29"/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -6757,20 +6757,20 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile gid="29"/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
    <tile gid="29"/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="29"/>
+   <tile gid="29"/>
    <tile/>
    <tile/>
    <tile/>
@@ -6824,17 +6824,17 @@
    <tile gid="29"/>
    <tile gid="29"/>
    <tile gid="29"/>
-   <tile gid="29"/>
-   <tile gid="29"/>
    <tile/>
    <tile gid="29"/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="29"/>
+   <tile gid="29"/>
+   <tile gid="29"/>
+   <tile gid="29"/>
+   <tile gid="29"/>
+   <tile gid="29"/>
+   <tile gid="29"/>
+   <tile gid="29"/>
    <tile/>
    <tile/>
    <tile/>
@@ -8212,7 +8212,7 @@
   </data>
  </layer>
  <objectgroup id="29" name="OBJ">
-  <object id="822" name="Player" type="player" x="288" y="128" width="16" height="16">
+  <object id="822" name="Player" type="player" x="464" y="128" width="16" height="16">
    <properties>
     <property name="hello" type="bool" value="true"/>
     <property name="somefloat" type="float" value="1.56"/>

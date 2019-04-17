@@ -37,7 +37,9 @@ namespace Platformer
             TURN_AROUND = 1 << 8,
             GET_UP = 1 << 9,
             HIT_AIR = 1 << 10,
-            HIT_GROUND = 1 << 11
+            HIT_GROUND = 1 << 11,
+            CEIL_IDLE = 1 << 12,
+            CEIL_CLIMB = 1 << 13
         }
 
         public PlayerState State { get; set; }
@@ -88,6 +90,8 @@ namespace Platformer
             Gravity = .1f;
 
             AnimationComplete += Player_AnimationComplete;
+
+            lastGroundY = Y;
         }
 
         private void Player_AnimationComplete(object sender, EventArgs e)
@@ -186,6 +190,7 @@ namespace Platformer
             // ++++ collision flags ++++
 
             var onWall = ObjectManager.CollisionPoint(this, X + (.5f * BoundingBox.Width + 1) * Math.Sign((int)dir), Y + 4, typeof(Solid)).Count > 0;
+            var onCeil = ObjectManager.CollisionPoint(this, X, Y - BoundingBox.Height * .5f - 1, typeof(Solid)).Count > 0;
 
             if (onWall)
             {
@@ -204,6 +209,13 @@ namespace Platformer
                         lastGroundY = Y;
                         State = PlayerState.WALL_IDLE;
                     }
+                }
+            }
+            if (onCeil)
+            {
+                if ((State == PlayerState.JUMP_UP || State == PlayerState.WALL_CLIMB) && k_upHolding)
+                {
+                    State = PlayerState.CEIL_IDLE;
                 }
             }
 
@@ -319,50 +331,68 @@ namespace Platformer
                     State = PlayerState.IDLE;
             }
             // wall
-            if (State == PlayerState.WALL_IDLE)
+            if (State == PlayerState.WALL_IDLE || State == PlayerState.WALL_CLIMB)
             {
                 XVel = 0;
                 YVel = -Gravity;
 
                 if (dir == Direction.LEFT)
                 {
+                    var jumpOff = false;
+
                     if (k_jumpPressed)
                     {
-                        //dir = Direction.RIGHT;
                         XVel = 1;
                         YVel = -2.5f;
                         State = PlayerState.JUMP_UP;
 
-                        // switch back the ground Y
-                        lastGroundY = Math.Min(lastGroundY, lastGroundYbeforeWall);
+                        jumpOff = true;
                     }
 
-                    if (k_rightPressed)
+                    if (k_rightHolding)
                     {
+                        dir = Direction.RIGHT;
                         XVel = 1;
-                        State = PlayerState.JUMP_DOWN;
+                        YVel = -1;
+                        State = PlayerState.JUMP_UP;
+                        jumpOff = true;
+
+                    }
+                    if (jumpOff)
+                    {
+                        // switch back the ground Y
+                        lastGroundY = Math.Min(lastGroundY, lastGroundYbeforeWall);
                     }
                 }
                 else if (dir == Direction.RIGHT)
                 {
+                    var jumpOff = false;
+
                     if (k_jumpPressed)
                     {
-                        //dir = Direction.LEFT;
                         XVel = -1;
                         YVel = -2.5f;
                         State = PlayerState.JUMP_UP;
 
+                        jumpOff = true;
+                    }
+
+                    if (k_leftHolding)
+                    {
+                        dir = Direction.LEFT;
+                        XVel = -1;
+                        YVel = -1;
+                        State = PlayerState.JUMP_UP;
+                        jumpOff = true;
+                    }
+
+                    if (jumpOff)
+                    {
                         // switch back the ground Y
                         lastGroundY = Math.Min(lastGroundY, lastGroundYbeforeWall);
                     }
-
-                    if (k_leftPressed)
-                    {
-                        XVel = -1;
-                        State = PlayerState.JUMP_DOWN;
-                    }
                 }
-
+                
                 if (k_upHolding || k_downHolding)
                     State = PlayerState.WALL_CLIMB;
             }
@@ -419,6 +449,41 @@ namespace Platformer
                     }
                 }
             }
+            // ceiling climbing
+            if (State == PlayerState.CEIL_IDLE)
+            {
+                YVel = -Gravity;
+                XVel = 0;
+                if (k_leftPressed || k_rightPressed)
+                    State = PlayerState.CEIL_CLIMB;
+            }
+            if (State == PlayerState.CEIL_CLIMB)
+            {
+                YVel = -Gravity;
+                if (k_leftPressed || k_leftHolding)
+                {
+                    XVel = -.5f;
+                    dir = Direction.LEFT;
+                }
+                else if (k_rightPressed || k_rightHolding)
+                {
+                    XVel = .5f;
+                    dir = Direction.RIGHT;
+                }
+                else
+                {
+                    State = PlayerState.CEIL_IDLE;
+                }
+            }
+            if (State == PlayerState.CEIL_IDLE || State == PlayerState.CEIL_CLIMB)
+            {
+                if (k_downPressed || k_jumpPressed || !onCeil)
+                {
+                    XVel = 0;
+                    YVel = 0;
+                    State = PlayerState.JUMP_DOWN;
+                }
+            }
 
             // ++++ collision & movement ++++
 
@@ -438,7 +503,7 @@ namespace Platformer
                     // transition from falling to getting up again
                     if (State == PlayerState.JUMP_UP || State == PlayerState.JUMP_DOWN || State == PlayerState.WALL_CLIMB)
                     {
-                        if (lastGroundY < Y)
+                        if (lastGroundY < Y - Globals.TILE)
                             State = PlayerState.GET_UP;
                         else
                             State = PlayerState.IDLE;
@@ -532,6 +597,16 @@ namespace Platformer
                     offset = 1;
                     fAmount = 1;
                     fSpd = 0;
+                    break;
+                case PlayerState.CEIL_IDLE:
+                    row = 10;
+                    fAmount = 4;
+                    fSpd = 0.05f;
+                    break;
+                case PlayerState.CEIL_CLIMB:
+                    row = 11;
+                    fAmount = 4;
+                    fSpd = 0.15f;
                     break;
             }
 
