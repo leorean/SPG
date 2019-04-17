@@ -27,8 +27,8 @@ namespace SPG
 
         public enum Stick
         {
-            LEFT = 0,
-            RIGHT = 1
+            LeftStick = 0,
+            RightStick = 1
         }
 
         public bool GamePadEnabled { get { return _gamePadState != null && _gamePadState.IsConnected; } }
@@ -41,7 +41,17 @@ namespace SPG
 
         private Vector2[] _stickVector;
         private Vector2[] _lastStickVector;
-        
+
+        private bool[] left;
+        private bool[] right;
+        private bool[] up;
+        private bool[] down;
+
+        private bool[] lastLeft;
+        private bool[] lastRight;
+        private bool[] lastUp;
+        private bool[] lastDown;
+
         public Input()
         {
             _keyboardState = new KeyboardState();
@@ -52,6 +62,16 @@ namespace SPG
 
             _stickVector = new[] { Vector2.Zero, Vector2.Zero };
             _lastStickVector = new[] { Vector2.Zero, Vector2.Zero };
+
+            left = new[] { false, false };
+            right = new[] { false, false };
+            up = new[] { false, false };
+            down = new[] { false, false };
+
+            lastLeft = new[] { false, false };
+            lastRight = new[] { false, false };
+            lastUp = new[] { false, false };
+            lastDown = new[] { false, false };            
         }
 
         public Vector2 LeftStick()
@@ -70,26 +90,22 @@ namespace SPG
         
         public bool DirectionPressedFromStick(Direction direction, Stick stick, State keyState = State.Pressed)
         {
+            var i = (int)stick;
+            
+            var leftPressed = left[i] && !lastLeft[i];
+            var rightPressed = right[i] && !lastRight[i];
+            var upPressed = up[i] && !lastUp[i];
+            var downPressed = down[i] && !lastDown[i];
 
-            Vector2 dir = _stickVector[(int)stick];
-            Vector2 lastDir = _lastStickVector[(int)stick];
+            var leftHolding = left[i] && lastLeft[i];
+            var rightHolding = right[i] && lastRight[i];
+            var upHolding = up[i] && lastUp[i];
+            var downHolding = down[i] && lastDown[i];
 
-            double thresh = 0.2f;
-
-            var leftPressed = dir.X < lastDir.X - thresh;
-            var rightPressed = dir.X > lastDir.X + thresh;
-            var upPressed = dir.Y < lastDir.Y - thresh;
-            var downPressed = dir.Y > lastDir.Y + thresh;
-
-            var leftReleased = dir.X > -thresh && lastDir.X < -thresh;
-            var rightReleased = !rightPressed;
-            var upReleased = !upPressed;
-            var downReleased = !downPressed;
-
-            var leftHolding = dir.X < -thresh && lastDir.X < -thresh;
-            var rightHolding = dir.X > thresh && lastDir.X > thresh;
-            var upHolding = dir.Y < -thresh && lastDir.Y < -thresh;
-            var downHolding = dir.Y > thresh && lastDir.Y > thresh;
+            var leftReleased = !left[i] && lastLeft[i];
+            var rightReleased = !right[i] && lastRight[i];
+            var upReleased = !up[i] && lastUp[i];
+            var downReleased = !down[i] && lastDown[i];
 
             switch (keyState)
             {
@@ -168,14 +184,29 @@ namespace SPG
 
             if (GamePadEnabled)
             {
-                _lastStickVector[0] = _stickVector[0];
-                _lastStickVector[1] = _stickVector[1];
-
                 _stickVector[0] = _gamePadState.ThumbSticks.Left;
                 _stickVector[1] = _gamePadState.ThumbSticks.Right;
+                
+                double thresh = 0.2f;
+                for (int i = 0; i < 2; i++)
+                {
+                    var dir = _stickVector;
+                    var lastDir = _lastStickVector;
+
+                    left[i] = dir[i].X < -thresh;
+                    right[i] = dir[i].X > thresh;
+                    up[i] = -dir[i].Y < -thresh;
+                    down[i] = -dir[i].Y > thresh;
+
+                    lastLeft[i] = lastDir[i].X < -thresh;
+                    lastRight[i] = lastDir[i].X > thresh;
+                    lastUp[i] = -lastDir[i].Y < -thresh;
+                    lastDown[i] = -lastDir[i].Y > thresh;
+                }
+
+                _lastStickVector[0] = _stickVector[0];
+                _lastStickVector[1] = _stickVector[1];
             }
         }
-
-
     }
 }

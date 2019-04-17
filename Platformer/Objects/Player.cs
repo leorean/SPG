@@ -126,22 +126,32 @@ namespace Platformer
             if (input.GamePadEnabled)
             {
 
-                k_leftHolding = input.DirectionPressedFromStick(Input.Direction.LEFT, Input.Stick.LEFT, Input.State.Holding);
-                k_leftPressed = input.DirectionPressedFromStick(Input.Direction.LEFT, Input.Stick.LEFT, Input.State.Pressed);
-                k_leftReleased = input.DirectionPressedFromStick(Input.Direction.LEFT, Input.Stick.LEFT, Input.State.Released);
+                k_leftPressed = input.DirectionPressedFromStick(Input.Direction.LEFT, Input.Stick.LeftStick, Input.State.Pressed);
+                k_leftHolding = input.DirectionPressedFromStick(Input.Direction.LEFT, Input.Stick.LeftStick, Input.State.Holding);
+                k_leftReleased = input.DirectionPressedFromStick(Input.Direction.LEFT, Input.Stick.LeftStick, Input.State.Released);
 
-                if (k_leftPressed)
+                k_rightPressed = input.DirectionPressedFromStick(Input.Direction.RIGHT, Input.Stick.LeftStick, Input.State.Pressed);
+                k_rightHolding = input.DirectionPressedFromStick(Input.Direction.RIGHT, Input.Stick.LeftStick, Input.State.Holding);
+                k_rightReleased = input.DirectionPressedFromStick(Input.Direction.RIGHT, Input.Stick.LeftStick, Input.State.Released);
+
+                k_upHolding = input.DirectionPressedFromStick(Input.Direction.UP, Input.Stick.LeftStick, Input.State.Holding);
+                k_upPressed = input.DirectionPressedFromStick(Input.Direction.UP, Input.Stick.LeftStick, Input.State.Pressed);
+                
+                k_downHolding = input.DirectionPressedFromStick(Input.Direction.DOWN, Input.Stick.LeftStick, Input.State.Holding);
+                k_downPressed = input.DirectionPressedFromStick(Input.Direction.DOWN, Input.Stick.LeftStick, Input.State.Pressed);
+
+                k_jumpPressed = input.IsButtonPressed(Buttons.A, Input.State.Pressed);
+                k_jumpHolding = input.IsButtonPressed(Buttons.A, Input.State.Holding);
+
+                /*if (k_leftPressed)
                     Debug.WriteLine("LeftPressed");
                 if (k_leftReleased)
                     Debug.WriteLine("LeftReleased");
+                if (k_rightPressed)
+                    Debug.WriteLine("RightPressed");
+                if (k_rightReleased)
+                    Debug.WriteLine("RightReleased");*/
 
-
-                /*Vector2 gamePadVector = input.LeftStick();
-
-                if (gamePadVector != Vector2.Zero)
-                {
-                    
-                }*/
             }
 
 
