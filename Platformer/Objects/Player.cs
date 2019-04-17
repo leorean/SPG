@@ -39,7 +39,8 @@ namespace Platformer
             HIT_AIR = 1 << 10,
             HIT_GROUND = 1 << 11,
             CEIL_IDLE = 1 << 12,
-            CEIL_CLIMB = 1 << 13
+            CEIL_CLIMB = 1 << 13,
+            SWIM = 1 << 14
         }
 
         public PlayerState State { get; set; }
@@ -63,7 +64,6 @@ namespace Platformer
         // private
 
         private Direction dir = Direction.RIGHT;
-        float xScale = 1f;
         private bool animationComplete;
 
         private bool onGround;
@@ -71,10 +71,12 @@ namespace Platformer
         private float lastGroundYbeforeWall;
 
         private bool hit = false;
-        private int hitDelay = 0;
-        private int maxHitDelay = 60;
-
+        private int invincible = 0;
+        
         Input input = new Input();
+
+        private float gravAir = .1f;
+        private float gravWater = .03f;
 
         // constructor
         
@@ -87,7 +89,7 @@ namespace Platformer
             BoundingBox = new RectF(-4, -4, 8, 12);
             Depth = Globals.LAYER_FG + 0.0010f;
             State = PlayerState.IDLE;
-            Gravity = .1f;
+            Gravity = gravAir;
 
             AnimationComplete += Player_AnimationComplete;
 
@@ -145,17 +147,7 @@ namespace Platformer
                 k_downPressed = input.DirectionPressedFromStick(Input.Direction.DOWN, Input.Stick.LeftStick, Input.State.Pressed);
 
                 k_jumpPressed = input.IsButtonPressed(Buttons.A, Input.State.Pressed);
-                k_jumpHolding = input.IsButtonPressed(Buttons.A, Input.State.Holding);
-
-                /*if (k_leftPressed)
-                    Debug.WriteLine("LeftPressed");
-                if (k_leftReleased)
-                    Debug.WriteLine("LeftReleased");
-                if (k_rightPressed)
-                    Debug.WriteLine("RightPressed");
-                if (k_rightReleased)
-                    Debug.WriteLine("RightReleased");*/
-
+                k_jumpHolding = input.IsButtonPressed(Buttons.A, Input.State.Holding);                
             }
 
 
@@ -166,31 +158,28 @@ namespace Platformer
             }
 
             // ++++ getting hit ++++
-            
+
+            invincible = Math.Max(invincible - 1, 0);
+
             // impulse
             if (hit)
             {
                 State = PlayerState.HIT_AIR;
                 XVel = -.7f * Math.Sign((int)dir);
-                YVel = -1.5f;
-                hitDelay = maxHitDelay;
+                YVel = -1.5f;                
                 hit = false;
+                invincible = 60;
             }
-
-            if (hitDelay > 0)
-            {
-                hitDelay = Math.Max(hitDelay - 1, 0);
-
-                if (hitDelay == 0)
-                {
-                    //hit = false;
-                }
-            }
-
+            
             // ++++ collision flags ++++
 
             var onWall = ObjectManager.CollisionPoint(this, X + (.5f * BoundingBox.Width + 1) * Math.Sign((int)dir), Y + 4, typeof(Solid)).Count > 0;
             var onCeil = ObjectManager.CollisionPoint(this, X, Y - BoundingBox.Height * .5f - 1, typeof(Solid)).Count > 0;
+
+            int tx = MathUtil.Div(X, Globals.TILE);
+            int ty = MathUtil.Div(Y + 4, Globals.TILE);
+
+            var inWater = (GameManager.Game.Map.LayerData[2].Get(tx, ty) != null);
 
             if (onWall)
             {
@@ -216,6 +205,36 @@ namespace Platformer
                 if ((State == PlayerState.JUMP_UP || State == PlayerState.WALL_CLIMB) && k_upHolding)
                 {
                     State = PlayerState.CEIL_IDLE;
+                }
+            }
+            if (inWater)
+            {
+                Gravity = gravWater;
+
+                if (State != PlayerState.SWIM)
+                {                    
+                    if (State != PlayerState.HIT_AIR && State != PlayerState.HIT_GROUND)
+                    {
+                        XVel *= .3f;
+                        YVel *= .3f;
+                        State = PlayerState.SWIM;
+
+                        //TODO: splash effect
+                    }
+
+                    if (State == PlayerState.HIT_GROUND)
+                        Gravity = -gravWater;
+                }                
+            } else
+            {
+                Gravity = gravAir;
+
+                if (State == PlayerState.SWIM)
+                {
+                    YVel = -1.3f;
+                    State = PlayerState.JUMP_UP;
+
+                    //TODO: splash effect
                 }
             }
 
@@ -440,12 +459,15 @@ namespace Platformer
             }
             if (State == PlayerState.HIT_GROUND)
             {
+                if (inWater)
+                    YVel = 0;
+
                 XVel = Math.Sign(XVel) * Math.Min(Math.Abs(XVel) - .01f, 0);
                 if (YVel == 0)
                 {
                     if (k_leftHolding || k_rightHolding || k_jumpHolding)
                     {
-                        State = PlayerState.GET_UP;
+                        State = PlayerState.GET_UP;                        
                     }
                 }
             }
@@ -482,6 +504,42 @@ namespace Platformer
                     XVel = 0;
                     YVel = 0;
                     State = PlayerState.JUMP_DOWN;
+                }
+            }
+            if (State == PlayerState.SWIM)
+            {
+
+                //Gravity = 0.01f;
+
+                var waterAcc = 0.03f;
+                var waterVelMax = 1f;
+
+                if (k_leftHolding)
+                {
+                    XVel = Math.Max(XVel - waterAcc, -waterVelMax);
+                    dir = Direction.LEFT;
+                }
+                else if (k_rightHolding)
+                {
+                    XVel = Math.Min(XVel + waterAcc, waterVelMax);
+                    dir = Direction.RIGHT;
+                }
+                else
+                {
+                    XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - .02f, 0);
+                }
+
+                if (k_upHolding || k_jumpHolding)
+                {
+                    YVel = Math.Max(YVel - waterAcc - Gravity, -waterVelMax);
+                }
+                else if (k_downHolding)
+                {
+                    YVel = Math.Min(YVel + waterAcc, waterVelMax);
+                }
+                else
+                {
+                    YVel = Math.Sign(YVel) * Math.Max(Math.Abs(YVel) - .02f, 0);
                 }
             }
 
@@ -608,27 +666,25 @@ namespace Platformer
                     fAmount = 4;
                     fSpd = 0.15f;
                     break;
+                case PlayerState.SWIM:
+                    row = 5;
+                    fAmount = 4;
+                    fSpd = 0.05f;
+                    break;
             }
 
             SetAnimation(cols * row + offset, cols * row + offset + fAmount - 1, fSpd, loopAnim);
+
+            Color = (invincible > 0) ? new Color(255, 255, 255, 128) : Color.White;
         }
         
         public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
-
+            
             animationComplete = false;
-
-            // scaling effect
-            /*xScale = Math.Sign((int)dir);
-            float s = 0;
-
-            if (dir == Direction.RIGHT)
-                s = Math.Min(Scale.X + .3f, 1);
-            else
-                s = Math.Max(Scale.X - .3f, -1);
-            Scale = new Vector2(s, 1);*/
-            xScale = Math.Sign((int)dir);
+            
+            var xScale = Math.Sign((int)dir);
             Scale = new Vector2(xScale, 1);
         }
     }
