@@ -104,7 +104,7 @@ namespace Platformer
             // ++++ input ++++
 
             input.Update(gameTime);
-
+            
             var k_leftPressed = input.IsKeyPressed(Keys.Left, Input.State.Pressed);
             var k_leftHolding = input.IsKeyPressed(Keys.Left, Input.State.Holding);
             var k_leftReleased = input.IsKeyPressed(Keys.Left, Input.State.Released);
@@ -121,6 +121,30 @@ namespace Platformer
 
             var k_jumpPressed = input.IsKeyPressed(Keys.A, Input.State.Pressed);
             var k_jumpHolding = input.IsKeyPressed(Keys.A, Input.State.Holding);
+
+            // gamepad overrides keyboard input if pussible
+            if (input.GamePadEnabled)
+            {
+
+                k_leftHolding = input.DirectionPressedFromStick(Input.Direction.LEFT, Input.Stick.LEFT, Input.State.Holding);
+                k_leftPressed = input.DirectionPressedFromStick(Input.Direction.LEFT, Input.Stick.LEFT, Input.State.Pressed);
+                k_leftReleased = input.DirectionPressedFromStick(Input.Direction.LEFT, Input.Stick.LEFT, Input.State.Released);
+
+                if (k_leftPressed)
+                    Debug.WriteLine("LeftPressed");
+                if (k_leftReleased)
+                    Debug.WriteLine("LeftReleased");
+
+
+                /*Vector2 gamePadVector = input.LeftStick();
+
+                if (gamePadVector != Vector2.Zero)
+                {
+                    
+                }*/
+            }
+
+
 
             if (input.IsKeyPressed(Keys.H, Input.State.Pressed))
             {
