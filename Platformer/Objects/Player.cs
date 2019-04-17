@@ -202,7 +202,9 @@ namespace Platformer
             }
             if (onCeil)
             {
-                if ((State == PlayerState.JUMP_UP || State == PlayerState.WALL_CLIMB) && k_upHolding)
+                if ((State == PlayerState.JUMP_UP || State == PlayerState.WALL_CLIMB) 
+                    && 
+                    (k_upHolding || k_jumpHolding))
                 {
                     State = PlayerState.CEIL_IDLE;
                 }
@@ -355,24 +357,27 @@ namespace Platformer
                 XVel = 0;
                 YVel = -Gravity;
 
+                var wallJumpVel = -2.2f;
+
                 if (dir == Direction.LEFT)
                 {
                     var jumpOff = false;
 
-                    if (k_jumpPressed)
+                    /*if (k_jumpPressed) // jump off
                     {
-                        XVel = 1;
-                        YVel = -2.5f;
+                        XVel = .5f;
+                        YVel = -1;
                         State = PlayerState.JUMP_UP;
 
                         jumpOff = true;
-                    }
+                    }*/
 
-                    if (k_rightHolding)
+                    if (k_jumpPressed || k_rightHolding)
                     {
-                        dir = Direction.RIGHT;
+                        if (k_rightHolding)
+                            dir = Direction.RIGHT;
                         XVel = 1;
-                        YVel = -1;
+                        YVel = wallJumpVel;
                         State = PlayerState.JUMP_UP;
                         jumpOff = true;
 
@@ -387,20 +392,21 @@ namespace Platformer
                 {
                     var jumpOff = false;
 
-                    if (k_jumpPressed)
+                    /*if (k_jumpPressed) // jump off
                     {
-                        XVel = -1;
-                        YVel = -2.5f;
+                        XVel = -.5f;
+                        YVel = -1;
                         State = PlayerState.JUMP_UP;
 
                         jumpOff = true;
-                    }
+                    }*/
 
-                    if (k_leftHolding)
+                    if (k_jumpPressed || k_leftHolding)
                     {
-                        dir = Direction.LEFT;
+                        if (k_leftHolding)
+                            dir = Direction.LEFT;
                         XVel = -1;
-                        YVel = -1;
+                        YVel = wallJumpVel;
                         State = PlayerState.JUMP_UP;
                         jumpOff = true;
                     }
