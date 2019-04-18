@@ -70,11 +70,11 @@ namespace SPG.View
         private Vector3 _resTranslationVector = Vector3.Zero;
 
         private bool _boundsEnabled = false;
-        private Rectangle _bounds;
+        protected Rectangle bounds;
         
         public void EnableBounds(Rectangle rect)
         {
-            _bounds = rect;
+            bounds = rect;
             _boundsEnabled = true;
         }
         
@@ -88,15 +88,26 @@ namespace SPG.View
             {
                 if (_boundsEnabled)
                 {
-                    _position = new Vector2(
+
+                    var minX = Math.Max(value.X, bounds.X + ResolutionRenderer.ViewWidth * .5f / Zoom);
+                    var x = Math.Min(minX, bounds.X + bounds.Width - ResolutionRenderer.ViewWidth * .5f / Zoom);
+
+                    var minY = Math.Max(value.Y, bounds.Y + ResolutionRenderer.ViewHeight * .5f / Zoom);
+                    var y = Math.Min(minY, bounds.Y + bounds.Height - ResolutionRenderer.ViewHeight * .5f / Zoom);
+
+                    _position = new Vector2(x, y);
+
+                    /*_position = new Vector2(                        
                         Math.Min(
-                            Math.Max(value.X, _bounds.X + ResolutionRenderer.ViewWidth * .5f / Zoom),
-                            _bounds.Width - ResolutionRenderer.ViewWidth * .5f / Zoom),
+                            Math.Max(value.X, bounds.X + ResolutionRenderer.ViewWidth * .5f / Zoom),
+                            bounds.Width - ResolutionRenderer.ViewWidth * .5f / Zoom),
                         Math.Min(
-                            Math.Max(value.Y, _bounds.Y + ResolutionRenderer.ViewHeight * .5f / Zoom),
-                            _bounds.Height - ResolutionRenderer.ViewHeight * .5f / Zoom)
+                            Math.Max(value.Y, bounds.Y + ResolutionRenderer.ViewHeight * .5f / Zoom),
+                            bounds.Height - ResolutionRenderer.ViewHeight * .5f / Zoom)
                         );
-                } else
+                    */
+                }
+                else
                 {
                     _position = value;
                 }

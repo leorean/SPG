@@ -112,7 +112,6 @@ namespace Platformer
 
             // load room data so the camera behaves accordingly
             var roomData = Map.ObjectData.FindByTypeName("room");
-            camera.SetRoomSize(16, 9);            
             camera.InitRoomData(roomData);
 
             camera.SetTarget(player);

@@ -101,10 +101,14 @@ namespace SPG.Map
                     var name = objectNode.Attributes["type"].Value;
                     int x = int.Parse(objectNode.Attributes["x"].Value);
                     int y = int.Parse(objectNode.Attributes["y"].Value);
+                    int width = int.Parse(objectNode.Attributes["width"].Value);
+                    int height = int.Parse(objectNode.Attributes["height"].Value);
 
                     objProperties.Add("name", name); // is actually the type name!
                     objProperties.Add("x", x);
                     objProperties.Add("y", y);
+                    objProperties.Add("width", width);
+                    objProperties.Add("height", height);
 
                     if (objectNode.HasChildNodes)
                     {
