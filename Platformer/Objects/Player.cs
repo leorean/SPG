@@ -41,6 +41,8 @@ namespace Platformer
             CEIL_IDLE = 1 << 12,
             CEIL_CLIMB = 1 << 13,
             SWIM = 1 << 14
+
+            // TODO: OBTAIN, DEAD?, 
         }
 
         public PlayerState State { get; set; }
@@ -204,7 +206,7 @@ namespace Platformer
             {
                 if ((State == PlayerState.JUMP_UP || State == PlayerState.WALL_CLIMB) 
                     && 
-                    (k_upHolding || k_jumpHolding))
+                    (k_jumpHolding))
                 {
                     State = PlayerState.CEIL_IDLE;
                 }
@@ -553,7 +555,7 @@ namespace Platformer
 
             YVel += Gravity;
 
-            var colY = ObjectManager.Find(this, X, Y + YVel, typeof(Solid));
+            var colY = ObjectManager.CollisionBounds(this, X, Y + YVel, typeof(Solid));
             if (colY.Count == 0)
             {
                 Move(0, YVel);
@@ -587,7 +589,7 @@ namespace Platformer
             }
             
 
-            var colX = ObjectManager.Find(this, X + XVel, Y, typeof(Solid));
+            var colX = ObjectManager.CollisionBounds(this, X + XVel, Y, typeof(Solid));
 
             if (colX.Count == 0)
             {

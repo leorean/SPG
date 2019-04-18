@@ -10,7 +10,7 @@ using System.Xml;
 namespace SPG.Map
 {
 
-    public static class XmlExtensions
+    public static class MapExtensions
     {
         public static string Find(this XmlAttributeCollection attribs, string name)
         {
@@ -34,6 +34,11 @@ namespace SPG.Map
             }
 
             return nodeList;
+        }
+
+        public static List<Dictionary<string, object>> FindByTypeName(this List<Dictionary<string, object>> list, string name)
+        {
+            return list.Where(x => x.Values.Contains(name)).ToList();
         }
 
         public static Dictionary<string, object> FindFirstByTypeName(this List<Dictionary<string, object>> list, string name)

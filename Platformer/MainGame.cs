@@ -11,6 +11,7 @@ using System.Linq;
 using System;
 using SPG.View;
 using System.Diagnostics;
+using Platformer.Misc;
 
 namespace Platformer
 {
@@ -32,7 +33,7 @@ namespace Platformer
         private GameObject player;
 
         private ResolutionRenderer resolutionRenderer;
-        private Camera camera;
+        private RoomCamera camera;
 
         public override GraphicsDeviceManager GraphicsDeviceManager { get => graphics; }
         public override SpriteBatch SpriteBatch { get => spriteBatch; }
@@ -104,12 +105,17 @@ namespace Platformer
 
             resolutionRenderer = new ResolutionRenderer(viewSize.Width, viewSize.Height, screenSize.Width, screenSize.Height);
             
-            camera = new Camera(resolutionRenderer) { MaxZoom = 10f, MinZoom = .4f, Zoom = 1f };
+            camera = new RoomCamera(resolutionRenderer) { MaxZoom = 10f, MinZoom = .4f, Zoom = 1f };
             camera.SetPosition(Vector2.Zero);
 
             camera.EnableBounds(new Rectangle(0, 0, Map.Width * Globals.TILE, Map.Height * Globals.TILE));
 
-            //camera.Target = player;
+            // load room data so the camera behaves accordingly
+            var roomData = Map.ObjectData.FindByTypeName("room");
+            camera.SetRoomSize(16, 9);            
+            camera.InitRoomData(roomData);
+
+            camera.SetTarget(player);
         }
 
         /// <summary>
@@ -133,7 +139,7 @@ namespace Platformer
             Map.LayerDepth["BG2"] = Globals.LAYER_BG2;
             
             LoadObjectsFromMap();
-
+            
             // player
 
             var playerData = Map.ObjectData.FindFirstByTypeName("player");
@@ -181,6 +187,8 @@ namespace Platformer
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             
+            // ++++ debug input ++++
+
             KeyboardState keyboard = Keyboard.GetState();
 
             if (keyboard.IsKeyDown(Keys.Space))
@@ -200,11 +208,13 @@ namespace Platformer
                 player.Position = camera.ToVirtual(mouse.Position.ToVector2());
             }
 
-            camera.Position = player.Position;
-
-            //camera.Update(gameTime);
+            // ++++ update objects ++++
 
             ObjectManager.UpdateObjects(gameTime);
+
+            // ++++ update camera ++++
+
+            camera.Update(gameTime);
 
             base.Update(gameTime);
         }

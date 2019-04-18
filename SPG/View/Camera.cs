@@ -257,6 +257,7 @@ namespace SPG.View
             ResolutionRenderer = null;
         }
 
+        /*
         #region SmoothTransition Logic
         private int _trDuration;
         public bool IsTransitionActive { get; private set; }
@@ -329,16 +330,16 @@ namespace SPG.View
             if (amount >= 1f)
                 StopTransition();
         }
-        #endregion
+        #endregion*/
 
         /// <summary>
         /// Update logic (must be called within main update method)
         /// </summary>
         /// <param name="gt">Game time</param>
-        public void Update(GameTime gt)
+        public virtual void Update(GameTime gt)
         {
-            if (IsTransitionActive)
-                UpdateTransition(gt);
+            //if (IsTransitionActive)
+            //    UpdateTransition(gt);
         }
     }    
 }

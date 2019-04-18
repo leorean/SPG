@@ -81,6 +81,14 @@ namespace SPG.Objects
             }
         }
         
+        /// <summary>
+        /// Finds a list of game objects of a certain type that overlap a certain point x , y.
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public static List<GameObject> CollisionPoint(GameObject self, float x, float y, Type type)
         {
             //Stopwatch sw = Stopwatch.StartNew();
@@ -100,7 +108,15 @@ namespace SPG.Objects
             return candidates;
         }
 
-        public static List<GameObject> Find(GameObject self, float x, float y, Type type)
+        /// <summary>
+        /// Finds a list of game objects of a certain type that have their bounding coordinates within the own bounding coordinates, based on x and y value.
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static List<GameObject> CollisionBounds(GameObject self, float x, float y, Type type)
         {
             //Stopwatch sw = Stopwatch.StartNew();
 

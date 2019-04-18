@@ -44,6 +44,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="MainGame.cs" />
+    <Compile Include="Misc\RoomCamera.cs" />
     <Compile Include="Objects\Player.cs" />
     <Compile Include="Objects\Solid.cs" />
     <Compile Include="Program.cs" />

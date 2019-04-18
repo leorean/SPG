@@ -42,11 +42,17 @@ namespace SPG.Util
             var x = i % Width;
             var y = (int)MathUtil.Floor((double)(i / Width));
 
+            if (x < 0 || y < 0 || x >= Width || y >= Height)
+                return default(T);
+
             return data[x][y];
         }
 
         public T Get(int x, int y)
         {
+            if (x < 0 || y < 0 || x >= Width || y >= Height)
+                return default(T);
+
             return data[x][y];
         }        
     }
