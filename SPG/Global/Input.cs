@@ -143,7 +143,7 @@ namespace SPG
             }
         }
 
-        public bool IsKeyPressed(Keys key, State keyState = State.Pressed)
+        public bool IsKeyPressed(Keys key, State keyState = State.Holding)
         {
             switch (keyState)
             {

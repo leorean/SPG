@@ -18,13 +18,12 @@ namespace Platformer.Misc
 
         public enum State
         {
-            None,
+            Default,
             PrepareRoomTransition,
-            OpenTransition,
-            CloseTransition
+            RoomTransition
         }
 
-        private State state = State.None;
+        private State state = State.Default;
         
 
         private int viewWidth;
@@ -83,102 +82,94 @@ namespace Platformer.Misc
         {
             base.Update(gt);
 
+            if (ObjectManager.ElapsedTime < ObjectManager.GameSpeed)
+            {
+                return;
+            }
+            
             if (target == null)
                 return;
 
-            if (state == State.None)
+            // if no room is available, always resort to this state
+            if (state == State.Default)
             {
-
                 if (currentRoom == null)
                 {
                     currentRoom = ObjectManager.CollisionPoint<Room>(target, target.X, target.Y).FirstOrDefault();
                     if (currentRoom != null)
                     {
                         lastRoom = currentRoom;
-
                         EnableBounds(new Rectangle((int)currentRoom.X, (int)currentRoom.Y, (int)currentRoom.BoundingBox.Width, (int)currentRoom.BoundingBox.Height));
                     }
-                }
-
-                if (!MathUtil.In(target.X, bounds.X, bounds.X + bounds.Width)
-                    || !MathUtil.In(target.Y, bounds.Y, bounds.Y + bounds.Height))
-                {
-                    lastRoom = currentRoom;
-                    currentRoom = ObjectManager.CollisionPoint<Room>(target, target.X, target.Y).FirstOrDefault();
-
-                    if (currentRoom != null)
-                        state = State.PrepareRoomTransition;
-                }
+                }                
             }
 
+            // if outside view, try to find new room
+            if (!MathUtil.In(target.X, bounds.X, bounds.X + bounds.Width)
+                    || !MathUtil.In(target.Y, bounds.Y, bounds.Y + bounds.Height))
+            {
+                lastRoom = currentRoom;
+                currentRoom = ObjectManager.CollisionPoint<Room>(target, target.X, target.Y).FirstOrDefault();
+
+                if (currentRoom != null)
+                    state = State.PrepareRoomTransition;
+            }
+
+            // prepare for transition
             if (state == State.PrepareRoomTransition)
             {
-                curX = (int)lastRoom.X;
-                curY = (int)lastRoom.Y;
-                curW = (int)lastRoom.BoundingBox.Width;
-                curH = (int)lastRoom.BoundingBox.Height;
+                curX = (int)(Position.X - .5f * viewWidth);
+                curY = (int)(Position.Y - .5f * viewHeight);
+                curW = (int)viewWidth;
+                curH = (int)viewHeight;
 
-                tarX = (int)Math.Min(currentRoom.X, lastRoom.X);
-                tarY = (int)Math.Min(currentRoom.Y, lastRoom.Y);
-                tarW = (int)Math.Max(currentRoom.BoundingBox.Width + currentRoom.X, lastRoom.BoundingBox.Width + lastRoom.X);
-                tarH = (int)Math.Max(currentRoom.BoundingBox.Height + currentRoom.Y, lastRoom.BoundingBox.Height + lastRoom.Y);
-                
-                state = State.OpenTransition;                
+                tarX = (int)currentRoom.X;
+                tarY = (int)currentRoom.Y;
+                tarW = (int)currentRoom.BoundingBox.Width;
+                tarH = (int)currentRoom.BoundingBox.Height;
+
+                state = State.RoomTransition;                
             }
-
-            if (state == State.OpenTransition)
+            
+            // do transition until eligable for default state
+            if (state == State.RoomTransition)
             {
-                var spdX = (tarX - curX) / 4f;
-                var spdY = (tarY - curY) / 4f;
-                var spdW = (tarW - curW) / 4f;
-                var spdH = (tarH - curH) / 4f;
+                if (currentRoom == null)
+                    state = State.Default;
+
+                var s = 10f;
+                var max = 8;
+
+                var spdX = (tarX - curX) / s;
+                var spdY = (tarY - curY) / s;
+                var spdW = (tarW - curW) / s;
+                var spdH = (tarH - curH) / s;
+
+                //spdX = Math.Sign(spdX) * Math.Min(Math.Abs(spdX), max);
+                //spdY = Math.Sign(spdY) * Math.Min(Math.Abs(spdY), max);
+                //spdW = Math.Sign(spdW) * Math.Min(Math.Abs(spdW), max);
+                //spdH = Math.Sign(spdH) * Math.Min(Math.Abs(spdH), max);
 
                 curX += spdX;
                 curY += spdY;
                 curW += spdW;
                 curH += spdH;
 
-                if (Math.Round(spdX) == 0 && Math.Round(spdY) == 0 && Math.Round(spdW) == 0 && Math.Round(spdH) == 0)
-                {
-                    curX = (int)Math.Min(currentRoom.X, lastRoom.X);
-                    curY = (int)Math.Min(currentRoom.Y, lastRoom.Y);
-                    curW = (int)Math.Max(currentRoom.BoundingBox.Width + currentRoom.X, lastRoom.BoundingBox.Width + lastRoom.X);
-                    curH = (int)Math.Max(currentRoom.BoundingBox.Height + currentRoom.Y, lastRoom.BoundingBox.Height + lastRoom.Y);
+                Debug.WriteLine($"{curX}, {curY}, {curW}, {curH}");
 
-                    tarX = (int)currentRoom.X;
-                    tarY = (int)currentRoom.Y;
-                    tarW = (int)currentRoom.BoundingBox.Width;
-                    tarH = (int)currentRoom.BoundingBox.Height;
+                var prec = 3;
 
-                    state = State.CloseTransition;
-                }
-                
-                EnableBounds(new Rectangle((int)curX, (int)curY, (int)curW, (int)curH));
-            }
-
-            if (state == State.CloseTransition)
-            {
-                var spdX = (tarX - curX) / 4f;
-                var spdY = (tarY - curY) / 4f;
-                var spdW = (tarW - curW) / 4f;
-                var spdH = (tarH - curH) / 4f;
-
-                curX += spdX;
-                curY += spdY;
-                curW += spdW;
-                curH += spdH;
-
-                if (Math.Round(spdX) == 0 && Math.Round(spdY) == 0 && Math.Round(spdW) == 0 && Math.Round(spdH) == 0)
+                if (Math.Round(spdX * prec) == 0 && Math.Round(spdY * prec) == 0 && Math.Round(spdW * prec) == 0 && Math.Round(spdH * prec) == 0)
                 {
                     curX = (int)currentRoom.X;
                     curY = (int)currentRoom.Y;
                     curW = (int)currentRoom.BoundingBox.Width;
                     curH = (int)currentRoom.BoundingBox.Height;
 
-                    state = State.None;
+                    state = State.Default;                    
                 }
 
-                EnableBounds(new Rectangle((int)curX, (int)curY, (int)curW, (int)curH));
+                EnableBounds(new Rectangle((int)Math.Ceiling(curX), (int)Math.Ceiling(curY), (int)curW, (int)curH));
             }
             
             Position = target.Position;            

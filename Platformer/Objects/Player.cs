@@ -130,6 +130,21 @@ namespace Platformer
             var k_jumpPressed = input.IsKeyPressed(Keys.A, Input.State.Pressed);
             var k_jumpHolding = input.IsKeyPressed(Keys.A, Input.State.Holding);
 
+            // debug keys
+
+            if (input.IsKeyPressed(Keys.LeftShift, Input.State.Holding))
+            {
+                if (k_leftPressed)
+                    Position = new Vector2(Position.X - 16 * Globals.TILE, Position.Y);
+                if (k_rightPressed)
+                    Position = new Vector2(Position.X + 16 * Globals.TILE, Position.Y);
+                if (k_upPressed)
+                    Position = new Vector2(Position.X, Position.Y - 16 * Globals.TILE);
+                if (k_downPressed)
+                    Position = new Vector2(Position.X, Position.Y + 16 * Globals.TILE);
+
+            }
+
             // gamepad overrides keyboard input if pussible
             if (input.GamePadEnabled)
             {
@@ -151,9 +166,7 @@ namespace Platformer
                 k_jumpPressed = input.IsButtonPressed(Buttons.A, Input.State.Pressed);
                 k_jumpHolding = input.IsButtonPressed(Buttons.A, Input.State.Holding);                
             }
-
-
-
+            
             if (input.IsKeyPressed(Keys.H, Input.State.Pressed))
             {
                 hit = true;                

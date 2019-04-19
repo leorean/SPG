@@ -18,7 +18,7 @@ namespace SPG.Objects
 
         private static int idCounter;
 
-        private static double elapsedTime = 0;
+        public static double ElapsedTime { get; private set; } = 0;
         
         public static double GameSpeed { get; set; }
 
@@ -142,12 +142,12 @@ namespace SPG.Objects
         /// </summary>
         public static void UpdateObjects(GameTime gameTime)
         {
-            if (elapsedTime > GameSpeed)
+            if (ElapsedTime > GameSpeed)
             {
-                elapsedTime -= GameSpeed;
+                ElapsedTime -= GameSpeed;
                 Objects.Where(o => o.Enabled).ToList().ForEach(o => o.Update(gameTime));
             }
-            elapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;            
+            ElapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;            
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace SPG.Objects
         public static void DrawObjects(GameTime gameTime)
         {
             SortByID();
-            Objects.Where(o => o.Enabled && o.Visible).ToList().ForEach(o => o.Draw(gameTime));
+            Objects.Where(o => o.Visible).ToList().ForEach(o => o.Draw(gameTime));
         }
     }
 }
