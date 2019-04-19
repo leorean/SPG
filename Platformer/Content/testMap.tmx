@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="2018.06.27" orientation="orthogonal" renderorder="right-down" width="64" height="36" tilewidth="16" tileheight="16" infinite="0" nextlayerid="78" nextobjectid="852">
+<map version="1.0" tiledversion="2018.06.27" orientation="orthogonal" renderorder="right-down" width="64" height="36" tilewidth="16" tileheight="16" infinite="0" nextlayerid="79" nextobjectid="861">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="128" columns="16">
   <image source="tiles.png" width="256" height="128"/>
  </tileset>
@@ -7159,15 +7159,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="53"/>
    <tile/>
+   <tile gid="53"/>
    <tile/>
    <tile/>
    <tile/>
@@ -7181,7 +7175,9 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="53"/>
    <tile/>
+   <tile gid="53"/>
    <tile/>
    <tile/>
    <tile/>
@@ -7292,7 +7288,9 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="53"/>
    <tile/>
+   <tile gid="53"/>
    <tile/>
    <tile/>
    <tile/>
@@ -7306,7 +7304,9 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="53"/>
    <tile/>
+   <tile gid="53"/>
    <tile/>
    <tile/>
    <tile/>
@@ -7459,51 +7459,51 @@
    <tile gid="53"/>
    <tile gid="53"/>
    <tile gid="53"/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="53"/>
    <tile/>
    <tile/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
    <tile/>
    <tile/>
+   <tile gid="53"/>
+   <tile gid="53"/>
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
    <tile/>
    <tile/>
    <tile/>
@@ -7524,7 +7524,6 @@
    <tile/>
    <tile/>
    <tile gid="53"/>
-   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -7558,6 +7557,7 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="53"/>
    <tile/>
    <tile/>
    <tile/>
@@ -7611,7 +7611,6 @@
    <tile/>
    <tile/>
    <tile gid="53"/>
-   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -7622,6 +7621,7 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="53"/>
    <tile/>
    <tile/>
    <tile/>
@@ -7685,7 +7685,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="53"/>
    <tile/>
    <tile/>
    <tile/>
@@ -7749,7 +7749,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="53"/>
    <tile/>
    <tile/>
    <tile/>
@@ -7877,7 +7877,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="53"/>
    <tile/>
    <tile/>
    <tile/>
@@ -7911,7 +7911,6 @@
    <tile/>
    <tile/>
    <tile gid="53"/>
-   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -7942,7 +7941,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="53"/>
    <tile/>
    <tile/>
    <tile/>
@@ -8006,6 +8005,7 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="53"/>
    <tile/>
    <tile/>
    <tile/>
@@ -8069,7 +8069,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="53"/>
    <tile/>
    <tile/>
    <tile/>
@@ -8133,9 +8133,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="53"/>
    <tile/>
    <tile/>
    <tile/>
@@ -8199,6 +8197,7 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="53"/>
    <tile/>
    <tile/>
    <tile/>
@@ -8262,6 +8261,7 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="53"/>
    <tile/>
    <tile/>
    <tile/>
@@ -8314,7 +8314,6 @@
    <tile gid="53"/>
    <tile/>
    <tile gid="53"/>
-   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -8326,7 +8325,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="53"/>
    <tile/>
    <tile/>
    <tile/>
@@ -8390,6 +8389,7 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="53"/>
    <tile/>
    <tile/>
    <tile/>
@@ -8453,8 +8453,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="53"/>
    <tile/>
    <tile/>
    <tile/>
@@ -8518,6 +8517,7 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="53"/>
    <tile/>
    <tile/>
    <tile/>
@@ -8555,7 +8555,6 @@
    <tile gid="53"/>
    <tile gid="53"/>
    <tile gid="53"/>
-   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -8582,6 +8581,7 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="53"/>
    <tile/>
    <tile/>
    <tile/>
@@ -8640,23 +8640,23 @@
    <tile gid="53"/>
    <tile gid="53"/>
    <tile gid="53"/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
+   <tile gid="53"/>
    <tile/>
    <tile/>
    <tile/>
@@ -9235,15 +9235,7 @@
    <tile/>
   </data>
  </layer>
- <objectgroup id="29" name="OBJ">
-  <object id="822" name="Player" type="player" x="128" y="112" width="16" height="16">
-   <properties>
-    <property name="hello" type="bool" value="true"/>
-    <property name="somefloat" type="float" value="1.56"/>
-    <property name="test" type="int" value="1"/>
-   </properties>
-  </object>
-  <object id="823" name="Blub" type="blub" x="272" y="144" width="16" height="16"/>
+ <objectgroup id="78" name="ROOM">
   <object id="825" type="room" x="256" y="144" width="512" height="288">
    <properties>
     <property name="h" type="int" value="2"/>
@@ -9266,6 +9258,36 @@
    <properties>
     <property name="h" type="int" value="2"/>
     <property name="w" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="852" type="room" x="512" y="0" width="256" height="144">
+   <properties>
+    <property name="h" type="int" value="2"/>
+    <property name="w" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="860" type="room" x="768" y="0" width="256" height="144">
+   <properties>
+    <property name="h" type="int" value="2"/>
+    <property name="w" type="int" value="2"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="29" name="OBJ">
+  <object id="822" name="Player" type="player" x="448" y="112" width="16" height="16">
+   <properties>
+    <property name="hello" type="bool" value="true"/>
+    <property name="somefloat" type="float" value="1.56"/>
+    <property name="test" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="823" name="Blub" type="blub" x="272" y="144" width="16" height="16"/>
+  <object id="854" name="Blub" type="blub" x="272" y="144" width="16" height="16"/>
+  <object id="853" name="Player" type="player" x="448" y="112" width="16" height="16">
+   <properties>
+    <property name="hello" type="bool" value="true"/>
+    <property name="somefloat" type="float" value="1.56"/>
+    <property name="test" type="int" value="1"/>
    </properties>
   </object>
  </objectgroup>

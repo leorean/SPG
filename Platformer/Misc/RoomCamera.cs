@@ -18,11 +18,13 @@ namespace Platformer.Misc
 
         public enum State
         {
-            Transitioning,
-            Locked
+            None,
+            PrepareRoomTransition,
+            OpenTransition,
+            CloseTransition
         }
 
-        private State state;
+        private State state = State.None;
         
 
         private int viewWidth;
@@ -30,12 +32,17 @@ namespace Platformer.Misc
         
         private GameObject target;
 
+        Vector2 targetSpd;
+
+        private Room lastRoom;
         private Room currentRoom;
 
         private List<Room> Rooms;
 
         public RoomCamera(ResolutionRenderer resolutionRenderer) : base(resolutionRenderer) { }
         
+        float curX, curY, curW, curH, tarX, tarY, tarW, tarH;
+
         public void InitRoomData(List<Dictionary<string, object>> roomData)
         {
             try
@@ -79,56 +86,102 @@ namespace Platformer.Misc
             if (target == null)
                 return;
 
-            var room = ObjectManager.CollisionPoint(target, target.X, target.Y, typeof(Room)).FirstOrDefault();
-            
-            if (room != null)
-            {                
-                EnableBounds(new Rectangle((int)room.X, (int)room.Y, (int)room.BoundingBox.Width, (int)room.BoundingBox.Height));
-
-            }
-            
-            var tx = target.X;
-            var ty = target.Y;
-
-            Position = new Vector2(tx, ty);
-
-            /*if (target != null)
+            if (state == State.None)
             {
-                if (state == State.Transitioning)
+
+                if (currentRoom == null)
                 {
-                    var tx = MathUtil.Div(target.X, roomWidth * Globals.TILE) * roomWidth * Globals.TILE + .5f * roomWidth * Globals.TILE;
-                    var ty = MathUtil.Div(target.Y, roomHeight * Globals.TILE) * roomHeight * Globals.TILE + .5f * roomHeight * Globals.TILE;
-
-                    var roomX = MathUtil.Div(tx, roomWidth * Globals.TILE);
-                    var roomY = MathUtil.Div(ty, roomHeight * Globals.TILE);
-
-                    //Debug.WriteLine($"{roomX} , {roomY}");
-
-                    var currentRoomData = Rooms.Get(roomX, roomY);
-
-                    if (currentRoomData != null)
+                    currentRoom = ObjectManager.CollisionPoint<Room>(target, target.X, target.Y).FirstOrDefault();
+                    if (currentRoom != null)
                     {
-                        var w = (int)(currentRoomData.ContainsKey("w") ? currentRoomData["w"] : 1) * roomWidth * Globals.TILE;
-                        var h = (int)(currentRoomData.ContainsKey("h") ? currentRoomData["h"] : 1) * roomHeight * Globals.TILE;
+                        lastRoom = currentRoom;
 
-                        var x = (int)roomX * roomWidth * Globals.TILE;
-                        var y = (int)roomY * roomHeight * Globals.TILE;
-
-                        EnableBounds(new Rectangle(x, y, w, h));
-
-                        state = State.Locked;
+                        EnableBounds(new Rectangle((int)currentRoom.X, (int)currentRoom.Y, (int)currentRoom.BoundingBox.Width, (int)currentRoom.BoundingBox.Height));
                     }
                 }
 
-                Position = new Vector2(target.X, target.Y);
-
-                if (!MathUtil.In(target.X, Position.X + bounds.X, Position.X + bounds.Width)
-                    ||
-                    !MathUtil.In(target.Y, Position.Y + bounds.Y, Position.Y + bounds.Height))
+                if (!MathUtil.In(target.X, bounds.X, bounds.X + bounds.Width)
+                    || !MathUtil.In(target.Y, bounds.Y, bounds.Y + bounds.Height))
                 {
-                    state = State.Transitioning;
+                    lastRoom = currentRoom;
+                    currentRoom = ObjectManager.CollisionPoint<Room>(target, target.X, target.Y).FirstOrDefault();
+
+                    if (currentRoom != null)
+                        state = State.PrepareRoomTransition;
                 }
-            }*/
+            }
+
+            if (state == State.PrepareRoomTransition)
+            {
+                curX = (int)lastRoom.X;
+                curY = (int)lastRoom.Y;
+                curW = (int)lastRoom.BoundingBox.Width;
+                curH = (int)lastRoom.BoundingBox.Height;
+
+                tarX = (int)Math.Min(currentRoom.X, lastRoom.X);
+                tarY = (int)Math.Min(currentRoom.Y, lastRoom.Y);
+                tarW = (int)Math.Max(currentRoom.BoundingBox.Width + currentRoom.X, lastRoom.BoundingBox.Width + lastRoom.X);
+                tarH = (int)Math.Max(currentRoom.BoundingBox.Height + currentRoom.Y, lastRoom.BoundingBox.Height + lastRoom.Y);
+                
+                state = State.OpenTransition;                
+            }
+
+            if (state == State.OpenTransition)
+            {
+                var spdX = (tarX - curX) / 4f;
+                var spdY = (tarY - curY) / 4f;
+                var spdW = (tarW - curW) / 4f;
+                var spdH = (tarH - curH) / 4f;
+
+                curX += spdX;
+                curY += spdY;
+                curW += spdW;
+                curH += spdH;
+
+                if (Math.Round(spdX) == 0 && Math.Round(spdY) == 0 && Math.Round(spdW) == 0 && Math.Round(spdH) == 0)
+                {
+                    curX = (int)Math.Min(currentRoom.X, lastRoom.X);
+                    curY = (int)Math.Min(currentRoom.Y, lastRoom.Y);
+                    curW = (int)Math.Max(currentRoom.BoundingBox.Width + currentRoom.X, lastRoom.BoundingBox.Width + lastRoom.X);
+                    curH = (int)Math.Max(currentRoom.BoundingBox.Height + currentRoom.Y, lastRoom.BoundingBox.Height + lastRoom.Y);
+
+                    tarX = (int)currentRoom.X;
+                    tarY = (int)currentRoom.Y;
+                    tarW = (int)currentRoom.BoundingBox.Width;
+                    tarH = (int)currentRoom.BoundingBox.Height;
+
+                    state = State.CloseTransition;
+                }
+                
+                EnableBounds(new Rectangle((int)curX, (int)curY, (int)curW, (int)curH));
+            }
+
+            if (state == State.CloseTransition)
+            {
+                var spdX = (tarX - curX) / 4f;
+                var spdY = (tarY - curY) / 4f;
+                var spdW = (tarW - curW) / 4f;
+                var spdH = (tarH - curH) / 4f;
+
+                curX += spdX;
+                curY += spdY;
+                curW += spdW;
+                curH += spdH;
+
+                if (Math.Round(spdX) == 0 && Math.Round(spdY) == 0 && Math.Round(spdW) == 0 && Math.Round(spdH) == 0)
+                {
+                    curX = (int)currentRoom.X;
+                    curY = (int)currentRoom.Y;
+                    curW = (int)currentRoom.BoundingBox.Width;
+                    curH = (int)currentRoom.BoundingBox.Height;
+
+                    state = State.None;
+                }
+
+                EnableBounds(new Rectangle((int)curX, (int)curY, (int)curW, (int)curH));
+            }
+            
+            Position = target.Position;            
         }
     }
 }

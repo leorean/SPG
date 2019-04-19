@@ -89,11 +89,11 @@ namespace SPG.Objects
         /// <param name="y"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static List<GameObject> CollisionPoint(GameObject self, float x, float y, Type type)
+        public static List<T> CollisionPoint<T>(GameObject self, float x, float y) where T : GameObject
         {
             //Stopwatch sw = Stopwatch.StartNew();
 
-            List<GameObject> candidates = Objects.Where(o => o != self && o.GetType() == type && o.Enabled == true).ToList();
+            List<T> candidates = Objects.Where(o => o != self && o.GetType() == typeof(T) && o.Enabled == true).Cast<T>().ToList();
 
             if (candidates.Count == 0) return candidates;
 
@@ -116,11 +116,11 @@ namespace SPG.Objects
         /// <param name="y"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static List<GameObject> CollisionBounds(GameObject self, float x, float y, Type type)
+        public static List<T> CollisionBounds<T>(GameObject self, float x, float y) where T : GameObject
         {
             //Stopwatch sw = Stopwatch.StartNew();
 
-            List<GameObject> candidates = Objects.Where(o => o != self && o.GetType() == type && o.Enabled == true).ToList();
+            List<T> candidates = Objects.Where(o => o != self && o.GetType() == typeof(T) && o.Enabled == true).Cast<T>().ToList();
 
             if (candidates.Count == 0) return candidates;
             

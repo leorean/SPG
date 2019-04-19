@@ -92,62 +92,63 @@ namespace SPG.Map
                 
                 ObjectData = new List<Dictionary<string, object>>();
 
-                var objectNodes = mapElement.ToList().Where(x => x.Name == "objectgroup").First();
-
-                foreach (XmlNode objectNode in objectNodes.ChildNodes)
+                foreach (var objectNodes in mapElement.ToList().Where(x => x.Name == "objectgroup")) // multiple object layers
                 {
-                    var objProperties = new Dictionary<string, object>();
-
-                    var name = objectNode.Attributes["type"].Value;
-                    int x = int.Parse(objectNode.Attributes["x"].Value);
-                    int y = int.Parse(objectNode.Attributes["y"].Value);
-                    int width = int.Parse(objectNode.Attributes["width"].Value);
-                    int height = int.Parse(objectNode.Attributes["height"].Value);
-
-                    objProperties.Add("name", name); // is actually the type name!
-                    objProperties.Add("x", x);
-                    objProperties.Add("y", y);
-                    objProperties.Add("width", width);
-                    objProperties.Add("height", height);
-
-                    if (objectNode.HasChildNodes)
+                    foreach (XmlNode objectNode in objectNodes.ChildNodes)
                     {
-                        foreach (XmlNode node in objectNode.ChildNodes)
+                        var objProperties = new Dictionary<string, object>();
+
+                        var name = objectNode.Attributes["type"].Value;
+                        int x = int.Parse(objectNode.Attributes["x"].Value);
+                        int y = int.Parse(objectNode.Attributes["y"].Value);
+                        int width = int.Parse(objectNode.Attributes["width"].Value);
+                        int height = int.Parse(objectNode.Attributes["height"].Value);
+
+                        objProperties.Add("name", name); // is actually the type name!
+                        objProperties.Add("x", x);
+                        objProperties.Add("y", y);
+                        objProperties.Add("width", width);
+                        objProperties.Add("height", height);
+
+                        if (objectNode.HasChildNodes)
                         {
-                            foreach (XmlNode prop in node.ChildNodes)
+                            foreach (XmlNode node in objectNode.ChildNodes)
                             {
-                                var propName = prop.Attributes["name"].Value;
-                                var propValueString = prop.Attributes["value"].Value;
-
-                                var propValueType = prop.Attributes["type"].Value;
-
-                                object propValue;
-
-                                switch (propValueType)
+                                foreach (XmlNode prop in node.ChildNodes)
                                 {
-                                    case "int":
-                                        propValue = int.Parse(propValueString);
-                                        break;
-                                    case "float":
-                                        float res;
-                                        if (float.TryParse(propValueString, out res))
-                                            propValue = res;
-                                        else
-                                            propValue = float.Parse(propValueString.Replace('.', ','));                                            
-                                        break;
-                                    case "bool":
-                                        propValue = bool.Parse(propValueString);
-                                        break;
-                                    default:
-                                        propValue = propValueString;
-                                        break;
-                                }
+                                    var propName = prop.Attributes["name"].Value;
+                                    var propValueString = prop.Attributes["value"].Value;
 
-                                objProperties.Add(propName, propValue);
+                                    var propValueType = prop.Attributes["type"].Value;
+
+                                    object propValue;
+
+                                    switch (propValueType)
+                                    {
+                                        case "int":
+                                            propValue = int.Parse(propValueString);
+                                            break;
+                                        case "float":
+                                            float res;
+                                            if (float.TryParse(propValueString, out res))
+                                                propValue = res;
+                                            else
+                                                propValue = float.Parse(propValueString.Replace('.', ','));
+                                            break;
+                                        case "bool":
+                                            propValue = bool.Parse(propValueString);
+                                            break;
+                                        default:
+                                            propValue = propValueString;
+                                            break;
+                                    }
+
+                                    objProperties.Add(propName, propValue);
+                                }
                             }
                         }
+                        ObjectData.Add(objProperties);
                     }
-                    ObjectData.Add(objProperties);
                 }
 
 

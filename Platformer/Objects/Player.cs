@@ -175,8 +175,8 @@ namespace Platformer
             
             // ++++ collision flags ++++
 
-            var onWall = ObjectManager.CollisionPoint(this, X + (.5f * BoundingBox.Width + 1) * Math.Sign((int)dir), Y + 4, typeof(Solid)).Count > 0;
-            var onCeil = ObjectManager.CollisionPoint(this, X, Y - BoundingBox.Height * .5f - 1, typeof(Solid)).Count > 0;
+            var onWall = ObjectManager.CollisionPoint<Solid>(this, X + (.5f * BoundingBox.Width + 1) * Math.Sign((int)dir), Y + 4).Count > 0;
+            var onCeil = ObjectManager.CollisionPoint<Solid>(this, X, Y - BoundingBox.Height * .5f - 1).Count > 0;
 
             int tx = MathUtil.Div(X, Globals.TILE);
             int ty = MathUtil.Div(Y + 4, Globals.TILE);
@@ -555,7 +555,7 @@ namespace Platformer
 
             YVel += Gravity;
 
-            var colY = ObjectManager.CollisionBounds(this, X, Y + YVel, typeof(Solid));
+            var colY = ObjectManager.CollisionBounds<Solid>(this, X, Y + YVel);
             if (colY.Count == 0)
             {
                 Move(0, YVel);
@@ -589,7 +589,7 @@ namespace Platformer
             }
             
 
-            var colX = ObjectManager.CollisionBounds(this, X + XVel, Y, typeof(Solid));
+            var colX = ObjectManager.CollisionBounds<Solid>(this, X + XVel, Y);
 
             if (colX.Count == 0)
             {

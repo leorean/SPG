@@ -78,6 +78,11 @@ namespace SPG.View
             _boundsEnabled = true;
         }
         
+        public void DisableBounds()
+        {
+            _boundsEnabled = false;
+        }
+
         /// <summary>
         /// Current camera position
         /// </summary>
