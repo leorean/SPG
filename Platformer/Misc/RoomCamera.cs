@@ -25,22 +25,23 @@ namespace Platformer.Misc
 
         private State state = State.Default;
         
-
         private int viewWidth;
         private int viewHeight;
         
         private GameObject target;
-
-        Vector2 targetSpd;
-
+        
         private Room lastRoom;
         private Room currentRoom;
-
-        private List<Room> Rooms;
-
-        public RoomCamera(ResolutionRenderer resolutionRenderer) : base(resolutionRenderer) { }
         
-        float curX, curY, curW, curH, tarX, tarY, tarW, tarH;
+        private bool moveX = false;
+        private bool moveY = false;
+
+        float curX, curY;
+
+        private float tx0, ty0;
+        private float tx, ty;
+        
+        public RoomCamera(ResolutionRenderer resolutionRenderer) : base(resolutionRenderer) { }
 
         public void InitRoomData(List<Dictionary<string, object>> roomData)
         {
@@ -49,7 +50,7 @@ namespace Platformer.Misc
                 viewWidth = ResolutionRenderer.ViewWidth;
                 viewHeight = ResolutionRenderer.ViewHeight;
                 
-                Rooms = new List<Room>();
+                //Rooms = new List<Room>();
 
                 foreach (var data in roomData)
                 {
@@ -63,7 +64,7 @@ namespace Platformer.Misc
                     var room = new Room(x, y, w, h);
                     room.Background = bg;
 
-                    Rooms.Add(room);
+                    //Rooms.Add(room);
                 }
             }
             catch(Exception)
@@ -83,16 +84,20 @@ namespace Platformer.Misc
             base.Update(gt);
 
             if (ObjectManager.ElapsedTime < ObjectManager.GameSpeed)
-            {
                 return;
-            }
             
             if (target == null)
                 return;
 
+            Position = target.Position;
+
+            tx0 = MathUtil.Div(target.X, viewWidth) * viewWidth;
+            ty0 = MathUtil.Div(target.Y, viewHeight) * viewHeight;
+
             // if no room is available, always resort to this state
             if (state == State.Default)
             {
+                // if no room is yet found, try to find first room
                 if (currentRoom == null)
                 {
                     currentRoom = ObjectManager.CollisionPoint<Room>(target, target.X, target.Y).FirstOrDefault();
@@ -101,78 +106,84 @@ namespace Platformer.Misc
                         lastRoom = currentRoom;
                         EnableBounds(new Rectangle((int)currentRoom.X, (int)currentRoom.Y, (int)currentRoom.BoundingBox.Width, (int)currentRoom.BoundingBox.Height));
                     }
-                }                
-            }
+                }
 
-            // if outside view, try to find new room
-            if (!MathUtil.In(target.X, bounds.X, bounds.X + bounds.Width)
-                    || !MathUtil.In(target.Y, bounds.Y, bounds.Y + bounds.Height))
-            {
-                lastRoom = currentRoom;
-                currentRoom = ObjectManager.CollisionPoint<Room>(target, target.X, target.Y).FirstOrDefault();
+                // if outside view, try to find new room
+                if (!MathUtil.In(target.X, bounds.X, bounds.X + bounds.Width)
+                        || !MathUtil.In(target.Y, bounds.Y, bounds.Y + bounds.Height))
+                {
+                    lastRoom = currentRoom;
+                    currentRoom = ObjectManager.CollisionPoint<Room>(target, target.X, target.Y).FirstOrDefault();
 
-                if (currentRoom != null)
-                    state = State.PrepareRoomTransition;
+                    if (currentRoom != null)
+                    {
+                        state = State.PrepareRoomTransition;
+                    }
+                }
             }
 
             // prepare for transition
             if (state == State.PrepareRoomTransition)
             {
-                curX = (int)(Position.X - .5f * viewWidth);
-                curY = (int)(Position.Y - .5f * viewHeight);
-                curW = (int)viewWidth;
-                curH = (int)viewHeight;
+                DisableBounds();
 
-                tarX = (int)currentRoom.X;
-                tarY = (int)currentRoom.Y;
-                tarW = (int)currentRoom.BoundingBox.Width;
-                tarH = (int)currentRoom.BoundingBox.Height;
+                moveX = (currentRoom.X != lastRoom.X);
+                moveY = (currentRoom.Y != lastRoom.Y);
 
-                state = State.RoomTransition;                
+                tx = Position.X;
+                ty = Position.Y;
+
+                curX = tx;
+                curY = ty;
+
+                state = State.RoomTransition;
             }
-            
+
             // do transition until eligable for default state
             if (state == State.RoomTransition)
             {
                 if (currentRoom == null)
-                    state = State.Default;
-
-                var s = 10f;
-                var max = 8;
-
-                var spdX = (tarX - curX) / s;
-                var spdY = (tarY - curY) / s;
-                var spdW = (tarW - curW) / s;
-                var spdH = (tarH - curH) / s;
-
-                //spdX = Math.Sign(spdX) * Math.Min(Math.Abs(spdX), max);
-                //spdY = Math.Sign(spdY) * Math.Min(Math.Abs(spdY), max);
-                //spdW = Math.Sign(spdW) * Math.Min(Math.Abs(spdW), max);
-                //spdH = Math.Sign(spdH) * Math.Min(Math.Abs(spdH), max);
-
-                curX += spdX;
-                curY += spdY;
-                curW += spdW;
-                curH += spdH;
-
-                Debug.WriteLine($"{curX}, {curY}, {curW}, {curH}");
-
-                var prec = 3;
-
-                if (Math.Round(spdX * prec) == 0 && Math.Round(spdY * prec) == 0 && Math.Round(spdW * prec) == 0 && Math.Round(spdH * prec) == 0)
                 {
-                    curX = (int)currentRoom.X;
-                    curY = (int)currentRoom.Y;
-                    curW = (int)currentRoom.BoundingBox.Width;
-                    curH = (int)currentRoom.BoundingBox.Height;
-
-                    state = State.Default;                    
+                    state = State.Default;
+                    return;
                 }
 
-                EnableBounds(new Rectangle((int)Math.Ceiling(curX), (int)Math.Ceiling(curY), (int)curW, (int)curH));
-            }
-            
-            Position = target.Position;            
+                if (!moveX)
+                    tx = viewWidth * .5f + tx0;
+                else
+                {
+                    tx = Math.Min(Math.Max(target.X, currentRoom.X + viewWidth * .5f), currentRoom.X + currentRoom.BoundingBox.Width - .5f * viewWidth + .5f);
+                }
+
+                if (!moveY)
+                    ty = viewHeight * .5f + ty0;
+                else
+                {
+                    ty = Math.Min(Math.Max(target.Y, currentRoom.Y + viewHeight * .5f), currentRoom.Y + currentRoom.BoundingBox.Height - .5f * viewHeight + .5f);
+                }
+
+                curX += (tx - curX) / 6f;
+                curY += (ty - curY) / 6f;
+
+                if (Math.Abs(curX - tx) < 1)
+                    curX = tx;
+                if (Math.Abs(curY - ty) < 1)
+                    curY = ty;
+                
+                Vector2 t = new Vector2(curX, curY);                
+                Position = t;
+
+                if (curX == tx && curY == ty)
+                {
+                    state = State.Default;
+                    //EnableBounds(new Rectangle((int)currentRoom.X, (int)currentRoom.Y, (int)currentRoom.BoundingBox.Width, (int)currentRoom.BoundingBox.Height));
+                }
+            }            
+        }
+
+        public void DrawBackground(GameTime gt)
+        {
+
         }
     }
 }

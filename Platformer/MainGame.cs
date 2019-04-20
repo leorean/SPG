@@ -48,7 +48,7 @@ namespace Platformer
             IsMouseVisible = true;
 
             viewSize = new Size(256, 144);
-            scale = 3.0f;
+            scale = 4.0f;
 
             screenSize = new Size((int)(viewSize.Width * scale), (int)(viewSize.Height * scale));
 
@@ -105,7 +105,7 @@ namespace Platformer
 
             resolutionRenderer = new ResolutionRenderer(viewSize.Width, viewSize.Height, screenSize.Width, screenSize.Height);
             
-            camera = new RoomCamera(resolutionRenderer) { MaxZoom = 10f, MinZoom = .4f, Zoom = 1f };
+            camera = new RoomCamera(resolutionRenderer) { MaxZoom = 2f, MinZoom = .5f, Zoom = 1f };
             camera.SetPosition(Vector2.Zero);
 
             camera.EnableBounds(new Rectangle(0, 0, Map.Width * Globals.TILE, Map.Height * Globals.TILE));
@@ -224,13 +224,13 @@ namespace Platformer
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            //GameManager.Game.GraphicsDevice.SetRenderTarget(camera.RenderTarget);
-            
             resolutionRenderer.SetupDraw();
             
             GraphicsDevice.Clear(Color.CornflowerBlue);
             
             SpriteBatch.BeginCamera(camera);
+
+            camera.DrawBackground(gameTime);
 
             Map.Draw(gameTime);
             ObjectManager.DrawObjects(gameTime);

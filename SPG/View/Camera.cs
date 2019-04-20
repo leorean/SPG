@@ -100,17 +100,7 @@ namespace SPG.View
                     var minY = Math.Max(value.Y, bounds.Y + ResolutionRenderer.ViewHeight * .5f / Zoom);
                     var y = Math.Min(minY, bounds.Y + bounds.Height - ResolutionRenderer.ViewHeight * .5f / Zoom);
 
-                    _position = new Vector2(x, y);
-
-                    /*_position = new Vector2(                        
-                        Math.Min(
-                            Math.Max(value.X, bounds.X + ResolutionRenderer.ViewWidth * .5f / Zoom),
-                            bounds.Width - ResolutionRenderer.ViewWidth * .5f / Zoom),
-                        Math.Min(
-                            Math.Max(value.Y, bounds.Y + ResolutionRenderer.ViewHeight * .5f / Zoom),
-                            bounds.Height - ResolutionRenderer.ViewHeight * .5f / Zoom)
-                        );
-                    */
+                    _position = new Vector2(x, y);                    
                 }
                 else
                 {
