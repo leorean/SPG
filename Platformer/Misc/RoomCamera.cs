@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Platformer.Objects;
 using SPG;
+using SPG.Map;
 using SPG.Objects;
 using SPG.Util;
 using SPG.View;
@@ -40,7 +42,11 @@ namespace Platformer.Misc
 
         private float tx0, ty0;
         private float tx, ty;
-        
+
+        private float dirOffsetX = 0;
+
+        private TextureSet _backgrounds;
+
         public RoomCamera(ResolutionRenderer resolutionRenderer) : base(resolutionRenderer) { }
 
         public void InitRoomData(List<Dictionary<string, object>> roomData)
@@ -50,8 +56,6 @@ namespace Platformer.Misc
                 viewWidth = ResolutionRenderer.ViewWidth;
                 viewHeight = ResolutionRenderer.ViewHeight;
                 
-                //Rooms = new List<Room>();
-
                 foreach (var data in roomData)
                 {
                     var x = (int)data["x"];
@@ -62,9 +66,7 @@ namespace Platformer.Misc
                     var bg = data.ContainsKey("bg") ? (int)data["bg"] : 0;
 
                     var room = new Room(x, y, w, h);
-                    room.Background = bg;
-
-                    //Rooms.Add(room);
+                    room.Background = bg;                    
                 }
             }
             catch(Exception)
@@ -105,12 +107,22 @@ namespace Platformer.Misc
                         lastRoom = currentRoom;
                         EnableBounds(new Rectangle((int)currentRoom.X, (int)currentRoom.Y, (int)currentRoom.BoundingBox.Width, (int)currentRoom.BoundingBox.Height));
                     }
+                    else
+                        return;
+                }
+                
+                if (target is Player)
+                {
+                    var dir = (target as Player).Dir;
+
+                    dirOffsetX += Math.Sign((int)dir) * 1f;
+                    dirOffsetX = dirOffsetX.Clamp(-4 * Globals.TILE, 4 * Globals.TILE);
                 }
 
-                var tarX = Math.Min(Math.Max(target.X, currentRoom.X + .5f * viewWidth), currentRoom.X + currentRoom.BoundingBox.Width - .5f * viewWidth);
-                var tarY = Math.Min(Math.Max(target.Y, currentRoom.Y + .5f * viewHeight), currentRoom.Y + currentRoom.BoundingBox.Height - .5f * viewHeight);
+                var tarX = Math.Min(Math.Max(target.X + dirOffsetX, currentRoom.X + .5f * viewWidth), currentRoom.X + currentRoom.BoundingBox.Width - .5f * viewWidth);
+                var tarY = Math.Min(Math.Max(target.Y - Globals.TILE, currentRoom.Y + .5f * viewHeight), currentRoom.Y + currentRoom.BoundingBox.Height - .5f * viewHeight);
 
-                var vel = new Vector2((tarX - Position.X) / 60f, (tarY - Position.Y) / 6f);
+                var vel = new Vector2((tarX - Position.X) / 12f, (tarY - Position.Y) / 12f);
 
                 Position = new Vector2(Position.X + vel.X, Position.Y + vel.Y);
 
@@ -126,6 +138,7 @@ namespace Platformer.Misc
 
                     if (currentRoom != null)
                     {
+                        dirOffsetX = 0;
                         state = State.PrepareRoomTransition;
                     }
                 }
@@ -190,9 +203,24 @@ namespace Platformer.Misc
             }            
         }
 
+        /// <summary>
+        /// Loads the backgrounds to the camera so it can display them depending on the room background number.
+        /// </summary>
+        /// <param name="backgrounds"></param>
+        public void SetBackgrounds(TextureSet backgrounds)
+        {
+            _backgrounds = backgrounds;
+        }
+
         public void DrawBackground(GameTime gt)
         {
-
+            if (_backgrounds != null)
+            {
+                if (currentRoom != null)
+                {
+                    GameManager.Game.SpriteBatch.Draw(_backgrounds[currentRoom.Background], Position - new Vector2(viewWidth * .5f, viewHeight *.5f), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+                }
+            }
         }
     }
 }

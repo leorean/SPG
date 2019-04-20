@@ -9275,7 +9275,7 @@
   </object>
  </objectgroup>
  <objectgroup id="29" name="OBJ">
-  <object id="822" name="Player" type="player" x="208" y="272" width="16" height="16">
+  <object id="822" name="Player" type="player" x="464" y="112" width="16" height="16">
    <properties>
     <property name="hello" type="bool" value="true"/>
     <property name="somefloat" type="float" value="1.56"/>

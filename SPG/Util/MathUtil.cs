@@ -5,6 +5,11 @@ namespace SPG.Util
 {
     public static class MathUtil
     {
+        public static float Clamp(this float f, float v1, float v2)
+        {
+            return Math.Min(Math.Max(f, v1), v2);
+        }
+
         public static int Div(double v1, double v2)
         {            
             return Floor(v1 / v2);

@@ -53,16 +53,14 @@ namespace Platformer
             screenSize = new Size((int)(viewSize.Width * scale), (int)(viewSize.Height * scale));
 
             GraphicsDeviceManager.PreferredBackBufferWidth = screenSize.Width;
-            GraphicsDeviceManager.PreferredBackBufferHeight = screenSize.Height;
-
-            //scaleMatrix = Matrix.CreateScale(new Vector3(scale, scale, 1));
-
-            
+            GraphicsDeviceManager.PreferredBackBufferHeight = screenSize.Height;            
         }
 
+        /// <summary>
+        /// decides whether to put blocks or other objects per tile ID on to the map
+        /// </summary>
         void LoadObjectsFromMap()
         {
-
             var index = Map.LayerDepth.ToList().IndexOf(Map.LayerDepth.First(x => x.Key.ToLower() == "fg"));
 
             var data = Map.LayerData.ElementAt(index);
@@ -83,9 +81,7 @@ namespace Platformer
                                 break;
                             default:
                                 t.TileType = TileType.Solid;
-                                var solid = new Solid(x * Globals.TILE, y * Globals.TILE);
-                                //solid.Visible = true;
-                                //solid.Texture = map.TileSet[28];
+                                var solid = new Solid(x * Globals.TILE, y * Globals.TILE);                                
                                 break;
                         }
                     }
@@ -113,7 +109,9 @@ namespace Platformer
             // load room data so the camera behaves accordingly
             var roomData = Map.ObjectData.FindByTypeName("room");
             camera.InitRoomData(roomData);
+            var backgrounds = TextureSet.Load("background", 16 * Globals.TILE, 9 * Globals.TILE);
 
+            camera.SetBackgrounds(backgrounds);
             camera.SetTarget(player);
         }
 
@@ -127,7 +125,7 @@ namespace Platformer
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             var tileSet = TextureSet.Load("tiles");
-
+            
             XmlDocument xml = SPG.Util.Xml.Load("testMap.tmx");
             Map = new GameMap(xml);
 
@@ -148,23 +146,6 @@ namespace Platformer
 
             player = new Player(playerX, playerY);
             player.AnimationTexture = TextureSet.Load("player", 16, 32);
-            
-            /*
-            var block = new Solid(128, 128);
-            block.Texture = tileSet[28];
-            block.Depth = Globals.LAYER_FG;
-            block.SetDebug(true);*/
-
-            /*var r = new Random();
-            for (var i = 0; i < 10000; i++)
-            {
-                var block = new Solid(r.Next(0, 280), r.Next(0, 280));
-                block.Texture = tileSet[28];
-                block.Depth = Globals.LAYER_FG;
-                //block.Enabled = false;
-                //block.SetDebug(true);
-            }*/
-
         }
 
         /// <summary>
