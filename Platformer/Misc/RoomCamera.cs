@@ -77,6 +77,7 @@ namespace Platformer.Misc
         public void SetTarget(GameObject target)
         {
             this.target = target;
+            Position = target.Position;
         }
 
         public override void Update(GameTime gt)
@@ -88,9 +89,7 @@ namespace Platformer.Misc
             
             if (target == null)
                 return;
-
-            Position = target.Position;
-
+            
             tx0 = MathUtil.Div(target.X, viewWidth) * viewWidth;
             ty0 = MathUtil.Div(target.Y, viewHeight) * viewHeight;
 
@@ -108,9 +107,19 @@ namespace Platformer.Misc
                     }
                 }
 
+                var tarX = Math.Min(Math.Max(target.X, currentRoom.X + .5f * viewWidth), currentRoom.X + currentRoom.BoundingBox.Width - .5f * viewWidth);
+                var tarY = Math.Min(Math.Max(target.Y, currentRoom.Y + .5f * viewHeight), currentRoom.Y + currentRoom.BoundingBox.Height - .5f * viewHeight);
+
+                var vel = new Vector2((tarX - Position.X) / 60f, (tarY - Position.Y) / 6f);
+
+                Position = new Vector2(Position.X + vel.X, Position.Y + vel.Y);
+
+
                 // if outside view, try to find new room
-                if (!MathUtil.In(target.X, bounds.X, bounds.X + bounds.Width)
-                        || !MathUtil.In(target.Y, bounds.Y, bounds.Y + bounds.Height))
+                //if (!MathUtil.In(target.X, bounds.X, bounds.X + bounds.Width)
+                //        || !MathUtil.In(target.Y, bounds.Y, bounds.Y + bounds.Height))
+                if (!MathUtil.In(target.X, currentRoom.X, currentRoom.X + currentRoom.BoundingBox.Width)
+                        || !MathUtil.In(target.Y, currentRoom.Y, currentRoom.Y + currentRoom.BoundingBox.Height))
                 {
                     lastRoom = currentRoom;
                     currentRoom = ObjectManager.CollisionPoint<Room>(target, target.X, target.Y).FirstOrDefault();
