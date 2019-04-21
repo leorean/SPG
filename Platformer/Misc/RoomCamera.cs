@@ -31,8 +31,10 @@ namespace Platformer.Misc
         private State state = State.Default;
         
         private GameObject target;
-        
+
         // room <-> view calculation vars
+
+        public List<Room> Rooms { get; private set; } = new List<Room>();
 
         private Room lastRoom;
         private Room currentRoom;
@@ -51,11 +53,21 @@ namespace Platformer.Misc
         // background vars
 
         private TextureSet _backgrounds;
-        private float lastBackgroundAlpha;
         private float backgroundAlpha = 1f;
 
-        public RoomCamera(ResolutionRenderer resolutionRenderer) : base(resolutionRenderer) { }
+        // events
 
+        /// <summary>
+        /// Is called when a room change is initiated. Provides last room and current room as arguments.
+        /// </summary>
+        public event EventHandler<Tuple<Room, Room>> OnBeginRoomChange;
+        /// <summary>
+        /// Is called when a room change is finished. Provides last room and current room as arguments.
+        /// </summary>
+        public event EventHandler<Tuple<Room, Room>> OnEndRoomChange;
+
+        public RoomCamera(ResolutionRenderer resolutionRenderer) : base(resolutionRenderer) { }
+        
         public void InitRoomData(List<Dictionary<string, object>> roomData)
         {
             try
@@ -70,7 +82,9 @@ namespace Platformer.Misc
                     var bg = data.ContainsKey("bg") ? (int)data["bg"] : 0;
 
                     var room = new Room(x, y, w, h);
-                    room.Background = bg;                    
+                    room.Background = bg;
+
+                    Rooms.Add(room);
                 }
             }
             catch(Exception)
@@ -83,7 +97,7 @@ namespace Platformer.Misc
         public void SetTarget(GameObject target)
         {
             this.target = target;
-            Position = target.Position;
+            Position = target != null ? target.Position : Vector2.Zero;
         }
 
         private void DisableRegionForRoom(Room room)
@@ -181,6 +195,8 @@ namespace Platformer.Misc
                 curX = tx;
                 curY = ty;
 
+                OnBeginRoomChange?.Invoke(this, new Tuple<Room,Room>(lastRoom, currentRoom));
+
                 DisableRegionForRoom(lastRoom);
                 EnableRegionForRoom(currentRoom);
 
@@ -223,15 +239,23 @@ namespace Platformer.Misc
 
                 if (curX == tx && curY == ty)
                 {
+                    OnEndRoomChange?.Invoke(this, new Tuple<Room, Room>(lastRoom, currentRoom));
                     state = State.Default;                    
                 }
             }
 
             // background interpolation
 
-            backgroundAlpha = Math.Min(backgroundAlpha + .02f, 1);
-            //lastBackgroundAlpha = Math.Max(lastBackgroundAlpha - .02f, 0);
-            lastBackgroundAlpha = 1;
+            backgroundAlpha = Math.Min(backgroundAlpha + .02f, 1);            
+        }
+
+        internal void Reset()
+        {
+            SetTarget(null);
+
+            state = State.Default;
+            currentRoom = null;
+            lastRoom = null;
         }
 
         /// <summary>
@@ -251,8 +275,7 @@ namespace Platformer.Misc
                 {
                     if (backgroundAlpha < 1)
                     {
-                        var color = new Color(Color.White, lastBackgroundAlpha);
-                        GameManager.Game.SpriteBatch.Draw(_backgrounds[lastRoom.Background], Position - new Vector2(ViewWidth * .5f, ViewHeight * .5f), null, color, 0, Vector2.Zero, 1, SpriteEffects.None, 0.0001f);
+                        GameManager.Game.SpriteBatch.Draw(_backgrounds[lastRoom.Background], Position - new Vector2(ViewWidth * .5f, ViewHeight * .5f), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0.0001f);
                     }
                 }
                 if (currentRoom != null)

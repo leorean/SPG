@@ -126,6 +126,7 @@ namespace SPG.Objects
         
         ~GameObject()
         {
+            Debug.WriteLine($"Finalizer of {this} called. Removing from ObjectManager..");
             ObjectManager.Remove(this);
         }
 
@@ -194,8 +195,7 @@ namespace SPG.Objects
 
                 SPG.Draw.Primitives2D.DrawRectangle(rect, Color.Black, false);
             }
-        }
-
+        }        
     }
 }
 

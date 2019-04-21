@@ -1,17 +1,20 @@
 ﻿using Microsoft.Xna.Framework;
+using Platformer.Objects;
 using SPG.Objects;
 using System;
 
 namespace Platformer
 {
-    public class Solid : GameObject
+    public class Solid : RoomDependentdObject
     {
-        public Solid(int x, int y)
+        public Solid(int x, int y, Room room)
         {
             Name = "solid";
             Position = new Vector2(x, y);
             BoundingBox = new SPG.Util.RectF(0, 0, Globals.TILE, Globals.TILE);
             Visible = false;
+
+            Room = room;
         }
     }
 }

@@ -54,6 +54,14 @@ namespace SPG.View
     public class Camera : IDisposable
     {
         #region Variables
+
+        public ResolutionRenderer ResolutionRenderer { get; protected set; }
+
+        public int ViewWidth { get { return ResolutionRenderer.ViewWidth; } }
+        public int ViewHeight { get { return ResolutionRenderer.ViewHeight; } }
+
+        protected Rectangle bounds;
+
         private float _zoom;
         private float _rotation;
         private Vector2 _position;
@@ -64,28 +72,30 @@ namespace SPG.View
         private Matrix _camScaleMatrix = Matrix.Identity;
         private Matrix _resTranslationMatrix = Matrix.Identity;
 
-        protected ResolutionRenderer ResolutionRenderer;
         private Vector3 _camTranslationVector = Vector3.Zero;
         private Vector3 _camScaleVector = Vector3.Zero;
         private Vector3 _resTranslationVector = Vector3.Zero;
 
         private bool _boundsEnabled = false;
-        protected Rectangle bounds;
         
+        /// <summary>
+        /// Enables bounds in which the camera is able to move.
+        /// </summary>
+        /// <param name="rect"></param>
         public void EnableBounds(Rectangle rect)
         {
             bounds = rect;
             _boundsEnabled = true;
         }
         
+        /// <summary>
+        /// Disables bounds.
+        /// </summary>
         public void DisableBounds()
         {
             _boundsEnabled = false;
         }
-
-        public int ViewWidth { get { return ResolutionRenderer.ViewWidth; } }
-        public int ViewHeight { get { return ResolutionRenderer.ViewHeight; } }
-
+        
         /// <summary>
         /// Current camera position
         /// </summary>

@@ -42,10 +42,17 @@ namespace Platformer
         private Size viewSize;
         private Size screenSize;
         private float scale;
-        
+
+        Input input;
+
+        private TextureSet tileSet;
+        private TextureSet playerSet;
         private GameObject player;
 
-        private ResolutionRenderer resolutionRenderer;
+        private int playerX = 16 * 8;
+        private int playerY = 16 * 4;
+
+        private List<Room> loadedRooms;
         
         public override GraphicsDeviceManager GraphicsDeviceManager { get => graphics; }
         public override SpriteBatch SpriteBatch { get => spriteBatch; }
@@ -65,81 +72,127 @@ namespace Platformer
             screenSize = new Size((int)(viewSize.Width * scale), (int)(viewSize.Height * scale));
 
             GraphicsDeviceManager.PreferredBackBufferWidth = screenSize.Width;
-            GraphicsDeviceManager.PreferredBackBufferHeight = screenSize.Height;            
+            GraphicsDeviceManager.PreferredBackBufferHeight = screenSize.Height;
+
+            input = new Input();
+        }
+        
+        void UnloadRoom(Room room)
+        {
+            var aliveObjects = ObjectManager.Objects.Where(o => o is RoomDependentdObject && (o as RoomDependentdObject).Room == room).ToList();
+            foreach (var o in aliveObjects)
+            {
+                ObjectManager.Remove(o);
+            }
+            loadedRooms.Remove(room);
         }
 
         /// <summary>
-        /// decides whether to put blocks or other objects per tile ID on to the map
+        /// loads objects from a given room
         /// </summary>
-        void LoadObjectsFromMap()
+        void LoadRoom(Room room)
         {
-            var index = Map.LayerDepth.ToList().IndexOf(Map.LayerDepth.First(x => x.Key.ToLower() == "fg"));
+            if (room == null || loadedRooms.Contains(room))
+                return;
+
+            var x = MathUtil.Div(room.X, camera.ViewWidth) * 16;
+            var y = MathUtil.Div(room.Y, camera.ViewHeight) * 9;
+            var w = MathUtil.Div(room.BoundingBox.Width, camera.ViewWidth) * 16;
+            var h = MathUtil.Div(room.BoundingBox.Height, camera.ViewHeight) * 9;
+
+            var index = Map.LayerDepth.ToList().IndexOf(Map.LayerDepth.First(o => o.Key.ToLower() == "fg"));
 
             var data = Map.LayerData.ElementAt(index);
+
+            var blub = 0;
+
+            for(int i = x; i < x + w; i++)
             {
-                for(var x = 0; x < data.Width; x++)
+                for (int j = y; j < y + h; j++)
                 {
-                    for (var y = 0; y < data.Height; y++)
+                    var t = data.Get(i, j);
+
+                    if (t == null || t.ID == -1)
+                        continue;
+
+                    switch(t.ID)
                     {
-                        var t = data.Get(x, y);
+                        case 7:
+                            t.TileType = TileType.Platform;
+                            break;
+                        default:
+                            t.TileType = TileType.Solid;
+                            var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room);
+                            solid.Enabled = false;
 
-                        if (t == null || t.ID == -1)
-                            continue;
-
-                        switch(t.ID)
-                        {
-                            case 7:
-                                t.TileType = TileType.Platform;
-                                break;
-                            default:
-                                t.TileType = TileType.Solid;
-                                var solid = new Solid(x * Globals.TILE, y * Globals.TILE);
-                                solid.Enabled = false;
-                                break;
-                        }
+                            blub++;
+                            break;
                     }
                 }
             }
+
+            Debug.WriteLine("Created " + blub + " solid objects.");
+            loadedRooms.Add(room);
         }
 
         /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
+        /// Unloads the whole level.
         /// </summary>
-        protected override void Initialize()
+        public void UnloadLevel()
         {
-            base.Initialize();
+            Room[] roomList = new Room[loadedRooms.Count];
+            loadedRooms.CopyTo(roomList);
 
-            resolutionRenderer = new ResolutionRenderer(viewSize.Width, viewSize.Height, screenSize.Width, screenSize.Height);
-            
-            camera = new RoomCamera(resolutionRenderer) { MaxZoom = 2f, MinZoom = .5f, Zoom = 1f };
-            camera.SetPosition(Vector2.Zero);
+            foreach(var room in roomList)
+            {
+                UnloadRoom(room);
+            }
 
-            camera.EnableBounds(new Rectangle(0, 0, Map.Width * Globals.TILE, Map.Height * Globals.TILE));
+            ObjectManager.Remove(player);
 
-            // load room data so the camera behaves accordingly
-            var roomData = Map.ObjectData.FindByTypeName("room");
-            camera.InitRoomData(roomData);
-            var backgrounds = TextureSet.Load("background", 16 * Globals.TILE, 9 * Globals.TILE);
-
-            camera.SetBackgrounds(backgrounds);
-            camera.SetTarget(player);
+            player = null;
+            camera.Reset();            
         }
 
         /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
+        /// Loads the whole level.
+        /// </summary>
+        public void LoadLevel()
+        {
+            // TODO: load from save/load coordinates
+
+            // TODO: load 3x3
+
+            var startRoom = camera.Rooms.Where(r => r.X == 0 && r.Y == 0).FirstOrDefault();
+            
+            LoadRoom(startRoom);
+
+            // player
+
+            //var playerData = Map.ObjectData.FindFirstByTypeName("player");
+            //var playerX = (int)playerData["x"] + 8;
+            //var playerY = (int)playerData["y"] + 7;
+            
+            player = new Player(playerX, playerY);
+            player.AnimationTexture = playerSet;
+            camera.SetTarget(player);
+            
+        }
+        
+        /// <summary>
+        /// called BEFORE initialize
         /// </summary>
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            var tileSet = TextureSet.Load("tiles");
-            
+            tileSet = TextureSet.Load("tiles");
+
+            Stopwatch sw = Stopwatch.StartNew();
+
             XmlDocument xml = SPG.Util.Xml.Load("testMap.tmx");
+            
             Map = new GameMap(xml);
 
             Map.TileSet = tileSet;
@@ -148,17 +201,51 @@ namespace Platformer
             Map.LayerDepth["BG"] = Globals.LAYER_BG;
             Map.LayerDepth["BG2"] = Globals.LAYER_BG2;
             
-            LoadObjectsFromMap();
-            
-            // player
+            Debug.WriteLine("Loading took " + sw.ElapsedMilliseconds + "ms"); sw.Stop();
+        }
 
-            var playerData = Map.ObjectData.FindFirstByTypeName("player");
+        /// <summary>
+        /// Called AFTER load content
+        /// </summary>
+        protected override void Initialize()
+        {
+            base.Initialize();
 
-            var playerX = (int)playerData["x"] + 8;
-            var playerY = (int)playerData["y"] + 7;
+            var resolutionRenderer = new ResolutionRenderer(viewSize.Width, viewSize.Height, screenSize.Width, screenSize.Height);
 
-            player = new Player(playerX, playerY);
-            player.AnimationTexture = TextureSet.Load("player", 16, 32);
+            camera = new RoomCamera(resolutionRenderer) { MaxZoom = 2f, MinZoom = .5f, Zoom = 1f };
+            camera.SetPosition(Vector2.Zero);
+
+            // first, restrict the bounds to the whole map - will be overridden from the room camera afterwards
+            camera.EnableBounds(new Rectangle(0, 0, Map.Width * Globals.TILE, Map.Height * Globals.TILE));
+
+            // handle room changing <-> object loading/unloading
+
+            camera.OnBeginRoomChange += (sender, rooms) =>
+            { 
+                // load 3x3 rooms
+                LoadRoom(rooms.Item2);
+
+
+            };
+
+            camera.OnEndRoomChange += (sender, rooms) =>
+            {
+                UnloadRoom(rooms.Item1);                
+            };
+
+            // load room data for the camera
+            var roomData = Map.ObjectData.FindByTypeName("room");
+            camera.InitRoomData(roomData);
+
+            loadedRooms = new List<Room>();
+
+            playerSet = TextureSet.Load("player", 16, 32);
+
+            var backgrounds = TextureSet.Load("background", 16 * Globals.TILE, 9 * Globals.TILE);
+            camera.SetBackgrounds(backgrounds);
+
+            LoadLevel(); // <- more than once!!!
         }
 
         /// <summary>
@@ -179,12 +266,12 @@ namespace Platformer
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            
+
             // ++++ debug input ++++
 
-            KeyboardState keyboard = Keyboard.GetState();
+            input.Update(gameTime);
 
-            if (keyboard.IsKeyDown(Keys.Space))
+            if (input.IsKeyPressed(Keys.Space, Input.State.Holding))
             {
                 ObjectManager.GameSpeed = 120;
             }
@@ -192,6 +279,12 @@ namespace Platformer
             {
                 ObjectManager.GameSpeed = 0;
                 player.DebugEnabled = false;
+            }
+
+            if (input.IsKeyPressed(Keys.R, Input.State.Pressed))
+            {
+                UnloadLevel();
+                LoadLevel();                
             }
 
             MouseState mouse = Mouse.GetState();
@@ -220,7 +313,7 @@ namespace Platformer
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            resolutionRenderer.SetupDraw();
+            camera.ResolutionRenderer.SetupDraw();
             
             GraphicsDevice.Clear(Color.CornflowerBlue);
             

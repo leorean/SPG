@@ -47,6 +47,7 @@
     <Compile Include="Misc\RoomCamera.cs" />
     <Compile Include="Objects\Player.cs" />
     <Compile Include="Objects\Room.cs" />
+    <Compile Include="Objects\RoomDependentdObject.cs" />
     <Compile Include="Objects\Solid.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

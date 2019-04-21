@@ -39,7 +39,7 @@ namespace SPG.Objects
         public static void Remove(GameObject o)
         {
             if (Objects.Contains(o))
-                Objects.Remove(o);
+                Objects.Remove(o);            
         }
 
         public static void SortByID()
