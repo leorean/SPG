@@ -132,7 +132,7 @@ namespace Platformer
 
             // debug keys
 
-            if (input.IsKeyPressed(Keys.LeftShift, Input.State.Holding))
+            if (input.IsKeyPressed(Keys.LeftShift, Input.State.Holding) || input.IsKeyPressed(Keys.RightShift, Input.State.Holding))
             {
                 if (k_leftPressed)
                     Position = new Vector2(Position.X - 16 * Globals.TILE, Position.Y);
@@ -601,9 +601,8 @@ namespace Platformer
                 YVel = 0;
             }
             
-
             var colX = ObjectManager.CollisionBounds<Solid>(this, X + XVel, Y);
-
+            
             if (colX.Count == 0)
             {
                 Move(XVel, 0);
@@ -611,6 +610,22 @@ namespace Platformer
             {
                 XVel = 0;
             }
+
+            // ++++ limit positin within room bounds ++++
+
+            var boundX = Position.X;
+            var boundY = Position.Y;
+
+            if (boundX < 4) { XVel = 0; }
+            if (boundX > GameManager.Game.Map.Width * Globals.TILE - 4) { XVel = 0; }
+            if (boundY < 4) { YVel = 0; }
+            if (boundY > GameManager.Game.Map.Height * Globals.TILE - 4) { YVel = 0; }
+
+            boundX = boundX.Clamp(4, GameManager.Game.Map.Width * Globals.TILE - 4);
+            boundY = boundY.Clamp(4, GameManager.Game.Map.Height * Globals.TILE - 4);
+
+            Position = new Vector2(boundX, boundY);
+
 
             // ++++ draw <-> state logic ++++
 

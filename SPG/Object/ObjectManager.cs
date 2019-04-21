@@ -15,12 +15,13 @@ namespace SPG.Objects
     public static class ObjectManager
     {
         public static List<GameObject> Objects { get; private set; } = new List<GameObject>();
-
+        
         private static int idCounter;
 
         public static double ElapsedTime { get; private set; } = 0;
         
         public static double GameSpeed { get; set; }
+        public static RectF Region { get; set; }
 
         public static int Add(GameObject o)
         {
@@ -75,12 +76,14 @@ namespace SPG.Objects
 
         public static void DisableAll(Type objectType)
         {
-            foreach(var o in Objects)
-            {
-                o.Enabled = false;
-            }
+            Objects.Where(o => o.GetType() == objectType).ToList().ForEach(o => o.Enabled = false);            
         }
-        
+
+        public static void EnableAll(Type objectType)
+        {
+            Objects.Where(o => o.GetType() == objectType).ToList().ForEach(o => o.Enabled = true);
+        }
+
         /// <summary>
         /// Finds a list of game objects of a certain type that overlap a certain point x , y.
         /// </summary>
@@ -91,8 +94,6 @@ namespace SPG.Objects
         /// <returns></returns>
         public static List<T> CollisionPoint<T>(GameObject self, float x, float y) where T : GameObject
         {
-            //Stopwatch sw = Stopwatch.StartNew();
-
             List<T> candidates = Objects.Where(o => o != self && o.GetType() == typeof(T) && o.Enabled == true).Cast<T>().ToList();
 
             if (candidates.Count == 0) return candidates;
@@ -102,8 +103,6 @@ namespace SPG.Objects
                     MathUtil.In(x, o.Left, o.Right) 
                     && MathUtil.In(y, o.Top, o.Bottom)
                 ).ToList();
-
-            //Debug.WriteLine($"Found {candidates.Count} candidates after {sw.ElapsedMilliseconds}ms.");
             
             return candidates;
         }
@@ -118,8 +117,6 @@ namespace SPG.Objects
         /// <returns></returns>
         public static List<T> CollisionBounds<T>(GameObject self, float x, float y) where T : GameObject
         {
-            //Stopwatch sw = Stopwatch.StartNew();
-
             List<T> candidates = Objects.Where(o => o != self && o.GetType() == typeof(T) && o.Enabled == true).Cast<T>().ToList();
 
             if (candidates.Count == 0) return candidates;
@@ -130,9 +127,6 @@ namespace SPG.Objects
                     &&
                     o.Bottom >= y + self.BoundingBox.Y && o.Top <= y + self.BoundingBox.Y + self.BoundingBox.Height
                 ).ToList();
-            //candidates = candidates.Where(o => o.Bottom >= y + self.BoundingBox.Y && o.Top <= y + self.BoundingBox.Y + self.BoundingBox.Height).ToList();
-
-            //Debug.WriteLine($"Found {candidates.Count} candidates after {sw.ElapsedMilliseconds}ms.");
 
             return candidates;
         }
@@ -157,6 +151,14 @@ namespace SPG.Objects
         {
             SortByID();
             Objects.Where(o => o.Visible).ToList().ForEach(o => o.Draw(gameTime));
+        }
+
+        public static void SetRegionEnabled(float x, float y, float width, float height, bool enabled)
+        {
+            foreach (var o in Objects)
+            {
+                if (o.X >= x && o.Y >= y && o.X <= x + width && o.Y <= y + height) o.Enabled = enabled;
+            }
         }
     }
 }

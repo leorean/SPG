@@ -12,6 +12,7 @@ using System;
 using SPG.View;
 using System.Diagnostics;
 using Platformer.Misc;
+using Platformer.Objects;
 
 namespace Platformer
 {
@@ -25,6 +26,18 @@ namespace Platformer
 
         //private Matrix scaleMatrix;
 
+        private RoomCamera camera;
+
+        public override Camera Camera {
+            get
+            {
+                return camera;
+            }
+            protected set
+            {
+                camera = value as RoomCamera;
+            }
+        }
         
         private Size viewSize;
         private Size screenSize;
@@ -33,8 +46,7 @@ namespace Platformer
         private GameObject player;
 
         private ResolutionRenderer resolutionRenderer;
-        private RoomCamera camera;
-
+        
         public override GraphicsDeviceManager GraphicsDeviceManager { get => graphics; }
         public override SpriteBatch SpriteBatch { get => spriteBatch; }
 
@@ -81,7 +93,8 @@ namespace Platformer
                                 break;
                             default:
                                 t.TileType = TileType.Solid;
-                                var solid = new Solid(x * Globals.TILE, y * Globals.TILE);                                
+                                var solid = new Solid(x * Globals.TILE, y * Globals.TILE);
+                                solid.Enabled = false;
                                 break;
                         }
                     }
@@ -186,12 +199,14 @@ namespace Platformer
             if (mouse.LeftButton == ButtonState.Pressed)
             {                
                 player.Position = camera.ToVirtual(mouse.Position.ToVector2());
+                player.XVel = 0;
+                player.YVel = 0;
             }
 
             // ++++ update objects ++++
-
+            
             ObjectManager.UpdateObjects(gameTime);
-
+            
             // ++++ update camera ++++
 
             camera.Update(gameTime);

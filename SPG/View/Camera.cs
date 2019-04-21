@@ -83,6 +83,9 @@ namespace SPG.View
             _boundsEnabled = false;
         }
 
+        public int ViewWidth { get { return ResolutionRenderer.ViewWidth; } }
+        public int ViewHeight { get { return ResolutionRenderer.ViewHeight; } }
+
         /// <summary>
         /// Current camera position
         /// </summary>

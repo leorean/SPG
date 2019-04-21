@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using SPG.Map;
 using SPG.Objects;
+using SPG.View;
 using System;
 
 namespace SPG
@@ -12,5 +13,6 @@ namespace SPG
         public abstract SpriteBatch SpriteBatch { get; }
         
         public GameMap Map { get; protected set; }
+        public abstract Camera Camera { get; protected set; }
     }
 }

@@ -52,7 +52,13 @@ namespace SPG.Map
     /// </summary>
     public class GameMap
     {
+        /// <summary>
+        /// Gets the width in tile units.
+        /// </summary>
         public int Width { get; private set; }
+        /// <summary>
+        /// Gets the height in tile units.
+        /// </summary>
         public int Height { get; private set; }
 
         public List<Grid<Tile>> LayerData { get; set; } //BG2, BG, WATER, FG
@@ -160,17 +166,36 @@ namespace SPG.Map
             }
         }
         
+        /// <summary>
+        /// Draws parts of the map that are visible to the Game camera (within the camera view bounds).
+        /// </summary>
+        /// <param name="gameTime"></param>
         public void Draw(GameTime gameTime)
         {
 
             if (TileSet == null)
                 throw new InvalidOperationException("The map cannot be drawn without a tileset!");
+            
+            var cam = GameManager.Game.Camera;
 
+            if (cam == null)
+                return;
+
+            int minX = (int)Math.Max(cam.Position.X - cam.ViewWidth * .5f, 0f);
+            int maxX = (int)Math.Min(cam.Position.X + cam.ViewWidth * .5f + Globals.TILE, Width * Globals.TILE);
+            int minY = (int)Math.Max(cam.Position.Y - cam.ViewHeight * .5f, 0f);
+            int maxY = (int)Math.Min(cam.Position.Y + cam.ViewHeight * .5f + Globals.TILE, Height * Globals.TILE);
+
+            minX = MathUtil.Div(minX, Globals.TILE);
+            minY = MathUtil.Div(minY, Globals.TILE);
+            maxX = MathUtil.Div(maxX, Globals.TILE);
+            maxY = MathUtil.Div(maxY, Globals.TILE);
+            
             for (var l = 0; l < LayerData.Count; l++)
             {
-                for (var i = 0; i < Width; i++)
+                for (int i = minX; i < maxX; i++)
                 {
-                    for (var j = 0; j < Height; j++)
+                    for (int j = minY; j < maxY; j++)
                     {
                         var tile = LayerData[l].Get(i, j);
 

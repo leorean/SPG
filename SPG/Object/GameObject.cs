@@ -26,7 +26,18 @@ namespace SPG.Objects
         public string Name { get; protected set; }
         public int ID { get; protected set; }
 
-        public bool Enabled { get; set; } = true;
+        private bool _enabled;
+        public bool Enabled
+        {
+            get
+            {
+                return _enabled;
+            }
+            set
+            {                
+                _enabled = value;
+            }
+        }
         public bool Visible { get; set; } = true;
 
         // draw/visual
@@ -104,12 +115,13 @@ namespace SPG.Objects
         public GameObject(float x, float y, string name) : this()
         {
             Position = new Vector2(x, y);
-            Name = name;  
+            Name = name;            
         }
 
         protected GameObject()
         {
             ID = ObjectManager.Add(this);
+            Enabled = true;
         }
         
         ~GameObject()
