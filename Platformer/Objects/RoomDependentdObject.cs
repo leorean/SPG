@@ -9,6 +9,6 @@ namespace Platformer.Objects
 {
     public abstract class RoomDependentdObject : GameObject
     {
-        public Room Room { get; protected set; }
+        public Room Room { get; set; }
     }
 }

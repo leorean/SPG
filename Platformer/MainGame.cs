@@ -13,6 +13,7 @@ using SPG.View;
 using System.Diagnostics;
 using Platformer.Misc;
 using Platformer.Objects;
+using SPG.Draw;
 
 namespace Platformer
 {
@@ -57,6 +58,8 @@ namespace Platformer
         public override GraphicsDeviceManager GraphicsDeviceManager { get => graphics; }
         public override SpriteBatch SpriteBatch { get => spriteBatch; }
 
+        public Font font;
+
         public MainGame()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -77,9 +80,14 @@ namespace Platformer
             input = new Input();
         }
         
-        void UnloadRoom(Room room)
+        void UnloadRoomObjects(Room room)
         {
-            var aliveObjects = ObjectManager.Objects.Where(o => o is RoomDependentdObject && (o as RoomDependentdObject).Room == room).ToList();
+            // gather all objects which are inside the specified room
+            var aliveObjects = ObjectManager.Objects.Where(
+                o => o is RoomDependentdObject 
+                && (o as RoomDependentdObject).Room == room)
+                .ToList();
+
             foreach (var o in aliveObjects)
             {
                 ObjectManager.Remove(o);
@@ -88,9 +96,9 @@ namespace Platformer
         }
 
         /// <summary>
-        /// loads objects from a given room
+        /// loads objects from a given room. 
         /// </summary>
-        void LoadRoom(Room room)
+        void LoadRoomObjects(Room room)
         {
             if (room == null || loadedRooms.Contains(room))
                 return;
@@ -99,12 +107,15 @@ namespace Platformer
             var y = MathUtil.Div(room.Y, camera.ViewHeight) * 9;
             var w = MathUtil.Div(room.BoundingBox.Width, camera.ViewWidth) * 16;
             var h = MathUtil.Div(room.BoundingBox.Height, camera.ViewHeight) * 9;
-
+            
             var index = Map.LayerDepth.ToList().IndexOf(Map.LayerDepth.First(o => o.Key.ToLower() == "fg"));
 
             var data = Map.LayerData.ElementAt(index);
 
-            var blub = 0;
+            x = (int)((float)x).Clamp(0, data.Width);
+            y = (int)((float)y).Clamp(0, data.Height);
+            
+            var solidCount = 0;
 
             for(int i = x; i < x + w; i++)
             {
@@ -123,15 +134,14 @@ namespace Platformer
                         default:
                             t.TileType = TileType.Solid;
                             var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room);
-                            solid.Enabled = false;
-
-                            blub++;
+                            solid.Enabled = false;                            
+                            solidCount++;
                             break;
                     }
                 }
             }
 
-            Debug.WriteLine("Created " + blub + " solid objects.");
+            Debug.WriteLine("Created " + solidCount + " solid objects.");
             loadedRooms.Add(room);
         }
 
@@ -145,9 +155,9 @@ namespace Platformer
 
             foreach(var room in roomList)
             {
-                UnloadRoom(room);
+                UnloadRoomObjects(room);
             }
-
+            
             ObjectManager.Remove(player);
 
             player = null;
@@ -160,19 +170,20 @@ namespace Platformer
         public void LoadLevel()
         {
             // TODO: load from save/load coordinates
-
-            // TODO: load 3x3
-
-            var startRoom = camera.Rooms.Where(r => r.X == 0 && r.Y == 0).FirstOrDefault();
             
-            LoadRoom(startRoom);
+            var startRoom = camera.Rooms.Where(r => r.X == 0 && r.Y == 0).FirstOrDefault();
+
+            var neighbours = startRoom.Neighbors();
+            LoadRoomObjects(startRoom);
+            foreach (var n in neighbours)
+                LoadRoomObjects(n);
 
             // player
 
             //var playerData = Map.ObjectData.FindFirstByTypeName("player");
             //var playerX = (int)playerData["x"] + 8;
             //var playerY = (int)playerData["y"] + 7;
-            
+
             player = new Player(playerX, playerY);
             player.AnimationTexture = playerSet;
             camera.SetTarget(player);
@@ -184,12 +195,16 @@ namespace Platformer
         /// </summary>
         protected override void LoadContent()
         {
+            Stopwatch sw = Stopwatch.StartNew();
+
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            tileSet = TextureSet.Load("tiles");
+            // load default tileset
 
-            Stopwatch sw = Stopwatch.StartNew();
+            tileSet = TextureSet.Load("tiles");
+                        
+            // load map
 
             XmlDocument xml = SPG.Util.Xml.Load("testMap.tmx");
             
@@ -200,7 +215,13 @@ namespace Platformer
             Map.LayerDepth["WATER"] = Globals.LAYER_WATER;
             Map.LayerDepth["BG"] = Globals.LAYER_BG;
             Map.LayerDepth["BG2"] = Globals.LAYER_BG2;
-            
+
+            // load font
+
+            var fontTexture = TextureSet.Load("font", 10, 10);
+
+            font = new Font(fontTexture, ' ');
+
             Debug.WriteLine("Loading took " + sw.ElapsedMilliseconds + "ms"); sw.Stop();
         }
 
@@ -220,18 +241,20 @@ namespace Platformer
             camera.EnableBounds(new Rectangle(0, 0, Map.Width * Globals.TILE, Map.Height * Globals.TILE));
 
             // handle room changing <-> object loading/unloading
-
             camera.OnBeginRoomChange += (sender, rooms) =>
-            { 
-                // load 3x3 rooms
-                LoadRoom(rooms.Item2);
-
-
-            };
-
-            camera.OnEndRoomChange += (sender, rooms) =>
             {
-                UnloadRoom(rooms.Item1);                
+                // unload old rooms
+                var oldNeighbors = rooms.Item1.Neighbors();                
+                foreach (var n in oldNeighbors)
+                    UnloadRoomObjects(n);
+
+                // do this, because else the GC would wait to clean huge resources and create a temporary lag
+                GC.Collect();
+
+                var neighbors = rooms.Item2.Neighbors();
+                LoadRoomObjects(rooms.Item2);
+                foreach (var n in neighbors)
+                    LoadRoomObjects(n);
             };
 
             // load room data for the camera
@@ -245,7 +268,7 @@ namespace Platformer
             var backgrounds = TextureSet.Load("background", 16 * Globals.TILE, 9 * Globals.TILE);
             camera.SetBackgrounds(backgrounds);
 
-            LoadLevel(); // <- more than once!!!
+            LoadLevel();
         }
 
         /// <summary>
@@ -323,7 +346,9 @@ namespace Platformer
 
             Map.Draw(gameTime);
             ObjectManager.DrawObjects(gameTime);
-            
+
+            font.Draw(player.X, player.Y, "Hello World");
+
             SpriteBatch.End();
             
             base.Draw(gameTime);

@@ -84,6 +84,11 @@ namespace SPG.Objects
             Objects.Where(o => o.GetType() == objectType).ToList().ForEach(o => o.Enabled = true);
         }
 
+        public static List<T> CollisionPoint<T>(float x, float y) where T : GameObject
+        {
+            return CollisionPoint<T>(null, x, y);
+        }
+
         /// <summary>
         /// Finds a list of game objects of a certain type that overlap a certain point x , y.
         /// </summary>

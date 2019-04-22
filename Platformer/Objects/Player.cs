@@ -139,9 +139,9 @@ namespace Platformer
                 if (k_rightPressed)
                     Position = new Vector2(Position.X + 16 * Globals.TILE, Position.Y);
                 if (k_upPressed)
-                    Position = new Vector2(Position.X, Position.Y - 16 * Globals.TILE);
+                    Position = new Vector2(Position.X, Position.Y - 9 * Globals.TILE);
                 if (k_downPressed)
-                    Position = new Vector2(Position.X, Position.Y + 16 * Globals.TILE);
+                    Position = new Vector2(Position.X, Position.Y + 9 * Globals.TILE);
 
             }
 

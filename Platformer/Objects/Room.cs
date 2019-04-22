@@ -11,7 +11,7 @@ namespace Platformer.Objects
 {
     public class Room : GameObject
     {
-        public int Background { get; set; }
+        public int Background { get; set; } = 0;
 
         private Room() { }
 
@@ -20,7 +20,7 @@ namespace Platformer.Objects
             Position = new Vector2(x, y);
             BoundingBox = new RectF(0, 0, width, height);
             Name = "room";
-            Visible = false;
+            Visible = false;            
         }
     }
 }

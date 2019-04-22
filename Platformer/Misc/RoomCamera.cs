@@ -61,11 +61,7 @@ namespace Platformer.Misc
         /// Is called when a room change is initiated. Provides last room and current room as arguments.
         /// </summary>
         public event EventHandler<Tuple<Room, Room>> OnBeginRoomChange;
-        /// <summary>
-        /// Is called when a room change is finished. Provides last room and current room as arguments.
-        /// </summary>
-        public event EventHandler<Tuple<Room, Room>> OnEndRoomChange;
-
+        
         public RoomCamera(ResolutionRenderer resolutionRenderer) : base(resolutionRenderer) { }
         
         public void InitRoomData(List<Dictionary<string, object>> roomData)
@@ -83,8 +79,20 @@ namespace Platformer.Misc
 
                     var room = new Room(x, y, w, h);
                     room.Background = bg;
-
                     Rooms.Add(room);
+                }
+
+                // load rooms of standard size when there is none
+                for(var i = 0; i < GameManager.Game.Map.Width * Globals.TILE; i += ViewWidth)
+                {
+                    for (var j = 0; j < GameManager.Game.Map.Height * Globals.TILE; j += ViewHeight)
+                    {
+                        if (ObjectManager.CollisionPoint<Room>(i + Globals.TILE, j + Globals.TILE).Count == 0)
+                        {
+                            var room = new Room(i, j, ViewWidth, ViewHeight);
+                            Rooms.Add(room);                            
+                        }
+                    }
                 }
             }
             catch(Exception)
@@ -110,7 +118,7 @@ namespace Platformer.Misc
             if (room == null) return;
 
             // enable a little more region so the player won't get stuck
-            var o = Globals.TILE;
+            var o = 2 * Globals.TILE;
             ObjectManager.SetRegionEnabled(room.X - o, room.Y - o, room.X + room.BoundingBox.Width + 2 * o, room.Y + room.BoundingBox.Height + 2 * o, true);
         }
 
@@ -158,7 +166,7 @@ namespace Platformer.Misc
                 var tarX = Math.Min(Math.Max(target.X + dirOffsetX, currentRoom.X + .5f * ViewWidth), currentRoom.X + currentRoom.BoundingBox.Width - .5f * ViewWidth);
                 var tarY = Math.Min(Math.Max(target.Y - Globals.TILE, currentRoom.Y + .5f * ViewHeight), currentRoom.Y + currentRoom.BoundingBox.Height - .5f * ViewHeight);
 
-                var vel = new Vector2((tarX - Position.X) / 12f, (tarY - Position.Y) / 12f);
+                var vel = new Vector2((tarX - Position.X) / 12f, (tarY - Position.Y) / 6f);
 
                 Position = new Vector2(Position.X + vel.X, Position.Y + vel.Y);
 
@@ -175,8 +183,8 @@ namespace Platformer.Misc
                         dirOffsetX = 0;
                         state = State.PrepareRoomTransition;
 
-                        // switch background alpha
-                        backgroundAlpha = 0;                        
+                        // switch backgrounds           
+                        backgroundAlpha = 0;
                     }
                 }
             }
@@ -238,8 +246,7 @@ namespace Platformer.Misc
                 Position = t;
 
                 if (curX == tx && curY == ty)
-                {
-                    OnEndRoomChange?.Invoke(this, new Tuple<Room, Room>(lastRoom, currentRoom));
+                {                    
                     state = State.Default;                    
                 }
             }

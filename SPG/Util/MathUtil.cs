@@ -10,6 +10,11 @@ namespace SPG.Util
             return Math.Min(Math.Max(f, v1), v2);
         }
 
+        //public static int Clamp(this int f, int v1, int v2)
+        //{
+        //    return Math.Min(Math.Max(f, v1), v2);
+        //}
+
         public static int Div(double v1, double v2)
         {            
             return Floor(v1 / v2);

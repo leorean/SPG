@@ -3,7 +3,11 @@
 public static class Globals
 {
     public static readonly int TILE = 16;
-    
+
+    public static readonly float LAYER_FONT
+        = 0.9010f;
+    public static readonly float LAYER_UI
+        = 0.9000f;
     public static readonly float LAYER_FG
         = 0.0040f;
     public static readonly float LAYER_WATER
@@ -11,6 +15,5 @@ public static class Globals
     public static readonly float LAYER_BG
         = 0.0020f;
     public static readonly float LAYER_BG2
-        = 0.0010f;
-    
+        = 0.0010f;    
 }

@@ -126,7 +126,6 @@ namespace SPG.Objects
         
         ~GameObject()
         {
-            Debug.WriteLine($"Finalizer of {this} called. Removing from ObjectManager..");
             ObjectManager.Remove(this);
         }
 
