@@ -30,31 +30,31 @@ namespace Platformer
     {
 
         // public
-
-        [Flags]
+        
         public enum PlayerState
         {
-            IDLE = 1 << 0,
-            WALK = 1 << 1,
-            JUMP_UP = 1 << 2,
-            JUMP_DOWN = 1 << 3,
-            WALL_IDLE = 1 << 4,
-            WALL_CLIMB = 1 << 5,
-            OBTAIN = 1 << 6,
-            DIE = 1 << 7,
-            TURN_AROUND = 1 << 8,
-            GET_UP = 1 << 9,
-            HIT_AIR = 1 << 10,
-            HIT_GROUND = 1 << 11,
-            CEIL_IDLE = 1 << 12,
-            CEIL_CLIMB = 1 << 13,
-            SWIM = 1 << 14
-
-            // TODO: OBTAIN, DEAD?, 
+            IDLE,
+            WALK,
+            JUMP_UP,
+            JUMP_DOWN,
+            WALL_IDLE,
+            WALL_CLIMB,
+            OBTAIN,
+            DIE,
+            TURN_AROUND,
+            GET_UP,
+            HIT_AIR,
+            HIT_GROUND,
+            CEIL_IDLE,
+            CEIL_CLIMB,
+            SWIM,
+            DEAD             
         }
 
         public PlayerState State { get; set; }
-        
+
+        public int HP;
+
         // private
 
         public Direction Direction { get; set; } = Direction.RIGHT;
@@ -88,6 +88,10 @@ namespace Platformer
             AnimationComplete += Player_AnimationComplete;
 
             lastGroundY = Y;
+
+            // stats:
+
+            HP = 3;
         }
 
         private void Player_AnimationComplete(object sender, EventArgs e)
@@ -96,6 +100,12 @@ namespace Platformer
         }
 
         // methods
+
+        public void Hit(int hitPoints)
+        {
+            hit = true;
+            HP = Math.Max(HP - hitPoints, 0);
+        }
 
         public override void Update(GameTime gameTime)
         {
@@ -161,7 +171,8 @@ namespace Platformer
             
             if (input.IsKeyPressed(Keys.H, Input.State.Pressed))
             {
-                hit = true;                
+                Hit(1);
+                
             }
 
             // ++++ getting hit ++++
@@ -173,9 +184,14 @@ namespace Platformer
             {
                 State = PlayerState.HIT_AIR;
                 XVel = -.7f * Math.Sign((int)Direction);
-                YVel = -1.5f;                
+                YVel = -1.5f;
                 hit = false;
                 invincible = 60;
+            }
+
+            if (HP == 0)
+            {
+                State = PlayerState.DEAD;
             }
             
             // ++++ collision flags ++++
@@ -554,6 +570,12 @@ namespace Platformer
                 {
                     YVel = Math.Sign(YVel) * Math.Max(Math.Abs(YVel) - .02f, 0);
                 }
+            }
+            if (State == PlayerState.DEAD)
+            {
+                XVel = 0;
+                YVel = 0;
+                Visible = false;
             }
 
             // ++++ collision & movement ++++

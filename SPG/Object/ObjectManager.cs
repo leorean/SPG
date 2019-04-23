@@ -32,7 +32,7 @@ namespace SPG.Objects
                 return idCounter;
             } else
             {
-                throw new Exception("Object already added to the object manager!");
+                throw new Exception("Object already registered!");
             }
         }
 
@@ -74,14 +74,22 @@ namespace SPG.Objects
             });
         }
 
-        public static void DisableAll(Type objectType)
+        /// <summary>
+        /// Disables all objects of type T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public static void Disable<T>() where T : GameObject
         {
-            Objects.Where(o => o.GetType() == objectType).ToList().ForEach(o => o.Enabled = false);            
+            Objects.Where(o => o is T).ToList().ForEach(o => o.Enabled = false);
         }
 
-        public static void EnableAll(Type objectType)
+        /// <summary>
+        /// Enables all objects of type T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public static void Enable<T>() where T : GameObject
         {
-            Objects.Where(o => o.GetType() == objectType).ToList().ForEach(o => o.Enabled = true);
+            Objects.Where(o => o is T).ToList().ForEach(o => o.Enabled = true);
         }
 
         public static List<T> CollisionPoint<T>(float x, float y) where T : GameObject
@@ -90,7 +98,7 @@ namespace SPG.Objects
         }
 
         /// <summary>
-        /// Finds a list of game objects of a certain type that overlap a certain point x , y.
+        /// Finds a list of game objects (excluding self) of a certain type that overlap a certain point (x, y).
         /// </summary>
         /// <param name="self"></param>
         /// <param name="x"></param>
@@ -99,7 +107,7 @@ namespace SPG.Objects
         /// <returns></returns>
         public static List<T> CollisionPoint<T>(GameObject self, float x, float y) where T : GameObject
         {
-            List<T> candidates = Objects.Where(o => o != self && o.GetType() == typeof(T) && o.Enabled == true).Cast<T>().ToList();
+            List<T> candidates = Objects.Where(o => o != self && o is T && o.Enabled == true).Cast<T>().ToList();
 
             if (candidates.Count == 0) return candidates;
 
@@ -122,7 +130,7 @@ namespace SPG.Objects
         /// <returns></returns>
         public static List<T> CollisionBounds<T>(GameObject self, float x, float y) where T : GameObject
         {
-            List<T> candidates = Objects.Where(o => o != self && o.GetType() == typeof(T) && o.Enabled == true).Cast<T>().ToList();
+            List<T> candidates = Objects.Where(o => o != self && o is T && o.Enabled == true).Cast<T>().ToList();
 
             if (candidates.Count == 0) return candidates;
             
@@ -134,6 +142,26 @@ namespace SPG.Objects
                 ).ToList();
 
             return candidates;
+        }
+
+        /// <summary>
+        /// Sets a region of a type T of objects enabled or disabled.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="enabled"></param>
+        public static void SetRegionEnabled<T>(float x, float y, float width, float height, bool enabled) where T : GameObject
+        {
+            foreach (var o in Objects)
+            {
+                if (o is T)
+                {
+                    if (o.X >= x && o.Y >= y && o.X <= x + width && o.Y <= y + height) o.Enabled = enabled;
+                }
+            }
         }
 
         /// <summary>
@@ -158,13 +186,7 @@ namespace SPG.Objects
             Objects.Where(o => o.Visible).ToList().ForEach(o => o.Draw(gameTime));
         }
 
-        public static void SetRegionEnabled(float x, float y, float width, float height, bool enabled)
-        {
-            foreach (var o in Objects)
-            {
-                if (o.X >= x && o.Y >= y && o.X <= x + width && o.Y <= y + height) o.Enabled = enabled;
-            }
-        }
+        
     }
 }
 

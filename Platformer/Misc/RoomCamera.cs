@@ -25,8 +25,8 @@ namespace Platformer.Misc
             RoomTransition
         }
 
-        //public int ViewWidth { get; private set; }
-        //public int ViewHeight { get; private set; }
+        public float ViewX { get { return Position.X - .5f * ViewWidth; } }
+        public float ViewY { get { return Position.Y - .5f * ViewHeight; } }
 
         private State state = State.Default;
         
@@ -111,7 +111,7 @@ namespace Platformer.Misc
         private void DisableRegionForRoom(Room room)
         {
             if (room == null) return;
-            ObjectManager.SetRegionEnabled(room.X, room.Y, room.X + room.BoundingBox.Width, room.Y + room.BoundingBox.Height, false);
+            ObjectManager.SetRegionEnabled<GameObject>(room.X, room.Y, room.X + room.BoundingBox.Width, room.Y + room.BoundingBox.Height, false);
         }
         private void EnableRegionForRoom(Room room)
         {
@@ -119,7 +119,8 @@ namespace Platformer.Misc
 
             // enable a little more region so the player won't get stuck
             var o = 2 * Globals.TILE;
-            ObjectManager.SetRegionEnabled(room.X - o, room.Y - o, room.X + room.BoundingBox.Width + 2 * o, room.Y + room.BoundingBox.Height + 2 * o, true);
+            ObjectManager.SetRegionEnabled<Solid>(room.X - o, room.Y - o, room.X + room.BoundingBox.Width + 2 * o, room.Y + room.BoundingBox.Height + 2 * o, true);
+            ObjectManager.Enable<Player>();
         }
 
         public override void Update(GameTime gt)
@@ -132,7 +133,7 @@ namespace Platformer.Misc
             if (target == null)
                 return;
 
-            ObjectManager.EnableAll(typeof(Room));
+            ObjectManager.Enable<Room>();
 
             tx0 = MathUtil.Div(target.X, ViewWidth) * ViewWidth;
             ty0 = MathUtil.Div(target.Y, ViewHeight) * ViewHeight;

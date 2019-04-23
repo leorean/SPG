@@ -11,6 +11,11 @@ namespace Platformer.Objects
 {
     public static class RoomExtensions
     {
+        /// <summary>
+        /// Gets a list of all neighbors for a given room, based on the room camera view bounds.
+        /// </summary>
+        /// <param name="room"></param>
+        /// <returns></returns>
         public static List<Room> Neighbors(this Room room)
         {
             List<Room> neighbours = new List<Room>();

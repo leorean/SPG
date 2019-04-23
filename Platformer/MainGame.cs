@@ -48,7 +48,7 @@ namespace Platformer
 
         private TextureSet tileSet;
         private TextureSet playerSet;
-        private GameObject player;
+        private Player player;
 
         private int playerX = 16 * 8;
         private int playerY = 16 * 4;
@@ -222,7 +222,8 @@ namespace Platformer
 
             font = new Font(fontTexture, ' ');
 
-            Debug.WriteLine("Loading took " + sw.ElapsedMilliseconds + "ms"); sw.Stop();
+            sw.Stop();
+            Debug.WriteLine("Loaded game in " + sw.ElapsedMilliseconds + "ms");            
         }
 
         /// <summary>
@@ -325,9 +326,7 @@ namespace Platformer
             
             // ++++ update camera ++++
 
-            camera.Update(gameTime);
-
-            base.Update(gameTime);
+            camera.Update(gameTime);            
         }
         
         /// <summary>
@@ -355,14 +354,9 @@ namespace Platformer
             font.Halign = Font.HorizontalAlignment.Left;
             font.Valign = Font.VerticalAlignment.Top;
 
-            font.Draw(12 * Globals.TILE, 5 * Globals.TILE, "1234567890µµµ!", 0);
+            font.Draw(camera.ViewX + 4, camera.ViewY + 4, player.HP, 0);
 
-            SpriteBatch.End();
-            
-            base.Draw(gameTime);
-
-            
-
+            SpriteBatch.End();            
         }
     }
 }

@@ -89,7 +89,18 @@ namespace SPG.Draw
                 glyphs[' '] = spaceTex.Clear();
             }
         }
-                
+
+        public void Update()
+        {
+            // removes all texts that are not used anymore.
+            texts.RemoveAll(t => t.DecreaseAliveCounter());
+        }
+
+        public void Draw(float x, float y, object text, int maxWidth = 0)
+        {
+            Draw(x, y, text.ToString(), maxWidth);
+        }
+
         /// <summary>
         /// Draw text at a position, optionally limiting to a maxWidth in pixels.
         /// </summary>
