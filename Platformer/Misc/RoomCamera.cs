@@ -157,7 +157,7 @@ namespace Platformer.Misc
                 
                 if (target is Player)
                 {
-                    var dir = (target as Player).Dir;
+                    var dir = (target as Player).Direction;
 
                     dirOffsetX += Math.Sign((int)dir) * 1f;
                     dirOffsetX = dirOffsetX.Clamp(-4 * Globals.TILE, 4 * Globals.TILE);

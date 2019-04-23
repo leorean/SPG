@@ -338,7 +338,7 @@ namespace Platformer
         {
             camera.ResolutionRenderer.SetupDraw();
             
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            //GraphicsDevice.Clear(Color.CornflowerBlue);
             
             SpriteBatch.BeginCamera(camera);
 
@@ -347,7 +347,9 @@ namespace Platformer
             Map.Draw(gameTime);
             ObjectManager.DrawObjects(gameTime);
 
-            font.Draw(player.X, player.Y, "Hello World");
+            font.Halign = Font.HorizontalAlignment.Right;
+            font.Valign = Font.VerticalAlignment.Top;
+            font.Draw(6 * Globals.TILE, 2 * Globals.TILE, "Hello World\nWhat's up!\nTEST.", 0);
 
             SpriteBatch.End();
             

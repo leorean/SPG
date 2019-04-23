@@ -36,69 +36,127 @@ namespace SPG.Draw
 
         // constructor
 
-        public Font(TextureSet texture, int start, int spacing = 0)
+        /// <summary>
+        /// Creates a new font, based on a texture set and with a set starting character index
+        /// </summary>
+        /// <param name="texture"></param>
+        /// <param name="startCharacter"></param>
+        /// <param name="spacing"></param>
+        public Font(TextureSet texture, int startCharacter, int spacing = 0)
         {
             glyphs = new Dictionary<char, Texture2D>();
             
             for (var i = 0; i < texture.Count; i++)
             {
-
-                Debug.WriteLine($"Cropping {(char)(start + i)}...");
-                var tex = CropFromMask(texture[i], spacing);
-
-                glyphs.Add((char)(start + i), tex);                
+                var tex = texture[i].CropFromBackgroundColor(spacing);
+                glyphs.Add((char)(startCharacter + i), tex);
             }
 
-        }
+            var spaceTex = glyphs.Where(o => o.Key == ' ').FirstOrDefault().Value;
 
-        /// <summary>
-        /// Takes a texture and calculates a width (+ spacing) based on the mask
-        /// </summary>
-        /// <param name="texture"></param>
-        /// <returns></returns>
-        private Texture2D CropFromMask(Texture2D texture, int spacing)
-        {
-            int max = 0;
-            int min = texture.Width;
-
-            Color mask = new Color(0, 0, 0, 0);
-
-            Color[] pixels = texture.GetPixels();
-
-            for(var i = 0; i <texture.Width; i++)
+            if (spaceTex != null)
             {
-                for (var j = 0; j < texture.Height; j++)
-                {
-                    var px = pixels.GetPixel(i, j, texture.Width);
-
-                    if (px != mask)
-                    {
-                        max = Math.Max(i, max);
-                        min = Math.Min(i, min);                        
-                    }
-                }
-            }
-
-            var tex = texture.Crop(min, 0, max + spacing, texture.Height);
-
-            return tex;
+                glyphs[' '] = spaceTex.Clear();
+            }            
         }
+        
+        // draws text
 
-        // draws single-line text
-
-        public void Draw(float x, float y, string text)
+        public void Draw(float x, float y, string text, int maxWidth = 0)
         {
             var spriteBatch = GameManager.Game.SpriteBatch;
-            
-            var width = 0;
-            var height = glyphs.FirstOrDefault().Value.Height;
 
+            var line = text.Split('\n');
+
+            List<Texture2D> lineTextures = new List<Texture2D>();
+
+            int textHeight = glyphs.FirstOrDefault().Value.Height;
+
+            // prepare
+            for (var l = 0; l < line.Length; l++)
+            {
+                var txt = line[l];
+                Texture2D word = null;
+                for (var i = 0; i < txt.Length; i++)
+                {
+                    var c = txt[i];
+                    var tex = glyphs.Where(o => o.Key == c).FirstOrDefault().Value;
+
+                    // draw ? when glyph is not found in set.
+                    if (c != '\n' && tex == null)
+                        tex = glyphs.Where(o => o.Key == '?').FirstOrDefault().Value;
+                    
+                    if (maxWidth > 0 && word != null && word.Width + tex.Width > maxWidth)
+                    {
+                        lineTextures.Add(word);                        
+                        word = tex;
+                        continue;
+                    }
+
+                    word = (word == null) ? tex : word.AppendRight(tex);
+                }
+                // add line
+                lineTextures.Add(word);                
+            }
+
+            var posx = x;
+            switch (Halign)
+            {
+                case HorizontalAlignment.Left:
+                    posx = x;
+                    break;
+                case HorizontalAlignment.Center:
+                    posx = x - .5f * lineTextures.Max(o => o.Width);
+                    break;
+                case HorizontalAlignment.Right:
+                    posx = x + lineTextures.Max(o => o.Width);
+                    break;
+            }
+
+            // draw lines
+            for (var i = 0; i < lineTextures.Count; i++)
+            {
+                var pos = new Vector2(x, y + i * textHeight);
+                spriteBatch.Draw(lineTextures[i], pos, null, Color, 0, Vector2.Zero, 1.0f, SpriteEffects.None, Depth);
+            }
+        }
+
+        /*
+        public void Draw(float x, float y, string text, int maxWidth = 0)
+        {
+            var spriteBatch = GameManager.Game.SpriteBatch;
+
+            List<int> lineWidths = new List<int>();
+            int line = 0;
+
+            lineWidths.Add(0);
+
+            var charHeight = glyphs.FirstOrDefault().Value.Height;
+            
             for (var i = 0; i < text.Length; i++)
             {
                 var c = text[i];
                 var tex = glyphs.Where(o => o.Key == c).FirstOrDefault().Value;
-                width += tex.Width;
+
+                // draw ? when glyph is not found in set.
+                if (c != '\n' && tex == null)
+                    tex = glyphs.Where(o => o.Key == '?').FirstOrDefault().Value;
+                
+                if (c == '\n' || (lineWidths[line] + tex.Width > maxWidth && maxWidth > 0))
+                {
+                    // ignore special case where first char is newline..
+                    if (!(lineWidths[line] == 0 && c == '\n'))
+                    {
+                        line++;
+                        lineWidths.Add(0);
+                    }                    
+                } else
+                {
+                    lineWidths[line] += tex.Width;
+                }                
             }
+
+            var maxLineWidth = lineWidths.Max();            
 
             var posx = 0f;
             var posy = 0f;
@@ -108,10 +166,10 @@ namespace SPG.Draw
                     posx = x;
                     break;
                 case HorizontalAlignment.Center:
-                    posx = x - .5f * width;
+                    posx = x - .5f * maxLineWidth;
                     break;
                 case HorizontalAlignment.Right:
-                    posx = x - width;
+                    posx = x - maxLineWidth;
                     break;
             }
             switch (Valign)
@@ -120,26 +178,49 @@ namespace SPG.Draw
                     posy = y;
                     break;
                 case VerticalAlignment.Center:
-                    posy = y - .5f * height;
+                    posy = y - .5f * charHeight * lineWidths.Count;
                     break;
                 case VerticalAlignment.Bottom:
-                    posy = y - height;
+                    posy = y - charHeight * lineWidths.Count;
                     break;
             }
+
+            var tx = posx;
+            var ty = posy;
+
+            //var lastX = posx + maxLineWidth;
+            line = 0; // reset
 
             for (var i = 0; i < text.Length; i++)
             {
                 var c = text[i];
                 var tex = glyphs.Where(o => o.Key == c).FirstOrDefault().Value;
 
-                var pos = new Vector2(posx, posy);
+                // draw ? when glyph is not found in set.
+                if (c != '\n' && tex == null)
+                    tex = glyphs.Where(o => o.Key == '?').FirstOrDefault().Value;
+
+                var pos = new Vector2(tx, ty);
 
                 // we don't draw spaces
-                if(c != ' ')
+                if (c != ' ' && c != '\n')
                     spriteBatch.Draw(tex, pos, null, Color, 0, Vector2.Zero, 1.0f, SpriteEffects.None, Depth);
 
-                posx += tex.Width;
-            }            
+                if (c == '\n' || ((tx - posx) + tex.Width > maxWidth && maxWidth > 0))
+                {
+                    // ignore special case where first char is newline..
+                    if (!(tx == posx && c == '\n'))
+                    {
+                        ty += charHeight;                        
+                    }
+                    tx = posx;
+                }
+                else
+                {
+                    tx += tex.Width;
+                }                
+            }
         }
+        */
     }
 }

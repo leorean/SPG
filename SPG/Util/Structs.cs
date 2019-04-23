@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace SPG.Util
 {
@@ -22,6 +23,17 @@ namespace SPG.Util
             {
                 data[i] = new T[h];
             }
+        }
+
+        public List<T> ToList()
+        {
+            List<T> t = new List<T>();
+            
+            for (var i = 0; i < Width * Height; i++)
+            {
+                t.Add(Get(i));
+            }
+            return t;
         }
 
         public void Set(int i, T value)

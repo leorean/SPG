@@ -9,13 +9,21 @@ using System.Linq;
 using SPG;
 
 namespace Platformer
-{
+{ 
     public static class PlayerExtensions
     {
-        public static Player.Direction Reverse(this Player.Direction dir)
+        public static Direction Reverse(this Direction dir)
         {
-            return (Player.Direction)(-(int)dir);
+            return (Direction)(-(int)dir);
         }
+    }
+    
+    public enum Direction
+    {
+        LEFT = -1,
+        RIGHT = 1,
+        UP = -2,
+        DOWN = 2
     }
 
     public class Player : GameObject
@@ -46,26 +54,10 @@ namespace Platformer
         }
 
         public PlayerState State { get; set; }
-
-        // flags are: shooting, hurt & invincible, 
-        /*
-         * shooting: angle + projectile
-         * 
-         * shooting can be done during: idle, walk, jump, climb
-         * 
-         */
-
-        public enum Direction
-        {
-            LEFT = -1,
-            RIGHT = 1,
-            UP = -2,
-            DOWN = 2
-        }
-
+        
         // private
 
-        public Direction Dir { get; set; } = Direction.RIGHT;
+        public Direction Direction { get; set; } = Direction.RIGHT;
         private bool animationComplete;
 
         private bool onGround;
@@ -180,7 +172,7 @@ namespace Platformer
             if (hit)
             {
                 State = PlayerState.HIT_AIR;
-                XVel = -.7f * Math.Sign((int)Dir);
+                XVel = -.7f * Math.Sign((int)Direction);
                 YVel = -1.5f;                
                 hit = false;
                 invincible = 60;
@@ -188,7 +180,7 @@ namespace Platformer
             
             // ++++ collision flags ++++
 
-            var onWall = ObjectManager.CollisionPoint<Solid>(this, X + (.5f * BoundingBox.Width + 1) * Math.Sign((int)Dir), Y + 4).Count > 0;
+            var onWall = ObjectManager.CollisionPoint<Solid>(this, X + (.5f * BoundingBox.Width + 1) * Math.Sign((int)Direction), Y + 4).Count > 0;
             var onCeil = ObjectManager.CollisionPoint<Solid>(this, X, Y - BoundingBox.Height * .5f - 1).Count > 0;
 
             int tx = MathUtil.Div(X, Globals.TILE);
@@ -204,9 +196,9 @@ namespace Platformer
                     ||
                     State == PlayerState.JUMP_DOWN)
                 {
-                    if ((Dir == Direction.LEFT && k_leftHolding)
+                    if ((Direction == Direction.LEFT && k_leftHolding)
                         ||
-                        (Dir == Direction.RIGHT && k_rightHolding)
+                        (Direction == Direction.RIGHT && k_rightHolding)
                     )
                     {
                         lastGroundYbeforeWall = lastGroundY;
@@ -273,12 +265,12 @@ namespace Platformer
                 if (k_rightHolding)
                 {
                     State = PlayerState.WALK;
-                    Dir = Direction.RIGHT;
+                    Direction = Direction.RIGHT;
                 }
                 if (k_leftHolding)
                 {
                     State = PlayerState.WALK;
-                    Dir = Direction.LEFT;
+                    Direction = Direction.LEFT;
                 }
             }
             // walk
@@ -286,7 +278,7 @@ namespace Platformer
             {
                 if (k_rightHolding)
                 {
-                    if (Dir == Direction.RIGHT)
+                    if (Direction == Direction.RIGHT)
                     {
                         XVel = Math.Min(XVel + .2f, maxVel);
                     }
@@ -297,7 +289,7 @@ namespace Platformer
                 }
                 if (k_leftHolding)
                 {
-                    if (Dir == Direction.LEFT)
+                    if (Direction == Direction.LEFT)
                     {
                         XVel = Math.Max(XVel - .2f, -maxVel);
                     }
@@ -336,13 +328,13 @@ namespace Platformer
                 if (k_leftHolding)
                 {
                     if (XVel < .5)
-                        Dir = Direction.LEFT;
+                        Direction = Direction.LEFT;
                     XVel = Math.Max(XVel - .08f, -maxVel);
                 }
                 if (k_rightHolding)
                 {
                     if (XVel > -.5)
-                        Dir = Direction.RIGHT;
+                        Direction = Direction.RIGHT;
                     XVel = Math.Min(XVel + .08f, maxVel);                    
                 }                
             }
@@ -360,8 +352,8 @@ namespace Platformer
             {
                 XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - .1f, 0);
 
-                if (XVel > 0) Dir = Direction.LEFT;
-                if (XVel < 0) Dir = Direction.RIGHT;
+                if (XVel > 0) Direction = Direction.LEFT;
+                if (XVel < 0) Direction = Direction.RIGHT;
 
                 if (XVel == 0)
                     State = PlayerState.IDLE;
@@ -374,7 +366,7 @@ namespace Platformer
 
                 var wallJumpVel = -2.2f;
 
-                if (Dir == Direction.LEFT)
+                if (Direction == Direction.LEFT)
                 {
                     var jumpOff = false;
 
@@ -390,7 +382,7 @@ namespace Platformer
                     if (k_jumpPressed || k_rightHolding)
                     {
                         if (k_rightHolding)
-                            Dir = Direction.RIGHT;
+                            Direction = Direction.RIGHT;
                         XVel = 1;
                         YVel = wallJumpVel;
                         State = PlayerState.JUMP_UP;
@@ -403,7 +395,7 @@ namespace Platformer
                         lastGroundY = Math.Min(lastGroundY, lastGroundYbeforeWall);
                     }
                 }
-                else if (Dir == Direction.RIGHT)
+                else if (Direction == Direction.RIGHT)
                 {
                     var jumpOff = false;
 
@@ -419,7 +411,7 @@ namespace Platformer
                     if (k_jumpPressed || k_leftHolding)
                     {
                         if (k_leftHolding)
-                            Dir = Direction.LEFT;
+                            Direction = Direction.LEFT;
                         XVel = -1;
                         YVel = wallJumpVel;
                         State = PlayerState.JUMP_UP;
@@ -506,12 +498,12 @@ namespace Platformer
                 if (k_leftPressed || k_leftHolding)
                 {
                     XVel = -.5f;
-                    Dir = Direction.LEFT;
+                    Direction = Direction.LEFT;
                 }
                 else if (k_rightPressed || k_rightHolding)
                 {
                     XVel = .5f;
-                    Dir = Direction.RIGHT;
+                    Direction = Direction.RIGHT;
                 }
                 else
                 {
@@ -538,12 +530,12 @@ namespace Platformer
                 if (k_leftHolding)
                 {
                     XVel = Math.Max(XVel - waterAcc, -waterVelMax);
-                    Dir = Direction.LEFT;
+                    Direction = Direction.LEFT;
                 }
                 else if (k_rightHolding)
                 {
                     XVel = Math.Min(XVel + waterAcc, waterVelMax);
-                    Dir = Direction.RIGHT;
+                    Direction = Direction.RIGHT;
                 }
                 else
                 {
@@ -720,7 +712,7 @@ namespace Platformer
             
             animationComplete = false;
             
-            var xScale = Math.Sign((int)Dir);
+            var xScale = Math.Sign((int)Direction);
             Scale = new Vector2(xScale, 1);
         }
     }
