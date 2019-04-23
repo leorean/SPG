@@ -347,9 +347,15 @@ namespace Platformer
             Map.Draw(gameTime);
             ObjectManager.DrawObjects(gameTime);
 
-            font.Halign = Font.HorizontalAlignment.Right;
+            font.Halign = Font.HorizontalAlignment.Center;
             font.Valign = Font.VerticalAlignment.Top;
-            font.Draw(6 * Globals.TILE, 2 * Globals.TILE, "Hello World\nWhat's up!\nTEST.", 0);
+
+            font.Draw(6 * Globals.TILE, 2 * Globals.TILE, "HelloWorld\nWhat's up!\nTEST.", 32);
+
+            font.Halign = Font.HorizontalAlignment.Left;
+            font.Valign = Font.VerticalAlignment.Top;
+
+            font.Draw(12 * Globals.TILE, 5 * Globals.TILE, "1234567890µµµ!", 0);
 
             SpriteBatch.End();
             
