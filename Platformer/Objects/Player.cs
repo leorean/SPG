@@ -74,7 +74,7 @@ namespace Platformer
 
         // constructor
         
-        public Player(int x, int y)
+        public Player(float x, float y)
         {
             Name = "Player";
             Position = new Vector2(x, y);

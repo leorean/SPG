@@ -1,21 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using SPG.Save;
 
 namespace Platformer.Misc
 {
-    public class SaveGame
-    {                
-        public static void Load()
-        {
+    [Serializable]
+    public class SaveGame : ISaveGame
+    {
+        private string fileName;
+        
+        public Vector2 playerPosition;        
 
+        // methods
+
+        public SaveGame(string fileName)
+        {
+            this.fileName = fileName;
         }
 
-        public static void Save()
+        public string GetName()
         {
-
+            return fileName;
         }
-    }
+    }    
 }

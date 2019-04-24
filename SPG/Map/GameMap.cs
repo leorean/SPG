@@ -36,12 +36,12 @@ namespace SPG.Map
             return nodeList;
         }
 
-        public static List<Dictionary<string, object>> FindByTypeName(this List<Dictionary<string, object>> list, string name)
+        public static List<Dictionary<string, object>> FindDataByTypeName(this List<Dictionary<string, object>> list, string name)
         {
             return list.Where(x => x.Values.Contains(name)).ToList();
         }
 
-        public static Dictionary<string, object> FindFirstByTypeName(this List<Dictionary<string, object>> list, string name)
+        public static Dictionary<string, object> FindFirstDataByTypeName(this List<Dictionary<string, object>> list, string name)
         {
             return list.Where(x => x.Values.Contains(name)).First();
         }
@@ -72,6 +72,10 @@ namespace SPG.Map
         /// </summary>
         public List<Dictionary<string, object>> ObjectData { get; set; }
 
+        /// <summary>
+        /// Creates a new map from an XML document.
+        /// </summary>
+        /// <param name="xml"></param>
         public GameMap(XmlDocument xml)
         {
             try

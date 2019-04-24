@@ -14,6 +14,7 @@ using System.Diagnostics;
 using Platformer.Misc;
 using Platformer.Objects;
 using SPG.Draw;
+using SPG.Save;
 
 namespace Platformer
 {
@@ -22,13 +23,16 @@ namespace Platformer
     /// </summary>
     public class MainGame : SPG.Game
     {
+        // visual vars
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        //private Matrix scaleMatrix;
+        private Size viewSize;
+        private Size screenSize;
+        private float scale;
 
         private RoomCamera camera;
-
         public override Camera Camera {
             get
             {
@@ -40,24 +44,27 @@ namespace Platformer
             }
         }
         
-        private Size viewSize;
-        private Size screenSize;
-        private float scale;
+        // input
 
         Input input;
+
+        // common textures & objects
 
         private TextureSet tileSet;
         private TextureSet playerSet;
         private Player player;
-
-        private int playerX = 16 * 8;
-        private int playerY = 16 * 4;
-
+        
+        // stores room data
         private List<Room> loadedRooms;
+
+        // save data
+
+        SaveGame saveGame;
         
         public override GraphicsDeviceManager GraphicsDeviceManager { get => graphics; }
         public override SpriteBatch SpriteBatch { get => spriteBatch; }
 
+        // default font
         public Font font;
 
         public MainGame()
@@ -78,6 +85,8 @@ namespace Platformer
             GraphicsDeviceManager.PreferredBackBufferHeight = screenSize.Height;
 
             input = new Input();
+            
+            saveGame = new SaveGame("save.dat");
         }
         
         void UnloadRoomObjects(Room room)
@@ -169,27 +178,39 @@ namespace Platformer
         /// </summary>
         public void LoadLevel()
         {
-            // TODO: load from save/load coordinates
+            var playerData = Map.ObjectData.FindFirstDataByTypeName("player");
+            var startX = (float)(int)playerData["x"] + 8;
+            var startY = (float)(int)playerData["y"] + 7;
+
+            bool success = SaveManager.Load(ref saveGame);
+
+            if (success)
+            {
+                startX = saveGame.playerPosition.X;
+                startY = saveGame.playerPosition.Y;
+            }
+
+            // find starting room
+            var startRoom = ObjectManager.CollisionPoint<Room>(startX, startY).FirstOrDefault();
             
-            var startRoom = camera.Rooms.Where(r => r.X == 0 && r.Y == 0).FirstOrDefault();
+            if (startRoom == null)
+            {
+                throw new Exception($"No room detected at position {startX}x{startY}!");
+            }
 
             var neighbours = startRoom.Neighbors();
             LoadRoomObjects(startRoom);
             foreach (var n in neighbours)
                 LoadRoomObjects(n);
-
-            // player
-
-            //var playerData = Map.ObjectData.FindFirstByTypeName("player");
-            //var playerX = (int)playerData["x"] + 8;
-            //var playerY = (int)playerData["y"] + 7;
-
-            player = new Player(playerX, playerY);
+            
+            // create player at start position and set camera target
+            
+            player = new Player(startX, startY);
             player.AnimationTexture = playerSet;
             camera.SetTarget(player);
-            
+
         }
-        
+
         /// <summary>
         /// called BEFORE initialize
         /// </summary>
@@ -206,7 +227,7 @@ namespace Platformer
                         
             // load map
 
-            XmlDocument xml = SPG.Util.Xml.Load("testMap.tmx");
+            XmlDocument xml = Xml.Load("testMap.tmx");
             
             Map = new GameMap(xml);
 
@@ -259,7 +280,7 @@ namespace Platformer
             };
 
             // load room data for the camera
-            var roomData = Map.ObjectData.FindByTypeName("room");
+            var roomData = Map.ObjectData.FindDataByTypeName("room");
             camera.InitRoomData(roomData);
 
             loadedRooms = new List<Room>();
@@ -294,6 +315,28 @@ namespace Platformer
             // ++++ debug input ++++
 
             input.Update(gameTime);
+
+            if (input.IsKeyPressed(Keys.D0, Input.State.Pressed))
+            {
+                saveGame.playerPosition = player.Position;
+                saveGame.Save();
+
+                Debug.WriteLine("Saved.");
+            }
+
+            if (input.IsKeyPressed(Keys.D9, Input.State.Pressed))
+            {
+                SaveManager.Load(ref saveGame);
+                
+                Debug.WriteLine("Loaded.");
+            }
+
+            if (input.IsKeyPressed(Keys.C, Input.State.Pressed))
+            {
+                saveGame.Delete();
+                
+                Debug.WriteLine("Deleted save game.");
+            }
 
             if (input.IsKeyPressed(Keys.Space, Input.State.Holding))
             {

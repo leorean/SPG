@@ -8,7 +8,7 @@ namespace SPG.Util
     public static class Xml
     {
         /// <summary>
-        /// Loads a file in XML format. File must have build type "Content" and "Copy if newer" so it gets found.
+        /// Loads a file in XML format. File must have build type "Content", must be within the "Content" folder and must have Build Action: "Copy if newer" so it gets found.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
