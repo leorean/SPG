@@ -166,7 +166,7 @@ namespace Platformer.Misc
 
                 var tarX = Math.Min(Math.Max(target.X + dirOffsetX, currentRoom.X + .5f * ViewWidth), currentRoom.X + currentRoom.BoundingBox.Width - .5f * ViewWidth);
                 var tarY = Math.Min(Math.Max(target.Y - Globals.TILE, currentRoom.Y + .5f * ViewHeight), currentRoom.Y + currentRoom.BoundingBox.Height - .5f * ViewHeight);
-
+                
                 var vel = new Vector2((tarX - Position.X) / 12f, (tarY - Position.Y) / 6f);
 
                 Position = new Vector2(Position.X + vel.X, Position.Y + vel.Y);
@@ -209,10 +209,11 @@ namespace Platformer.Misc
                 DisableRegionForRoom(lastRoom);
                 EnableRegionForRoom(currentRoom);
 
-                state = State.RoomTransition;
+                state = State.Default;
             }
 
             // do transition until eligable for default state
+            /*
             if (state == State.RoomTransition)
             {
                 if (currentRoom == null)
@@ -220,6 +221,9 @@ namespace Platformer.Misc
                     state = State.Default;
                     return;
                 }
+
+                state = State.Default;
+                return;
 
                 if (!moveX)
                     tx = ViewWidth * .5f + tx0;
@@ -237,6 +241,8 @@ namespace Platformer.Misc
 
                 curX += (tx - curX) / 6f;
                 curY += (ty - curY) / 6f;
+                //curX = tx;
+                //curY = ty;
 
                 if (Math.Abs(curX - tx) < 1)
                     curX = tx;
@@ -250,7 +256,7 @@ namespace Platformer.Misc
                 {                    
                     state = State.Default;                    
                 }
-            }
+            }*/
 
             // background interpolation
 

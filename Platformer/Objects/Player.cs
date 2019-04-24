@@ -94,6 +94,11 @@ namespace Platformer
             HP = 3;
         }
 
+        ~Player()
+        {
+            AnimationComplete -= Player_AnimationComplete;            
+        }
+
         private void Player_AnimationComplete(object sender, EventArgs e)
         {
             animationComplete = true;

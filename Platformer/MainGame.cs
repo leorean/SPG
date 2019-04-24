@@ -69,23 +69,46 @@ namespace Platformer
 
         public MainGame()
         {
+            // fundamental setup
+
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
             GameManager.Game = this;
 
-            IsMouseVisible = true;
+            input = new Input();
+
+            // window & screen setup
 
             viewSize = new Size(256, 144);
             scale = 4.0f;
-
             screenSize = new Size((int)(viewSize.Width * scale), (int)(viewSize.Height * scale));
 
-            GraphicsDeviceManager.PreferredBackBufferWidth = screenSize.Width;
-            GraphicsDeviceManager.PreferredBackBufferHeight = screenSize.Height;
+            graphics.PreferredBackBufferWidth = screenSize.Width;
+            graphics.PreferredBackBufferHeight = screenSize.Height;
 
-            input = new Input();
-            
+            IsMouseVisible = true;
+            Window.AllowUserResizing = true;
+
+            // change window & camera parameters when changing window size
+            Window.ClientSizeChanged += (s, args) =>
+            {
+                var w = Window.ClientBounds.Width;
+                var h = Window.ClientBounds.Height;
+
+                graphics.PreferredBackBufferWidth = w;
+                graphics.PreferredBackBufferHeight = h;
+
+                camera.ResolutionRenderer.ScreenWidth = w;
+                camera.ResolutionRenderer.ScreenHeight = h;
+
+                graphics.ApplyChanges();
+
+                Debug.WriteLine($"Size changed to {w}x{h}.");
+            };
+
+            // game setup
+
             saveGame = new SaveGame("save.dat");
         }
         
