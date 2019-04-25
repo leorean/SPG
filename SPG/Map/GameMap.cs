@@ -206,9 +206,16 @@ namespace SPG.Map
                         if (tile == null)
                             continue;
 
-                        var texture = TileSet.ElementAt(tile.ID);
+                        Texture2D texture = null;
+                        try
+                        {
+                            if (tile.TileOptions == null || tile.TileOptions.Visible == true)
+                                texture = TileSet.ElementAt(tile.ID);
+                        }
+                        catch(Exception) { }
                         
-                        GameManager.Game.SpriteBatch.Draw(texture, new Vector2(i * Globals.TILE, j * Globals.TILE), null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.ElementAt(l).Value);                        
+                        if (texture != null)
+                            GameManager.Game.SpriteBatch.Draw(texture, new Vector2(i * Globals.TILE, j * Globals.TILE), null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.ElementAt(l).Value);                        
                     }
                 }
             }

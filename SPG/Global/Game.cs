@@ -12,7 +12,7 @@ namespace SPG
         public abstract GraphicsDeviceManager GraphicsDeviceManager { get; }
         public abstract SpriteBatch SpriteBatch { get; }
         
-        public GameMap Map { get; protected set; }
+        public abstract GameMap Map { get; protected set; }        
         public abstract Camera Camera { get; protected set; }
     }
 }

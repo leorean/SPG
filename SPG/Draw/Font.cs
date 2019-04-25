@@ -90,6 +90,23 @@ namespace SPG.Draw
             }
         }
 
+        private Font() { }
+
+        // methods
+
+        public Font Copy()
+        {
+            var copy = new Font();
+
+            copy.Color = Color;
+            copy.Depth = Depth;
+            copy.glyphs = glyphs;
+            copy.Halign = Halign;
+            copy.Valign = Valign;
+            
+            return copy;
+        }
+
         public void Update()
         {
             // removes all texts that are not used anymore.
@@ -200,6 +217,6 @@ namespace SPG.Draw
 
             //Debug.WriteLine("Drawing text took " + sw.ElapsedMilliseconds + "ms");
             //sw.Stop();            
-        }        
+        }
     }
 }

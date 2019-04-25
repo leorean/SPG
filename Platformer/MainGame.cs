@@ -15,6 +15,10 @@ using Platformer.Misc;
 using Platformer.Objects;
 using SPG.Draw;
 using SPG.Save;
+using Platformer.Objects.Enemy;
+using System.Threading.Tasks;
+using System.Threading;
+using Platformer.Objects.Effects;
 
 namespace Platformer
 {
@@ -32,18 +36,15 @@ namespace Platformer
         private Size screenSize;
         private float scale;
 
+        // game variables
+
         private RoomCamera camera;
-        public override Camera Camera {
-            get
-            {
-                return camera;
-            }
-            protected set
-            {
-                camera = value as RoomCamera;
-            }
-        }
-        
+        public override Camera Camera { get => camera; protected set => camera = value as RoomCamera; }
+        public override GraphicsDeviceManager GraphicsDeviceManager { get => graphics; }
+        public override SpriteBatch SpriteBatch { get => spriteBatch; }
+        private GameMap map;
+        public override GameMap Map { get => map; protected set => map = value; }
+
         // input
 
         Input input;
@@ -61,11 +62,11 @@ namespace Platformer
 
         SaveGame saveGame;
         
-        public override GraphicsDeviceManager GraphicsDeviceManager { get => graphics; }
-        public override SpriteBatch SpriteBatch { get => spriteBatch; }
-
+        
         // default font
-        public Font font;
+        public static Font DefaultFont;
+
+        private bool initialized;
 
         public MainGame()
         {
@@ -111,22 +112,28 @@ namespace Platformer
 
             saveGame = new SaveGame("save.dat");
         }
-        
+
         void UnloadRoomObjects(Room room)
         {
             // gather all objects which are inside the specified room
             var aliveObjects = ObjectManager.Objects.Where(
-                o => o is RoomDependentdObject 
+                o => o is RoomDependentdObject
                 && (o as RoomDependentdObject).Room == room)
                 .ToList();
 
             foreach (var o in aliveObjects)
             {
-                ObjectManager.Remove(o);
+                o.Destroy();
             }
-            loadedRooms.Remove(room);
-        }
 
+            // TODO: add all objects that are alive and should be killed
+
+            var alive = ObjectManager.Objects.Where(o => !(o is Room) && !(o is Player)).ToList();
+            alive.ForEach(o => o.Destroy());
+            
+            loadedRooms.Remove(room);            
+        }
+        
         /// <summary>
         /// loads objects from a given room. 
         /// </summary>
@@ -160,13 +167,16 @@ namespace Platformer
 
                     switch(t.ID)
                     {
-                        case 7:
-                            t.TileType = TileType.Platform;
+                        case 512:
+                            var spike = new SpikeBottom(i * Globals.TILE, j * Globals.TILE, room);
+                            spike.Enabled = false;
+                            spike.Texture = tileSet[512];
+                            t.TileOptions = new TileOptions();
+                            t.TileOptions.Visible = false;
                             break;
                         default:
-                            t.TileType = TileType.Solid;
                             var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room);
-                            solid.Enabled = false;                            
+                            solid.Enabled = false;
                             solidCount++;
                             break;
                     }
@@ -247,7 +257,11 @@ namespace Platformer
             // load default tileset
 
             tileSet = TextureSet.Load("tiles");
-                        
+
+            Debug.WriteLine($"Loaded Tileset in {sw.ElapsedMilliseconds}ms");
+
+            sw.Restart();
+
             // load map
 
             XmlDocument xml = Xml.Load("testMap.tmx");
@@ -260,14 +274,17 @@ namespace Platformer
             Map.LayerDepth["BG"] = Globals.LAYER_BG;
             Map.LayerDepth["BG2"] = Globals.LAYER_BG2;
 
+            Debug.WriteLine("Loaded map in " + sw.ElapsedMilliseconds + "ms");
+
             // load font
 
             var fontTexture = TextureSet.Load("font", 10, 10);
 
-            font = new Font(fontTexture, ' ');
-
+            DefaultFont = new Font(fontTexture, ' ');
+                       
+            
+            initialized = true;
             sw.Stop();
-            Debug.WriteLine("Loaded game in " + sw.ElapsedMilliseconds + "ms");            
         }
 
         /// <summary>
@@ -368,7 +385,8 @@ namespace Platformer
             else
             {
                 ObjectManager.GameSpeed = 0;
-                player.DebugEnabled = false;
+                if (player != null)
+                    player.DebugEnabled = false;
             }
 
             if (input.IsKeyPressed(Keys.R, Input.State.Pressed))
@@ -412,16 +430,19 @@ namespace Platformer
             Map.Draw(gameTime);
             ObjectManager.DrawObjects(gameTime);
 
-            font.Halign = Font.HorizontalAlignment.Center;
-            font.Valign = Font.VerticalAlignment.Top;
+            if (initialized)
+            {
 
-            font.Draw(6 * Globals.TILE, 2 * Globals.TILE, "HelloWorld\nWhat's up!\nTEST.", 32);
+                DefaultFont.Halign = Font.HorizontalAlignment.Center;
+                DefaultFont.Valign = Font.VerticalAlignment.Top;
 
-            font.Halign = Font.HorizontalAlignment.Left;
-            font.Valign = Font.VerticalAlignment.Top;
+                DefaultFont.Draw(6 * Globals.TILE, 2 * Globals.TILE, "HelloWorld\nWhat's up!\nTEST.", 32);
 
-            font.Draw(camera.ViewX + 4, camera.ViewY + 4, player.HP, 0);
+                DefaultFont.Halign = Font.HorizontalAlignment.Left;
+                DefaultFont.Valign = Font.VerticalAlignment.Top;
 
+                DefaultFont.Draw(camera.ViewX + 4, camera.ViewY + 4, player.HP, 0);
+            }
             SpriteBatch.End();            
         }
     }

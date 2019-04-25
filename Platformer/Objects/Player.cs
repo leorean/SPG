@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 using SPG;
+using Platformer.Objects.Enemy;
+using Platformer.Objects.Effects;
 
 namespace Platformer
 { 
@@ -91,7 +93,7 @@ namespace Platformer
 
             // stats:
 
-            HP = 3;
+            HP = 30;
         }
 
         ~Player()
@@ -110,6 +112,8 @@ namespace Platformer
         {
             hit = true;
             HP = Math.Max(HP - hitPoints, 0);
+
+            var dmgFont = new DamageFont(X, Y, $"-{hitPoints}");
         }
 
         public override void Update(GameTime gameTime)
@@ -184,6 +188,16 @@ namespace Platformer
 
             invincible = Math.Max(invincible - 1, 0);
 
+            if (invincible == 0)
+            {
+                var obstacle = ObjectManager.CollisionBounds<SpikeBottom>(this, X, Y).FirstOrDefault();
+
+                if (obstacle != null)
+                {
+                    Hit(obstacle.Damage);
+                }                
+            }
+            
             // impulse
             if (hit)
             {
@@ -500,7 +514,7 @@ namespace Platformer
                 if (YVel == 0)
                 {
                     if (k_leftHolding || k_rightHolding || k_jumpHolding)
-                    {
+                    {                        
                         State = PlayerState.GET_UP;                        
                     }
                 }
@@ -575,6 +589,11 @@ namespace Platformer
                 {
                     YVel = Math.Sign(YVel) * Math.Max(Math.Abs(YVel) - .02f, 0);
                 }
+            }
+            if (State == PlayerState.HIT_AIR || State == PlayerState.HIT_GROUND)
+            {
+                // "stops" the invincibility timer
+                invincible++;
             }
             if (State == PlayerState.DEAD)
             {

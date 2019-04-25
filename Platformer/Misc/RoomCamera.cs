@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Platformer.Objects;
+using Platformer.Objects.Enemy;
 using SPG;
 using SPG.Map;
 using SPG.Objects;
@@ -61,7 +62,9 @@ namespace Platformer.Misc
         /// Is called when a room change is initiated. Provides last room and current room as arguments.
         /// </summary>
         public event EventHandler<Tuple<Room, Room>> OnBeginRoomChange;
-        
+
+        public event EventHandler<Tuple<Room, Room>> OnEndRoomChange;
+
         public RoomCamera(ResolutionRenderer resolutionRenderer) : base(resolutionRenderer) { }
         
         public void InitRoomData(List<Dictionary<string, object>> roomData)
@@ -117,9 +120,14 @@ namespace Platformer.Misc
         {
             if (room == null) return;
 
-            // enable a little more region so the player won't get stuck
-            var o = 2 * Globals.TILE;
-            ObjectManager.SetRegionEnabled<Solid>(room.X - o, room.Y - o, room.X + room.BoundingBox.Width + 2 * o, room.Y + room.BoundingBox.Height + 2 * o, true);
+            // enable blocks - with a little more region so the player won't get stuck
+            var outer = 2 * Globals.TILE;
+            ObjectManager.SetRegionEnabled<Solid>(room.X - outer, room.Y - outer, room.X + room.BoundingBox.Width + 2 * outer, room.Y + room.BoundingBox.Height + 2 * outer, true);
+
+            // enable obstacles
+            ObjectManager.SetRegionEnabled<Obstacle>(room.X, room.Y, room.X + room.BoundingBox.Width, room.Y + room.BoundingBox.Height, true);
+
+            // enable player
             ObjectManager.Enable<Player>();
         }
 
@@ -170,9 +178,13 @@ namespace Platformer.Misc
                 var vel = new Vector2((tarX - Position.X) / 12f, (tarY - Position.Y) / 6f);
 
                 Position = new Vector2(Position.X + vel.X, Position.Y + vel.Y);
+                
+                if (Math.Abs(vel.X) < 0.001f && Math.Abs(vel.Y) < 0.001f)
+                {
+                    OnEndRoomChange?.Invoke(this, new Tuple<Room, Room>(lastRoom, currentRoom));
+                }asdasdasd TODO
 
-
-                // if outside view, try to find new room
+                // if outside view, try to find new room                
                 if (!MathUtil.In(target.X, currentRoom.X, currentRoom.X + currentRoom.BoundingBox.Width)
                         || !MathUtil.In(target.Y, currentRoom.Y, currentRoom.Y + currentRoom.BoundingBox.Height))
                 {
@@ -203,7 +215,7 @@ namespace Platformer.Misc
 
                 curX = tx;
                 curY = ty;
-
+                
                 OnBeginRoomChange?.Invoke(this, new Tuple<Room,Room>(lastRoom, currentRoom));
 
                 DisableRegionForRoom(lastRoom);

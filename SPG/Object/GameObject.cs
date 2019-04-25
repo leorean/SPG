@@ -99,7 +99,7 @@ namespace SPG.Objects
 
         public float Left { get => Position.X + BoundingBox.X; }
         public float Right { get => Left + BoundingBox.Width; }
-        public float Top { get => Position.Y; }
+        public float Top { get => Position.Y + BoundingBox.Y; }
         public float Bottom { get => Top + BoundingBox.Height; }
 
         public float XVel { get; set; }
@@ -146,9 +146,19 @@ namespace SPG.Objects
             _isLooped = loop;
         }
 
-        public void Move(float x, float y)
+        /// <summary>
+        /// Unregisters a game object from the object manager. Optionally calls GC afterwards.
+        /// </summary>
+        public void Destroy(bool callGC = false)
         {
-            Position = new Vector2(Position.X + x, Position.Y + y);
+            ObjectManager.Remove(this);
+            if (callGC)
+                GC.Collect();
+        }
+
+        public void Move(float xVel, float yVel)
+        {
+            Position = new Vector2(Position.X + xVel, Position.Y + yVel);
         }
 
         public virtual void Update(GameTime gameTime)
@@ -180,7 +190,7 @@ namespace SPG.Objects
         {            
             if (Texture == null)
             {
-                System.Diagnostics.Debug.WriteLine($"Warning: object '{Name}'({ID}) has no texture!");                
+                //Debug.WriteLine($"Warning: object '{Name}'({ID}) has no texture!");
             } else
             {
                 GameManager.Game.SpriteBatch.Draw(Texture, Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
