@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using SPG;
 using SPG.Draw;
 using SPG.Objects;
 using SPG.Util;
@@ -48,7 +49,7 @@ namespace Platformer.Objects.Effects
             var c = font.Color;
             font.Color = new Color(c, alpha);
 
-            if (alpha == 0)
+            if (alpha == 0 || Y > GameManager.Game.Camera.ViewY + GameManager.Game.Camera.ViewHeight)
                 Destroy();
         }
 

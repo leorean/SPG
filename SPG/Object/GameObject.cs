@@ -202,7 +202,7 @@ namespace SPG.Objects
                     (Position.Y + BoundingBox.Y) - .5f,
                     BoundingBox.Width, BoundingBox.Height);
 
-                SPG.Draw.Primitives2D.DrawRectangle(rect, Color.Black, false);
+                SPG.Draw.Primitives2D.DrawRectangle(rect, Enabled ? Color.Black : Color.Gray, false);
             }
         }        
     }

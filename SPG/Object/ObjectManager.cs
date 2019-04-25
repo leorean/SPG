@@ -159,7 +159,7 @@ namespace SPG.Objects
             {
                 if (o is T)
                 {
-                    if (o.X >= x && o.Y >= y && o.X <= x + width && o.Y <= y + height) o.Enabled = enabled;
+                    if (o.X >= x && o.Y >= y && o.X < x + width && o.Y < y + height) o.Enabled = enabled;
                 }
             }
         }

@@ -60,6 +60,15 @@ namespace SPG.View
         public int ViewWidth { get { return ResolutionRenderer.ViewWidth; } }
         public int ViewHeight { get { return ResolutionRenderer.ViewHeight; } }
 
+        /// <summary>
+        /// Gets the leftmost position of the view
+        /// </summary>
+        public float ViewX { get { return Position.X - .5f * ViewWidth; } }
+        /// <summary>
+        /// Gets the topmost position of the view
+        /// </summary>
+        public float ViewY { get { return Position.Y - .5f * ViewHeight; } }
+
         protected Rectangle bounds;
 
         private float _zoom;

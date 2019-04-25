@@ -125,7 +125,7 @@ namespace Platformer
             {
                 o.Destroy();
             }
-
+            
             // TODO: add all objects that are alive and should be killed
 
             var alive = ObjectManager.Objects.Where(o => !(o is Room) && !(o is Player)).ToList();
@@ -177,6 +177,10 @@ namespace Platformer
                         default:
                             var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room);
                             solid.Enabled = false;
+
+                            //solid.DebugEnabled = true;
+                            //solid.Visible = true;
+
                             solidCount++;
                             break;
                     }
@@ -222,6 +226,8 @@ namespace Platformer
                 startX = saveGame.playerPosition.X;
                 startY = saveGame.playerPosition.Y;
             }
+
+            ObjectManager.Enable<Room>();
 
             // find starting room
             var startRoom = ObjectManager.CollisionPoint<Room>(startX, startY).FirstOrDefault();
@@ -303,20 +309,23 @@ namespace Platformer
             camera.EnableBounds(new Rectangle(0, 0, Map.Width * Globals.TILE, Map.Height * Globals.TILE));
 
             // handle room changing <-> object loading/unloading
-            camera.OnBeginRoomChange += (sender, rooms) =>
+            camera.OnRoomChange += (sender, rooms) =>
             {
-                // unload old rooms
-                var oldNeighbors = rooms.Item1.Neighbors();                
-                foreach (var n in oldNeighbors)
-                    UnloadRoomObjects(n);
+                // unload all rooms that exist
+                Room[] tmp = new Room[loadedRooms.Count];
+                loadedRooms.CopyTo(tmp);
+
+                foreach(var room in tmp)
+                    UnloadRoomObjects(room);
 
                 // do this, because else the GC would wait to clean huge resources and create a temporary lag
                 GC.Collect();
 
+                // load new room + neighbors
                 var neighbors = rooms.Item2.Neighbors();
                 LoadRoomObjects(rooms.Item2);
                 foreach (var n in neighbors)
-                    LoadRoomObjects(n);
+                    LoadRoomObjects(n);                
             };
 
             // load room data for the camera
@@ -404,8 +413,28 @@ namespace Platformer
                 player.YVel = 0;
             }
 
-            // ++++ update objects ++++
+            // enable all solids from neighbors
+            foreach (var room in loadedRooms)
+            {
+                ObjectManager.SetRegionEnabled<Solid>(room.X, room.Y, room.BoundingBox.Width, room.BoundingBox.Height, true);
+            }
+
+            if (camera?.CurrentRoom != null)
+            {
+                ObjectManager.SetRegionEnabled<GameObject>(camera.CurrentRoom.X, camera.CurrentRoom.Y, camera.CurrentRoom.BoundingBox.Width, camera.CurrentRoom.BoundingBox.Height, true);
+            }
+
+                /*var outer = 2 * Globals.TILE;
+                ObjectManager.SetRegionEnabled<Solid>(room.X - outer, room.Y - outer, room.BoundingBox.Width + 2 * outer, room.BoundingBox.Height + 2 * outer, true);
+
+                // enable obstacles
+                ObjectManager.SetRegionEnabled<Obstacle>(room.X, room.Y, room.X + room.BoundingBox.Width, room.Y + room.BoundingBox.Height, true);
+
+                // enable player
+                ObjectManager.Enable<Player>();*/
             
+            // ++++ update objects ++++
+
             ObjectManager.UpdateObjects(gameTime);
             
             // ++++ update camera ++++
