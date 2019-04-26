@@ -36,6 +36,11 @@ namespace SPG.Objects
             }
         }
 
+        public static bool Exists(GameObject target)
+        {
+            return target != null && Objects.Find(x => x == target) != null;
+        }
+
         public static void Remove(GameObject o)
         {
             if (Objects.Contains(o))
@@ -72,6 +77,16 @@ namespace SPG.Objects
                 if (o1.Y > o2.Y) return 1;
                 return 0;
             });
+        }
+
+        /// <summary>
+        /// Returns the number of alive objects of a given type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static int Count<T>() where T : GameObject
+        {
+            return Objects.Where(o => o is T).Count();
         }
 
         /// <summary>

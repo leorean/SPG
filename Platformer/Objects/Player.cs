@@ -113,7 +113,8 @@ namespace Platformer
             hit = true;
             HP = Math.Max(HP - hitPoints, 0);
 
-            var dmgFont = new DamageFont(X, Y, $"-{hitPoints}");
+            var dmgFont = new DamageFont(X, Y - Globals.TILE, $"-{hitPoints}");
+            dmgFont.Target = this;
         }
 
         public override void Update(GameTime gameTime)
@@ -180,7 +181,7 @@ namespace Platformer
             
             if (input.IsKeyPressed(Keys.H, Input.State.Pressed))
             {
-                Hit(1);
+                Hit(0);
                 
             }
 
@@ -201,10 +202,15 @@ namespace Platformer
             // impulse
             if (hit)
             {
-                State = PlayerState.HIT_AIR;
-                XVel = -.7f * Math.Sign((int)Direction);
-                YVel = -1.5f;
-                hit = false;
+                if (State == PlayerState.IDLE || State == PlayerState.WALK || State == PlayerState.GET_UP)
+                    State = PlayerState.JUMP_UP;
+
+                if (State != PlayerState.HIT_GROUND)
+                {
+                    XVel = -.7f * Math.Sign((int)Direction);
+                    YVel = -1.5f;
+                }
+                
                 invincible = 60;
             }
 
@@ -215,8 +221,8 @@ namespace Platformer
             
             // ++++ collision flags ++++
 
-            var onWall = ObjectManager.CollisionPoint<Solid>(this, X + (.5f * BoundingBox.Width + 1) * Math.Sign((int)Direction), Y + 4).Count > 0;
-            var onCeil = ObjectManager.CollisionPoint<Solid>(this, X, Y - BoundingBox.Height * .5f - 1).Count > 0;
+            var onWall = !hit && ObjectManager.CollisionPoint<Solid>(this, X + (.5f * BoundingBox.Width + 1) * Math.Sign((int)Direction), Y + 4).Count > 0;
+            var onCeil = !hit && ObjectManager.CollisionPoint<Solid>(this, X, Y - BoundingBox.Height * .5f - 1).Count > 0;
 
             int tx = MathUtil.Div(X, Globals.TILE);
             int ty = MathUtil.Div(Y + 4, Globals.TILE);
@@ -428,7 +434,7 @@ namespace Platformer
                     {
                         // switch back the ground Y
                         lastGroundY = Math.Min(lastGroundY, lastGroundYbeforeWall);
-                    }
+                    }                    
                 }
                 else if (Direction == Direction.RIGHT)
                 {
@@ -462,6 +468,13 @@ namespace Platformer
                 
                 if (k_upHolding || k_downHolding)
                     State = PlayerState.WALL_CLIMB;
+
+                if (hit)
+                {
+                    XVel = -Math.Sign((int)Direction) * .5f;
+                    YVel = -1f;
+                    State = PlayerState.HIT_AIR;
+                }
             }
             // wall climb
             if (State == PlayerState.WALL_CLIMB)
@@ -553,6 +566,11 @@ namespace Platformer
                     YVel = 0;
                     State = PlayerState.JUMP_DOWN;
                 }
+                if (hit)
+                {
+                    XVel = -Math.Sign((int)Direction) * .5f;
+                    State = PlayerState.HIT_AIR;
+                }
             }
             if (State == PlayerState.SWIM)
             {
@@ -590,11 +608,11 @@ namespace Platformer
                     YVel = Math.Sign(YVel) * Math.Max(Math.Abs(YVel) - .02f, 0);
                 }
             }
-            if (State == PlayerState.HIT_AIR || State == PlayerState.HIT_GROUND)
+            /*if (State == PlayerState.HIT_AIR || State == PlayerState.HIT_GROUND)
             {
                 // "stops" the invincibility timer
                 invincible++;
-            }
+            }*/
             if (State == PlayerState.DEAD)
             {
                 XVel = 0;
@@ -602,6 +620,9 @@ namespace Platformer
                 Visible = false;
             }
 
+            // reset hit after state-logic
+            hit = false;
+            
             // ++++ collision & movement ++++
 
             YVel += Gravity;
@@ -749,7 +770,7 @@ namespace Platformer
 
             SetAnimation(cols * row + offset, cols * row + offset + fAmount - 1, fSpd, loopAnim);
 
-            Color = (invincible > 0) ? new Color(255, 255, 255, 128) : Color.White;
+            Color = (invincible % 4 > 2) ? Color.Transparent : Color.White;
         }
         
         public override void Draw(GameTime gameTime)

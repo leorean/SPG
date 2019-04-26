@@ -57,7 +57,7 @@ namespace SPG.Objects
         public int MaxFrame { get; private set; }
         public double AnimationSpeed { get; private set; }
         private bool _isLooped = false;
-        //private bool _isAnimated = false;
+
         public Texture2D Texture
         {
             get
@@ -90,7 +90,10 @@ namespace SPG.Objects
         // world/position/collision
 
         public Vector2 Position { get; set; } = Vector2.Zero;
-        // use positive values because it is used in the drawing primitive
+
+        /// <summary>
+        /// Sets the draw offset. Use positive values because it is used in the drawing primitive 
+        /// </summary>
         public Vector2 DrawOffset { get; set; }
         public RectF BoundingBox { get; set; } = new RectF(0, 0, Globals.TILE, Globals.TILE);
         

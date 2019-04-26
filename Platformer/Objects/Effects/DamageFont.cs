@@ -18,33 +18,43 @@ namespace Platformer.Objects.Effects
         float alpha;
 
         Font font;
+        
+        private float offX, offY;
+        private GameObject target;
+        public GameObject Target { get => target; set { target = value; offX = (X - target.X); offY = (Y - target.Y); } }
 
         public DamageFont(float x, float y, string text)
         {
             Position = new Vector2(x, y);
             this.text = text;
 
-            alpha = 2f;
-            YVel = -2f;
+            alpha = 1.5f;
+            //YVel = -1f;
 
-            font = MainGame.DefaultFont.Copy();
+            font = MainGame.DamageFont.Copy();
 
             font.Halign = Font.HorizontalAlignment.Center;
             font.Valign = Font.VerticalAlignment.Center;
             font.Color = Color.Red;
 
-            XVel = -1f + (float)RND.Next * 2f;
-            Gravity = .15f;
+            //XVel = -.5f + (float)RND.Next * 1f;
+            //Gravity = .05f;
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            YVel += Gravity;
+            if (ObjectManager.Exists(Target))
+            {
+                YVel = 0;
+                Position = new Vector2(Target.X + offX, Target.Y + offY);
+            }
 
-            Move(XVel, YVel);
-            alpha = Math.Max(alpha - .01f, 0);
+            //YVel += Gravity;
+            //Move(XVel, YVel);
+
+            alpha = Math.Max(alpha - .02f, 0);
 
             var c = font.Color;
             font.Color = new Color(c, alpha);

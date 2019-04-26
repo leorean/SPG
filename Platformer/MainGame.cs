@@ -63,8 +63,9 @@ namespace Platformer
         SaveGame saveGame;
         
         
-        // default font
+        // fonts
         public static Font DefaultFont;
+        public static Font DamageFont;
 
         private bool initialized;
 
@@ -282,13 +283,14 @@ namespace Platformer
 
             Debug.WriteLine("Loaded map in " + sw.ElapsedMilliseconds + "ms");
 
-            // load font
+            // load fonts
 
-            var fontTexture = TextureSet.Load("font", 10, 10);
+            var defaultFont = TextureSet.Load("font", 10, 10);
+            var damageFont = TextureSet.Load("damageFont", 10, 10);
 
-            DefaultFont = new Font(fontTexture, ' ');
-                       
-            
+            DefaultFont = new Font(defaultFont, ' ');
+            DamageFont = new Font(damageFont, ' ');
+
             initialized = true;
             sw.Stop();
         }
@@ -436,7 +438,7 @@ namespace Platformer
             // ++++ update objects ++++
 
             ObjectManager.UpdateObjects(gameTime);
-            
+
             // ++++ update camera ++++
 
             camera.Update(gameTime);            
