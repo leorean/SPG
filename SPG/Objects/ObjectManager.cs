@@ -16,24 +16,32 @@ namespace SPG.Objects
     {
         public static List<GameObject> Objects { get; private set; } = new List<GameObject>();
         
-        private static int idCounter;
+        //private static int idCounter;
 
         public static double ElapsedTime { get; private set; } = 0;
         
         public static double GameSpeed { get; set; }
         public static RectF Region { get; set; }
 
-        public static int Add(GameObject o)
+        public static void Add(GameObject o)
         {
             if (!Objects.Contains(o))
             {
-                idCounter++;
+                //idCounter++;
                 Objects.Add(o);
-                return idCounter;
+                //return idCounter;
             } else
-            {
+            {                
                 throw new Exception("Object already registered!");
             }
+        }
+
+        public static void CreateID(this GameObject o)
+        {
+            string strX = MathUtil.Div(o.X, Globals.TILE).ToString();
+            string strY = MathUtil.Div(o.Y, Globals.TILE).ToString();
+
+            o.ID = int.Parse(strX + strY);
         }
 
         public static bool Exists(GameObject target)
@@ -120,7 +128,7 @@ namespace SPG.Objects
         /// <param name="y"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static List<T> CollisionPoint<T>(GameObject self, float x, float y) where T : GameObject
+        public static List<T> CollisionPoint<T>(this GameObject self, float x, float y) where T : GameObject
         {
             List<T> candidates = Objects.Where(o => o != self && o is T && o.Enabled == true).Cast<T>().ToList();
 
@@ -143,7 +151,7 @@ namespace SPG.Objects
         /// <param name="y"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static List<T> CollisionBounds<T>(GameObject self, float x, float y) where T : GameObject
+        public static List<T> CollisionBounds<T>(this GameObject self, float x, float y) where T : GameObject
         {
             List<T> candidates = Objects.Where(o => o != self && o is T && o.Enabled == true).Cast<T>().ToList();
 

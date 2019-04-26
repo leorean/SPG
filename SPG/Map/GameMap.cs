@@ -206,16 +206,27 @@ namespace SPG.Map
                         if (tile == null)
                             continue;
 
-                        Texture2D texture = null;
-                        try
+                        // approach to draw each texture extra:
+
+                        //Texture2D texture = null;
+                        //texture = TileSet.ElementAt(tile.ID);
+                        //if (texture != null)
+                        //    GameManager.Game.SpriteBatch.Draw(texture, new Vector2(i * Globals.TILE, j * Globals.TILE), null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.ElementAt(l).Value);
+
+                        // approach to draw parts of the original set instead of each texture extra:
+
+                        if (tile.TileOptions == null || tile.TileOptions.Visible)
                         {
-                            if (tile.TileOptions == null || tile.TileOptions.Visible == true)
-                                texture = TileSet.ElementAt(tile.ID);
+
+                            var tid = tile.ID;
+
+                            var tix = (tid * Globals.TILE) % TileSet.Width;
+                            var tiy = MathUtil.Div(tid * Globals.TILE, TileSet.Width) * Globals.TILE;
+
+                            var partRect = new Rectangle(tix, tiy, Globals.TILE, Globals.TILE);
+
+                            GameManager.Game.SpriteBatch.Draw(TileSet.OriginalTexture, new Vector2(i * Globals.TILE, j * Globals.TILE), partRect, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.ElementAt(l).Value);
                         }
-                        catch(Exception) { }
-                        
-                        if (texture != null)
-                            GameManager.Game.SpriteBatch.Draw(texture, new Vector2(i * Globals.TILE, j * Globals.TILE), null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.ElementAt(l).Value);                        
                     }
                 }
             }

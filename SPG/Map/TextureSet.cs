@@ -21,12 +21,18 @@ namespace SPG.Map
 
         }
 
+        public int Width { get => OriginalTexture != null ? OriginalTexture.Width : 0; }
+        public int Height { get => OriginalTexture != null ? OriginalTexture.Height : 0; }
+
+        public Texture2D OriginalTexture { get; private set; }
+
         public static TextureSet FromTexture(Texture2D texture)
         {
             var tileSet = new TextureSet();
 
             tileSet.Add(texture);
-
+            tileSet.OriginalTexture = texture;
+            
             return tileSet;
         }
 
@@ -70,7 +76,9 @@ namespace SPG.Map
             TextureSet result = new TextureSet();
             foreach(var element in r.Cast<Texture2D>())
                 result.Add(element);
-            
+
+            result.OriginalTexture = original;
+
             return result;
         }
     }

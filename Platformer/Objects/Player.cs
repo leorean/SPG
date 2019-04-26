@@ -9,6 +9,7 @@ using System.Linq;
 using SPG;
 using Platformer.Objects.Enemy;
 using Platformer.Objects.Effects;
+using Platformer.Objects;
 
 namespace Platformer
 { 
@@ -76,7 +77,7 @@ namespace Platformer
 
         // constructor
         
-        public Player(float x, float y)
+        public Player(float x, float y) : base(x, y)
         {
             Name = "Player";
             Position = new Vector2(x, y);
@@ -608,16 +609,18 @@ namespace Platformer
                     YVel = Math.Sign(YVel) * Math.Max(Math.Abs(YVel) - .02f, 0);
                 }
             }
-            /*if (State == PlayerState.HIT_AIR || State == PlayerState.HIT_GROUND)
-            {
-                // "stops" the invincibility timer
-                invincible++;
-            }*/
             if (State == PlayerState.DEAD)
             {
                 XVel = 0;
                 YVel = 0;
                 Visible = false;
+            }
+
+            var saveStatue = this.CollisionBounds<SaveStatue>(X, Y).FirstOrDefault();
+
+            if(saveStatue != null)
+            {
+                saveStatue.Save();
             }
 
             // reset hit after state-logic
@@ -626,6 +629,8 @@ namespace Platformer
             // ++++ collision & movement ++++
 
             YVel += Gravity;
+
+            YVel = Math.Sign(YVel) * Math.Min(Math.Abs(YVel), 4);
 
             var colY = ObjectManager.CollisionBounds<Solid>(this, X, Y + YVel);
             if (colY.Count == 0)

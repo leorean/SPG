@@ -51,27 +51,35 @@ namespace Platformer
 
         // common textures & objects
 
-        private TextureSet tileSet;
-        private TextureSet playerSet;
+        public TextureSet TileSet { get; private set; }
+        public TextureSet PlayerSprites { get; private set; }
+        public TextureSet SaveStatueSprites { get; private set; }
+
+        public Font DefaultFont { get; private set; }
+        public Font DamageFont { get; private set; }
+
+        // common objects
+
         private Player player;
-        
+
         // stores room data
         private List<Room> loadedRooms;
 
         // save data
 
-        SaveGame saveGame;
-        
-        
-        // fonts
-        public static Font DefaultFont;
-        public static Font DamageFont;
-
+        private SaveGame saveGame;
+        public SaveGame SaveGame { get => saveGame; private set => saveGame = value; }
+                
         private bool initialized;
+
+        private static MainGame instance;
+        public static MainGame Current { get => instance; }
 
         public MainGame()
         {
             // fundamental setup
+
+            instance = this;
 
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -111,7 +119,17 @@ namespace Platformer
 
             // game setup
 
-            saveGame = new SaveGame("save.dat");
+            SaveGame = new SaveGame("save.dat");
+        }
+
+        /// <summary>
+        /// The main Save method.
+        /// </summary>
+        public void Save(int posX, int posY)
+        {
+            SaveGame.playerPosition = new Vector2(posX, posY);
+            SaveGame.playerDirection = player.Direction;
+            SaveGame.Save();
         }
 
         void UnloadRoomObjects(Room room)
@@ -168,20 +186,24 @@ namespace Platformer
 
                     switch(t.ID)
                     {
-                        case 512:
-                            var spike = new SpikeBottom(i * Globals.TILE, j * Globals.TILE, room);
-                            spike.Enabled = false;
-                            spike.Texture = tileSet[512];
-                            t.TileOptions = new TileOptions();
-                            t.TileOptions.Visible = false;
+
+                        case 576: //save-statues
+                            var saveSatue = new SaveStatue(i * Globals.TILE, j * Globals.TILE, room);
+                            t.Hide();
                             break;
-                        default:
-                            var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room);
-                            solid.Enabled = false;
-
-                            //solid.DebugEnabled = true;
-                            //solid.Visible = true;
-
+                        case 512: //spikes
+                            var spike = new SpikeBottom(i * Globals.TILE, j * Globals.TILE, room)
+                            {
+                                Enabled = false,
+                                Texture = TileSet[512]
+                            };
+                            t.Hide();
+                            break;
+                        default:                            
+                            var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room)
+                            {
+                                Enabled = false
+                            };
                             solidCount++;
                             break;
                     }
@@ -219,13 +241,15 @@ namespace Platformer
             var playerData = Map.ObjectData.FindFirstDataByTypeName("player");
             var startX = (float)(int)playerData["x"] + 8;
             var startY = (float)(int)playerData["y"] + 7;
+            var direction = Direction.RIGHT;
 
             bool success = SaveManager.Load(ref saveGame);
 
             if (success)
             {
-                startX = saveGame.playerPosition.X;
-                startY = saveGame.playerPosition.Y;
+                startX = SaveGame.playerPosition.X;
+                startY = SaveGame.playerPosition.Y;
+                direction = SaveGame.playerDirection;
             }
 
             ObjectManager.Enable<Room>();
@@ -246,7 +270,8 @@ namespace Platformer
             // create player at start position and set camera target
             
             player = new Player(startX, startY);
-            player.AnimationTexture = playerSet;
+            player.Direction = direction;
+            player.AnimationTexture = PlayerSprites;            
             camera.SetTarget(player);
 
         }
@@ -261,28 +286,24 @@ namespace Platformer
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // load default tileset
+            // load texture sets
 
-            tileSet = TextureSet.Load("tiles");
-
-            Debug.WriteLine($"Loaded Tileset in {sw.ElapsedMilliseconds}ms");
-
-            sw.Restart();
-
+            TileSet = TextureSet.Load("tiles");
+            SaveStatueSprites = TextureSet.Load("save");
+            PlayerSprites = TextureSet.Load("player", 16, 32);
+            
             // load map
 
             XmlDocument xml = Xml.Load("testMap.tmx");
             
             Map = new GameMap(xml);
 
-            Map.TileSet = tileSet;
+            Map.TileSet = TileSet;
             Map.LayerDepth["FG"] = Globals.LAYER_FG;
             Map.LayerDepth["WATER"] = Globals.LAYER_WATER;
             Map.LayerDepth["BG"] = Globals.LAYER_BG;
             Map.LayerDepth["BG2"] = Globals.LAYER_BG2;
-
-            Debug.WriteLine("Loaded map in " + sw.ElapsedMilliseconds + "ms");
-
+            
             // load fonts
 
             var defaultFont = TextureSet.Load("font", 10, 10);
@@ -292,6 +313,7 @@ namespace Platformer
             DamageFont = new Font(damageFont, ' ');
 
             initialized = true;
+            Debug.WriteLine("Loaded game in " + sw.ElapsedMilliseconds + "ms");
             sw.Stop();
         }
 
@@ -336,7 +358,7 @@ namespace Platformer
 
             loadedRooms = new List<Room>();
 
-            playerSet = TextureSet.Load("player", 16, 32);
+            //PlayerSet = TextureSet.Load("player", 16, 32);
 
             var backgrounds = TextureSet.Load("background", 16 * Globals.TILE, 9 * Globals.TILE);
             camera.SetBackgrounds(backgrounds);
@@ -369,8 +391,10 @@ namespace Platformer
 
             if (input.IsKeyPressed(Keys.D0, Input.State.Pressed))
             {
-                saveGame.playerPosition = player.Position;
-                saveGame.Save();
+                var posX = MathUtil.Div(player.Position.X, Globals.TILE) * Globals.TILE + 8;
+                var posY = MathUtil.Div(player.Position.Y, Globals.TILE) * Globals.TILE + 7;
+
+                Save(posX, posY);
 
                 Debug.WriteLine("Saved.");
             }
@@ -384,7 +408,7 @@ namespace Platformer
 
             if (input.IsKeyPressed(Keys.C, Input.State.Pressed))
             {
-                saveGame.Delete();
+                SaveGame.Delete();
                 
                 Debug.WriteLine("Deleted save game.");
             }
@@ -474,7 +498,7 @@ namespace Platformer
 
                 DefaultFont.Draw(camera.ViewX + 4, camera.ViewY + 4, player.HP, 0);
             }
-            SpriteBatch.End();            
+            SpriteBatch.End();
         }
     }
 }

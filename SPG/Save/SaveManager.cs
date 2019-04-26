@@ -81,6 +81,7 @@ namespace SPG.Save
                 return false;
             }
 
+            bool success = true;
             using (FileStream fs = new FileStream(filePath, FileMode.Open))
             {
                 try
@@ -96,7 +97,8 @@ namespace SPG.Save
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Failed to load game. Reason: " + e.Message);                    
+                    Console.WriteLine("Failed to load game. Reason: " + e.Message);
+                    success = false;
                 }
                 finally
                 {
@@ -104,7 +106,7 @@ namespace SPG.Save
                 }
             }
 
-            return true;
+            return success;
         }
 
         public static void Delete<T>(this T saveGame) where T : ISaveGame

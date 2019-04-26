@@ -40,6 +40,7 @@ namespace Platformer.Misc
         private float curX, curY;
         private float tx0, ty0;
         private float tx, ty;
+        private float dyVel;
 
         // player-related vars
 
@@ -144,8 +145,13 @@ namespace Platformer.Misc
 
                 var tarX = Math.Min(Math.Max(target.X + dirOffsetX, CurrentRoom.X + .5f * ViewWidth), CurrentRoom.X + CurrentRoom.BoundingBox.Width - .5f * ViewWidth);
                 var tarY = Math.Min(Math.Max(target.Y - Globals.TILE, CurrentRoom.Y + .5f * ViewHeight), CurrentRoom.Y + CurrentRoom.BoundingBox.Height - .5f * ViewHeight);
-                
-                var vel = new Vector2((tarX - Position.X) / 12f, (tarY - Position.Y) / 6f);
+
+                if (Math.Abs(tarY - Position.Y) > 2 * Globals.TILE || Math.Abs(target.YVel) > 3)
+                    dyVel = Math.Max(dyVel - .1f, 1);
+                else
+                    dyVel = Math.Min(dyVel + .1f, 12f);
+
+                var vel = new Vector2((tarX - Position.X) / 12f, (tarY - Position.Y) / dyVel);
 
                 Position = new Vector2(Position.X + vel.X, Position.Y + vel.Y);
                 

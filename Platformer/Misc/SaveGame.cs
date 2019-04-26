@@ -9,7 +9,8 @@ namespace Platformer.Misc
     {
         private string fileName;
         
-        public Vector2 playerPosition;        
+        public Vector2 playerPosition;
+        public Direction playerDirection;
 
         // methods
 

@@ -158,9 +158,9 @@ namespace SPG.Draw
                         var c = txt[i];
                         var tex = glyphs.Where(o => o.Key == c).FirstOrDefault().Value;
 
-                        // draw ? when glyph is not found in set.
+                        // draw first texture when glyph is not found in set.
                         if (c != '\n' && tex == null)
-                            tex = glyphs.Where(o => o.Key == '?').FirstOrDefault().Value;
+                            tex = glyphs.FirstOrDefault().Value;
 
                         if (maxWidth > 0 && word != null && word.Width + tex.Width > maxWidth)
                         {

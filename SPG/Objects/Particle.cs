@@ -5,9 +5,9 @@ using System.Text;
 
 namespace SPG.Objects
 {
-    public class Particle : GameObject
+    public class Particle// : GameObject
     {
 
-        // have velicity, texture, color, alpha transition, scale transition, lifetime, ..
+        // have velicity, texture <-> type -> animation (from particleset?), color, alpha transition, scale transition, lifetime, ..
     }
 }

@@ -15,8 +15,7 @@ namespace SPG.Map
     
     // a visual object at a certain position in a tilemap
     public class Tile
-    {
-        
+    {   
         public int ID { get; private set; }
         public TileOptions TileOptions { get; set; }
 
@@ -24,6 +23,16 @@ namespace SPG.Map
         {
             ID = id;            
             TileOptions = options;
+        }
+
+        public void Hide()
+        {
+            if (TileOptions != null)
+                TileOptions.Visible = false;
+            else
+            {
+                TileOptions = new TileOptions { Visible = false };
+            }
         }
     }    
 }

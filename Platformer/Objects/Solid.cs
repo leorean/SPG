@@ -7,7 +7,14 @@ namespace Platformer
 {
     public class Solid : RoomDependentdObject
     {
-        public Solid(int x, int y, Room room)
+        public Solid(float x, float y, Room room) : base(x, y, room)
+        {
+            Name = "solid";
+
+            BoundingBox = new SPG.Util.RectF(0, 0, Globals.TILE, Globals.TILE);
+            Visible = false;            
+        }
+        /*public Solid(int x, int y, Room room)
         {
             Name = "solid";
             Position = new Vector2(x, y);
@@ -15,6 +22,6 @@ namespace Platformer
             Visible = false;
 
             Room = room;
-        }
+        }*/
     }
 }

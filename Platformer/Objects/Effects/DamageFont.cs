@@ -23,22 +23,18 @@ namespace Platformer.Objects.Effects
         private GameObject target;
         public GameObject Target { get => target; set { target = value; offX = (X - target.X); offY = (Y - target.Y); } }
 
-        public DamageFont(float x, float y, string text)
+        public DamageFont(float x, float y, string text, string name = null) : base(x, y, name)
         {
             Position = new Vector2(x, y);
             this.text = text;
 
             alpha = 1.5f;
-            //YVel = -1f;
 
-            font = MainGame.DamageFont.Copy();
+            font = MainGame.Current.DamageFont.Copy();
 
             font.Halign = Font.HorizontalAlignment.Center;
             font.Valign = Font.VerticalAlignment.Center;
-            font.Color = Color.Red;
-
-            //XVel = -.5f + (float)RND.Next * 1f;
-            //Gravity = .05f;
+            font.Color = Color.Red;            
         }
 
         public override void Update(GameTime gameTime)
@@ -50,10 +46,7 @@ namespace Platformer.Objects.Effects
                 YVel = 0;
                 Position = new Vector2(Target.X + offX, Target.Y + offY);
             }
-
-            //YVel += Gravity;
-            //Move(XVel, YVel);
-
+            
             alpha = Math.Max(alpha - .02f, 0);
 
             var c = font.Color;

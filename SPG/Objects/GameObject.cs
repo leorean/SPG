@@ -16,27 +16,25 @@ namespace SPG.Objects
 {
     public interface IGameObject
     {
-
+        
     }
 
-    public class GameObject : IGameObject
+    public abstract class GameObject : IGameObject
     {
         // general props
 
-        public string Name { get; protected set; }
-        public int ID { get; protected set; }
+        public string Name { get; set; }
+
+        /// <summary>
+        /// If not overridden, the ID will be created based on the coordinates of the object.
+        /// </summary>
+        public int ID { get; set; }
 
         private bool _enabled;
         public bool Enabled
         {
-            get
-            {
-                return _enabled;
-            }
-            set
-            {                
-                _enabled = value;
-            }
+            get => _enabled;
+            set => _enabled = value;
         }
         public bool Visible { get; set; } = true;
 
@@ -48,22 +46,16 @@ namespace SPG.Objects
         private double _currentFrame = 0;
         public int AnimationFrame
         {
-            get
-            {
-                return MinFrame + (int)Math.Floor(_currentFrame);
-            }
+            get => MinFrame + (int)Math.Floor(_currentFrame);
         }
-        public int MinFrame { get; private set; }
-        public int MaxFrame { get; private set; }
-        public double AnimationSpeed { get; private set; }
+        public int MinFrame { get; protected set; }
+        public int MaxFrame { get; protected set; }
+        public double AnimationSpeed { get; protected set; }
         private bool _isLooped = false;
 
         public Texture2D Texture
         {
-            get
-            {
-                return (_frames != null) ? _frames[AnimationFrame] : null;
-            }
+            get => (_frames != null) ? _frames[AnimationFrame] : null;
             set
             {
                 if (_frames == null)
@@ -114,16 +106,19 @@ namespace SPG.Objects
         public bool DebugEnabled { get; set; }
 
         // constructor
-
-        public GameObject(float x, float y, string name) : this()
+        
+        public GameObject(float x, float y, string name = null) : this()
         {
             Position = new Vector2(x, y);
-            Name = name;            
-        }
+            Name = name == null ? name : GetType().Name;
+            this.CreateID();
 
-        protected GameObject()
+            //Debug.WriteLine($"Set ID '{ID}' to object of type '{GetType()}'.");
+        }
+        
+        private GameObject()
         {
-            ID = ObjectManager.Add(this);
+            ObjectManager.Add(this);
             Enabled = true;
         }
         
