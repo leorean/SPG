@@ -5,23 +5,27 @@ using System;
 
 namespace Platformer
 {
-    public class Solid : RoomDependentdObject
+
+    public abstract class Collider : RoomDependentdObject
+    {
+        public Collider(float x, float y, Room room) : base(x, y, room) { }
+    }
+
+    public class Platform : Collider
+    {
+        public Platform(float x, float y, Room room) : base(x, y, room)
+        {            
+            BoundingBox = new SPG.Util.RectF(0, 0, Globals.TILE, 1);
+            Visible = false;
+        }
+    }
+
+    public class Solid : Collider
     {
         public Solid(float x, float y, Room room) : base(x, y, room)
-        {
-            Name = "solid";
-
+        {            
             BoundingBox = new SPG.Util.RectF(0, 0, Globals.TILE, Globals.TILE);
             Visible = false;            
         }
-        /*public Solid(int x, int y, Room room)
-        {
-            Name = "solid";
-            Position = new Vector2(x, y);
-            BoundingBox = new SPG.Util.RectF(0, 0, Globals.TILE, Globals.TILE);
-            Visible = false;
-
-            Room = room;
-        }*/
     }
 }

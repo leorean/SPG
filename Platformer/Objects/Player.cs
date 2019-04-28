@@ -109,13 +109,34 @@ namespace Platformer
 
         // methods
 
-        public void Hit(int hitPoints)
+        public void Hit(int hitPoints, float? angle = null)
         {
-            hit = true;
             HP = Math.Max(HP - hitPoints, 0);
 
             var dmgFont = new DamageFont(X, Y - Globals.TILE, $"-{hitPoints}");
             dmgFont.Target = this;
+
+            if (State == PlayerState.IDLE || State == PlayerState.WALK || State == PlayerState.GET_UP)
+                State = PlayerState.JUMP_UP;
+
+            if (State != PlayerState.HIT_GROUND)
+            {
+                if (angle == null)
+                {
+                    XVel = -.7f * Math.Sign((int)Direction);
+                    YVel = Math.Min(YVel - .5f, -1.2f);
+                }
+                else
+                {
+                    var ldx = MathUtil.LengthDirX((float)angle) * 1.5f;
+                    var ldy = MathUtil.LengthDirY((float)angle) * 1.5f;
+
+                    XVel = (float)ldx;
+                    YVel = (float)ldy;
+                }
+            }
+
+            invincible = 60;
         }
 
         public override void Update(GameTime gameTime)
@@ -200,27 +221,16 @@ namespace Platformer
 
             if (invincible == 0)
             {
-                var obstacle = ObjectManager.CollisionBounds<SpikeBottom>(this, X, Y).FirstOrDefault();
+                var obstacle = ObjectManager.CollisionBounds<Obstacle>(this, X, Y).FirstOrDefault();
 
                 if (obstacle != null)
                 {
-                    Hit(obstacle.Damage);
-                }                
-            }
-            
-            // impulse
-            if (hit)
-            {
-                if (State == PlayerState.IDLE || State == PlayerState.WALK || State == PlayerState.GET_UP)
-                    State = PlayerState.JUMP_UP;
+                    var vec = Position - (obstacle.Position + new Vector2(8, 12));
 
-                if (State != PlayerState.HIT_GROUND)
-                {
-                    XVel = -.7f * Math.Sign((int)Direction);
-                    YVel = -1.5f;
-                }
-                
-                invincible = 60;
+                    var angle = vec.ToAngle();
+                    
+                    Hit(obstacle.Damage, angle);
+                }                
             }
 
             if (HP == 0)
@@ -358,7 +368,7 @@ namespace Platformer
                 }                
             }
             // walk/idle -> jump
-            if (State == PlayerState.IDLE || State ==  PlayerState.WALK || State == PlayerState.GET_UP)
+            if (State == PlayerState.IDLE || State ==  PlayerState.WALK || State == PlayerState.GET_UP || State == PlayerState.TURN_AROUND)
             {
                 if (YVel > 0 && !onGround)
                     State = PlayerState.JUMP_DOWN;
@@ -640,8 +650,23 @@ namespace Platformer
 
             YVel = Math.Sign(YVel) * Math.Min(Math.Abs(YVel), 4);
 
-            var colY = ObjectManager.CollisionBounds<Solid>(this, X, Y + YVel);
-            if (colY.Count == 0)
+            var colY = this.CollisionBounds<Collider>(X, Y + YVel).Where(o => o is Solid).ToList();
+
+            var platform = this.CollisionBounds<Platform>(X, Y + YVel).FirstOrDefault();
+
+            if (platform != null)
+            {
+                if (Bottom <= platform.Top + 1)
+                {
+                    if (YVel >= 0)
+                    {
+                        colY.Clear();
+                        colY.Add(platform);
+                    }
+                }
+            }
+
+            if (colY.Count == 0)// || (YVel < 0 && colY.Where(o => o is Solid).Count() == 0))
             {
                 Move(0, YVel);
             }
@@ -663,7 +688,7 @@ namespace Platformer
                     var b = colY.Min(x => x.Y);
                     var bottom = colY.Where(o => o.Y == b).First();
 
-                    var newY = bottom.Y + BoundingBox.Y + BoundingBox.Height - bottom.BoundingBox.Height - Gravity;
+                    var newY = bottom.Y + BoundingBox.Y + BoundingBox.Height - Globals.TILE - Gravity;
 
                     Position = new Vector2(X, newY);
                 } else

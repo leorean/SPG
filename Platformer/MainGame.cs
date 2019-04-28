@@ -186,7 +186,9 @@ namespace Platformer
 
                     switch(t.ID)
                     {
-
+                        case 0: // platforms
+                            var platform = new Platform(i * Globals.TILE, j * Globals.TILE, room);                            
+                            break;
                         case 576: //save-statues
                             var saveSatue = new SaveStatue(i * Globals.TILE, j * Globals.TILE, room);
                             t.Hide();
@@ -241,7 +243,8 @@ namespace Platformer
             var playerData = Map.ObjectData.FindFirstDataByTypeName("player");
             var startX = (float)(int)playerData["x"] + 8;
             var startY = (float)(int)playerData["y"] + 7;
-            var direction = Direction.RIGHT;
+            var dir = (int)playerData["direction"];
+            var direction = (dir == 1) ? Direction.RIGHT : Direction.LEFT;
 
             bool success = SaveManager.Load(ref saveGame);
 
@@ -269,9 +272,9 @@ namespace Platformer
             
             // create player at start position and set camera target
             
-            Player = new Player(startX, startY);
+            Player = new Player(startX, startY);            
             Player.Direction = direction;
-            Player.AnimationTexture = PlayerSprites;            
+            Player.AnimationTexture = PlayerSprites;
             camera.SetTarget(Player);
 
         }
@@ -294,7 +297,7 @@ namespace Platformer
             
             // load map
 
-            XmlDocument xml = Xml.Load("testMap.tmx");
+            XmlDocument xml = Xml.Load("worldMap.tmx");
             
             Map = new GameMap(xml);
 

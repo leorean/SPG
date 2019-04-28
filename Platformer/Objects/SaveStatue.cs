@@ -39,7 +39,9 @@ namespace Platformer.Objects
             particleColors = new List<Color>();
 
             floatPosition = Vector2.Zero;
-            
+
+            alreadyActivated = true;
+
             particleColors.Add(new Color(255, 255, 255));
             particleColors.Add(new Color(206, 255, 255));
             particleColors.Add(new Color(168, 248, 248));
@@ -141,7 +143,7 @@ namespace Platformer.Objects
 
             emitter.Position = Position + floatPosition + new Vector2(8 , 8);
 
-            floatPosition = new Vector2(0, -6 + (float)Math.Sin(sin) * 3);
+            floatPosition = new Vector2(0, -5 - (float)Math.Sin(sin) * 2);
         }
 
         public override void Draw(GameTime gameTime)

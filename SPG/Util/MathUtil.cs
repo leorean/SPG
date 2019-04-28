@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
+using System.Diagnostics;
 
 namespace SPG.Util
 {
@@ -27,6 +28,12 @@ namespace SPG.Util
             var f3 = (float)(object)v3;
 
             return f1 >= f2 && f1 <= f3;
+        }
+
+        public static float ToAngle(this Vector2 vector)
+        {
+            var rad = (float)Math.Atan2(vector.Y, vector.X);
+            return (float)(rad / (2f * Math.PI)) * 360;
         }
 
         public static Vector2 Vector2(this Vector3 vec)
