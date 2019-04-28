@@ -195,7 +195,7 @@ namespace SPG.Objects
             if (ElapsedTime > GameSpeed)
             {
                 ElapsedTime -= GameSpeed;
-                Objects.Where(o => o.Enabled).ToList().ForEach(o => o.Update(gameTime));
+                Objects.Where(o => o.Enabled == true).ToList().ForEach(o => o.Update(gameTime));
             }
             ElapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;            
         }

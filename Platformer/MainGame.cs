@@ -449,15 +449,6 @@ namespace Platformer
             {
                 ObjectManager.SetRegionEnabled<GameObject>(camera.CurrentRoom.X, camera.CurrentRoom.Y, camera.CurrentRoom.BoundingBox.Width, camera.CurrentRoom.BoundingBox.Height, true);
             }
-
-                /*var outer = 2 * Globals.TILE;
-                ObjectManager.SetRegionEnabled<Solid>(room.X - outer, room.Y - outer, room.BoundingBox.Width + 2 * outer, room.BoundingBox.Height + 2 * outer, true);
-
-                // enable obstacles
-                ObjectManager.SetRegionEnabled<Obstacle>(room.X, room.Y, room.X + room.BoundingBox.Width, room.Y + room.BoundingBox.Height, true);
-
-                // enable player
-                ObjectManager.Enable<Player>();*/
             
             // ++++ update objects ++++
 
