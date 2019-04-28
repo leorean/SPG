@@ -15,7 +15,7 @@ namespace SPG.View
 
         public static void BeginCamera(this SpriteBatch mBatch, Camera camera, BlendState bstate)
         {
-            mBatch.Begin(SpriteSortMode.Deferred, bstate, SamplerState.AnisotropicWrap, DepthStencilState.Default, RasterizerState.CullNone, null, camera.GetViewTransformationMatrix());
+            mBatch.Begin(SpriteSortMode.FrontToBack, bstate, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null, camera.GetViewTransformationMatrix());
         }
 
         public static Rectangle NewInflate(this Rectangle rect, int width, int height)

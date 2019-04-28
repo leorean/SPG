@@ -14,7 +14,7 @@ namespace SPG.View
         /// </summary>
         private bool _dirtyMatrix = true;
         
-        public Color BackgroundColor { get; set; } = Color.Black;
+        public Color BackgroundColor { get; set; } = Color.White;
         
         public Vector2 VirtualScreenCenter { get; private set; }        
         public Vector2 VirtualScreenSize { get; private set; }
@@ -65,7 +65,7 @@ namespace SPG.View
         public void SetupDraw()
         {
             SetupFullViewport();
-            GameManager.Game.GraphicsDevice.Clear(BackgroundColor);
+            //GameManager.Game.GraphicsDevice.Clear(BackgroundColor);
             SetupVirtualScreenViewport();
         }
 

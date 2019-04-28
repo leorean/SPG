@@ -11,5 +11,12 @@ namespace SPG.Util
         {
             get => r.NextDouble();
         }
+
+        public static int Int(int maxVal)
+        {
+            var rnd = Next * maxVal;
+
+            return (int)Math.Round(rnd);
+        }
     }
 }

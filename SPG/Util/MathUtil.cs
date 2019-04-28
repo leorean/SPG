@@ -33,5 +33,20 @@ namespace SPG.Util
         {
             return new Vector2(vec.X, vec.Y);
         }
+
+        public static double LengthDirX(float angle)
+        {
+            var rad = (angle / 360) * 2 * Math.PI;
+
+            return Math.Cos(rad);
+            
+        }
+
+        public static double LengthDirY(float angle)
+        {
+            var rad = (angle / 360) * 2 * Math.PI;
+
+            return Math.Sin(rad);
+        }
     }
 }

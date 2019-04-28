@@ -60,7 +60,7 @@ namespace Platformer
 
         // common objects
 
-        private Player player;
+        public Player Player { get; private set; }
 
         // stores room data
         private List<Room> loadedRooms;
@@ -128,7 +128,7 @@ namespace Platformer
         public void Save(int posX, int posY)
         {
             SaveGame.playerPosition = new Vector2(posX, posY);
-            SaveGame.playerDirection = player.Direction;
+            SaveGame.playerDirection = Player.Direction;
             SaveGame.Save();
         }
 
@@ -227,9 +227,9 @@ namespace Platformer
                 UnloadRoomObjects(room);
             }
             
-            ObjectManager.Remove(player);
+            ObjectManager.Remove(Player);
 
-            player = null;
+            Player = null;
             camera.Reset();            
         }
 
@@ -269,10 +269,10 @@ namespace Platformer
             
             // create player at start position and set camera target
             
-            player = new Player(startX, startY);
-            player.Direction = direction;
-            player.AnimationTexture = PlayerSprites;            
-            camera.SetTarget(player);
+            Player = new Player(startX, startY);
+            Player.Direction = direction;
+            Player.AnimationTexture = PlayerSprites;            
+            camera.SetTarget(Player);
 
         }
 
@@ -285,7 +285,7 @@ namespace Platformer
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            
             // load texture sets
 
             TileSet = TextureSet.Load("tiles");
@@ -391,8 +391,8 @@ namespace Platformer
 
             if (input.IsKeyPressed(Keys.D0, Input.State.Pressed))
             {
-                var posX = MathUtil.Div(player.Position.X, Globals.TILE) * Globals.TILE + 8;
-                var posY = MathUtil.Div(player.Position.Y, Globals.TILE) * Globals.TILE + 7;
+                var posX = MathUtil.Div(Player.Position.X, Globals.TILE) * Globals.TILE + 8;
+                var posY = MathUtil.Div(Player.Position.Y, Globals.TILE) * Globals.TILE + 7;
 
                 Save(posX, posY);
 
@@ -420,8 +420,8 @@ namespace Platformer
             else
             {
                 ObjectManager.GameSpeed = 0;
-                if (player != null)
-                    player.DebugEnabled = false;
+                if (Player != null)
+                    Player.DebugEnabled = false;
             }
 
             if (input.IsKeyPressed(Keys.R, Input.State.Pressed))
@@ -434,9 +434,9 @@ namespace Platformer
 
             if (mouse.LeftButton == ButtonState.Pressed)
             {                
-                player.Position = camera.ToVirtual(mouse.Position.ToVector2());
-                player.XVel = 0;
-                player.YVel = 0;
+                Player.Position = camera.ToVirtual(mouse.Position.ToVector2());
+                Player.XVel = 0;
+                Player.YVel = 0;
             }
 
             // enable all solids from neighbors
@@ -467,8 +467,6 @@ namespace Platformer
         {
             camera.ResolutionRenderer.SetupDraw();
             
-            //GraphicsDevice.Clear(Color.CornflowerBlue);
-            
             SpriteBatch.BeginCamera(camera);
 
             camera.DrawBackground(gameTime);
@@ -487,7 +485,7 @@ namespace Platformer
                 DefaultFont.Halign = Font.HorizontalAlignment.Left;
                 DefaultFont.Valign = Font.VerticalAlignment.Top;
 
-                DefaultFont.Draw(camera.ViewX + 4, camera.ViewY + 4, player.HP, 0);
+                DefaultFont.Draw(camera.ViewX + 4, camera.ViewY + 4, Player.HP, 0);
             }
             SpriteBatch.End();
         }

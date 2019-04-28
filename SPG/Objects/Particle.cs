@@ -10,7 +10,7 @@ namespace SPG.Objects
 {
     public class ParticleEmitter : GameObject
     {
-        private List<Particle> particles;        
+        protected List<Particle> particles;
         private Texture2D pixel;
         
         public delegate void ParticleDelegate(Particle particle);
@@ -25,7 +25,13 @@ namespace SPG.Objects
         /// </summary>
         public ParticleDelegate ParticleInit;
 
-        public bool Active;
+        public bool Active { get; set; }
+
+        /// <summary>
+        /// Gets or sets the spawn rate. >1 means multiple particles per run
+        /// </summary>
+        public float SpawnRate { get; set; }
+        private float spawn;
 
         public ParticleEmitter(float x, float y) : base(x, y)
         {
@@ -35,6 +41,8 @@ namespace SPG.Objects
             Texture = pixel;
 
             particles = new List<Particle>();
+
+            SpawnRate = 1;
 
             Active = true;
         }
@@ -64,9 +72,17 @@ namespace SPG.Objects
                 particles.Clear();
                 return;
             }
-            
-            var part = new Particle(this);
 
+            spawn += SpawnRate;
+
+            int spawnAmount = (int)Math.Floor(spawn);
+
+            for(var i = 0; i < spawnAmount; i++)
+            {
+                var part = new Particle(this);
+            }
+            spawn -= spawnAmount;
+            
             List<Particle> delete = new List<Particle>();
 
             Particle[] copy = new Particle[particles.Count];
@@ -83,7 +99,8 @@ namespace SPG.Objects
 
         public override void Draw(GameTime gameTime)
         {
-            base.Draw(gameTime);
+            // the emitter doesn't draw itself, instead the texture is used for the particles
+            //base.Draw(gameTime);
             
             foreach (var part in particles)
                 part.Draw(gameTime);

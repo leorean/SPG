@@ -1,6 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Platformer.Objects.Effects;
+using SPG;
 using SPG.Objects;
 using SPG.Util;
+using SPG.View;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,6 +21,12 @@ namespace Platformer.Objects
 
         private ParticleEmitter emitter;
 
+        private List<Color> particleColors;
+
+        private Vector2 floatPosition;
+
+        private float sin;
+        
         public SaveStatue(float x, float y, Room room, string name = null) : base(x, y, room)
         {            
             BoundingBox = new RectF(4, 6, Globals.TILE - 8, Globals.TILE - 7);
@@ -26,28 +36,37 @@ namespace Platformer.Objects
 
             Depth = Globals.LAYER_BG + .001f;
 
-            emitter = new ParticleEmitter(x + 8, y + 8);
+            particleColors = new List<Color>();
 
+            floatPosition = Vector2.Zero;
+            
+            particleColors.Add(new Color(255, 255, 255));
+            particleColors.Add(new Color(206, 255, 255));
+            particleColors.Add(new Color(168, 248, 248));
+            particleColors.Add(new Color(104, 216, 248));
+            
+            emitter = new ParticleEmitter(x + 8, y + 8);
+            
             emitter.ParticleInit = (particle) =>
             {
-                var posX = x + RND.Next * 16;
-                var posY = y + RND.Next * 16;
+                var posX = emitter.X - 4 + RND.Next * 8;
+                var posY = emitter.Y + 3;
 
                 particle.LifeTime = 60;
 
+                // reset spawn rate to low rate
+                emitter.SpawnRate = .1f;
+
                 particle.Position = new Vector2((float) posX, (float) posY);
                 
-                particle.YVel = (float) (-.2 - RND.Next * .5);
+                particle.YVel = (float) (-.2 - RND.Next * .2);
                 particle.Scale = new Vector2(3, 3);
                 particle.Alpha = 0;
-
-                int r = (int)(120 + RND.Next * 60);
-                int g = (int)(150 + RND.Next * 100);
-                int b = 255;
-
+                
                 particle.Angle = (float)(RND.Next * 360);
 
-                particle.Color = new Color(r, g, b);
+                var colorIndex = RND.Int(particleColors.Count - 1);
+                particle.Color = particleColors[colorIndex];
 
             };
 
@@ -57,9 +76,14 @@ namespace Platformer.Objects
 
                 particle.Scale = new Vector2(s);
 
-                var p = Math.Sin((particle.LifeTime / 60f) * 2 * Math.PI);
-                
-                particle.Alpha = (float) p * 1;
+                var relativeLifeTime = particle.LifeTime / 60f;
+
+                if (relativeLifeTime > .5f)
+                    particle.Alpha = Math.Min(particle.Alpha + .1f, 1);
+                else
+                {
+                    particle.Alpha = Math.Max(particle.Alpha - .05f, 0);
+                }                
             };
         }
         
@@ -73,9 +97,11 @@ namespace Platformer.Objects
             var posX = MathUtil.Div(X, Globals.TILE) * Globals.TILE + 8;
             var posY = MathUtil.Div(Y, Globals.TILE) * Globals.TILE + 7;
 
+            var burst = new MagicBurstEmitter(emitter.Position.X, emitter.Position.Y);
+
             alreadyActivated = true;
-            Debug.WriteLine("Saved.");
             MainGame.Current.Save(posX, posY);
+            Debug.WriteLine("Saved.");            
         }
 
         public override void Update(GameTime gameTime)
@@ -83,13 +109,7 @@ namespace Platformer.Objects
             base.Update(gameTime);
 
             // ++++ draw <-> state logic ++++
-
-            var cols = 4; // how many columns there are in the sheet
-            var row = 0; // which row in the sheet
-            var fSpd = 0f; // frame speed
-            var fAmount = 4; // how many frames
-            var offset = 0; // offset within same row
-
+            
             if (MainGame.Current.SaveGame != null)
             {
                 var saveStatue = ObjectManager.CollisionPoint<SaveStatue>(MainGame.Current.SaveGame.playerPosition.X, MainGame.Current.SaveGame.playerPosition.Y).FirstOrDefault();
@@ -107,20 +127,34 @@ namespace Platformer.Objects
                     alreadyActivated = false;
             }
 
+            emitter.Active = Active;
+            emitter.Enabled = Enabled;
+
             if (Active)
-            {
-                row = 1;
-                fSpd = .1f;
-                emitter.Active = true;
+            {                
+                sin = (sin + .05f) % (2f * (float)Math.PI);
             }
             else
             {
-                row = 0;
-                fSpd = .1f;
-                emitter.Active = false;
+                sin = Math.Max(sin - .1f, 0);
             }
 
-            SetAnimation(cols * row + offset, cols * row + offset + fAmount - 1, fSpd, true);
+            emitter.Position = Position + floatPosition + new Vector2(8 , 8);
+
+            floatPosition = new Vector2(0, -6 + (float)Math.Sin(sin) * 3);
+        }
+
+        public override void Draw(GameTime gameTime)
+        {            
+            GameManager.Game.SpriteBatch.Draw(AnimationTexture[0], Position, null, Color.White, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
+
+            if (Active)
+                GameManager.Game.SpriteBatch.Draw(AnimationTexture[1], Position + floatPosition, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0003f);
+            else
+                GameManager.Game.SpriteBatch.Draw(AnimationTexture[3], Position + floatPosition, null, new Color(Color.White, 0.33f), Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0003f);
+
+            var shineColor = new Color(Color, (float)Math.Max(Math.Sin(sin), 0) * .7f);
+            GameManager.Game.SpriteBatch.Draw(AnimationTexture[2], Position + floatPosition, null, shineColor, Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0002f);
         }
     }
 }
