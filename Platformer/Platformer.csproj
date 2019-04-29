@@ -47,7 +47,7 @@
     <Compile Include="Misc\RoomCamera.cs" />
     <Compile Include="Misc\SaveGame.cs" />
     <Compile Include="Objects\Effects\DamageFont.cs" />
-    <Compile Include="Objects\Effects\MagicBurstEmitter.cs" />
+    <Compile Include="Objects\Effects\Emitters.cs" />
     <Compile Include="Objects\Enemy\Obstacles.cs" />
     <Compile Include="Objects\Player.cs" />
     <Compile Include="Objects\Room.cs" />

@@ -144,9 +144,10 @@ namespace Platformer
             {
                 o.Destroy();
             }
-            
+
             // TODO: add all objects that are alive and should be killed
 
+            //var alive = ObjectManager.Objects.Where(o => !(o is Room)).ToList();
             var alive = ObjectManager.Objects.Where(o => !(o is Room) && !(o is Player)).ToList();
             alive.ForEach(o => o.Destroy());
             
@@ -228,8 +229,8 @@ namespace Platformer
             {
                 UnloadRoomObjects(room);
             }
-            
-            ObjectManager.Remove(Player);
+
+            Player.Destroy();
 
             Player = null;
             camera.Reset();            

@@ -49,6 +49,10 @@ namespace SPG.Objects
             return target != null && Objects.Find(x => x == target) != null;
         }
 
+        /// <summary>
+        /// Are you sure you need to use this? Try using object.Destroy() instead.
+        /// </summary>
+        /// <param name="o"></param>
         public static void Remove(GameObject o)
         {
             if (Objects.Contains(o))

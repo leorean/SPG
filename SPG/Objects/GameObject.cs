@@ -25,10 +25,15 @@ namespace SPG.Objects
 
         public string Name { get; set; }
 
+        public GameObject Parent { get; set; } = null;
+
         /// <summary>
         /// If not overridden, the ID will be created based on the coordinates of the object.
         /// </summary>
         public int ID { get; set; }
+
+        // too dangerous for the moment..
+        //public bool KeepAlive { get; protected set; } = false;
 
         private bool _enabled;
         public bool Enabled
@@ -144,10 +149,40 @@ namespace SPG.Objects
             _isLooped = loop;
         }
 
+        /*
         /// <summary>
-        /// Unregisters a game object from the object manager. Optionally calls GC afterwards.
+        /// Unregisters a game object from the object manager, even if this game object set KeepAlive to true. Optionally calls GC afterwards.
+        /// </summary>
+        /// <param name="callGC"></param>
+        public void ForceDestroy(bool callGC = false)
+        {
+            RemoveAndCallGC(callGC);
+        }*/
+
+        /// <summary>
+        /// Unregisters a game object from the object manager. 
+        /// If that game object is child to another game object, it is not destroyed until the parent is destroyed.
+        /// Optionally calls GC afterwards.
         /// </summary>
         public void Destroy(bool callGC = false)
+        {
+            if (Parent != null && ObjectManager.Objects.Contains(Parent))
+                return;
+
+            List<GameObject> children = ObjectManager.Objects.Where(o => o.Parent == this).ToList();
+            
+            GameObject[] copy = new GameObject[children.Count];
+            children.CopyTo(copy);
+
+            foreach(var c in copy)
+            {
+                c.RemoveAndCallGC(callGC);
+            }
+
+            RemoveAndCallGC(callGC);
+        }
+
+        private void RemoveAndCallGC(bool callGC)
         {
             ObjectManager.Remove(this);
             if (callGC)

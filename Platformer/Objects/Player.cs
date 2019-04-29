@@ -89,7 +89,7 @@ namespace Platformer
 
         private float levitationSine = 0f;
 
-        private MagicBurstEmitter magicBurstEmitter;
+        private PlayerLevitationEmitter levitationEmitter;
 
         // constructor
         
@@ -108,12 +108,14 @@ namespace Platformer
 
             lastGroundY = Y;
 
+            //KeepAlive = true;
+
             // stats:
 
             HP = 30;
 
-            magicBurstEmitter = new MagicBurstEmitter(x, y);
-            magicBurstEmitter.SpawnRate = 0;
+            levitationEmitter = new PlayerLevitationEmitter(x, y);
+            levitationEmitter.Parent = this;
         }
 
         ~Player()
@@ -292,7 +294,7 @@ namespace Platformer
             }
             if (onCeil)
             {
-                if ((State == PlayerState.JUMP_UP || State == PlayerState.WALL_CLIMB) 
+                if ((State == PlayerState.JUMP_UP || State == PlayerState.WALL_CLIMB)// || State == PlayerState.LEVITATE) 
                     && 
                     (k_jumpHolding || k_upHolding))
                 {
@@ -447,12 +449,11 @@ namespace Platformer
 
                 if (hit)
                     State = PlayerState.HIT_AIR;
-
-                magicBurstEmitter = new MagicBurstEmitter(X, Y);
-                magicBurstEmitter.SpawnRate = 1;
+                
+                levitationEmitter.Active = true;
             } else
             {
-                magicBurstEmitter.SpawnRate = 0;
+                levitationEmitter.Active = false;
             }
             // jumping
             if (State == PlayerState.JUMP_UP  || State == PlayerState.JUMP_DOWN)
@@ -779,7 +780,7 @@ namespace Platformer
             boundY = boundY.Clamp(4, GameManager.Game.Map.Height * Globals.TILE - 4);
 
             Position = new Vector2(boundX, boundY);
-            magicBurstEmitter.Position = Position;
+            levitationEmitter.Position = Position;
 
             // ++++ draw <-> state logic ++++
 

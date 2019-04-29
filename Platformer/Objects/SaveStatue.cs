@@ -99,7 +99,7 @@ namespace Platformer.Objects
             var posX = MathUtil.Div(X, Globals.TILE) * Globals.TILE + 8f;
             var posY = MathUtil.Div(Y, Globals.TILE) * Globals.TILE + 7.9f;
 
-            var burst = new MagicBurstEmitter(emitter.Position.X, emitter.Position.Y);
+            var burst = new SaveStatueEmitter(emitter.Position.X, emitter.Position.Y);
 
             alreadyActivated = true;
             MainGame.Current.Save(posX, posY);
@@ -153,10 +153,13 @@ namespace Platformer.Objects
             if (Active)
                 GameManager.Game.SpriteBatch.Draw(AnimationTexture[1], Position + floatPosition, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0003f);
             else
-                GameManager.Game.SpriteBatch.Draw(AnimationTexture[3], Position + floatPosition, null, new Color(Color.White, 0.33f), Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0003f);
+                GameManager.Game.SpriteBatch.Draw(AnimationTexture[3], Position + floatPosition, null, new Color(Color.White, 0.5f), Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0003f);
 
-            var shineColor = new Color(Color.White, (float)Math.Max(Math.Sin(sin), 0) * .7f);
-            GameManager.Game.SpriteBatch.Draw(AnimationTexture[2], Position + floatPosition, null, shineColor, Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0002f);
+            if (Active)
+            {
+                var shineColor = new Color(Color.White, (float)Math.Max(Math.Sin(sin), 0) * .7f);
+                GameManager.Game.SpriteBatch.Draw(AnimationTexture[2], Position + floatPosition, null, shineColor, Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0002f);
+            }
         }
     }
 }

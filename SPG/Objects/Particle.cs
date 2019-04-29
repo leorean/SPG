@@ -61,39 +61,38 @@ namespace SPG.Objects
         ~ParticleEmitter()
         {
             particles.Clear();
+            ParticleUpdate = null;
+            ParticleInit = null;
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            if (!Active)
+            if (Active)
             {
-                particles.Clear();
-                return;
+
+                spawn += SpawnRate;
+
+                int spawnAmount = (int)Math.Floor(spawn);
+
+                for (var i = 0; i < spawnAmount; i++)
+                {
+                    var part = new Particle(this);
+                }
+                spawn -= spawnAmount;
             }
-
-            spawn += SpawnRate;
-
-            int spawnAmount = (int)Math.Floor(spawn);
-
-            for(var i = 0; i < spawnAmount; i++)
-            {
-                var part = new Particle(this);
-            }
-            spawn -= spawnAmount;
             
-            List<Particle> delete = new List<Particle>();
-
             Particle[] copy = new Particle[particles.Count];
             particles.CopyTo(copy);
 
             foreach (var p in copy)
             {
+                p.Update(gameTime);
+
                 if (p.LifeTime == 0)
                     Remove(p);
-                else
-                    p.Update(gameTime);
+                
             }
         }
 
