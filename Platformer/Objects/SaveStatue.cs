@@ -96,8 +96,8 @@ namespace Platformer.Objects
             if (alreadyActivated)
                 return;
 
-            var posX = MathUtil.Div(X, Globals.TILE) * Globals.TILE + 8;
-            var posY = MathUtil.Div(Y, Globals.TILE) * Globals.TILE + 7;
+            var posX = MathUtil.Div(X, Globals.TILE) * Globals.TILE + 8f;
+            var posY = MathUtil.Div(Y, Globals.TILE) * Globals.TILE + 7.9f;
 
             var burst = new MagicBurstEmitter(emitter.Position.X, emitter.Position.Y);
 
@@ -155,7 +155,7 @@ namespace Platformer.Objects
             else
                 GameManager.Game.SpriteBatch.Draw(AnimationTexture[3], Position + floatPosition, null, new Color(Color.White, 0.33f), Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0003f);
 
-            var shineColor = new Color(Color, (float)Math.Max(Math.Sin(sin), 0) * .7f);
+            var shineColor = new Color(Color.White, (float)Math.Max(Math.Sin(sin), 0) * .7f);
             GameManager.Game.SpriteBatch.Draw(AnimationTexture[2], Position + floatPosition, null, shineColor, Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0002f);
         }
     }

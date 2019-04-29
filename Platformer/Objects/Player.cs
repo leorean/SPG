@@ -10,6 +10,7 @@ using SPG;
 using Platformer.Objects.Enemy;
 using Platformer.Objects.Effects;
 using Platformer.Objects;
+using Platformer.Misc;
 
 namespace Platformer
 { 
@@ -34,6 +35,16 @@ namespace Platformer
 
         // public
         
+        [Flags]
+        public enum PlayerAbility
+        {
+            NONE = 0,
+            SWIM = 1,
+            CLIMB_WALL = 2,
+            CLIMB_CEIL = 4,
+            LEVITATE = 8
+        }
+
         public enum PlayerState
         {
             IDLE,
@@ -51,7 +62,8 @@ namespace Platformer
             CEIL_IDLE,
             CEIL_CLIMB,
             SWIM,
-            DEAD             
+            DEAD,
+            LEVITATE
         }
 
         public PlayerState State { get; set; }
@@ -75,6 +87,10 @@ namespace Platformer
         private float gravAir = .1f;
         private float gravWater = .03f;
 
+        private float levitationSine = 0f;
+
+        private MagicBurstEmitter magicBurstEmitter;
+
         // constructor
         
         public Player(float x, float y) : base(x, y)
@@ -95,6 +111,9 @@ namespace Platformer
             // stats:
 
             HP = 30;
+
+            magicBurstEmitter = new MagicBurstEmitter(x, y);
+            magicBurstEmitter.SpawnRate = 0;
         }
 
         ~Player()
@@ -135,7 +154,7 @@ namespace Platformer
                     YVel = (float)ldy;
                 }
             }
-
+            hit = true;
             invincible = 60;
         }
 
@@ -237,11 +256,15 @@ namespace Platformer
             {
                 State = PlayerState.DEAD;
             }
-            
+
             // ++++ collision flags ++++
 
-            var onWall = !hit && ObjectManager.CollisionPoint<Solid>(this, X + (.5f * BoundingBox.Width + 1) * Math.Sign((int)Direction), Y + 4).Count > 0;
-            var onCeil = !hit && ObjectManager.CollisionPoint<Solid>(this, X, Y - BoundingBox.Height * .5f - 1).Count > 0;
+            var currentRoom = (MainGame.Current.Camera as RoomCamera)?.CurrentRoom;
+            
+            var onWall = !hit && ObjectManager.CollisionPoint<Solid>(this, X + (.5f * BoundingBox.Width + 1) * Math.Sign((int)Direction), Y + 4)
+                            .Where(o => o.Room == currentRoom).Count() > 0;
+            var onCeil = !hit && ObjectManager.CollisionPoint<Solid>(this, X, Y - BoundingBox.Height * .5f - 1)
+                .Where(o => o.Room == currentRoom).Count() > 0;
 
             int tx = MathUtil.Div(X, Globals.TILE);
             int ty = MathUtil.Div(Y + 4, Globals.TILE);
@@ -377,7 +400,59 @@ namespace Platformer
                 {
                     State = PlayerState.JUMP_UP;
                     YVel = -2;
+                    k_jumpPressed = false;
                 }
+            }
+            // levitating
+            if (State == PlayerState.LEVITATE)
+            {
+                lastGroundY = Y;
+
+                var acc = 0.03f;
+                var leviMaxVel = 1f;
+
+                if (k_leftHolding)
+                {
+                    XVel = Math.Max(XVel - acc, -leviMaxVel);
+                    Direction = Direction.LEFT;
+                }
+                else if (k_rightHolding)
+                {
+                    XVel = Math.Min(XVel + acc, leviMaxVel);
+                    Direction = Direction.RIGHT;
+                }
+                else
+                {
+                    XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - .02f, 0);
+                }
+
+                if (k_upHolding)
+                {
+                    YVel = Math.Max(YVel - acc - Gravity, -leviMaxVel);
+                    levitationSine = (float)Math.PI;
+                }
+                else if (k_downHolding)
+                {
+                    YVel = Math.Min(YVel + acc - Gravity, leviMaxVel);
+                    levitationSine = (float)Math.PI;
+                }
+                else
+                {
+                    levitationSine = (float)((levitationSine + .1f) % (2f * Math.PI));
+                    YVel = -Gravity + (float)Math.Sin(levitationSine) * .1f;
+                }
+                
+                if (!k_jumpHolding)
+                    State = PlayerState.JUMP_DOWN;
+
+                if (hit)
+                    State = PlayerState.HIT_AIR;
+
+                magicBurstEmitter = new MagicBurstEmitter(X, Y);
+                magicBurstEmitter.SpawnRate = 1;
+            } else
+            {
+                magicBurstEmitter.SpawnRate = 0;
             }
             // jumping
             if (State == PlayerState.JUMP_UP  || State == PlayerState.JUMP_DOWN)
@@ -396,7 +471,10 @@ namespace Platformer
                     if (XVel > -.5)
                         Direction = Direction.RIGHT;
                     XVel = Math.Min(XVel + .08f, maxVel);                    
-                }                
+                }
+
+                if (k_jumpPressed)
+                    State = PlayerState.LEVITATE;
             }
             // getting back up
             if (State == PlayerState.GET_UP)
@@ -429,16 +507,7 @@ namespace Platformer
                 if (Direction == Direction.LEFT)
                 {
                     var jumpOff = false;
-
-                    /*if (k_jumpPressed) // jump off
-                    {
-                        XVel = .5f;
-                        YVel = -1;
-                        State = PlayerState.JUMP_UP;
-
-                        jumpOff = true;
-                    }*/
-
+                    
                     if (k_jumpPressed || k_rightHolding)
                     {
                         if (k_rightHolding)
@@ -458,16 +527,7 @@ namespace Platformer
                 else if (Direction == Direction.RIGHT)
                 {
                     var jumpOff = false;
-
-                    /*if (k_jumpPressed) // jump off
-                    {
-                        XVel = -.5f;
-                        YVel = -1;
-                        State = PlayerState.JUMP_UP;
-
-                        jumpOff = true;
-                    }*/
-
+                    
                     if (k_jumpPressed || k_leftHolding)
                     {
                         if (k_leftHolding)
@@ -593,9 +653,6 @@ namespace Platformer
             }
             if (State == PlayerState.SWIM)
             {
-
-                //Gravity = 0.01f;
-
                 var waterAcc = 0.03f;
                 var waterVelMax = 1f;
 
@@ -677,7 +734,7 @@ namespace Platformer
                     onGround = true;
 
                     // transition from falling to getting up again
-                    if (State == PlayerState.JUMP_UP || State == PlayerState.JUMP_DOWN || State == PlayerState.WALL_CLIMB)
+                    if (State == PlayerState.JUMP_UP || State == PlayerState.JUMP_DOWN || State == PlayerState.WALL_CLIMB || State == PlayerState.LEVITATE)
                     {
                         if (lastGroundY < Y - Globals.TILE)
                             State = PlayerState.GET_UP;
@@ -722,7 +779,7 @@ namespace Platformer
             boundY = boundY.Clamp(4, GameManager.Game.Map.Height * Globals.TILE - 4);
 
             Position = new Vector2(boundX, boundY);
-
+            magicBurstEmitter.Position = Position;
 
             // ++++ draw <-> state logic ++++
 
@@ -803,6 +860,11 @@ namespace Platformer
                     row = 5;
                     fAmount = 4;
                     fSpd = 0.05f;
+                    break;
+                case PlayerState.LEVITATE:
+                    row = 12;
+                    fAmount = 1;
+                    fSpd = 0;
                     break;
             }
 

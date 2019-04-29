@@ -125,7 +125,7 @@ namespace Platformer
         /// <summary>
         /// The main Save method.
         /// </summary>
-        public void Save(int posX, int posY)
+        public void Save(float posX, float posY)
         {
             SaveGame.playerPosition = new Vector2(posX, posY);
             SaveGame.playerDirection = Player.Direction;
@@ -241,8 +241,8 @@ namespace Platformer
         public void LoadLevel()
         {
             var playerData = Map.ObjectData.FindFirstDataByTypeName("player");
-            var startX = (float)(int)playerData["x"] + 8;
-            var startY = (float)(int)playerData["y"] + 7;
+            var spawnX = (float)(int)playerData["x"] + 8;
+            var spawnY = (float)(int)playerData["y"] + 8;
             var dir = (int)playerData["direction"];
             var direction = (dir == 1) ? Direction.RIGHT : Direction.LEFT;
 
@@ -250,19 +250,19 @@ namespace Platformer
 
             if (success)
             {
-                startX = SaveGame.playerPosition.X;
-                startY = SaveGame.playerPosition.Y;
+                spawnX = SaveGame.playerPosition.X;
+                spawnY = SaveGame.playerPosition.Y;
                 direction = SaveGame.playerDirection;
             }
 
             ObjectManager.Enable<Room>();
 
             // find starting room
-            var startRoom = ObjectManager.CollisionPoint<Room>(startX, startY).FirstOrDefault();
+            var startRoom = ObjectManager.CollisionPoint<Room>(spawnX, spawnY).FirstOrDefault();
             
             if (startRoom == null)
             {
-                throw new Exception($"No room detected at position {startX}x{startY}!");
+                throw new Exception($"No room detected at position {spawnX}x{spawnY}!");
             }
 
             var neighbours = startRoom.Neighbors();
@@ -272,7 +272,7 @@ namespace Platformer
             
             // create player at start position and set camera target
             
-            Player = new Player(startX, startY);            
+            Player = new Player(spawnX, spawnY);            
             Player.Direction = direction;
             Player.AnimationTexture = PlayerSprites;
             camera.SetTarget(Player);
@@ -470,8 +470,9 @@ namespace Platformer
         {
             camera.ResolutionRenderer.SetupDraw();
             
-            SpriteBatch.BeginCamera(camera);
+            // IMPORTANT HINT: when a texture's alpha is not "pretty", check the Content settings of that texture! Make sure that the texture has premultiplied : true.
 
+            SpriteBatch.BeginCamera(camera, BlendState.NonPremultiplied);
             camera.DrawBackground(gameTime);
 
             Map.Draw(gameTime);

@@ -28,8 +28,7 @@ namespace Platformer.Objects.Effects
                 particle.LifeTime = 30;
 
                 SpawnRate = 0;
-
-                //particle.YVel = (float)(-.2 - RND.Next * .2);
+                
                 particle.Scale = new Vector2(3, 3);
 
                 particle.Angle = (float)(RND.Next * 360);
