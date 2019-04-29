@@ -113,9 +113,9 @@ namespace SPG.Draw
             texts.RemoveAll(t => t.DecreaseAliveCounter());
         }
 
-        public void Draw(float x, float y, object text, int maxWidth = 0)
+        public void Draw(SpriteBatch sb, float x, float y, object text, int maxWidth = 0)
         {
-            Draw(x, y, text.ToString(), maxWidth);
+            Draw(sb, x, y, text.ToString(), maxWidth);
         }
 
         /// <summary>
@@ -125,12 +125,11 @@ namespace SPG.Draw
         /// <param name="y"></param>
         /// <param name="text"></param>
         /// <param name="maxWidth"></param>     
-        public void Draw(float x, float y, string text, int maxWidth = 0)
+        public void Draw(SpriteBatch sb, float x, float y, string text, int maxWidth = 0)
         {
             //var sw = Stopwatch.StartNew();
 
             int lineHeight = glyphs.FirstOrDefault().Value.Height;
-            var spriteBatch = GameManager.Game.SpriteBatch;
             
             // removes all texts that are not used anymore.
             texts.RemoveAll(t => t.DecreaseAliveCounter());
@@ -211,7 +210,7 @@ namespace SPG.Draw
                     }
 
                     var pos = new Vector2(posx, posy + i * lineHeight);
-                    spriteBatch.Draw(textObject.LineTextures[i], pos, null, Color, 0, Vector2.Zero, 1.0f, SpriteEffects.None, Depth);
+                    sb.Draw(textObject.LineTextures[i], pos, null, Color, 0, Vector2.Zero, 1.0f, SpriteEffects.None, Depth);
                 }
             }
 

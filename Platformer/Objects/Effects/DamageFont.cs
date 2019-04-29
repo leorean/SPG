@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using SPG;
 using SPG.Draw;
 using SPG.Objects;
@@ -56,11 +57,11 @@ namespace Platformer.Objects.Effects
                 Destroy();
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
-            base.Draw(gameTime);
+            base.Draw(sb, gameTime);
             
-            font.Draw(X, Y, text);
+            font.Draw(sb, X, Y, text);
         }        
     }
 }

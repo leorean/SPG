@@ -92,7 +92,7 @@ namespace SPG.Save
 
                         byte[] data = ms.ToArray();
 
-                        saveGame = BinarySerializer.Deserialize<T>(data);                        
+                        saveGame = BinarySerializer.Deserialize<T>(data);
                     }                    
                 }
                 catch (Exception e)

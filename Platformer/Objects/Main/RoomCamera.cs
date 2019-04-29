@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Platformer.Objects;
 using Platformer.Objects.Enemy;
+using Platformer.Objects.Main;
 using SPG;
 using SPG.Map;
 using SPG.Objects;
@@ -14,7 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Platformer.Misc
+namespace Platformer.Main
 {
     public class RoomCamera : Camera
     {
@@ -211,7 +212,7 @@ namespace Platformer.Misc
             _backgrounds = backgrounds;
         }
 
-        public void DrawBackground(GameTime gt)
+        public void DrawBackground(SpriteBatch sb, GameTime gameTime)
         {
             if (_backgrounds != null)
             {
@@ -219,13 +220,13 @@ namespace Platformer.Misc
                 {
                     if (backgroundAlpha < 1)
                     {
-                        GameManager.Game.SpriteBatch.Draw(_backgrounds[lastRoom.Background], Position - new Vector2(ViewWidth * .5f, ViewHeight * .5f), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0.0001f);
+                        sb.Draw(_backgrounds[lastRoom.Background], Position - new Vector2(ViewWidth * .5f, ViewHeight * .5f), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0.0001f);
                     }
                 }
                 if (CurrentRoom != null)
                 {
                     var color = new Color(Color.White, backgroundAlpha);
-                    GameManager.Game.SpriteBatch.Draw(_backgrounds[CurrentRoom.Background], Position - new Vector2(ViewWidth * .5f, ViewHeight *.5f), null, color, 0, Vector2.Zero, 1, SpriteEffects.None, 0.0002f);
+                    sb.Draw(_backgrounds[CurrentRoom.Background], Position - new Vector2(ViewWidth * .5f, ViewHeight *.5f), null, color, 0, Vector2.Zero, 1, SpriteEffects.None, 0.0002f);
                 }                
             }
         }

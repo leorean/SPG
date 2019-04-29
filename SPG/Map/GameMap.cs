@@ -174,7 +174,7 @@ namespace SPG.Map
         /// Draws parts of the map that are visible to the Game camera (within the camera view bounds).
         /// </summary>
         /// <param name="gameTime"></param>
-        public void Draw(GameTime gameTime)
+        public void Draw(SpriteBatch sb, GameTime gameTime)
         {
 
             if (TileSet == null)
@@ -225,7 +225,7 @@ namespace SPG.Map
 
                             var partRect = new Rectangle(tix, tiy, Globals.TILE, Globals.TILE);
 
-                            GameManager.Game.SpriteBatch.Draw(TileSet.OriginalTexture, new Vector2(i * Globals.TILE, j * Globals.TILE), partRect, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.ElementAt(l).Value);
+                            sb.Draw(TileSet.OriginalTexture, new Vector2(i * Globals.TILE, j * Globals.TILE), partRect, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.ElementAt(l).Value);
                         }
                     }
                 }

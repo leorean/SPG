@@ -219,14 +219,14 @@ namespace SPG.Objects
             _lastFrame = _currentFrame;
         }
 
-        public virtual void Draw(GameTime gameTime)
+        public virtual void Draw(SpriteBatch sb, GameTime gameTime)
         {            
             if (Texture == null)
             {
                 //Debug.WriteLine($"Warning: object '{Name}'({ID}) has no texture!");
             } else
             {
-                GameManager.Game.SpriteBatch.Draw(Texture, Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
+                sb.Draw(Texture, Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
             }
 
             if (DebugEnabled)
@@ -235,7 +235,7 @@ namespace SPG.Objects
                     (Position.Y + BoundingBox.Y) - .5f,
                     BoundingBox.Width, BoundingBox.Height);
 
-                SPG.Draw.Primitives2D.DrawRectangle(rect, Enabled ? Color.Black : Color.Gray, false);
+                SPG.Draw.Primitives2D.DrawRectangle(sb, rect, Enabled ? Color.Black : Color.Gray, false);
             }
         }        
     }

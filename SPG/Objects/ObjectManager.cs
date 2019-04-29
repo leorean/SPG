@@ -207,10 +207,10 @@ namespace SPG.Objects
         /// <summary>
         /// Call this between the SpriteBatch.Begin and SpriteBatch.End in your game Draw method.
         /// </summary>
-        public static void DrawObjects(GameTime gameTime)
+        public static void DrawObjects(SpriteBatch sb, GameTime gameTime)
         {
             SortByID();
-            Objects.Where(o => o.Visible).ToList().ForEach(o => o.Draw(gameTime));
+            Objects.Where(o => o.Visible).ToList().ForEach(o => o.Draw(sb, gameTime));
         }
 
         

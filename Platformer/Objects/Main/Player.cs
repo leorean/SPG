@@ -10,9 +10,10 @@ using SPG;
 using Platformer.Objects.Enemy;
 using Platformer.Objects.Effects;
 using Platformer.Objects;
-using Platformer.Misc;
+using Platformer.Main;
+using Microsoft.Xna.Framework.Graphics;
 
-namespace Platformer
+namespace Platformer.Objects.Main
 { 
     public static class PlayerExtensions
     {
@@ -22,29 +23,29 @@ namespace Platformer
         }
     }
     
-    public enum Direction
+    public class PlayerStats
     {
-        LEFT = -1,
-        RIGHT = 1,
-        UP = -2,
-        DOWN = 2
+        public int MaxHP { get; set; } = 0;
+        public int MaxMagic { get; set; } = 0;
+        public float MagicRegen { get; set; } = 0;
     }
 
+    [Flags]
+    public enum PlayerAbility
+    {
+        NONE = 0,
+        SWIM = 1,
+        CLIMB_WALL = 2,
+        CLIMB_CEIL = 4,
+        LEVITATE = 8,
+        //TODO: shoot? 
+    }
+    
     public class Player : GameObject
     {
 
         // public
         
-        [Flags]
-        public enum PlayerAbility
-        {
-            NONE = 0,
-            SWIM = 1,
-            CLIMB_WALL = 2,
-            CLIMB_CEIL = 4,
-            LEVITATE = 8
-        }
-
         public enum PlayerState
         {
             IDLE,
@@ -68,7 +69,22 @@ namespace Platformer
 
         public PlayerState State { get; set; }
 
-        public int HP;
+        // stats 
+
+        private PlayerStats stats;
+        public PlayerStats Stats { get => stats;
+            set
+            {
+                stats = value;
+                HP = stats.MaxHP;
+                Magic = 0;
+            }
+        }
+        public int HP { get; set; }
+        public float Magic { get; set; }
+        public float MagicRegen { get; set; }
+
+        public PlayerAbility Abilities;
 
         // private
 
@@ -80,8 +96,11 @@ namespace Platformer
         private float lastGroundYbeforeWall;
 
         private bool hit = false;
-        private int invincible = 0;
-        
+        public int InvincibleTimer { get; private set; } = 0;
+
+        private int magicRegenTimeout = 0;
+        private int maxMagicRegenTimeout = 60;
+
         Input input = new Input();
 
         private float gravAir = .1f;
@@ -108,11 +127,9 @@ namespace Platformer
 
             lastGroundY = Y;
 
-            //KeepAlive = true;
-
             // stats:
 
-            HP = 30;
+            Stats = new PlayerStats();
 
             levitationEmitter = new PlayerLevitationEmitter(x, y);
             levitationEmitter.Parent = this;
@@ -157,7 +174,7 @@ namespace Platformer
                 }
             }
             hit = true;
-            invincible = 60;
+            InvincibleTimer = 60;
         }
 
         public override void Update(GameTime gameTime)
@@ -201,7 +218,7 @@ namespace Platformer
             }
             if (input.IsKeyPressed(Keys.H, Input.State.Pressed))
             {
-                Hit(0);
+                Hit(1);
             }
 
             // gamepad overrides keyboard input if pussible
@@ -238,9 +255,9 @@ namespace Platformer
 
             // ++++ getting hit ++++
 
-            invincible = Math.Max(invincible - 1, 0);
+            InvincibleTimer = Math.Max(InvincibleTimer - 1, 0);
 
-            if (invincible == 0)
+            if (InvincibleTimer == 0)
             {
                 var obstacle = ObjectManager.CollisionBounds<Obstacle>(this, X, Y).FirstOrDefault();
 
@@ -332,6 +349,13 @@ namespace Platformer
                 }
             }
 
+            // ++++ magic regen ++++
+
+            magicRegenTimeout = Math.Max(magicRegenTimeout - 1, 0);
+
+            if (magicRegenTimeout == 0)
+                Magic = Math.Min(Magic + Stats.MagicRegen, Stats.MaxMagic);
+
             // ++++ state logic ++++
 
             var maxVel = 1.2f;
@@ -408,6 +432,9 @@ namespace Platformer
             // levitating
             if (State == PlayerState.LEVITATE)
             {
+                magicRegenTimeout = Math.Min(magicRegenTimeout + 2, maxMagicRegenTimeout);
+                Magic = Math.Max(Magic - 1, 0);
+
                 lastGroundY = Y;
 
                 var acc = 0.03f;
@@ -444,7 +471,7 @@ namespace Platformer
                     YVel = -Gravity + (float)Math.Sin(levitationSine) * .1f;
                 }
                 
-                if (!k_jumpHolding)
+                if (!k_jumpHolding || Magic == 0)
                     State = PlayerState.JUMP_DOWN;
 
                 if (hit)
@@ -871,12 +898,12 @@ namespace Platformer
 
             SetAnimation(cols * row + offset, cols * row + offset + fAmount - 1, fSpd, loopAnim);
 
-            Color = (invincible % 4 > 2) ? Color.Transparent : Color.White;
+            Color = (InvincibleTimer % 4 > 2) ? Color.Transparent : Color.White;
         }
         
-        public override void Draw(GameTime gameTime)
+        public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
-            base.Draw(gameTime);
+            base.Draw(sb, gameTime);
             
             animationComplete = false;
             

@@ -96,13 +96,13 @@ namespace SPG.Objects
             }
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
             // the emitter doesn't draw itself, instead the texture is used for the particles
             //base.Draw(gameTime);
             
             foreach (var part in particles)
-                part.Draw(gameTime);
+                part.Draw(sb, gameTime);
         }
 
         // ++++ PARTICLE ++++
@@ -152,9 +152,9 @@ namespace SPG.Objects
                 Position = new Vector2(Position.X + XVel, Position.Y + YVel);
             }
 
-            public void Draw(GameTime gameTime)
+            public void Draw(SpriteBatch sb, GameTime gameTime)
             {
-                GameManager.Game.SpriteBatch.Draw(emitter.Texture, Position, null, new Color(Color, Alpha), Angle, Vector2.Zero, Scale, SpriteEffects.None, emitter.Depth);
+                sb.Draw(emitter.Texture, Position, null, new Color(Color, Alpha), Angle, Vector2.Zero, Scale, SpriteEffects.None, emitter.Depth);
             }
         }
     }

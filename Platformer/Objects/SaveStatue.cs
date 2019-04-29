@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Platformer.Objects.Effects;
+using Platformer.Objects.Main;
 using SPG;
 using SPG.Objects;
 using SPG.Util;
@@ -146,19 +147,19 @@ namespace Platformer.Objects
             floatPosition = new Vector2(0, -5 - (float)Math.Sin(sin) * 2);
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw(SpriteBatch sb, GameTime gameTime)
         {            
-            GameManager.Game.SpriteBatch.Draw(AnimationTexture[0], Position, null, Color.White, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
+            sb.Draw(AnimationTexture[0], Position, null, Color.White, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
 
             if (Active)
-                GameManager.Game.SpriteBatch.Draw(AnimationTexture[1], Position + floatPosition, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0003f);
+                sb.Draw(AnimationTexture[1], Position + floatPosition, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0003f);
             else
-                GameManager.Game.SpriteBatch.Draw(AnimationTexture[3], Position + floatPosition, null, new Color(Color.White, 0.5f), Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0003f);
+                sb.Draw(AnimationTexture[3], Position + floatPosition, null, new Color(Color.White, 0.5f), Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0003f);
 
             if (Active)
             {
                 var shineColor = new Color(Color.White, (float)Math.Max(Math.Sin(sin), 0) * .7f);
-                GameManager.Game.SpriteBatch.Draw(AnimationTexture[2], Position + floatPosition, null, shineColor, Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0002f);
+                sb.Draw(AnimationTexture[2], Position + floatPosition, null, shineColor, Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0002f);
             }
         }
     }

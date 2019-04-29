@@ -11,7 +11,7 @@ using System.Linq;
 using System;
 using SPG.View;
 using System.Diagnostics;
-using Platformer.Misc;
+using Platformer.Main;
 using Platformer.Objects;
 using SPG.Draw;
 using SPG.Save;
@@ -19,6 +19,7 @@ using Platformer.Objects.Enemy;
 using System.Threading.Tasks;
 using System.Threading;
 using Platformer.Objects.Effects;
+using Platformer.Objects.Main;
 
 namespace Platformer
 {
@@ -41,7 +42,7 @@ namespace Platformer
         private RoomCamera camera;
         public override Camera Camera { get => camera; protected set => camera = value as RoomCamera; }
         public override GraphicsDeviceManager GraphicsDeviceManager { get => graphics; }
-        public override SpriteBatch SpriteBatch { get => spriteBatch; }
+        //public SpriteBatch SpriteBatch { get => spriteBatch; }
         private GameMap map;
         public override GameMap Map { get => map; protected set => map = value; }
 
@@ -59,6 +60,8 @@ namespace Platformer
         public Font DamageFont { get; private set; }
 
         // common objects
+
+        public HUD HUD { get; private set; }
 
         public Player Player { get; private set; }
 
@@ -120,6 +123,8 @@ namespace Platformer
             // game setup
 
             SaveGame = new SaveGame("save.dat");
+
+            HUD = new HUD();
         }
 
         /// <summary>
@@ -129,6 +134,7 @@ namespace Platformer
         {
             SaveGame.playerPosition = new Vector2(posX, posY);
             SaveGame.playerDirection = Player.Direction;
+            SaveGame.playerStats = Player.Stats;
             SaveGame.Save();
         }
 
@@ -243,9 +249,15 @@ namespace Platformer
         {
             var playerData = Map.ObjectData.FindFirstDataByTypeName("player");
             var spawnX = (float)(int)playerData["x"] + 8;
-            var spawnY = (float)(int)playerData["y"] + 8;
+            var spawnY = (float)(int)playerData["y"] + 7.9f;
             var dir = (int)playerData["direction"];
             var direction = (dir == 1) ? Direction.RIGHT : Direction.LEFT;
+            var stats = new PlayerStats
+            {
+                MaxHP = 5,
+                MaxMagic = 100,
+                MagicRegen = 1
+            };
 
             bool success = SaveManager.Load(ref saveGame);
 
@@ -254,6 +266,7 @@ namespace Platformer
                 spawnX = SaveGame.playerPosition.X;
                 spawnY = SaveGame.playerPosition.Y;
                 direction = SaveGame.playerDirection;
+                stats = SaveGame.playerStats;
             }
 
             ObjectManager.Enable<Room>();
@@ -270,13 +283,16 @@ namespace Platformer
             LoadRoomObjects(startRoom);
             foreach (var n in neighbours)
                 LoadRoomObjects(n);
-            
+
             // create player at start position and set camera target
-            
-            Player = new Player(spawnX, spawnY);            
+
+            Player = new Player(spawnX, spawnY);
+            Player.Stats = stats;
             Player.Direction = direction;
             Player.AnimationTexture = PlayerSprites;
             camera.SetTarget(Player);
+
+            HUD.SetTarget(Player);
 
         }
 
@@ -290,12 +306,13 @@ namespace Platformer
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             
-            // load texture sets
+            // load textures & texture sets
 
             TileSet = TextureSet.Load("tiles");
             SaveStatueSprites = TextureSet.Load("save");
             PlayerSprites = TextureSet.Load("player", 16, 32);
-            
+            HUD.Texture = Content.Load<Texture2D>("hud");
+
             // load map
 
             XmlDocument xml = Xml.Load("worldMap.tmx");
@@ -460,7 +477,11 @@ namespace Platformer
 
             // ++++ update camera ++++
 
-            camera.Update(gameTime);            
+            camera.Update(gameTime);
+
+            // ++++ update HUD ++++
+
+            HUD.Update(gameTime);
         }
         
         /// <summary>
@@ -470,18 +491,19 @@ namespace Platformer
         protected override void Draw(GameTime gameTime)
         {
             camera.ResolutionRenderer.SetupDraw();
-            
+
             // IMPORTANT HINT: when a texture's alpha is not "pretty", check the Content settings of that texture! Make sure that the texture has premultiplied : true.
 
-            SpriteBatch.BeginCamera(camera, BlendState.NonPremultiplied);
-            camera.DrawBackground(gameTime);
+            spriteBatch.BeginCamera(camera, BlendState.NonPremultiplied);
+            camera.DrawBackground(spriteBatch, gameTime);
 
-            Map.Draw(gameTime);
-            ObjectManager.DrawObjects(gameTime);
+            Map.Draw(spriteBatch, gameTime);
+            ObjectManager.DrawObjects(spriteBatch, gameTime);
 
-            if (initialized)
+            HUD.Draw(spriteBatch, gameTime);
+
+            /*if (initialized)
             {
-
                 DefaultFont.Halign = Font.HorizontalAlignment.Center;
                 DefaultFont.Valign = Font.VerticalAlignment.Top;
 
@@ -490,9 +512,9 @@ namespace Platformer
                 DefaultFont.Halign = Font.HorizontalAlignment.Left;
                 DefaultFont.Valign = Font.VerticalAlignment.Top;
 
-                DefaultFont.Draw(camera.ViewX + 4, camera.ViewY + 4, Player.HP, 0);
-            }
-            SpriteBatch.End();
+                DefaultFont.Draw(camera.ViewX + 4, camera.ViewY + 4, Player.Stats.HP, 0);
+            }*/
+            spriteBatch.End();
         }
     }
 }

@@ -9,25 +9,25 @@ namespace SPG.Draw
     {
         private static Texture2D pixel; //our pixel texture we will be using to draw primitives
         
-        static Primitives2D()
+        public static void Setup(GraphicsDevice gd)
         {
-            //saving GD for use in drawing funtions
-            var gd = GameManager.Game.GraphicsDevice;
-            var sb = GameManager.Game.SpriteBatch;
-
             //creating our simple pixel
             pixel = new Texture2D(gd, 1, 1);
             pixel.SetData(new Color[] { Color.White });
         }
 
-        //draws a pixel
-        public static void DrawPixel(float x, float y, Color col)
-        {            
-            GameManager.Game.SpriteBatch.Draw(pixel, new Vector2(x, y), null, col, 0, Vector2.Zero, 1f, SpriteEffects.None, 1);
+        static Primitives2D()
+        {
         }
 
-        //draws a line obviously :)/>
-        public static void DrawLine(float x1, float y1, float x2, float y2, Color col)
+        //draws a pixel
+        public static void DrawPixel(this SpriteBatch sb, float x, float y, Color col)
+        {            
+            sb.Draw(pixel, new Vector2(x, y), null, col, 0, Vector2.Zero, 1f, SpriteEffects.None, 1);
+        }
+
+        //draws a line 
+        public static void DrawLine(this SpriteBatch sb, float x1, float y1, float x2, float y2, Color col)
         {
             float deltax, deltay, x, y, xinc1, xinc2, yinc1, yinc2, den, num, numadd, numpixels, curpixel;
             deltax = Math.Abs(x2 - x1);        // The difference between the x's
@@ -78,7 +78,7 @@ namespace SPG.Draw
 
             for (curpixel = 0; curpixel <= numpixels; curpixel++)
             {
-                DrawPixel(x, y, col);
+                DrawPixel(sb, x, y, col);
                 num += numadd;              // Increase the numerator by the top of the fraction
                 if (num >= den)             // Check if numerator >= denominator
                 {
@@ -91,18 +91,18 @@ namespace SPG.Draw
             }
         }
 
-        public static void DrawRectangle(RectF rect, Color col, Boolean filled)
+        public static void DrawRectangle(this SpriteBatch sb, RectF rect, Color col, Boolean filled)
         {
             if (filled)
             {
-                GameManager.Game.SpriteBatch.Draw(pixel, new Rectangle((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height), col);
+                sb.Draw(pixel, new Rectangle((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height), col);
             }
             else
             {
-                DrawLine(rect.X, rect.Y, rect.X + rect.Width, rect.Y, col);
-                DrawLine(rect.X, rect.Y, rect.X, rect.Y + rect.Height, col);
-                DrawLine(rect.X + rect.Width, rect.Y, rect.X + rect.Width, rect.Y + rect.Height, col);
-                DrawLine(rect.X, rect.Y + rect.Height, rect.X + rect.Width, rect.Y + rect.Height, col);
+                DrawLine(sb, rect.X, rect.Y, rect.X + rect.Width, rect.Y, col);
+                DrawLine(sb, rect.X, rect.Y, rect.X, rect.Y + rect.Height, col);
+                DrawLine(sb, rect.X + rect.Width, rect.Y, rect.X + rect.Width, rect.Y + rect.Height, col);
+                DrawLine(sb, rect.X, rect.Y + rect.Height, rect.X + rect.Width, rect.Y + rect.Height, col);
             }
         }
     }
