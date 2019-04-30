@@ -147,6 +147,22 @@ namespace SPG.Objects
             return candidates;
         }
 
+        public static List<T> CollisionRectangle<T>(this GameObject self, float x1, float y1, float x2, float y2) where T : GameObject
+        {
+            List<T> candidates = Objects.Where(o => o != self && o is T && o.Enabled == true).Cast<T>().ToList();
+
+            if (candidates.Count == 0) return candidates;
+
+            candidates = candidates.Where(
+                o =>
+                    (x2 >= o.Left && x1 <= o.Right)
+                    &&
+                    (y2 >= o.Top && y1 <= o.Bottom)
+                ).ToList();
+
+            return candidates;
+        }
+
         /// <summary>
         /// Finds a list of game objects of a certain type that have their bounding coordinates within the own bounding coordinates, based on x and y value.
         /// </summary>

@@ -44,33 +44,42 @@ namespace Platformer.Objects.Main
 
         public void Draw(SpriteBatch sb, GameTime gameTime)
         {
-            var x = MainGame.Current.Camera.ViewX + 1;
-            var y = MainGame.Current.Camera.ViewY + 1;
+            var x = MainGame.Current.Camera.ViewX;
+            var y = MainGame.Current.Camera.ViewY;
 
             var font = MainGame.Current.HUDFont;
 
             font.Halign = SPG.Draw.Font.HorizontalAlignment.Left;
             font.Valign = SPG.Draw.Font.VerticalAlignment.Top;
 
-            font.Draw(sb, x, y, "24/50", scale:0.5f);
+            font.Draw(sb, x + 2, y + 2, $"HP: {hp}/{maxHP}", scale: .5f, depth: .991f);
+            font.Draw(sb, x + 2, y + 2 + 9, $"MP: {mp}/{maxMP} ({Math.Floor(mp/maxMP * 100)}%)", scale: .5f, depth: .991f);
 
-            /*
+            //font.Draw(sb, x, y, "24/50", scale:0.5f);
+
             // HP
 
-            sb.Draw(Texture, new Vector2(x, y), new Rectangle(0, 0, 11, 12), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 1);
 
-            var hpFactor = 3;
+            /*
+            var width = 5 * Globals.TILE;
 
-            for(var i = 0; i < maxHP * hpFactor; i++)
+            for(var i = 0; i < width; i++)
             {
-                var col = 0 + Convert.ToInt32(i < hp * hpFactor);
+                float t1 = (float)i / (float)width;
+                float t2 = (float)hp / (float)maxHP;
 
-                if (i == 0 || i == maxHP * hpFactor - 1)
+                var row = 1 - Convert.ToInt32(t1 < t2);
+                var col = 1;
+
+                if (i == 0)
+                    col = 0;
+                if(i == width - 1)
                     col = 2;
 
-                sb.Draw(Texture, new Vector2(x + 12 + i, y), new Rectangle(16 + col, 0, 1, 7), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 1);
+                sb.Draw(Texture, new Vector2(x + i * scale, y), new Rectangle(col, 16 * row, 1, 10), Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, .99f);                
             }
 
+            /*
             // magic
 
             sb.Draw(Texture, new Vector2(x + 12, y + 8), new Rectangle(0, 16, 11, 12), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 1);
@@ -86,6 +95,6 @@ namespace Platformer.Objects.Main
 
                 sb.Draw(Texture, new Vector2(x + 12 + 12 + i, y + 8), new Rectangle(16 + col, 16, 1, 7), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 1);
             }*/
-        }        
+        }
     }
 }

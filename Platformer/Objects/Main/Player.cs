@@ -64,7 +64,8 @@ namespace Platformer.Objects.Main
             CEIL_CLIMB,
             SWIM,
             DEAD,
-            LEVITATE
+            LEVITATE,
+            PUSH
         }
 
         public PlayerState State { get; set; }
@@ -77,7 +78,7 @@ namespace Platformer.Objects.Main
             {
                 stats = value;
                 HP = stats.MaxHP;
-                MP = 0;
+                MP = stats.MaxMP;
             }
         }
         public int HP { get; set; }
@@ -385,11 +386,16 @@ namespace Platformer.Objects.Main
             // walk
             if (State == PlayerState.WALK)
             {
+                var sideBlock = this.CollisionBounds<Solid>(X + Math.Sign((int)Direction), Y).FirstOrDefault();
+
                 if (k_rightHolding)
                 {
                     if (Direction == Direction.RIGHT)
                     {
                         XVel = Math.Min(XVel + .2f, maxVel);
+
+                        if (sideBlock != null)
+                            State = PlayerState.PUSH;
                     }
                     else
                     {
@@ -401,6 +407,9 @@ namespace Platformer.Objects.Main
                     if (Direction == Direction.LEFT)
                     {
                         XVel = Math.Max(XVel - .2f, -maxVel);
+
+                        if (sideBlock != null)
+                            State = PlayerState.PUSH;
                     }
                     else
                     {
@@ -417,7 +426,11 @@ namespace Platformer.Objects.Main
                 }                
             }
             // walk/idle -> jump
-            if (State == PlayerState.IDLE || State ==  PlayerState.WALK || State == PlayerState.GET_UP || State == PlayerState.TURN_AROUND)
+            if (State == PlayerState.IDLE 
+                || State ==  PlayerState.WALK
+                || State == PlayerState.GET_UP 
+                || State == PlayerState.TURN_AROUND 
+                || State == PlayerState.PUSH)
             {
                 if (YVel > 0 && !onGround)
                     State = PlayerState.JUMP_DOWN;
@@ -428,6 +441,28 @@ namespace Platformer.Objects.Main
                     YVel = -2;
                     k_jumpPressed = false;
                 }
+            }
+            // pushing
+            if (State == PlayerState.PUSH)
+            {
+                XVel = Math.Sign((int)Direction) * .5f;
+
+                var pushBlock = this.CollisionBounds<PushBlock>(X + Math.Sign((int)Direction), Y).FirstOrDefault();
+
+                bool continuePushing = true;
+
+                if (pushBlock != null)
+                {
+                    continuePushing = pushBlock.Push(XVel);
+                }
+
+                if ((Direction == Direction.LEFT && !k_leftHolding) 
+                    || (Direction == Direction.RIGHT && !k_rightHolding)
+                    || !continuePushing)
+                    State = PlayerState.IDLE;
+
+                if (hit)
+                    State = PlayerState.HIT_GROUND;
             }
             // levitating
             if (State == PlayerState.LEVITATE)
@@ -757,7 +792,7 @@ namespace Platformer.Objects.Main
             }
             else
             {
-                if (YVel > Gravity)
+                if (YVel >= Gravity)
                 {
                     onGround = true;
 
@@ -893,6 +928,11 @@ namespace Platformer.Objects.Main
                     row = 12;
                     fAmount = 1;
                     fSpd = 0;
+                    break;
+                case PlayerState.PUSH:
+                    row = 13;
+                    fAmount = 2;
+                    fSpd = .075f;
                     break;
             }
 

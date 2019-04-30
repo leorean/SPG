@@ -113,9 +113,9 @@ namespace SPG.Draw
             texts.RemoveAll(t => t.DecreaseAliveCounter());
         }
 
-        public void Draw(SpriteBatch sb, float x, float y, object text, int maxWidth = 0, float scale = 1f)
+        public void Draw(SpriteBatch sb, float x, float y, object text, int maxWidth = 0, float scale = 1f, float? depth = null)
         {
-            Draw(sb, x, y, text.ToString(), maxWidth, scale);
+            Draw(sb, x, y, text.ToString(), maxWidth, scale, depth);
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace SPG.Draw
         /// <param name="y"></param>
         /// <param name="text"></param>
         /// <param name="maxWidth"></param>     
-        public void Draw(SpriteBatch sb, float x, float y, string text, int maxWidth = 0, float scale = 1f)
+        public void Draw(SpriteBatch sb, float x, float y, string text, int maxWidth = 0, float scale = 1f, float? depth = null)
         {
             //var sw = Stopwatch.StartNew();
 
@@ -174,7 +174,7 @@ namespace SPG.Draw
                     textObject.LineTextures.Add(word);
                 }
             }
-            else // re-use resources
+            // re-use resources
             {
                 textObject.ResetAliveCounter();
 
@@ -210,12 +210,9 @@ namespace SPG.Draw
                     }
 
                     var pos = new Vector2(posx, posy + i * lineHeight);
-                    sb.Draw(textObject.LineTextures[i], pos, null, Color, 0, Vector2.Zero, scale, SpriteEffects.None, Depth);
+                    sb.Draw(textObject.LineTextures[i], pos, null, Color, 0, Vector2.Zero, scale, SpriteEffects.None, (depth == null) ? Depth : (float)depth);
                 }
-            }
-
-            //Debug.WriteLine("Drawing text took " + sw.ElapsedMilliseconds + "ms");
-            //sw.Stop();            
+            }       
         }
     }
 }

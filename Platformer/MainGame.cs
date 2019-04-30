@@ -192,10 +192,10 @@ namespace Platformer
                     if (t == null || t.ID == -1)
                         continue;
 
-                    switch(t.ID)
+                    switch (t.ID)
                     {
                         case 0: // platforms
-                            var platform = new Platform(i * Globals.TILE, j * Globals.TILE, room);                            
+                            var platform = new Platform(i * Globals.TILE, j * Globals.TILE, room);
                             break;
                         case 576: //save-statues
                             var saveSatue = new SaveStatue(i * Globals.TILE, j * Globals.TILE, room);
@@ -207,6 +207,11 @@ namespace Platformer
                                 Enabled = false,
                                 Texture = TileSet[512]
                             };
+                            t.Hide();
+                            break;
+                        case 640: // push-blocks
+                            var pushBlock = new PushBlock(i * Globals.TILE, j * Globals.TILE, room);
+                            pushBlock.Texture = TileSet[t.ID];
                             t.Hide();
                             break;
                         default:                            
@@ -505,7 +510,7 @@ namespace Platformer
 
             HUD.Draw(spriteBatch, gameTime);
 
-            if (initialized)
+            /*if (initialized)
             {
                 DefaultFont.Halign = Font.HorizontalAlignment.Center;
                 DefaultFont.Valign = Font.VerticalAlignment.Bottom;
@@ -513,7 +518,7 @@ namespace Platformer
                 DefaultFont.Draw(spriteBatch, Player.X, Player.Y - 1 * Globals.TILE, "HelloWorld\nWhat's up!\nTEST.", scale: 1f);
                 
                 //DefaultFont.Draw(camera.ViewX + 4, camera.ViewY + 4, Player.HP, 0);
-            }
+            }*/
             spriteBatch.End();
         }
     }

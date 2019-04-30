@@ -8,12 +8,18 @@ namespace SPG.Draw
     static class Primitives2D
     {
         private static Texture2D pixel; //our pixel texture we will be using to draw primitives
-        
-        public static void Setup(GraphicsDevice gd)
+
+        private static bool initialized = false;
+
+        private static void Setup(GraphicsDevice gd)
         {
+            if (initialized) return;
+
             //creating our simple pixel
             pixel = new Texture2D(gd, 1, 1);
             pixel.SetData(new Color[] { Color.White });
+
+            initialized = true;
         }
 
         static Primitives2D()
@@ -22,7 +28,8 @@ namespace SPG.Draw
 
         //draws a pixel
         public static void DrawPixel(this SpriteBatch sb, float x, float y, Color col)
-        {            
+        {
+            Setup(sb.GraphicsDevice);
             sb.Draw(pixel, new Vector2(x, y), null, col, 0, Vector2.Zero, 1f, SpriteEffects.None, 1);
         }
 
