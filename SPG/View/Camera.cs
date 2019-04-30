@@ -42,12 +42,12 @@ namespace SPG.View
 
         public static void BeginResolution(this SpriteBatch mBatch, ResolutionRenderer renderer)
         {
-            mBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullNone, null, renderer.GetTransformationMatrix());
+            mBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null, renderer.GetTransformationMatrix());
         }
 
         public static void BeginResolution(this SpriteBatch mBatch, ResolutionRenderer renderer, BlendState bstate)
         {
-            mBatch.Begin(SpriteSortMode.Deferred, bstate, SamplerState.AnisotropicClamp, DepthStencilState.Default, RasterizerState.CullNone, null, renderer.GetTransformationMatrix());
+            mBatch.Begin(SpriteSortMode.Deferred, bstate, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null, renderer.GetTransformationMatrix());
         }
     }
     

@@ -57,8 +57,8 @@ namespace SPG.Draw
                     }
                 }
             }
-
-            var tex = texture.Crop(min, 0, max + spacingRight, texture.Height);
+            
+            var tex = texture.Crop(min, max + spacingRight);
 
             return tex;
         }
@@ -91,9 +91,7 @@ namespace SPG.Draw
                 rightGrid.Set(i, right[i]);
 
             var totalGrid = new Grid<Color>(rect.Width, rect.Height);
-
-            var ind = 0;
-
+            
             for(var j = 0; j < rect.Height; j++)
             {
                 for (var i = 0; i < rect.Width; i++)
@@ -114,25 +112,32 @@ namespace SPG.Draw
             return newTexture;
         }
 
-        public static Texture2D Crop(this Texture2D tex, int x, int y, int w, int h)
+        public static Texture2D Crop(this Texture2D tex, int left, int right)
         {
-            if (x + w > tex.Width)
-                w = tex.Width - x;
-            if (y + h > tex.Height)
-                h = tex.Height - y;
-
-            if (w == 0 || h == 0)
+            if (left >= right)
                 return tex;
+            var width = (right - left) + 1;
 
-            var rect = new Rectangle(x, y, w, h);
+            // create a transparent row
+
+            Texture2D row = new Texture2D(tex.GraphicsDevice, 1, tex.Height);
+            var rowColors = new Color[tex.Height];
+            for (var i = 0; i < rowColors.Length; i++)
+                rowColors[i] = new Color(0, 0, 0, 0);
+            row.SetData(rowColors);
+
+            // append that row to the texture on the right side
+            while(tex.Width < (left + right) + 1)
+                tex = tex.AppendRight(row);
+                        
+            var rect = new Rectangle(left, 0, width, tex.Height);
             var newTexture = new Texture2D(GameManager.Game.GraphicsDevice, rect.Width, rect.Height);
 
             Color[] data = new Color[rect.Width * rect.Height];
-
-            tex.GetData(0, rect, data, 0, data.Length);
+            tex.GetData(0, rect, data, 0, rect.Width * rect.Height);
             newTexture.SetData(data);
 
-            return newTexture;            
+            return newTexture;
         }
 
         public static Color GetPixel(this Color[] colors, int x, int y, int width)

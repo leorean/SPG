@@ -26,8 +26,8 @@ namespace Platformer.Objects.Main
     public class PlayerStats
     {
         public int MaxHP { get; set; } = 0;
-        public int MaxMagic { get; set; } = 0;
-        public float MagicRegen { get; set; } = 0;
+        public int MaxMP { get; set; } = 0;
+        public float MPRegen { get; set; } = 0;
     }
 
     [Flags]
@@ -77,12 +77,12 @@ namespace Platformer.Objects.Main
             {
                 stats = value;
                 HP = stats.MaxHP;
-                Magic = 0;
+                MP = 0;
             }
         }
         public int HP { get; set; }
-        public float Magic { get; set; }
-        public float MagicRegen { get; set; }
+        public float MP { get; set; }
+        //public float MPRegen { get; set; }
 
         public PlayerAbility Abilities;
 
@@ -98,8 +98,8 @@ namespace Platformer.Objects.Main
         private bool hit = false;
         public int InvincibleTimer { get; private set; } = 0;
 
-        private int magicRegenTimeout = 0;
-        private int maxMagicRegenTimeout = 60;
+        private int mpRegenTimeout = 0;
+        private int maxMpRegenTimeout = 60;
 
         Input input = new Input();
 
@@ -351,10 +351,10 @@ namespace Platformer.Objects.Main
 
             // ++++ magic regen ++++
 
-            magicRegenTimeout = Math.Max(magicRegenTimeout - 1, 0);
+            mpRegenTimeout = Math.Max(mpRegenTimeout - 1, 0);
 
-            if (magicRegenTimeout == 0)
-                Magic = Math.Min(Magic + Stats.MagicRegen, Stats.MaxMagic);
+            if (mpRegenTimeout == 0)
+                MP = Math.Min(MP + Stats.MPRegen, Stats.MaxMP);
 
             // ++++ state logic ++++
 
@@ -432,12 +432,12 @@ namespace Platformer.Objects.Main
             // levitating
             if (State == PlayerState.LEVITATE)
             {
-                magicRegenTimeout = Math.Min(magicRegenTimeout + 2, maxMagicRegenTimeout);
-                Magic = Math.Max(Magic - 1, 0);
+                mpRegenTimeout = Math.Min(mpRegenTimeout + 2, maxMpRegenTimeout);
+                MP = Math.Max(MP - 1, 0);
 
                 lastGroundY = Y;
 
-                var acc = 0.03f;
+                var acc = 0.04f;
                 var leviMaxVel = 1f;
 
                 if (k_leftHolding)
@@ -471,7 +471,7 @@ namespace Platformer.Objects.Main
                     YVel = -Gravity + (float)Math.Sin(levitationSine) * .1f;
                 }
                 
-                if (!k_jumpHolding || Magic == 0)
+                if (!k_jumpHolding || MP == 0)
                     State = PlayerState.JUMP_DOWN;
 
                 if (hit)

@@ -72,7 +72,7 @@ namespace SPG.Draw
         /// <param name="texture"></param>
         /// <param name="startCharacter"></param>
         /// <param name="spacing"></param>
-        public Font(TextureSet texture, int startCharacter, int spacing = 0)
+        public Font(TextureSet texture, int startCharacter, int spacing = 1)
         {
             glyphs = new Dictionary<char, Texture2D>();
             
@@ -113,9 +113,9 @@ namespace SPG.Draw
             texts.RemoveAll(t => t.DecreaseAliveCounter());
         }
 
-        public void Draw(SpriteBatch sb, float x, float y, object text, int maxWidth = 0)
+        public void Draw(SpriteBatch sb, float x, float y, object text, int maxWidth = 0, float scale = 1f)
         {
-            Draw(sb, x, y, text.ToString(), maxWidth);
+            Draw(sb, x, y, text.ToString(), maxWidth, scale);
         }
 
         /// <summary>
@@ -125,11 +125,11 @@ namespace SPG.Draw
         /// <param name="y"></param>
         /// <param name="text"></param>
         /// <param name="maxWidth"></param>     
-        public void Draw(SpriteBatch sb, float x, float y, string text, int maxWidth = 0)
+        public void Draw(SpriteBatch sb, float x, float y, string text, int maxWidth = 0, float scale = 1f)
         {
             //var sw = Stopwatch.StartNew();
 
-            int lineHeight = glyphs.FirstOrDefault().Value.Height;
+            int lineHeight = (int)(glyphs.FirstOrDefault().Value.Height * scale);
             
             // removes all texts that are not used anymore.
             texts.RemoveAll(t => t.DecreaseAliveCounter());
@@ -161,7 +161,7 @@ namespace SPG.Draw
                         if (c != '\n' && tex == null)
                             tex = glyphs.FirstOrDefault().Value;
 
-                        if (maxWidth > 0 && word != null && word.Width + tex.Width > maxWidth)
+                        if (maxWidth > 0 && word != null && word.Width * scale + tex.Width * scale > maxWidth * scale)
                         {
                             textObject.LineTextures.Add(word);
                             word = tex;
@@ -189,10 +189,10 @@ namespace SPG.Draw
                             posx = x;
                             break;
                         case HorizontalAlignment.Center:
-                            posx = x - .5f * textObject.LineTextures[i].Width;
+                            posx = x - .5f * textObject.LineTextures[i].Width * scale;
                             break;
                         case HorizontalAlignment.Right:
-                            posx = x - textObject.LineTextures[i].Width;
+                            posx = x - textObject.LineTextures[i].Width * scale;
                             break;
                     }
 
@@ -210,7 +210,7 @@ namespace SPG.Draw
                     }
 
                     var pos = new Vector2(posx, posy + i * lineHeight);
-                    sb.Draw(textObject.LineTextures[i], pos, null, Color, 0, Vector2.Zero, 1.0f, SpriteEffects.None, Depth);
+                    sb.Draw(textObject.LineTextures[i], pos, null, Color, 0, Vector2.Zero, scale, SpriteEffects.None, Depth);
                 }
             }
 

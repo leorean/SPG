@@ -58,6 +58,7 @@ namespace Platformer
 
         public Font DefaultFont { get; private set; }
         public Font DamageFont { get; private set; }
+        public Font HUDFont { get; private set; }
 
         // common objects
 
@@ -255,8 +256,8 @@ namespace Platformer
             var stats = new PlayerStats
             {
                 MaxHP = 5,
-                MaxMagic = 100,
-                MagicRegen = 1
+                MaxMP = 100,
+                MPRegen = 1
             };
 
             bool success = SaveManager.Load(ref saveGame);
@@ -329,9 +330,11 @@ namespace Platformer
 
             var defaultFont = TextureSet.Load("font", 10, 10);
             var damageFont = TextureSet.Load("damageFont", 10, 10);
+            var hudFont = TextureSet.Load("hudFont", 9, 14);
 
             DefaultFont = new Font(defaultFont, ' ');
             DamageFont = new Font(damageFont, ' ');
+            HUDFont = new Font(hudFont, ' ');
 
             initialized = true;
             Debug.WriteLine("Loaded game in " + sw.ElapsedMilliseconds + "ms");
@@ -502,18 +505,15 @@ namespace Platformer
 
             HUD.Draw(spriteBatch, gameTime);
 
-            /*if (initialized)
+            if (initialized)
             {
                 DefaultFont.Halign = Font.HorizontalAlignment.Center;
-                DefaultFont.Valign = Font.VerticalAlignment.Top;
+                DefaultFont.Valign = Font.VerticalAlignment.Bottom;
 
-                DefaultFont.Draw(6 * Globals.TILE, 2 * Globals.TILE, "HelloWorld\nWhat's up!\nTEST.", 32);
-
-                DefaultFont.Halign = Font.HorizontalAlignment.Left;
-                DefaultFont.Valign = Font.VerticalAlignment.Top;
-
-                DefaultFont.Draw(camera.ViewX + 4, camera.ViewY + 4, Player.Stats.HP, 0);
-            }*/
+                DefaultFont.Draw(spriteBatch, Player.X, Player.Y - 1 * Globals.TILE, "HelloWorld\nWhat's up!\nTEST.", scale: 1f);
+                
+                //DefaultFont.Draw(camera.ViewX + 4, camera.ViewY + 4, Player.HP, 0);
+            }
             spriteBatch.End();
         }
     }
