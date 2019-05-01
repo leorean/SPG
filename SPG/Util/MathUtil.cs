@@ -30,9 +30,13 @@ namespace SPG.Util
             return f1 >= f2 && f1 <= f3;
         }
 
-        public static float ToAngle(this Vector2 vector)
+        public static float ToAngle(this Vector2 vector, bool inRadiant = false)
         {
             var rad = (float)Math.Atan2(vector.Y, vector.X);
+
+            if (inRadiant)
+                return rad;
+
             return (float)(rad / (2f * Math.PI)) * 360;
         }
 

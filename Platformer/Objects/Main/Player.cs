@@ -29,6 +29,8 @@ namespace Platformer.Objects.Main
         public int MaxHP { get; set; } = 0;
         public int MaxMP { get; set; } = 0;
         public float MPRegen { get; set; } = 0;
+
+        public PlayerAbility Abilities { get; set; } = PlayerAbility.NONE;
     }
 
     [Flags]
@@ -39,6 +41,7 @@ namespace Platformer.Objects.Main
         CLIMB_WALL = 2,
         CLIMB_CEIL = 4,
         LEVITATE = 8,
+        PUSH = 16
         //ideas:
         //WARP
         //STOMP
@@ -69,7 +72,8 @@ namespace Platformer.Objects.Main
             DEAD,
             LEVITATE,
             PUSH,
-            LIE
+            LIE,
+            DIVE_IN
         }
 
         public PlayerState State { get; set; }
@@ -87,10 +91,7 @@ namespace Platformer.Objects.Main
         }
         public int HP { get; set; }
         public float MP { get; set; }
-        //public float MPRegen { get; set; }
-
-        public PlayerAbility Abilities;
-
+        
         // private
 
         public Direction Direction { get; set; } = Direction.RIGHT;
@@ -111,8 +112,10 @@ namespace Platformer.Objects.Main
         private float gravAir = .1f;
         private float gravWater = .03f;
 
-        private float levitationSine = 0f;
+        private float targetAngle;
+        private float dAngle;
 
+        private float levitationSine;
         private PlayerLevitationEmitter levitationEmitter;
 
         private PushBlock pushBlock;
@@ -135,6 +138,9 @@ namespace Platformer.Objects.Main
             AnimationComplete += Player_AnimationComplete;
 
             lastGroundY = Y;
+
+            State = PlayerState.LIE;
+            lieTimer = 30;
 
             // stats:
 
@@ -226,10 +232,11 @@ namespace Platformer.Objects.Main
 
             }
             if (input.IsKeyPressed(Keys.H, Input.State.Pressed))
-            {
                 Hit(1);
-            }
 
+            if (input.IsKeyPressed(Keys.D9, Input.State.Pressed))
+                stats.Abilities ^= PlayerAbility.PUSH;
+           
             // gamepad overrides keyboard input if pussible
             if (input.GamePadEnabled)
             {
@@ -265,24 +272,24 @@ namespace Platformer.Objects.Main
             // ++++ getting hit ++++
 
             InvincibleTimer = Math.Max(InvincibleTimer - 1, 0);
-
-            if (InvincibleTimer == 0)
+            
+            if (InvincibleTimer == 0 && HP > 0)
             {
                 var obstacle = ObjectManager.CollisionBounds<Obstacle>(this, X, Y).FirstOrDefault();
 
                 if (obstacle != null)
                 {
-                    var vec = Position - (obstacle.Position + new Vector2(8, 12));
-
-                    var angle = vec.ToAngle();
-                    
+                    var vec = Position - (obstacle.Center + new Vector2(0, 0));
+                    var angle = vec.ToAngle();                    
                     Hit(obstacle.Damage, angle);
                 }                
             }
 
             if (HP == 0)
             {
-                State = PlayerState.DEAD;
+                if (State != PlayerState.HIT_AIR && State != PlayerState.DEAD)
+                    State = PlayerState.HIT_AIR;
+                InvincibleTimer = 0;
             }
 
             // ++++ collision flags ++++
@@ -298,6 +305,11 @@ namespace Platformer.Objects.Main
             int ty = MathUtil.Div(Y + 4, Globals.TILE);
 
             var inWater = (GameManager.Game.Map.LayerData[2].Get(tx, ty) != null);
+
+            if (!stats.Abilities.HasFlag(PlayerAbility.CLIMB_WALL))
+                onWall = false;
+            if (!stats.Abilities.HasFlag(PlayerAbility.CLIMB_CEIL))
+                onCeil = false;
 
             if (onWall)
             {
@@ -320,7 +332,7 @@ namespace Platformer.Objects.Main
             }
             if (onCeil)
             {
-                if ((State == PlayerState.JUMP_UP || State == PlayerState.WALL_CLIMB)// || State == PlayerState.LEVITATE) 
+                if ((State == PlayerState.JUMP_UP || State == PlayerState.WALL_CLIMB)
                     && 
                     (k_jumpHolding || k_upHolding)
                     && !k_downHolding)
@@ -332,20 +344,28 @@ namespace Platformer.Objects.Main
             {
                 Gravity = gravWater;
 
-                if (State != PlayerState.SWIM)
-                {                    
-                    if (State != PlayerState.HIT_AIR && State != PlayerState.HIT_GROUND)
+                if (HP > 0)
+                {
+                    if (State != PlayerState.SWIM && State != PlayerState.DIVE_IN)
                     {
-                        XVel *= .3f;
-                        YVel *= .3f;
-                        State = PlayerState.SWIM;
+                        if (State != PlayerState.HIT_AIR && State != PlayerState.HIT_GROUND)
+                        {
+                            if (YVel > 2)
+                                State = PlayerState.DIVE_IN;
+                            else
+                            {
+                                XVel *= .3f;
+                                YVel *= .3f;
+                                State = PlayerState.SWIM;
+                            }
 
-                        //TODO: splash effect
+                            //TODO: splash effect
+                        }
+
+                        if (State == PlayerState.HIT_GROUND)
+                            Gravity = -gravWater;
                     }
-
-                    if (State == PlayerState.HIT_GROUND)
-                        Gravity = -gravWater;
-                }                
+                }   
             } else
             {
                 Gravity = gravAir;
@@ -403,7 +423,7 @@ namespace Platformer.Objects.Main
                     {
                         XVel = Math.Min(XVel + .2f, maxVel);
 
-                        if (colSide != null)
+                        if (colSide != null && stats.Abilities.HasFlag(PlayerAbility.PUSH))
                             State = PlayerState.PUSH;
                     }
                     else
@@ -417,7 +437,7 @@ namespace Platformer.Objects.Main
                     {
                         XVel = Math.Max(XVel - .2f, -maxVel);
 
-                        if (colSide != null)
+                        if (colSide != null && stats.Abilities.HasFlag(PlayerAbility.PUSH))
                             State = PlayerState.PUSH;
                     }
                     else
@@ -572,7 +592,7 @@ namespace Platformer.Objects.Main
                     XVel = Math.Min(XVel + .08f, maxVel);                    
                 }
 
-                if (k_jumpPressed)
+                if (k_jumpPressed && stats.Abilities.HasFlag(PlayerAbility.LEVITATE))
                     State = PlayerState.LEVITATE;
             }
             // getting back up
@@ -695,6 +715,10 @@ namespace Platformer.Objects.Main
                     YVel = -1f;
                     State = PlayerState.HIT_GROUND;
                 }
+
+                if (HP == 0 && onGround)
+                    State = PlayerState.DEAD;
+
             }
             if (State == PlayerState.HIT_GROUND)
             {
@@ -750,9 +774,52 @@ namespace Platformer.Objects.Main
                     State = PlayerState.HIT_AIR;
                 }
             }
+            if (State == PlayerState.SWIM || State == PlayerState.DIVE_IN)
+            {
+                var angle = new Vector2(XVel, YVel).ToAngle() + 90;
+
+                if (onGround)
+                    angle = -90 + Convert.ToInt32(Direction == Direction.RIGHT) * 180;
+
+                if (Math.Abs(angle - targetAngle) > 180)
+                {
+                    targetAngle -= Math.Sign(targetAngle - angle) * 360;
+                }
+
+                targetAngle += (angle - targetAngle) / 9f;
+
+                Angle = (float)((targetAngle / 360) * (2 * Math.PI));
+
+                /*if (onGround)
+                    Angle = lastAngle;
+                else
+                    lastAngle = Angle;*/
+            }
+            else
+            {
+                Angle = 0;
+            }
+            // diving-in
+            if (State == PlayerState.DIVE_IN)
+            {
+                /*var angle = new Vector2(XVel, YVel + 5).ToAngle() + 90;
+                Angle = (float)((angle / 360) * (2 * Math.PI));*/
+
+                Gravity = 0;
+
+                XVel *= .9f;
+                YVel *= .85f;
+
+                if (Math.Abs(YVel) < .01f)
+                {
+                    State = PlayerState.SWIM;
+                }
+            }
             // swimming
             if (State == PlayerState.SWIM)
             {
+                lastGroundY = Y;
+
                 var waterAcc = 0.03f;
                 var waterVelMax = 1f;
 
@@ -795,14 +862,11 @@ namespace Platformer.Objects.Main
                 if (lieTimer == 0)
                     State = PlayerState.GET_UP;
             }
-            else
-                lieTimer = 120;
             // death
             if (State == PlayerState.DEAD)
             {
                 XVel = 0;
-                YVel = 0;
-                Visible = false;
+                YVel = 0;                
             }
 
             var saveStatue = this.CollisionBounds<SaveStatue>(X, Y).FirstOrDefault();
@@ -850,10 +914,12 @@ namespace Platformer.Objects.Main
                     // transition from falling to getting up again
                     if (State == PlayerState.JUMP_UP || State == PlayerState.JUMP_DOWN || State == PlayerState.WALL_CLIMB || State == PlayerState.LEVITATE)
                     {
-                        if (lastGroundY < Y - 6 * Globals.TILE)
+                        if (lastGroundY < Y - 9 * Globals.TILE)
                         {
                             var eff = new SingularEffect(X, Y + 8);
+                            Hit(3);
                             State = PlayerState.LIE;
+                            lieTimer = 120;
                         }
                         else if (lastGroundY < Y - Globals.TILE)
                             State = PlayerState.GET_UP;
@@ -983,6 +1049,7 @@ namespace Platformer.Objects.Main
                     fAmount = 4;
                     fSpd = 0.15f;
                     break;
+                case PlayerState.DIVE_IN:
                 case PlayerState.SWIM:
                     row = 5;
                     fAmount = 4;
@@ -998,11 +1065,17 @@ namespace Platformer.Objects.Main
                     fAmount = 2;
                     fSpd = .075f;
                     break;
+                case PlayerState.DEAD:
+                    row = 14;
+                    fAmount = 1;
+                    offset = 1;
+                    fSpd = 0;
+                    break;
                 case PlayerState.LIE:
                     row = 14;
                     fAmount = 1;
-                    fSpd = 0;                    
-                    break;
+                    fSpd = 0;
+                    break;                
             }
 
             SetAnimation(cols * row + offset, cols * row + offset + fAmount - 1, fSpd, loopAnim);

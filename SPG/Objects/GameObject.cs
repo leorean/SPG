@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using SPG;
+using SPG.Draw;
 using SPG.Map;
 using SPG.Util;
 
@@ -87,6 +88,11 @@ namespace SPG.Objects
         // world/position/collision
 
         public Vector2 Position { get; set; } = Vector2.Zero;
+
+        /// <summary>
+        /// Returns the center of the boundingBox.
+        /// </summary>
+        public Vector2 Center { get => new Vector2(X + BoundingBox.X + BoundingBox.Width * .5f, Y + BoundingBox.Y + BoundingBox.Height * .5f); }
 
         /// <summary>
         /// Sets the draw offset. Use positive values because it is used in the drawing primitive 
@@ -235,9 +241,9 @@ namespace SPG.Objects
                     (Position.Y + BoundingBox.Y) - .5f,
                     BoundingBox.Width, BoundingBox.Height);
 
-                SPG.Draw.Primitives2D.DrawRectangle(sb, rect, Enabled ? Color.Black : Color.Gray, false);
+                sb.DrawRectangle(rect, Enabled ? Color.Black : Color.Gray, false);
+                sb.DrawPixel(Center.X, Center.Y, Color.Red);
             }
         }        
     }
 }
-

@@ -75,9 +75,7 @@ namespace Platformer
 
         private SaveGame saveGame;
         public SaveGame SaveGame { get => saveGame; private set => saveGame = value; }
-                
-        private bool initialized;
-
+        
         private static MainGame instance;
         public static MainGame Current { get => instance; }
 
@@ -211,12 +209,12 @@ namespace Platformer
                             t.Hide();
                             break;
                         case 512: // spikes
-                            var spike = new SpikeBottom(i * Globals.TILE, j * Globals.TILE, room)
-                            {
-                                Texture = TileSet[t.ID]
-                            };
-                            t.Hide();
+                            var spike = new SpikeBottom(i * Globals.TILE, j * Globals.TILE, room);
                             break;
+                        case 577:
+                            var bigSpike = new BigSpike(i * Globals.TILE, j * Globals.TILE, room);
+                            break;
+                        case 578: case 641: case 642: break;
                         case 640: // push-blocks
                             var pushBlock = new PushBlock(i * Globals.TILE, j * Globals.TILE, room);
                             pushBlock.Texture = TileSet[t.ID];
@@ -348,8 +346,7 @@ namespace Platformer
             DefaultFont = new Font(defaultFont, ' ');
             DamageFont = new Font(damageFont, ' ');
             HUDFont = new Font(hudFont, ' ');
-
-            initialized = true;
+            
             Debug.WriteLine("Loaded game in " + sw.ElapsedMilliseconds + "ms");
             sw.Stop();
         }
@@ -435,14 +432,7 @@ namespace Platformer
 
                 Debug.WriteLine("Saved.");
             }
-
-            if (input.IsKeyPressed(Keys.D9, Input.State.Pressed))
-            {
-                SaveManager.Load(ref saveGame);
-                
-                Debug.WriteLine("Loaded.");
-            }
-
+            
             if (input.IsKeyPressed(Keys.C, Input.State.Pressed))
             {
                 SaveGame.Delete();
@@ -471,7 +461,7 @@ namespace Platformer
 
             if (mouse.LeftButton == ButtonState.Pressed)
             {                
-                Player.Position = camera.ToVirtual(mouse.Position.ToVector2());
+                Player.Position = camera.ToVirtual(mouse.Position.ToVector2());                
                 Player.XVel = 0;
                 Player.YVel = 0;
             }

@@ -5,7 +5,7 @@ using System;
 
 namespace SPG.Draw
 {
-    static class Primitives2D
+    public static class Primitives2D
     {
         private static Texture2D pixel; //our pixel texture we will be using to draw primitives
 

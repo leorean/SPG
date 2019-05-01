@@ -16,7 +16,7 @@ namespace Platformer.Main
         public Vector2 playerPosition;
         public Direction playerDirection;
 
-        public PlayerStats playerStats;        
+        public PlayerStats playerStats;
 
         // methods
 

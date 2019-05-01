@@ -11,7 +11,7 @@ namespace Platformer.Objects
 {
     public class Room : GameObject
     {
-        public int Background { get; set; } = 0;
+        public int Background { get; set; } = -1;
         
         public Room(int x, int y, int width, int height) : base(x, y, "room")
         {

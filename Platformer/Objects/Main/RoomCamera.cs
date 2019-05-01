@@ -51,6 +51,8 @@ namespace Platformer.Main
 
         private TextureSet _backgrounds;
         private float backgroundAlpha = 1f;
+        private int currentBG = 0;
+        private int lastBG = 0;
 
         // events
 
@@ -72,7 +74,7 @@ namespace Platformer.Main
 
                     var w = data.ContainsKey("width") ? (int)data["width"] : ViewWidth;
                     var h = data.ContainsKey("height") ? (int)data["height"] : ViewHeight;
-                    var bg = data.ContainsKey("bg") ? (int)data["bg"] : 0;
+                    var bg = data.ContainsKey("bg") ? (int)data["bg"] : -1;
 
                     var room = new Room(x, y, w, h);
                     room.Background = bg;
@@ -87,7 +89,7 @@ namespace Platformer.Main
                         if (ObjectManager.CollisionPoint<Room>(i + Globals.TILE, j + Globals.TILE).Count == 0)
                         {
                             var room = new Room(i, j, ViewWidth, ViewHeight);
-                            Rooms.Add(room);                            
+                            Rooms.Add(room);
                         }
                     }
                 }
@@ -130,6 +132,8 @@ namespace Platformer.Main
                     if (CurrentRoom != null)
                     {
                         lastRoom = CurrentRoom;
+                        lastBG = currentBG;
+                        currentBG = CurrentRoom.Background;
                         EnableBounds(new Rectangle((int)CurrentRoom.X, (int)CurrentRoom.Y, (int)CurrentRoom.BoundingBox.Width, (int)CurrentRoom.BoundingBox.Height));                        
                     }
                     else
@@ -167,9 +171,14 @@ namespace Platformer.Main
                     {
                         dirOffsetX = 0;
                         state = State.PrepareRoomTransition;
-                        
-                        // switch backgrounds           
-                        backgroundAlpha = 0;
+
+                        if (CurrentRoom.Background != -1)
+                        {
+                            // switch backgrounds
+                            backgroundAlpha = 0;
+                            lastBG = currentBG;
+                            currentBG = CurrentRoom.Background;
+                        }
                     }
                 }
             }
@@ -220,13 +229,13 @@ namespace Platformer.Main
                 {
                     if (backgroundAlpha < 1)
                     {
-                        sb.Draw(_backgrounds[lastRoom.Background], Position - new Vector2(ViewWidth * .5f, ViewHeight * .5f), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0.0001f);
+                        sb.Draw(_backgrounds[lastBG], Position - new Vector2(ViewWidth * .5f, ViewHeight * .5f), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0.0001f);
                     }
                 }
                 if (CurrentRoom != null)
                 {
                     var color = new Color(Color.White, backgroundAlpha);
-                    sb.Draw(_backgrounds[CurrentRoom.Background], Position - new Vector2(ViewWidth * .5f, ViewHeight *.5f), null, color, 0, Vector2.Zero, 1, SpriteEffects.None, 0.0002f);
+                    sb.Draw(_backgrounds[currentBG], Position - new Vector2(ViewWidth * .5f, ViewHeight *.5f), null, color, 0, Vector2.Zero, 1, SpriteEffects.None, 0.0002f);
                 }                
             }
         }
