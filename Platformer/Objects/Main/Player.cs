@@ -12,6 +12,7 @@ using Platformer.Objects.Effects;
 using Platformer.Objects;
 using Platformer.Main;
 using Microsoft.Xna.Framework.Graphics;
+using Platformer.Objects.Level;
 
 namespace Platformer.Objects.Main
 { 
@@ -67,7 +68,8 @@ namespace Platformer.Objects.Main
             SWIM,
             DEAD,
             LEVITATE,
-            PUSH
+            PUSH,
+            LIE
         }
 
         public PlayerState State { get; set; }
@@ -114,6 +116,8 @@ namespace Platformer.Objects.Main
         private PlayerLevitationEmitter levitationEmitter;
 
         private PushBlock pushBlock;
+
+        private int lieTimer = 0;
 
         // constructor
         
@@ -473,6 +477,9 @@ namespace Platformer.Objects.Main
                         if (!k_leftHolding && !k_rightHolding)
                             State = PlayerState.IDLE;
                     }
+
+                    /*if (pushBlock != null && pushBlock.IsFalling)
+                        State = PlayerState.IDLE;*/
                 }
                 if (((Direction == Direction.LEFT && !k_leftHolding) 
                     || (Direction == Direction.RIGHT && !k_rightHolding))
@@ -541,6 +548,17 @@ namespace Platformer.Objects.Main
                 if (YVel < 0) State = PlayerState.JUMP_UP;
                 if (YVel > 0) State = PlayerState.JUMP_DOWN;
                 
+                // mushrooms
+                if (YVel > 0)
+                {
+                    var mush = this.CollisionBounds<Mushroom>(X, Y).FirstOrDefault();
+                    if (mush != null && !mush.Bouncing)
+                    {
+                        mush.Bounce();
+                        YVel = -2.5f;
+                    }
+                }
+
                 if (k_leftHolding)
                 {
                     if (XVel < .5)
@@ -732,6 +750,7 @@ namespace Platformer.Objects.Main
                     State = PlayerState.HIT_AIR;
                 }
             }
+            // swimming
             if (State == PlayerState.SWIM)
             {
                 var waterAcc = 0.03f;
@@ -765,6 +784,20 @@ namespace Platformer.Objects.Main
                     YVel = Math.Sign(YVel) * Math.Max(Math.Abs(YVel) - .02f, 0);
                 }
             }
+            // lieing around
+            if (State == PlayerState.LIE)
+            {
+                XVel = 0;
+                YVel = 0;
+
+                lieTimer = Math.Max(lieTimer - 1, 0);
+
+                if (lieTimer == 0)
+                    State = PlayerState.GET_UP;
+            }
+            else
+                lieTimer = 120;
+            // death
             if (State == PlayerState.DEAD)
             {
                 XVel = 0;
@@ -817,7 +850,12 @@ namespace Platformer.Objects.Main
                     // transition from falling to getting up again
                     if (State == PlayerState.JUMP_UP || State == PlayerState.JUMP_DOWN || State == PlayerState.WALL_CLIMB || State == PlayerState.LEVITATE)
                     {
-                        if (lastGroundY < Y - Globals.TILE)
+                        if (lastGroundY < Y - 6 * Globals.TILE)
+                        {
+                            var eff = new SingularEffect(X, Y + 8);
+                            State = PlayerState.LIE;
+                        }
+                        else if (lastGroundY < Y - Globals.TILE)
                             State = PlayerState.GET_UP;
                         else
                             State = PlayerState.IDLE;
@@ -959,6 +997,11 @@ namespace Platformer.Objects.Main
                     row = 13;
                     fAmount = 2;
                     fSpd = .075f;
+                    break;
+                case PlayerState.LIE:
+                    row = 14;
+                    fAmount = 1;
+                    fSpd = 0;                    
                     break;
             }
 

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Platformer.Objects.Enemy
 {
-    public abstract class Obstacle : RoomDependentdObject
+    public abstract class Obstacle : RoomObject
     {
         public int Damage { get; protected set; } = 1;
 

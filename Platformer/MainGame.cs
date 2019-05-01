@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using Platformer.Objects.Effects;
 using Platformer.Objects.Main;
+using Platformer.Objects.Level;
 
 namespace Platformer
 {
@@ -54,8 +55,9 @@ namespace Platformer
 
         public TextureSet TileSet { get; private set; }
         public TextureSet PlayerSprites { get; private set; }
+        public TextureSet Effects { get; private set; }
         public TextureSet SaveStatueSprites { get; private set; }
-
+        
         public Font DefaultFont { get; private set; }
         public Font DamageFont { get; private set; }
         public Font HUDFont { get; private set; }
@@ -143,8 +145,8 @@ namespace Platformer
         {
             // gather all objects which are inside the specified room
             var aliveObjects = ObjectManager.Objects.Where(
-                o => o is RoomDependentdObject
-                && (o as RoomDependentdObject).Room == room)
+                o => o is RoomObject
+                && (o as RoomObject).Room == room)
                 .ToList();
 
             foreach (var o in aliveObjects)
@@ -197,15 +199,21 @@ namespace Platformer
                         case 0: // platforms
                             var platform = new Platform(i * Globals.TILE, j * Globals.TILE, room);
                             break;
-                        case 576: //save-statues
+                        case 387: // mushrooms
+                            var mushroom = new Mushroom(i * Globals.TILE, j * Globals.TILE, room)
+                            {
+                                Texture = TileSet[t.ID]
+                            };
+                            t.Hide();
+                            break;
+                        case 576: // save-statues
                             var saveSatue = new SaveStatue(i * Globals.TILE, j * Globals.TILE, room);
                             t.Hide();
                             break;
-                        case 512: //spikes
+                        case 512: // spikes
                             var spike = new SpikeBottom(i * Globals.TILE, j * Globals.TILE, room)
                             {
-                                Enabled = false,
-                                Texture = TileSet[512]
+                                Texture = TileSet[t.ID]
                             };
                             t.Hide();
                             break;
@@ -217,7 +225,6 @@ namespace Platformer
                         default:                            
                             var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room)
                             {
-                                Enabled = false
                             };
                             solidCount++;
                             break;
@@ -317,6 +324,7 @@ namespace Platformer
             TileSet = TextureSet.Load("tiles");
             SaveStatueSprites = TextureSet.Load("save");
             PlayerSprites = TextureSet.Load("player", 16, 32);
+            Effects = TextureSet.Load("effects", 32, 32);
             HUD.Texture = Content.Load<Texture2D>("hud");
 
             // load map

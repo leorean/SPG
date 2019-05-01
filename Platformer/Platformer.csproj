@@ -45,6 +45,8 @@
   <ItemGroup>
     <Compile Include="MainGame.cs" />
     <Compile Include="Objects\Common.cs" />
+    <Compile Include="Objects\Effects\SingularEffect.cs" />
+    <Compile Include="Objects\Level\Mushroom.cs" />
     <Compile Include="Objects\Main\HUD.cs" />
     <Compile Include="Objects\Main\RoomCamera.cs" />
     <Compile Include="Objects\Main\SaveGame.cs" />
@@ -52,12 +54,12 @@
     <Compile Include="Objects\Effects\Emitters.cs" />
     <Compile Include="Objects\Enemy\Obstacles.cs" />
     <Compile Include="Objects\Main\Player.cs" />
-    <Compile Include="Objects\PushBlock.cs" />
+    <Compile Include="Objects\Level\PushBlock.cs" />
     <Compile Include="Objects\Room.cs" />
-    <Compile Include="Objects\RoomDependentdObject.cs" />
+    <Compile Include="Objects\RoomObject.cs" />
     <Compile Include="Objects\RoomExtensions.cs" />
-    <Compile Include="Objects\SaveStatue.cs" />
-    <Compile Include="Objects\Solid.cs" />
+    <Compile Include="Objects\Level\SaveStatue.cs" />
+    <Compile Include="Objects\Level\Solid.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -133,6 +135,7 @@
       <Name>SPG</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
