@@ -4,70 +4,91 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Platformer.Objects.Main;
 using SPG.Objects;
+using SPG.Util;
 
 namespace Platformer.Objects
 {
     public class PushBlock : Solid
     {
+        private bool isPushing = false;
+        private float lastX;
+        private Direction dir;
+        private int freezeTimeout = 0;
+
         public PushBlock(float x, float y, Room room) : base(x, y, room)
         {
-            BoundingBox = new SPG.Util.RectF(.1f, 0, Globals.TILE - .1f, Globals.TILE - .1f);
+            BoundingBox = new SPG.Util.RectF(0, 0, Globals.TILE, Globals.TILE);
             Visible = true;
             Depth = Globals.LAYER_FG - .001f;
 
-            Gravity = .1f;
-
-            DebugEnabled = true;
+            Gravity = .1f;            
         }
 
-        public bool Push(float vel)
+        public void Push(Direction dir)
         {
-            /*var colX = this.CollisionRectangle<Solid>(X + vel, Y + 1, X + Width + vel, Y + Height - 2).FirstOrDefault();
+            if (isPushing)
+                return;
+
+            this.dir = dir;
+
+            var colX = this.CollisionPoint<Solid>(X + 8 + Math.Sign((int)dir) * Globals.TILE, Y + 8).FirstOrDefault();
 
             if (colX != null)
-                return false;
-            else
-                Move(vel, 0);
-            */
+                return;
 
-            XVel = vel;
-
-            var colX = this.CollisionBounds<Solid>(X + vel, Y).FirstOrDefault();
-
-            if (colX != null)
-                return false;
-            
-            return true;
+            isPushing = true;            
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            var colX = this.CollisionBounds<Solid>(X + XVel, Y).FirstOrDefault();
-
-            if (colX == null)
+            var t = Globals.TILE;
+            
+            if (!isPushing)
             {
-                Move(XVel, 0);
+                lastX = X;
             }
             else
             {
-                XVel = 0;
+                XVel = Math.Sign((int)dir);
+                if (Math.Abs(lastX - X) >= Globals.TILE)
+                {
+                    XVel = 0;
+                    Position = new Vector2(MathUtil.Div(X, Globals.TILE) * Globals.TILE, Y);
+                    isPushing = false;
+                }
             }
+            Move(XVel, 0);
 
+
+            var player = this.CollisionRectangle<Player>(Left, Top + t, Right, Bottom + t).FirstOrDefault();
+                
+            
+            if (player != null)
+            {
+                isPushing = true;
+                //Position = new Vector2(X, MathUtil.Div(Y, Globals.TILE) * Globals.TILE);
+            }
 
             YVel = Math.Min(YVel + Gravity, 3);
+            if (!isPushing)
+            {
+                if (YVel > 0)
+                {
+                    var colY = this.CollisionPoint<Solid>(X + 8, Y + Globals.TILE + YVel).FirstOrDefault();
 
-            var colY = this.CollisionBounds<Solid>(X, Y + YVel).FirstOrDefault();
-            
-            if (colY == null)
-            {
-                Move(0, YVel);
-            }
-            else
-            {
-                YVel = 0;
+                    if (colY == null)
+                    {
+                        Move(0, YVel);
+
+                    }
+                    else
+                    {
+                        YVel = 0;
+                    }
+                }
             }
         }
     }

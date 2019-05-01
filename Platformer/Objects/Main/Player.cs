@@ -314,7 +314,8 @@ namespace Platformer.Objects.Main
             {
                 if ((State == PlayerState.JUMP_UP || State == PlayerState.WALL_CLIMB)// || State == PlayerState.LEVITATE) 
                     && 
-                    (k_jumpHolding || k_upHolding))
+                    (k_jumpHolding || k_upHolding)
+                    && !k_downHolding)
                 {
                     State = PlayerState.CEIL_IDLE;
                 }
@@ -448,17 +449,14 @@ namespace Platformer.Objects.Main
                 XVel = Math.Sign((int)Direction) * .5f;
 
                 var pushBlock = this.CollisionBounds<PushBlock>(X + Math.Sign((int)Direction), Y).FirstOrDefault();
-
-                bool continuePushing = true;
-
+                
                 if (pushBlock != null)
                 {
-                    continuePushing = pushBlock.Push(XVel);
+                    pushBlock.Push(Direction);
                 }
 
                 if ((Direction == Direction.LEFT && !k_leftHolding) 
-                    || (Direction == Direction.RIGHT && !k_rightHolding)
-                    || !continuePushing)
+                    || (Direction == Direction.RIGHT && !k_rightHolding))
                     State = PlayerState.IDLE;
 
                 if (hit)
@@ -763,20 +761,19 @@ namespace Platformer.Objects.Main
 
             // reset hit after state-logic
             hit = false;
-            
+
             // ++++ collision & movement ++++
 
             YVel += Gravity;
-
             YVel = Math.Sign(YVel) * Math.Min(Math.Abs(YVel), 4);
 
             var colY = this.CollisionBounds<Collider>(X, Y + YVel).Where(o => o is Solid).ToList();
-
+            
             var platform = this.CollisionBounds<Platform>(X, Y + YVel).FirstOrDefault();
 
             if (platform != null)
             {
-                if (Bottom <= platform.Top + 1)
+                if (Bottom <= platform.Top)
                 {
                     if (YVel >= 0)
                     {
@@ -786,12 +783,13 @@ namespace Platformer.Objects.Main
                 }
             }
 
-            if (colY.Count == 0)// || (YVel < 0 && colY.Where(o => o is Solid).Count() == 0))
+            if (colY.Count == 0)
             {
-                Move(0, YVel);
+                Move(0, YVel);                
             }
             else
             {
+
                 if (YVel >= Gravity)
                 {
                     onGround = true;
@@ -804,16 +802,24 @@ namespace Platformer.Objects.Main
                         else
                             State = PlayerState.IDLE;
                     }
-                    
-                    var b = colY.Min(x => x.Y);
-                    var bottom = colY.Where(o => o.Y == b).First();
 
-                    var newY = bottom.Y + BoundingBox.Y + BoundingBox.Height - Globals.TILE - Gravity;
+                    // trick to "snap" to the bottom:                    
+                    var overlap = Bottom - colY.FirstOrDefault().Top;
+                    if (Math.Abs(overlap) <= Math.Abs(YVel))
+                        Move(0, -overlap - Gravity);
 
-                    Position = new Vector2(X, newY);
-                } else
-                {
-                    
+                    // deprecated: solved issue with a loop:
+
+                    /*while (true)
+                    {
+                        var cy = this.CollisionBounds<Collider>(X, Y + .01f).FirstOrDefault();
+                        Move(0, .01f);
+                        if (cy != null)
+                        {
+                            Move(0, -.01f);
+                            break;
+                        }
+                    }*/
                 }
                 YVel = 0;
             }
