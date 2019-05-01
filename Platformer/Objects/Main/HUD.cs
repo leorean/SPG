@@ -53,7 +53,7 @@ namespace Platformer.Objects.Main
             font.Valign = SPG.Draw.Font.VerticalAlignment.Top;
 
             font.Draw(sb, x + 2, y + 2, $"HP: {hp}/{maxHP}", scale: .5f, depth: .991f);
-            font.Draw(sb, x + 2, y + 2 + 9, $"MP: {mp}/{maxMP} ({Math.Floor(mp/maxMP * 100)}%)", scale: .5f, depth: .991f);
+            font.Draw(sb, x + 2, y + 2 + 9, $"MP: {mp}/{maxMP}", scale: .5f, depth: .991f);
 
             //font.Draw(sb, x, y, "24/50", scale:0.5f);
 

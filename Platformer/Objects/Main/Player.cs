@@ -38,7 +38,9 @@ namespace Platformer.Objects.Main
         CLIMB_WALL = 2,
         CLIMB_CEIL = 4,
         LEVITATE = 8,
-        //TODO: shoot? 
+        //ideas:
+        //WARP
+        //STOMP
     }
     
     public class Player : GameObject
@@ -110,6 +112,8 @@ namespace Platformer.Objects.Main
         private float levitationSine = 0f;
 
         private PlayerLevitationEmitter levitationEmitter;
+
+        private PushBlock pushBlock;
 
         // constructor
         
@@ -284,7 +288,7 @@ namespace Platformer.Objects.Main
             var onWall = !hit && ObjectManager.CollisionPoint<Solid>(this, X + (.5f * BoundingBox.Width + 1) * Math.Sign((int)Direction), Y + 4)
                             .Where(o => o.Room == currentRoom).Count() > 0;
             var onCeil = !hit && ObjectManager.CollisionPoint<Solid>(this, X, Y - BoundingBox.Height * .5f - 1)
-                .Where(o => o.Room == currentRoom).Count() > 0;
+                .Where(o => o.Room == currentRoom && !(o is PushBlock)).Count() > 0;
 
             int tx = MathUtil.Div(X, Globals.TILE);
             int ty = MathUtil.Div(Y + 4, Globals.TILE);
@@ -387,7 +391,7 @@ namespace Platformer.Objects.Main
             // walk
             if (State == PlayerState.WALK)
             {
-                var sideBlock = this.CollisionBounds<Solid>(X + Math.Sign((int)Direction), Y).FirstOrDefault();
+                var colSide = this.CollisionBounds<Solid>(X + Math.Sign((int)Direction), Y).FirstOrDefault();
 
                 if (k_rightHolding)
                 {
@@ -395,7 +399,7 @@ namespace Platformer.Objects.Main
                     {
                         XVel = Math.Min(XVel + .2f, maxVel);
 
-                        if (sideBlock != null)
+                        if (colSide != null)
                             State = PlayerState.PUSH;
                     }
                     else
@@ -409,7 +413,7 @@ namespace Platformer.Objects.Main
                     {
                         XVel = Math.Max(XVel - .2f, -maxVel);
 
-                        if (sideBlock != null)
+                        if (colSide != null)
                             State = PlayerState.PUSH;
                     }
                     else
@@ -446,19 +450,35 @@ namespace Platformer.Objects.Main
             // pushing
             if (State == PlayerState.PUSH)
             {
-                XVel = Math.Sign((int)Direction) * .5f;
-
-                var pushBlock = this.CollisionBounds<PushBlock>(X + Math.Sign((int)Direction), Y).FirstOrDefault();
-                
-                if (pushBlock != null)
+                if (pushBlock == null)
                 {
-                    pushBlock.Push(Direction);
+                    pushBlock = this.CollisionBounds<PushBlock>(X + Math.Sign((int)Direction), Y).FirstOrDefault();
+
+                    if (pushBlock != null && !pushBlock.IsPushing && !pushBlock.IsFalling)
+                    {
+                        var canBePushed = pushBlock.Push(Direction);
+                        if (!canBePushed)
+                            pushBlock = null;
+                    }
+                    
                 }
 
-                if ((Direction == Direction.LEFT && !k_leftHolding) 
-                    || (Direction == Direction.RIGHT && !k_rightHolding))
-                    State = PlayerState.IDLE;
+                if(pushBlock != null)
+                {
+                    XVel = Math.Sign((int)Direction) * pushBlock.PushVel;
 
+                    if (!pushBlock.IsPushing)
+                    {
+                        pushBlock = null;
+                        if (!k_leftHolding && !k_rightHolding)
+                            State = PlayerState.IDLE;
+                    }
+                }
+                if (((Direction == Direction.LEFT && !k_leftHolding) 
+                    || (Direction == Direction.RIGHT && !k_rightHolding))
+                    && pushBlock == null)
+                    State = PlayerState.IDLE;
+                
                 if (hit)
                     State = PlayerState.HIT_GROUND;
             }
