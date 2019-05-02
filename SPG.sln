@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SPG.Shared", "SPG.Shared\SPG.Shared.shproj", "{A0CDBD0E-3A41-42B7-9425-A838BC2C7383}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Platformer", "Platformer\Platformer.csproj", "{900A2D7D-1103-49FB-8967-94E00B649191}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPG", "SPG\SPG.csproj", "{818B8003-AA43-48D5-912B-5199A895A3F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SPG", "SPG\SPG.csproj", "{818B8003-AA43-48D5-912B-5199A895A3F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

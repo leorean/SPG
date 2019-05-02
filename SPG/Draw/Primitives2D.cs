@@ -7,17 +7,17 @@ namespace SPG.Draw
 {
     public static class Primitives2D
     {
-        private static Texture2D pixel; //our pixel texture we will be using to draw primitives
+        public static Texture2D Pixel { get; private set; } //our pixel texture we will be using to draw primitives
 
         private static bool initialized = false;
 
-        private static void Setup(GraphicsDevice gd)
+        public static void Setup(GraphicsDevice gd)
         {
             if (initialized) return;
 
             //creating our simple pixel
-            pixel = new Texture2D(gd, 1, 1);
-            pixel.SetData(new Color[] { Color.White });
+            Pixel = new Texture2D(gd, 1, 1);
+            Pixel.SetData(new Color[] { Color.White });
 
             initialized = true;
         }
@@ -30,7 +30,7 @@ namespace SPG.Draw
         public static void DrawPixel(this SpriteBatch sb, float x, float y, Color col)
         {
             Setup(sb.GraphicsDevice);
-            sb.Draw(pixel, new Vector2(x, y), null, col, 0, Vector2.Zero, 1f, SpriteEffects.None, 1);
+            sb.Draw(Pixel, new Vector2(x, y), null, col, 0, Vector2.Zero, 1f, SpriteEffects.None, 1);
         }
 
         //draws a line 
@@ -102,7 +102,7 @@ namespace SPG.Draw
         {
             if (filled)
             {
-                sb.Draw(pixel, new Rectangle((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height), col);
+                sb.Draw(Pixel, new Rectangle((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height), col);
             }
             else
             {

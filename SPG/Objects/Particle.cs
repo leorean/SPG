@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SPG.Draw;
 using SPG.Objects;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,9 @@ using System.Text;
 
 namespace SPG.Objects
 {
+
+    // TODO: refactor to generic classes??? then no delegates would be needed.... :|
+
     public class ParticleEmitter : GameObject
     {
         protected List<Particle> particles;
@@ -35,16 +39,18 @@ namespace SPG.Objects
 
         public ParticleEmitter(float x, float y) : base(x, y)
         {
-            pixel = new Texture2D(GameManager.Game.GraphicsDevice, 1, 1);
-            pixel.SetData(new Color[] { Color.White });
-
-            Texture = pixel;
+            Texture = Primitives2D.Pixel;
 
             particles = new List<Particle>();
 
             SpawnRate = 1;
 
             Active = true;
+
+            // default delegates
+
+            ParticleInit = new ParticleDelegate(particle =>  { });
+            ParticleUpdate = new ParticleDelegate(particle => { });
         }
 
         private void Add(Particle particle)
@@ -57,7 +63,7 @@ namespace SPG.Objects
             if (particles.Contains(particle))
                 particles.Remove(particle);
         }
-
+        
         ~ParticleEmitter()
         {
             particles.Clear();
@@ -123,8 +129,12 @@ namespace SPG.Objects
 
             public int LifeTime;
 
+            public Dictionary<string, object> CustomProperties;
+
             public Particle(ParticleEmitter emitter)
             {
+                CustomProperties = new Dictionary<string, object>();
+
                 Color = Color.White;
                 Position = emitter.Position;
 
@@ -146,6 +156,9 @@ namespace SPG.Objects
             public void Update(GameTime gameTime)
             {
                 LifeTime = Math.Max(LifeTime - 1, 0);
+
+                if (LifeTime == 0)
+                    return;
 
                 emitter.ParticleUpdate(this);
 

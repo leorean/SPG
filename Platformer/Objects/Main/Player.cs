@@ -113,10 +113,11 @@ namespace Platformer.Objects.Main
         private float gravWater = .03f;
 
         private float targetAngle;
-        private float dAngle;
-
+        
         private float levitationSine;
         private PlayerLevitationEmitter levitationEmitter;
+
+        private GlobalWaterEmitter globalWaterEmitter;
 
         private PushBlock pushBlock;
 
@@ -146,8 +147,8 @@ namespace Platformer.Objects.Main
 
             Stats = new PlayerStats();
 
-            levitationEmitter = new PlayerLevitationEmitter(x, y);
-            levitationEmitter.Parent = this;
+            levitationEmitter = new PlayerLevitationEmitter(x, y, this);
+            globalWaterEmitter = new GlobalWaterEmitter(x, y, this);
         }
 
         ~Player()
@@ -294,7 +295,7 @@ namespace Platformer.Objects.Main
 
             // ++++ collision flags ++++
 
-            var currentRoom = (MainGame.Current.Camera as RoomCamera)?.CurrentRoom;
+            var currentRoom = MainGame.Current.Camera.CurrentRoom;
             
             var onWall = !hit && ObjectManager.CollisionPoint<Solid>(this, X + (.5f * BoundingBox.Width + 1) * Math.Sign((int)Direction), Y + 4)
                             .Where(o => o.Room == currentRoom).Count() > 0;
@@ -304,7 +305,7 @@ namespace Platformer.Objects.Main
             int tx = MathUtil.Div(X, Globals.TILE);
             int ty = MathUtil.Div(Y + 4, Globals.TILE);
 
-            var inWater = (GameManager.Game.Map.LayerData[2].Get(tx, ty) != null);
+            var inWater = (MainGame.Current.Map.LayerData[2].Get(tx, ty) != null);
 
             if (!stats.Abilities.HasFlag(PlayerAbility.CLIMB_WALL))
                 onWall = false;
@@ -575,7 +576,12 @@ namespace Platformer.Objects.Main
                     if (mush != null && !mush.Bouncing)
                     {
                         mush.Bounce();
-                        YVel = -2.5f;
+                        YVel = -3;
+                        /*if (!k_jumpHolding)
+                            YVel = -2f;
+                        else
+                            YVel = -3;
+                        */
                     }
                 }
 
@@ -779,7 +785,12 @@ namespace Platformer.Objects.Main
                 var angle = new Vector2(XVel, YVel).ToAngle() + 90;
 
                 if (onGround)
-                    angle = -90 + Convert.ToInt32(Direction == Direction.RIGHT) * 180;
+                {
+                    if (k_leftHolding || k_rightHolding)
+                        angle = -90 + Convert.ToInt32(Direction == Direction.RIGHT) * 180;
+                    else
+                        angle = 0;
+                }
 
                 if (Math.Abs(angle - targetAngle) > 180)
                 {
@@ -789,11 +800,7 @@ namespace Platformer.Objects.Main
                 targetAngle += (angle - targetAngle) / 9f;
 
                 Angle = (float)((targetAngle / 360) * (2 * Math.PI));
-
-                /*if (onGround)
-                    Angle = lastAngle;
-                else
-                    lastAngle = Angle;*/
+                
             }
             else
             {
@@ -802,9 +809,6 @@ namespace Platformer.Objects.Main
             // diving-in
             if (State == PlayerState.DIVE_IN)
             {
-                /*var angle = new Vector2(XVel, YVel + 5).ToAngle() + 90;
-                Angle = (float)((angle / 360) * (2 * Math.PI));*/
-
                 Gravity = 0;
 
                 XVel *= .9f;
@@ -865,8 +869,8 @@ namespace Platformer.Objects.Main
             // death
             if (State == PlayerState.DEAD)
             {
-                XVel = 0;
-                YVel = 0;                
+                //XVel = 0;
+                //YVel = 0;
             }
 
             var saveStatue = this.CollisionBounds<SaveStatue>(X, Y).FirstOrDefault();
@@ -964,12 +968,12 @@ namespace Platformer.Objects.Main
             var boundY = Position.Y;
 
             if (boundX < 4) { XVel = 0; }
-            if (boundX > GameManager.Game.Map.Width * Globals.TILE - 4) { XVel = 0; }
+            if (boundX > MainGame.Current.Map.Width * Globals.TILE - 4) { XVel = 0; }
             if (boundY < 4) { YVel = 0; }
-            if (boundY > GameManager.Game.Map.Height * Globals.TILE - 4) { YVel = 0; }
+            if (boundY > MainGame.Current.Map.Height * Globals.TILE - 4) { YVel = 0; }
 
-            boundX = boundX.Clamp(4, GameManager.Game.Map.Width * Globals.TILE - 4);
-            boundY = boundY.Clamp(4, GameManager.Game.Map.Height * Globals.TILE - 4);
+            boundX = boundX.Clamp(4, MainGame.Current.Map.Width * Globals.TILE - 4);
+            boundY = boundY.Clamp(4, MainGame.Current.Map.Height * Globals.TILE - 4);
 
             Position = new Vector2(boundX, boundY);
             levitationEmitter.Position = Position;
@@ -1053,7 +1057,7 @@ namespace Platformer.Objects.Main
                 case PlayerState.SWIM:
                     row = 5;
                     fAmount = 4;
-                    fSpd = 0.05f;
+                    fSpd = 0.1f;
                     break;
                 case PlayerState.LEVITATE:
                     row = 12;

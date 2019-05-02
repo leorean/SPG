@@ -20,7 +20,7 @@ namespace Platformer.Objects
         {
             List<Room> neighbours = new List<Room>();
 
-            var camera = GameManager.Game.Camera;
+            var camera = MainGame.Current.Camera;
 
             for (var i = room.X - .5f * camera.ViewWidth; i <= room.X + room.BoundingBox.Width + .5f * camera.ViewWidth; i += camera.ViewWidth)
             {

@@ -27,7 +27,7 @@ namespace Platformer
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
-    public class MainGame : SPG.Game
+    public class MainGame : Microsoft.Xna.Framework.Game
     {
         // visual vars
 
@@ -40,13 +40,9 @@ namespace Platformer
 
         // game variables
 
-        private RoomCamera camera;
-        public override Camera Camera { get => camera; protected set => camera = value as RoomCamera; }
-        public override GraphicsDeviceManager GraphicsDeviceManager { get => graphics; }
-        //public SpriteBatch SpriteBatch { get => spriteBatch; }
-        private GameMap map;
-        public override GameMap Map { get => map; protected set => map = value; }
-
+        public RoomCamera Camera { get; private set; }
+        public GameMap Map { get; private set; }
+        
         // input
 
         Input input;
@@ -88,8 +84,6 @@ namespace Platformer
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            GameManager.Game = this;
-
             input = new Input();
 
             // window & screen setup
@@ -113,8 +107,8 @@ namespace Platformer
                 graphics.PreferredBackBufferWidth = w;
                 graphics.PreferredBackBufferHeight = h;
 
-                camera.ResolutionRenderer.ScreenWidth = w;
-                camera.ResolutionRenderer.ScreenHeight = h;
+                Camera.ResolutionRenderer.ScreenWidth = w;
+                Camera.ResolutionRenderer.ScreenHeight = h;
 
                 graphics.ApplyChanges();
 
@@ -169,10 +163,10 @@ namespace Platformer
             if (room == null || loadedRooms.Contains(room))
                 return;
 
-            var x = MathUtil.Div(room.X, camera.ViewWidth) * 16;
-            var y = MathUtil.Div(room.Y, camera.ViewHeight) * 9;
-            var w = MathUtil.Div(room.BoundingBox.Width, camera.ViewWidth) * 16;
-            var h = MathUtil.Div(room.BoundingBox.Height, camera.ViewHeight) * 9;
+            var x = MathUtil.Div(room.X, Camera.ViewWidth) * 16;
+            var y = MathUtil.Div(room.Y, Camera.ViewHeight) * 9;
+            var w = MathUtil.Div(room.BoundingBox.Width, Camera.ViewWidth) * 16;
+            var h = MathUtil.Div(room.BoundingBox.Height, Camera.ViewHeight) * 9;
             
             var index = Map.LayerDepth.ToList().IndexOf(Map.LayerDepth.First(o => o.Key.ToLower() == "fg"));
 
@@ -195,6 +189,7 @@ namespace Platformer
                     switch (t.ID)
                     {
                         case 0: // platforms
+                        case 12:
                             var platform = new Platform(i * Globals.TILE, j * Globals.TILE, room);
                             break;
                         case 387: // mushrooms
@@ -250,7 +245,7 @@ namespace Platformer
             Player.Destroy();
 
             Player = null;
-            camera.Reset();            
+            Camera.Reset();            
         }
 
         /// <summary>
@@ -301,7 +296,7 @@ namespace Platformer
             Player.Stats = stats;
             Player.Direction = direction;
             Player.AnimationTexture = PlayerSprites;
-            camera.SetTarget(Player);
+            Camera.SetTarget(Player);
 
             HUD.SetTarget(Player);
 
@@ -319,10 +314,10 @@ namespace Platformer
             
             // load textures & texture sets
 
-            TileSet = TextureSet.Load("tiles");
-            SaveStatueSprites = TextureSet.Load("save");
-            PlayerSprites = TextureSet.Load("player", 16, 32);
-            Effects = TextureSet.Load("effects", 32, 32);
+            TileSet = Content.LoadTextureSet("tiles");
+            SaveStatueSprites = Content.LoadTextureSet("save");
+            PlayerSprites = Content.LoadTextureSet("player", 16, 32);
+            Effects = Content.LoadTextureSet("effects", 32, 32);
             HUD.Texture = Content.Load<Texture2D>("hud");
 
             // load map
@@ -339,9 +334,9 @@ namespace Platformer
             
             // load fonts
 
-            var defaultFont = TextureSet.Load("font", 10, 10);
-            var damageFont = TextureSet.Load("damageFont", 10, 10);
-            var hudFont = TextureSet.Load("hudFont", 9, 14);
+            var defaultFont = Content.LoadTextureSet("font", 10, 10);
+            var damageFont = Content.LoadTextureSet("damageFont", 10, 10);
+            var hudFont = Content.LoadTextureSet("hudFont", 9, 14);
 
             DefaultFont = new Font(defaultFont, ' ');
             DamageFont = new Font(damageFont, ' ');
@@ -358,16 +353,16 @@ namespace Platformer
         {
             base.Initialize();
 
-            var resolutionRenderer = new ResolutionRenderer(viewSize.Width, viewSize.Height, screenSize.Width, screenSize.Height);
+            var resolutionRenderer = new ResolutionRenderer(graphics.GraphicsDevice, viewSize.Width, viewSize.Height, screenSize.Width, screenSize.Height);
 
-            camera = new RoomCamera(resolutionRenderer) { MaxZoom = 2f, MinZoom = .5f, Zoom = 1f };
-            camera.SetPosition(Vector2.Zero);
+            Camera = new RoomCamera(resolutionRenderer) { MaxZoom = 2f, MinZoom = .5f, Zoom = 1f };
+            Camera.SetPosition(Vector2.Zero);
 
             // first, restrict the bounds to the whole map - will be overridden from the room camera afterwards
-            camera.EnableBounds(new Rectangle(0, 0, Map.Width * Globals.TILE, Map.Height * Globals.TILE));
+            Camera.EnableBounds(new Rectangle(0, 0, Map.Width * Globals.TILE, Map.Height * Globals.TILE));
 
             // handle room changing <-> object loading/unloading
-            camera.OnRoomChange += (sender, rooms) =>
+            Camera.OnRoomChange += (sender, rooms) =>
             {
                 // unload all rooms that exist
                 Room[] tmp = new Room[loadedRooms.Count];
@@ -388,14 +383,12 @@ namespace Platformer
 
             // load room data for the camera
             var roomData = Map.ObjectData.FindDataByTypeName("room");
-            camera.InitRoomData(roomData);
+            Camera.InitRoomData(roomData);
 
             loadedRooms = new List<Room>();
-
-            //PlayerSet = TextureSet.Load("player", 16, 32);
-
-            var backgrounds = TextureSet.Load("background", 16 * Globals.TILE, 9 * Globals.TILE);
-            camera.SetBackgrounds(backgrounds);
+            
+            var backgrounds = Content.LoadTextureSet("background", 16 * Globals.TILE, 9 * Globals.TILE);
+            Camera.SetBackgrounds(backgrounds);
 
             LoadLevel();
         }
@@ -461,7 +454,7 @@ namespace Platformer
 
             if (mouse.LeftButton == ButtonState.Pressed)
             {                
-                Player.Position = camera.ToVirtual(mouse.Position.ToVector2());                
+                Player.Position = Camera.ToVirtual(mouse.Position.ToVector2());                
                 Player.XVel = 0;
                 Player.YVel = 0;
             }
@@ -472,9 +465,9 @@ namespace Platformer
                 ObjectManager.SetRegionEnabled<Solid>(room.X, room.Y, room.BoundingBox.Width, room.BoundingBox.Height, true);
             }
 
-            if (camera?.CurrentRoom != null)
+            if (Camera?.CurrentRoom != null)
             {
-                ObjectManager.SetRegionEnabled<GameObject>(camera.CurrentRoom.X, camera.CurrentRoom.Y, camera.CurrentRoom.BoundingBox.Width, camera.CurrentRoom.BoundingBox.Height, true);
+                ObjectManager.SetRegionEnabled<GameObject>(Camera.CurrentRoom.X, Camera.CurrentRoom.Y, Camera.CurrentRoom.BoundingBox.Width, Camera.CurrentRoom.BoundingBox.Height, true);
             }
             
             // ++++ update objects ++++
@@ -483,7 +476,7 @@ namespace Platformer
 
             // ++++ update camera ++++
 
-            camera.Update(gameTime);
+            Camera.Update(gameTime);
 
             // ++++ update HUD ++++
 
@@ -496,14 +489,14 @@ namespace Platformer
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            camera.ResolutionRenderer.SetupDraw();
+            Camera.ResolutionRenderer.SetupDraw();
 
             // IMPORTANT HINT: when a texture's alpha is not "pretty", check the Content settings of that texture! Make sure that the texture has premultiplied : true.
 
-            spriteBatch.BeginCamera(camera, BlendState.NonPremultiplied);
-            camera.DrawBackground(spriteBatch, gameTime);
+            spriteBatch.BeginCamera(Camera, BlendState.NonPremultiplied);
+            Camera.DrawBackground(spriteBatch, gameTime);
 
-            Map.Draw(spriteBatch, gameTime);
+            Map.Draw(spriteBatch, gameTime, Camera);
             ObjectManager.DrawObjects(spriteBatch, gameTime);
 
             HUD.Draw(spriteBatch, gameTime);

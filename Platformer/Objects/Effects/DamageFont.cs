@@ -53,7 +53,7 @@ namespace Platformer.Objects.Effects
             var c = font.Color;
             font.Color = new Color(c, alpha);
 
-            if (alpha == 0 || Y > GameManager.Game.Camera.ViewY + GameManager.Game.Camera.ViewHeight)
+            if (alpha == 0 || Y > MainGame.Current.Camera.ViewY + MainGame.Current.Camera.ViewHeight)
                 Destroy();
         }
 

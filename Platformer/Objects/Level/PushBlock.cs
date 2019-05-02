@@ -28,8 +28,7 @@ namespace Platformer.Objects.Level
         {
             BoundingBox = new RectF(0, 0, Globals.TILE, Globals.TILE);
             Visible = true;
-            //Depth = Globals.LAYER_FG + .0001f;
-            Depth = base.Depth + .001f;
+            Depth = Globals.LAYER_FG + .0001f;
 
             Gravity = .1f;
         }

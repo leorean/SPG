@@ -17,16 +17,16 @@ namespace Platformer.Objects.Enemy
         
         public Obstacle(float x, float y, Room room, string name = null) : base(x, y, room, name)
         {
-
-        }        
+            //Depth = Globals.LAYER_BG - .0005f;
+            //Depth = Globals.LAYER_BG2 + .0001f;
+        }
     }
 
     public class SpikeBottom : Obstacle
     {
         public SpikeBottom(float x, float y, Room room) : base(x, y, room)
         {   
-            BoundingBox = new RectF(0, 8, 16, 8);
-            Depth = Globals.LAYER_FG;// + 0.0010f;
+            BoundingBox = new RectF(0, 8, 16, 8);            
         }
     }
 
@@ -34,8 +34,7 @@ namespace Platformer.Objects.Enemy
     {
         public BigSpike(float x, float y, Room room) : base(x, y, room)
         {
-            BoundingBox = new RectF(0, 16, 32, 16);
-            
+            BoundingBox = new RectF(0, 16, 32, 16);            
             Damage = 9999;
         }
     }

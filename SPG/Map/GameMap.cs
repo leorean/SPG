@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SPG.Util;
+using SPG.View;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -174,14 +175,12 @@ namespace SPG.Map
         /// Draws parts of the map that are visible to the Game camera (within the camera view bounds).
         /// </summary>
         /// <param name="gameTime"></param>
-        public void Draw(SpriteBatch sb, GameTime gameTime)
+        public void Draw(SpriteBatch sb, GameTime gameTime, Camera cam)
         {
 
             if (TileSet == null)
                 throw new InvalidOperationException("The map cannot be drawn without a tileset!");
             
-            var cam = GameManager.Game.Camera;
-
             if (cam == null)
                 return;
 

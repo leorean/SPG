@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SPG.Draw;
 
 namespace SPG.View
 {
@@ -25,8 +26,14 @@ namespace SPG.View
         public int ScreenWidth { get; set; }
         public int ScreenHeight { get; set; }
 
-        public ResolutionRenderer(int viewWidth, int viewHeight, int screenWidth, int screenHeight)
+        private GraphicsDevice gd;
+
+        public ResolutionRenderer(GraphicsDevice gd, int viewWidth, int viewHeight, int screenWidth, int screenHeight)
         {
+            this.gd = gd;
+
+            Primitives2D.Setup(gd);
+
             ViewWidth = viewWidth;
             ViewHeight = viewHeight;
             VirtualScreenCenter = new Vector2(ViewWidth * .5f, ViewHeight * .5f);
@@ -57,7 +64,7 @@ namespace SPG.View
             vp.X = vp.Y = 0;
             vp.Width = ScreenWidth;
             vp.Height = ScreenHeight;
-            GameManager.Game.GraphicsDevice.Viewport = vp;
+            gd.Viewport = vp;
             _dirtyMatrix = true;
         }
 
@@ -65,7 +72,6 @@ namespace SPG.View
         public void SetupDraw()
         {
             SetupFullViewport();
-            //GameManager.Game.GraphicsDevice.Clear(BackgroundColor);
             SetupVirtualScreenViewport();
         }
 
@@ -114,7 +120,7 @@ namespace SPG.View
                 Height = height
             };
 
-            GameManager.Game.GraphicsDevice.Viewport = Viewport;
+            gd.Viewport = Viewport;
         }
 
         /// <summary>

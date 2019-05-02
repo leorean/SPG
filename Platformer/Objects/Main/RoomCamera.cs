@@ -82,9 +82,9 @@ namespace Platformer.Main
                 }
 
                 // load rooms of standard size when there is none
-                for(var i = 0; i < GameManager.Game.Map.Width * Globals.TILE; i += ViewWidth)
+                for(var i = 0; i < MainGame.Current.Map.Width * Globals.TILE; i += ViewWidth)
                 {
-                    for (var j = 0; j < GameManager.Game.Map.Height * Globals.TILE; j += ViewHeight)
+                    for (var j = 0; j < MainGame.Current.Map.Height * Globals.TILE; j += ViewHeight)
                     {
                         if (ObjectManager.CollisionPoint<Room>(i + Globals.TILE, j + Globals.TILE).Count == 0)
                         {

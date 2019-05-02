@@ -76,7 +76,7 @@ namespace SPG.Draw
 
             var rect = new Rectangle(0, 0, tex.Width + other.Width, tex.Height);
 
-            var newTexture = new Texture2D(GameManager.Game.GraphicsDevice, rect.Width, rect.Height);
+            var newTexture = new Texture2D(tex.GraphicsDevice, rect.Width, rect.Height);
 
             Color[] data = new Color[rect.Width * rect.Height];
             
@@ -131,7 +131,7 @@ namespace SPG.Draw
                 tex = tex.AppendRight(row);
                         
             var rect = new Rectangle(left, 0, width, tex.Height);
-            var newTexture = new Texture2D(GameManager.Game.GraphicsDevice, rect.Width, rect.Height);
+            var newTexture = new Texture2D(tex.GraphicsDevice, rect.Width, rect.Height);
 
             Color[] data = new Color[rect.Width * rect.Height];
             tex.GetData(0, rect, data, 0, rect.Width * rect.Height);

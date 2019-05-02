@@ -7,6 +7,7 @@ namespace SPG
 {
     public static class GameManager
     {
-        public static Game Game { get; set; }        
+        //public static Game Game { get; set; }        
+        public static ContentManager ContentManager { get; set; }
     }
 }
