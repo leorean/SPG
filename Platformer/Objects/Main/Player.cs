@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 using SPG;
+using SPG.Draw;
 using Platformer.Objects.Enemy;
 using Platformer.Objects.Effects;
 using Platformer.Objects;
@@ -96,6 +97,8 @@ namespace Platformer.Objects.Main
         // private
 
         public Direction Direction { get; set; } = Direction.RIGHT;
+        private Direction lastDirection;
+
         private bool animationComplete;
 
         private bool onGround;
@@ -112,9 +115,10 @@ namespace Platformer.Objects.Main
 
         private float gravAir = .1f;
         private float gravWater = .03f;
-
+        
+        private float swimAngle;
+        private Vector2 swimVector;
         private float targetAngle;
-        private Direction lastDirection;
         
         private float levitationSine;
         private PlayerLevitationEmitter levitationEmitter;
@@ -275,6 +279,8 @@ namespace Platformer.Objects.Main
             k_rightPressed = tk_rightPressed;
             k_leftHolding = tk_leftHolding;
             k_rightHolding = tk_rightHolding;
+
+            // ++++
             
             // ++++ getting hit ++++
 
@@ -795,73 +801,116 @@ namespace Platformer.Objects.Main
                 YVel *= .85f;
 
                 if (Math.Abs(YVel) < .01f)
-                {
+                {                    
                     State = PlayerState.SWIM;
                 }
             }
             // swimming
-            if (State == PlayerState.SWIM || State == PlayerState.SWIM_TURN_AROUND)
+            if (State == PlayerState.SWIM || State == PlayerState.SWIM_DIVE_IN || State == PlayerState.SWIM_TURN_AROUND)
             {
-                lastGroundY = Y;
+                var tSwimVecX = 5;
+                var maxSwimVecX = 10;
 
-                var waterAcc = 0.03f;
-                var waterVelMax = 1f;
+                var v = -Math.Sign(swimVector.X);
 
-                if (k_leftHolding)
+                if (k_leftHolding) v = -1;
+                if (k_rightHolding) v = 1;
+
+                var sx = swimVector.X + .6f * Math.Sign(v);
+                var sy = (YVel - Gravity) * maxSwimVecX;
+
+                sx = sx.Clamp(-maxSwimVecX, maxSwimVecX);
+                sy = sy.Clamp(-maxSwimVecX, maxSwimVecX);
+
+                swimVector = new Vector2(sx, sy);
+                
+                if (State == PlayerState.SWIM_TURN_AROUND)
                 {
-                    XVel = Math.Max(XVel - waterAcc, -waterVelMax);
-                    Direction = Direction.LEFT;
+                    YVel -= Gravity;
+
+                    targetAngle = -Math.Sign((int)Direction) * 90;
+
+                    if (animationComplete)
+                    {
+                        targetAngle = -targetAngle;                        
+                        State = PlayerState.SWIM;
+                    }
                 }
-                else if (k_rightHolding)
+                // swimming
+                if (State == PlayerState.SWIM || State == PlayerState.SWIM_DIVE_IN)
                 {
-                    XVel = Math.Min(XVel + waterAcc, waterVelMax);
-                    Direction = Direction.RIGHT;
-                }
-                else
-                {
-                    XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - .02f, 0);
+                    lastGroundY = Y;
+
+                    var waterAccX = 0.03f;
+                    var waterAccY = 0.03f;
+                    var waterVelMax = 1f;
+
+                    if (k_leftHolding)
+                    {
+                        XVel = Math.Max(XVel - waterAccX, -waterVelMax);
+                        if (sx < tSwimVecX)
+                        {
+                            Direction = Direction.LEFT;
+                            if (lastDirection == Direction.RIGHT)
+                            {
+                                ResetAnimation();
+                                State = PlayerState.SWIM_TURN_AROUND;
+                            }
+                        }
+                    }
+                    else if (k_rightHolding)
+                    {
+                        XVel = Math.Min(XVel + waterAccX, waterVelMax);
+                        if (sx > -tSwimVecX)
+                        {
+                            Direction = Direction.RIGHT;
+                            if (lastDirection == Direction.LEFT)
+                            {
+                                ResetAnimation();
+                                State = PlayerState.SWIM_TURN_AROUND;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - .02f, 0);
+                    }
+
+                    if (k_upHolding || k_jumpHolding)
+                    {
+                        YVel = Math.Max(YVel - waterAccY - Gravity, -waterVelMax);
+                    }
+                    else if (k_downHolding)
+                    {
+                        YVel = Math.Min(YVel + waterAccY - Gravity, waterVelMax);
+                    }
+                    else
+                    {
+                        YVel = Math.Sign(YVel) * Math.Max(Math.Abs(YVel) - .02f, 0);
+                        if (YVel > 0)
+                            YVel -= Gravity;
+                    }
+                                        
+                    if (State == PlayerState.SWIM_DIVE_IN)
+                    {
+                        swimAngle = 180;
+                        targetAngle = swimAngle;
+                    }
                 }
 
-                if (k_upHolding || k_jumpHolding)
-                {
-                    YVel = Math.Max(YVel - waterAcc - Gravity, -waterVelMax);
-                }
-                else if (k_downHolding)
-                {
-                    YVel = Math.Min(YVel + waterAcc, waterVelMax);
-                }
-                else
-                {
-                    YVel = Math.Sign(YVel) * Math.Max(Math.Abs(YVel) - .02f, 0);
-                }
+                swimAngle = new Vector2(Math.Sign((int)Direction) * Math.Abs(sx), sy).ToAngle() + 90;
 
-                if (Math.Abs(XVel) > Math.Abs(YVel))
-                    State = PlayerState.SWIM;
+                if (Math.Abs(swimAngle - targetAngle) > 180)
+                    targetAngle -= Math.Sign(targetAngle - swimAngle) * 360;
+
+                targetAngle += (swimAngle - targetAngle) / 29f;
+
+                Angle = (float)((targetAngle / 360) * (2 * Math.PI));
             }
-            if (State == PlayerState.SWIM || State == PlayerState.SWIM_DIVE_IN)
-            {
-                var angle = new Vector2(XVel + Math.Sign((int)Direction) * 2, YVel).ToAngle() + 90;
-
-                if (onGround)
-                {
-                    angle = -90 + Convert.ToInt32(Direction == Direction.RIGHT) * 180;
-                }
-
-                /*
-                if (Math.Abs(angle - targetAngle) > 180)
-                    targetAngle -= Math.Sign(targetAngle - angle) * 360;
-
-                targetAngle += (angle - targetAngle) / 9f;
-                targetAngle = (targetAngle + 360) % 360;
-                */
-
-                //Angle = (float)((targetAngle / 360) * (2 * Math.PI));
-                Angle = (float)((angle / 360) * (2 * Math.PI));
-            }
-            else
-            {
+            
+            if (State != PlayerState.SWIM && State != PlayerState.SWIM_TURN_AROUND && State != PlayerState.SWIM_DIVE_IN)
                 Angle = 0;
-            }            
+            
             // lieing around
             if (State == PlayerState.LIE)
             {
@@ -990,7 +1039,7 @@ namespace Platformer.Objects.Main
             // ++++ previous vars ++++
 
             lastDirection = Direction;
-
+            
             // ++++ draw <-> state logic ++++
 
             var cols = 8; // how many columns there are in the sheet
@@ -1096,7 +1145,8 @@ namespace Platformer.Objects.Main
                 case PlayerState.SWIM_TURN_AROUND:
                     row = 15;
                     fAmount = 4;
-                    fSpd = .15f;
+                    fSpd = .25f;
+                    loopAnim = false;
                     break;
             }
 
@@ -1104,14 +1154,20 @@ namespace Platformer.Objects.Main
             Color = (InvincibleTimer % 4 > 2) ? Color.Transparent : Color.White;
             
             var xScale = Math.Sign((int)Direction);
-            Scale = new Vector2(xScale, 1);            
+            Scale = new Vector2(xScale, 1);
+
+            animationComplete = false;
         }
         
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
             base.Draw(sb, gameTime);
-            
-            animationComplete = false;            
+
+            //animationComplete = false;
+
+            sb.DrawPixel(X, Y + swimVector.Y, Color.AliceBlue);
+            sb.DrawPixel(X + swimVector.X, Y + swimVector.Y, Color.Red);
+            sb.DrawPixel(X, Y, Color.Blue);
         }
     }
 }

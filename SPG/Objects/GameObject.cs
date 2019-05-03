@@ -140,6 +140,12 @@ namespace SPG.Objects
 
         // methods
         
+        public void ResetAnimation()
+        {
+            _currentFrame = 0;
+            _lastFrame = 0;
+        }
+
         public void SetAnimation(int minFrame, int maxFrame, double animationSpeed, bool loop)
         {
             // reset 
