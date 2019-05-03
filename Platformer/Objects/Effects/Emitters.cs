@@ -12,19 +12,17 @@ namespace Platformer.Objects.Effects
 {
     public class GlobalWaterEmitter : ParticleEmitter
     {
-        public List<Color> ParticleColors;
-
         private float sinus;
-
+        
         public GlobalWaterEmitter(float x, float y, GameObject parent) : base(x, y)
         {
             Parent = parent;
 
-            ParticleColors = new List<Color>();
-            ParticleColors.Add(new Color(255, 255, 255));
-            ParticleColors.Add(new Color(206, 255, 255));
-            ParticleColors.Add(new Color(168, 248, 248));
-            ParticleColors.Add(new Color(104, 216, 248));
+            particleColors = new List<Color>();
+            particleColors.Add(new Color(255, 255, 255));
+            particleColors.Add(new Color(206, 255, 255));
+            particleColors.Add(new Color(168, 248, 248));
+            particleColors.Add(new Color(104, 216, 248));
 
             SpawnRate = .5f;
             
@@ -34,7 +32,7 @@ namespace Platformer.Objects.Effects
 
                 var posX = room.X + RND.Int((int)room.BoundingBox.Width);
                 var posY = room.Y + RND.Int((int)room.BoundingBox.Height);
-
+                
                 int tx = MathUtil.Div(posX, Globals.TILE);
                 int ty = MathUtil.Div(posY, Globals.TILE);
 
@@ -49,14 +47,14 @@ namespace Platformer.Objects.Effects
 
                 if (!inWater)
                 {
-                    particle.LifeTime = 0;                    
+                    particle.LifeTime = 0;
                 } else
                 {
                     particle.Scale = new Vector2(.5f, .5f);                    
-                    particle.LifeTime = 999;
+                    particle.LifeTime = 600;
                     particle.Position = new Vector2(posX, posY);
                     particle.CustomProperties.Add("t", RND.Next * 2 * Math.PI);
-                }
+                }                
             };
 
             ParticleUpdate = (particle) =>
@@ -98,19 +96,82 @@ namespace Platformer.Objects.Effects
         }
     }
 
+    public class WaterSplashEmitter : ParticleEmitter
+    {
+        public WaterSplashEmitter(float x, float y) : base(x, y)
+        {
+            particleColors = new List<Color>();
+            particleColors.Add(new Color(255, 255, 255));
+            particleColors.Add(new Color(206, 255, 255));
+            particleColors.Add(new Color(168, 248, 248));
+            particleColors.Add(new Color(104, 216, 248));
+
+            SpawnRate = 10f;
+
+            ParticleInit = (particle) =>
+            {
+                SpawnRate = 0;
+
+                particle.Scale = new Vector2(2f, 2f);
+                particle.LifeTime = 120;
+
+                particle.Position = new Vector2(X - 6 + (float)(RND.Next * 12), Y);
+
+                particle.Alpha = 1;
+                particle.Angle = (float)((RND.Next * 360) / (2 * Math.PI));
+
+                particle.XVel = -1 + (float)(RND.Next * 2f);
+                particle.YVel = -1.5f - (float)(RND.Next * 1f);
+
+                var colorIndex = RND.Int(particleColors.Count - 1);
+                particle.Color = particleColors[colorIndex];
+            };
+
+            ParticleUpdate = (particle) =>
+            {
+                int tx = MathUtil.Div(particle.Position.X, Globals.TILE);
+                int ty = MathUtil.Div(particle.Position.Y + particle.YVel, Globals.TILE);
+                
+                // destroy:
+
+                var inWater = (MainGame.Current.Map.LayerData[2].Get(tx, ty) != null);
+                if (this.CollisionPoint<Solid>(particle.Position.X, particle.Position.Y).Count > 0)
+                    particle.LifeTime = 0;
+
+                if (inWater)
+                {
+                    particle.YVel *= .6f;
+                    particle.XVel *= .9f;
+                    particle.Alpha = Math.Max(particle.Alpha - .04f, 0);
+                } else
+                {
+                    particle.YVel = Math.Min(particle.YVel + .15f, 3f);
+                }
+
+                if (particle.Alpha == 0)
+                    particle.LifeTime = 0;
+            };
+        }
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            if (particles.Count == 0)
+                Destroy();
+        }
+    }
+
     public class PlayerLevitationEmitter : ParticleEmitter
     {
-        public List<Color> ParticleColors;
-
         public PlayerLevitationEmitter(float x, float y, GameObject parent) : base(x, y)
         {
             Parent = parent;
 
-            ParticleColors = new List<Color>();
-            ParticleColors.Add(new Color(255, 255, 255));
-            ParticleColors.Add(new Color(217, 255, 152));
-            ParticleColors.Add(new Color(177, 255, 116));
-            ParticleColors.Add(new Color(131, 237, 100));
+            particleColors = new List<Color>();
+            particleColors.Add(new Color(255, 255, 255));
+            particleColors.Add(new Color(217, 255, 152));
+            particleColors.Add(new Color(177, 255, 116));
+            particleColors.Add(new Color(131, 237, 100));
 
             SpawnRate = .5f;
             
@@ -131,8 +192,8 @@ namespace Platformer.Objects.Effects
 
                 particle.YVel = 2;
                 
-                var colorIndex = RND.Int(ParticleColors.Count - 1);
-                particle.Color = ParticleColors[colorIndex];
+                var colorIndex = RND.Int(particleColors.Count - 1);
+                particle.Color = particleColors[colorIndex];
             };
 
             ParticleUpdate = (particle) =>
@@ -153,15 +214,13 @@ namespace Platformer.Objects.Effects
 
     public class SaveStatueEmitter : ParticleEmitter
     {
-        public List<Color> ParticleColors;
-
         public SaveStatueEmitter(float x, float y) : base(x, y)
         {
-            ParticleColors = new List<Color>();
-            ParticleColors.Add(new Color(255, 255, 255));
-            ParticleColors.Add(new Color(206, 255, 255));
-            ParticleColors.Add(new Color(168, 248, 248));
-            ParticleColors.Add(new Color(104, 216, 248));
+            particleColors = new List<Color>();
+            particleColors.Add(new Color(255, 255, 255));
+            particleColors.Add(new Color(206, 255, 255));
+            particleColors.Add(new Color(168, 248, 248));
+            particleColors.Add(new Color(104, 216, 248));
 
             SpawnRate = 50;
 
@@ -173,15 +232,15 @@ namespace Platformer.Objects.Effects
                 
                 particle.Scale = new Vector2(3, 3);
 
-                particle.Angle = (float)(RND.Next * 360);
+                particle.Angle = (float)((RND.Next * 360) / (2 * Math.PI));
 
                 float spd = (float)(1 + RND.Next * .5f);
 
                 particle.XVel = (float)MathUtil.LengthDirX(particle.Angle) * spd;
                 particle.YVel = (float)MathUtil.LengthDirY(particle.Angle) * spd;
 
-                var colorIndex = RND.Int(ParticleColors.Count - 1);
-                particle.Color = ParticleColors[colorIndex];
+                var colorIndex = RND.Int(particleColors.Count - 1);
+                particle.Color = particleColors[colorIndex];
             };
 
             ParticleUpdate = (particle) =>

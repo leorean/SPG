@@ -363,16 +363,18 @@ namespace Platformer.Objects.Main
                     {
                         if (State != PlayerState.HIT_AIR && State != PlayerState.HIT_GROUND)
                         {
-                            if (YVel > 2)
+                            State = PlayerState.SWIM_DIVE_IN;
+                            YVel = 2;
+                            /*if (YVel > 2)
                                 State = PlayerState.SWIM_DIVE_IN;
                             else
                             {
                                 XVel *= .3f;
                                 YVel *= .3f;
                                 State = PlayerState.SWIM;
-                            }
+                            }*/
 
-                            //TODO: splash effect
+                            var splash = new WaterSplashEmitter(X, Y);
                         }
 
                         if (State == PlayerState.HIT_GROUND)
@@ -387,11 +389,11 @@ namespace Platformer.Objects.Main
                 {
                     YVel = -1.3f;
                     State = PlayerState.JUMP_UP;
-
-                    //TODO: splash effect
+                    
+                    var splash = new WaterSplashEmitter(X, Y);
                 }
             }
-
+            
             // ++++ magic regen ++++
 
             mpRegenTimeout = Math.Max(mpRegenTimeout - 1, 0);
@@ -509,10 +511,7 @@ namespace Platformer.Objects.Main
                         pushBlock = null;
                         if (!k_leftHolding && !k_rightHolding)
                             State = PlayerState.IDLE;
-                    }
-
-                    /*if (pushBlock != null && pushBlock.IsFalling)
-                        State = PlayerState.IDLE;*/
+                    }                    
                 }
                 if (((Direction == Direction.LEFT && !k_leftHolding) 
                     || (Direction == Direction.RIGHT && !k_rightHolding))
@@ -589,11 +588,6 @@ namespace Platformer.Objects.Main
                     {
                         mush.Bounce();
                         YVel = -3;
-                        /*if (!k_jumpHolding)
-                            YVel = -2f;
-                        else
-                            YVel = -3;
-                        */
                     }
                 }
 
@@ -890,15 +884,15 @@ namespace Platformer.Objects.Main
                         if (YVel > 0)
                             YVel -= Gravity;
                     }
-                                        
+
                     if (State == PlayerState.SWIM_DIVE_IN)
                     {
                         swimAngle = 180;
                         targetAngle = swimAngle;
                     }
                 }
-
-                swimAngle = new Vector2(Math.Sign((int)Direction) * Math.Abs(sx), sy).ToAngle() + 90;
+                
+                swimAngle = new Vector2(Math.Sign((int)Direction) * Math.Max(Math.Abs(sx), 1), sy).ToAngle() + 90;
 
                 if (Math.Abs(swimAngle - targetAngle) > 180)
                     targetAngle -= Math.Sign(targetAngle - swimAngle) * 360;
@@ -1162,12 +1156,10 @@ namespace Platformer.Objects.Main
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
             base.Draw(sb, gameTime);
-
-            //animationComplete = false;
-
-            sb.DrawPixel(X, Y + swimVector.Y, Color.AliceBlue);
-            sb.DrawPixel(X + swimVector.X, Y + swimVector.Y, Color.Red);
-            sb.DrawPixel(X, Y, Color.Blue);
+            
+            //sb.DrawPixel(X, Y + swimVector.Y, Color.AliceBlue);
+            //sb.DrawPixel(X + swimVector.X, Y + swimVector.Y, Color.Red);
+            //sb.DrawPixel(X, Y, Color.Blue);
         }
     }
 }

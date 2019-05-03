@@ -14,6 +14,7 @@ namespace SPG.Objects
 
     public class ParticleEmitter : GameObject
     {
+        protected List<Color> particleColors;
         protected List<Particle> particles;
         private Texture2D pixel;
         
@@ -41,6 +42,7 @@ namespace SPG.Objects
         {
             Texture = Primitives2D.Pixel;
 
+            particleColors = new List<Color>();
             particles = new List<Particle>();
 
             SpawnRate = 1;
