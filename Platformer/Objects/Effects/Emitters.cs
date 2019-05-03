@@ -232,7 +232,7 @@ namespace Platformer.Objects.Effects
                 
                 particle.Scale = new Vector2(3, 3);
 
-                particle.Angle = (float)((RND.Next * 360) / (2 * Math.PI));
+                particle.Angle = (float)(RND.Next * 360);
 
                 float spd = (float)(1 + RND.Next * .5f);
 

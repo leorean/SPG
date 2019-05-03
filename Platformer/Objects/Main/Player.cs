@@ -870,7 +870,7 @@ namespace Platformer.Objects.Main
                         XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - .02f, 0);
                     }
 
-                    if (k_upHolding || k_jumpHolding)
+                    if (k_upHolding)
                     {
                         YVel = Math.Max(YVel - waterAccY - Gravity, -waterVelMax);
                     }
@@ -883,16 +883,17 @@ namespace Platformer.Objects.Main
                         YVel = Math.Sign(YVel) * Math.Max(Math.Abs(YVel) - .02f, 0);
                         if (YVel > 0)
                             YVel -= Gravity;
-                    }
-
-                    if (State == PlayerState.SWIM_DIVE_IN)
-                    {
-                        swimAngle = 180;
-                        targetAngle = swimAngle;
-                    }
+                    }                    
                 }
                 
                 swimAngle = new Vector2(Math.Sign((int)Direction) * Math.Max(Math.Abs(sx), 1), sy).ToAngle() + 90;
+
+                if (State == PlayerState.SWIM_DIVE_IN)
+                {
+                    //swimAngle = 180;
+                    swimAngle = new Vector2(XVel, YVel).ToAngle() + 90;
+                    targetAngle = swimAngle;
+                }
 
                 if (Math.Abs(swimAngle - targetAngle) > 180)
                     targetAngle -= Math.Sign(targetAngle - swimAngle) * 360;
