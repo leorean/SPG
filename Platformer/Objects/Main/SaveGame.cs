@@ -18,6 +18,8 @@ namespace Platformer.Main
 
         public PlayerStats playerStats;
 
+        public int currentBG = -1;
+
         // methods
 
         public SaveGame(string fileName)

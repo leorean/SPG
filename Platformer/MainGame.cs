@@ -130,6 +130,7 @@ namespace Platformer
             SaveGame.playerPosition = new Vector2(posX, posY);
             SaveGame.playerDirection = Player.Direction;
             SaveGame.playerStats = Player.Stats;
+            SaveGame.currentBG = Camera.CurrentBG;
             SaveGame.Save();
         }
 
@@ -273,7 +274,8 @@ namespace Platformer
                 spawnY = SaveGame.playerPosition.Y;
                 direction = SaveGame.playerDirection;
                 stats = SaveGame.playerStats;
-            }
+            }            
+            Camera.CurrentBG = saveGame.currentBG;
 
             ObjectManager.Enable<Room>();
 
@@ -296,8 +298,8 @@ namespace Platformer
             Player.Stats = stats;
             Player.Direction = direction;
             Player.AnimationTexture = PlayerSprites;
-            Camera.SetTarget(Player);
 
+            Camera.SetTarget(Player);
             HUD.SetTarget(Player);
 
         }

@@ -73,7 +73,8 @@ namespace Platformer.Objects.Main
             LEVITATE,
             PUSH,
             LIE,
-            DIVE_IN
+            SWIM_DIVE_IN,
+            SWIM_TURN_AROUND
         }
 
         public PlayerState State { get; set; }
@@ -113,6 +114,7 @@ namespace Platformer.Objects.Main
         private float gravWater = .03f;
 
         private float targetAngle;
+        private Direction lastDirection;
         
         private float levitationSine;
         private PlayerLevitationEmitter levitationEmitter;
@@ -193,6 +195,10 @@ namespace Platformer.Objects.Main
             InvincibleTimer = 60;
         }
 
+        // ++++++++++++++++++++++++++
+        // UPDATE
+        // ++++++++++++++++++++++++++
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -269,7 +275,7 @@ namespace Platformer.Objects.Main
             k_rightPressed = tk_rightPressed;
             k_leftHolding = tk_leftHolding;
             k_rightHolding = tk_rightHolding;
-
+            
             // ++++ getting hit ++++
 
             InvincibleTimer = Math.Max(InvincibleTimer - 1, 0);
@@ -347,12 +353,12 @@ namespace Platformer.Objects.Main
 
                 if (HP > 0)
                 {
-                    if (State != PlayerState.SWIM && State != PlayerState.DIVE_IN)
+                    if (State != PlayerState.SWIM && State != PlayerState.SWIM_DIVE_IN && State != PlayerState.SWIM_TURN_AROUND)
                     {
                         if (State != PlayerState.HIT_AIR && State != PlayerState.HIT_GROUND)
                         {
                             if (YVel > 2)
-                                State = PlayerState.DIVE_IN;
+                                State = PlayerState.SWIM_DIVE_IN;
                             else
                             {
                                 XVel *= .3f;
@@ -779,35 +785,9 @@ namespace Platformer.Objects.Main
                     XVel = -Math.Sign((int)Direction) * .5f;
                     State = PlayerState.HIT_AIR;
                 }
-            }
-            if (State == PlayerState.SWIM || State == PlayerState.DIVE_IN)
-            {
-                var angle = new Vector2(XVel, YVel).ToAngle() + 90;
-
-                if (onGround)
-                {
-                    if (k_leftHolding || k_rightHolding)
-                        angle = -90 + Convert.ToInt32(Direction == Direction.RIGHT) * 180;
-                    else
-                        angle = 0;
-                }
-
-                if (Math.Abs(angle - targetAngle) > 180)
-                {
-                    targetAngle -= Math.Sign(targetAngle - angle) * 360;
-                }
-
-                targetAngle += (angle - targetAngle) / 9f;
-
-                Angle = (float)((targetAngle / 360) * (2 * Math.PI));
-                
-            }
-            else
-            {
-                Angle = 0;
-            }
+            }            
             // diving-in
-            if (State == PlayerState.DIVE_IN)
+            if (State == PlayerState.SWIM_DIVE_IN)
             {
                 Gravity = 0;
 
@@ -820,7 +800,7 @@ namespace Platformer.Objects.Main
                 }
             }
             // swimming
-            if (State == PlayerState.SWIM)
+            if (State == PlayerState.SWIM || State == PlayerState.SWIM_TURN_AROUND)
             {
                 lastGroundY = Y;
 
@@ -854,7 +834,34 @@ namespace Platformer.Objects.Main
                 {
                     YVel = Math.Sign(YVel) * Math.Max(Math.Abs(YVel) - .02f, 0);
                 }
+
+                if (Math.Abs(XVel) > Math.Abs(YVel))
+                    State = PlayerState.SWIM;
             }
+            if (State == PlayerState.SWIM || State == PlayerState.SWIM_DIVE_IN)
+            {
+                var angle = new Vector2(XVel + Math.Sign((int)Direction) * 2, YVel).ToAngle() + 90;
+
+                if (onGround)
+                {
+                    angle = -90 + Convert.ToInt32(Direction == Direction.RIGHT) * 180;
+                }
+
+                /*
+                if (Math.Abs(angle - targetAngle) > 180)
+                    targetAngle -= Math.Sign(targetAngle - angle) * 360;
+
+                targetAngle += (angle - targetAngle) / 9f;
+                targetAngle = (targetAngle + 360) % 360;
+                */
+
+                //Angle = (float)((targetAngle / 360) * (2 * Math.PI));
+                Angle = (float)((angle / 360) * (2 * Math.PI));
+            }
+            else
+            {
+                Angle = 0;
+            }            
             // lieing around
             if (State == PlayerState.LIE)
             {
@@ -869,6 +876,8 @@ namespace Platformer.Objects.Main
             // death
             if (State == PlayerState.DEAD)
             {
+                if (onGround)
+                    XVel *= .8f;
                 //XVel = 0;
                 //YVel = 0;
             }
@@ -978,6 +987,10 @@ namespace Platformer.Objects.Main
             Position = new Vector2(boundX, boundY);
             levitationEmitter.Position = Position;
 
+            // ++++ previous vars ++++
+
+            lastDirection = Direction;
+
             // ++++ draw <-> state logic ++++
 
             var cols = 8; // how many columns there are in the sheet
@@ -1053,7 +1066,7 @@ namespace Platformer.Objects.Main
                     fAmount = 4;
                     fSpd = 0.15f;
                     break;
-                case PlayerState.DIVE_IN:
+                case PlayerState.SWIM_DIVE_IN:
                 case PlayerState.SWIM:
                     row = 5;
                     fAmount = 4;
@@ -1079,22 +1092,26 @@ namespace Platformer.Objects.Main
                     row = 14;
                     fAmount = 1;
                     fSpd = 0;
-                    break;                
+                    break;
+                case PlayerState.SWIM_TURN_AROUND:
+                    row = 15;
+                    fAmount = 4;
+                    fSpd = .15f;
+                    break;
             }
 
             SetAnimation(cols * row + offset, cols * row + offset + fAmount - 1, fSpd, loopAnim);
-
             Color = (InvincibleTimer % 4 > 2) ? Color.Transparent : Color.White;
+            
+            var xScale = Math.Sign((int)Direction);
+            Scale = new Vector2(xScale, 1);            
         }
         
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
             base.Draw(sb, gameTime);
             
-            animationComplete = false;
-            
-            var xScale = Math.Sign((int)Direction);
-            Scale = new Vector2(xScale, 1);
+            animationComplete = false;            
         }
     }
 }

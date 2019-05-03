@@ -37,7 +37,8 @@ namespace Platformer.Main
 
         private Room lastRoom;
         public Room CurrentRoom { get; private set; }
-        
+        public int CurrentBG { get; set; } = 0;
+
         private float curX, curY;
         private float tx0, ty0;
         private float tx, ty;
@@ -50,8 +51,7 @@ namespace Platformer.Main
         // background vars
 
         private TextureSet _backgrounds;
-        private float backgroundAlpha = 1f;
-        private int currentBG = 0;
+        private float backgroundAlpha = 1f;        
         private int lastBG = 0;
 
         // events
@@ -76,9 +76,18 @@ namespace Platformer.Main
                     var h = data.ContainsKey("height") ? (int)data["height"] : ViewHeight;
                     var bg = data.ContainsKey("bg") ? (int)data["bg"] : -1;
 
+                    int remX, remY, remW, remH;
+                    Math.DivRem(x, ViewWidth, out remX);
+                    Math.DivRem(y, ViewHeight, out remY);
+                    Math.DivRem(w, ViewWidth, out remW);
+                    Math.DivRem(h, ViewHeight, out remH);
+
+                    if (remX != 0 || remY != 0 || remW != 0 || remH != 0)
+                        throw new ArgumentException($"The room at ({x},{y}) has an incorrect size or position!");
+
                     var room = new Room(x, y, w, h);
                     room.Background = bg;
-                    Rooms.Add(room);
+                    Rooms.Add(room);                    
                 }
 
                 // load rooms of standard size when there is none
@@ -94,9 +103,9 @@ namespace Platformer.Main
                     }
                 }
             }
-            catch(Exception)
+            catch(Exception e)
             {
-                Debug.WriteLine("Unable to initialize room from data!");
+                Debug.WriteLine("Unable to initialize room from data: " + e.Message);
                 throw;
             }
         }
@@ -128,12 +137,13 @@ namespace Platformer.Main
                 // if no room is yet found, try to find first room
                 if (CurrentRoom == null)
                 {
-                    CurrentRoom = ObjectManager.CollisionPoint<Room>(target, target.X, target.Y).FirstOrDefault();
+                    CurrentRoom = target.CollisionPoint<Room>(target.X, target.Y).FirstOrDefault();
                     if (CurrentRoom != null)
                     {
                         lastRoom = CurrentRoom;
-                        lastBG = currentBG;
-                        currentBG = CurrentRoom.Background;
+                        lastBG = CurrentBG;
+                        if (CurrentRoom.Background != -1)
+                            CurrentBG = CurrentRoom.Background;
                         EnableBounds(new Rectangle((int)CurrentRoom.X, (int)CurrentRoom.Y, (int)CurrentRoom.BoundingBox.Width, (int)CurrentRoom.BoundingBox.Height));                        
                     }
                     else
@@ -176,8 +186,8 @@ namespace Platformer.Main
                         {
                             // switch backgrounds
                             backgroundAlpha = 0;
-                            lastBG = currentBG;
-                            currentBG = CurrentRoom.Background;
+                            lastBG = CurrentBG;
+                            CurrentBG = CurrentRoom.Background;
                         }
                     }
                 }
@@ -229,15 +239,17 @@ namespace Platformer.Main
                 {
                     if (backgroundAlpha < 1)
                     {
-                        sb.Draw(_backgrounds[lastBG], Position - new Vector2(ViewWidth * .5f, ViewHeight * .5f), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0.0001f);
+                        if (lastBG != -1)
+                            sb.Draw(_backgrounds[lastBG], Position - new Vector2(ViewWidth * .5f, ViewHeight * .5f), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0.0001f);
                     }
                 }
                 if (CurrentRoom != null)
                 {
                     var color = new Color(Color.White, backgroundAlpha);
-                    sb.Draw(_backgrounds[currentBG], Position - new Vector2(ViewWidth * .5f, ViewHeight *.5f), null, color, 0, Vector2.Zero, 1, SpriteEffects.None, 0.0002f);
+                    if (CurrentBG != -1)
+                        sb.Draw(_backgrounds[CurrentBG], Position - new Vector2(ViewWidth * .5f, ViewHeight *.5f), null, color, 0, Vector2.Zero, 1, SpriteEffects.None, 0.0002f);
                 }                
             }
-        }
+        }        
     }
 }
