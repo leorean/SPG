@@ -58,7 +58,7 @@ namespace SPG.Draw
                 }
             }
             
-            var tex = texture.Crop(min, max + spacingRight);
+            var tex = texture.CropLeftRight(min, max + spacingRight);
 
             return tex;
         }
@@ -112,7 +112,7 @@ namespace SPG.Draw
             return newTexture;
         }
 
-        public static Texture2D Crop(this Texture2D tex, int left, int right)
+        public static Texture2D CropLeftRight(this Texture2D tex, int left, int right)
         {
             if (left >= right)
                 return tex;

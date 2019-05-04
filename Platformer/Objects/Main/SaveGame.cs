@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Platformer.Objects;
+using Platformer.Objects.Items;
 using Platformer.Objects.Main;
 using SPG.Save;
 
@@ -17,9 +19,9 @@ namespace Platformer.Main
         public Direction playerDirection;
 
         public PlayerStats playerStats;
-
+        
         public int currentBG = -1;
-
+        
         // methods
 
         public SaveGame(string fileName)

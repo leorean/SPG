@@ -114,7 +114,7 @@ namespace SPG.Map
                         int y = int.Parse(objectNode.Attributes["y"].Value);
                         int width = int.Parse(objectNode.Attributes["width"].Value);
                         int height = int.Parse(objectNode.Attributes["height"].Value);
-
+                        
                         objProperties.Add("name", name); // is actually the type name!
                         objProperties.Add("x", x);
                         objProperties.Add("y", y);
@@ -130,7 +130,11 @@ namespace SPG.Map
                                     var propName = prop.Attributes["name"].Value;
                                     var propValueString = prop.Attributes["value"].Value;
 
-                                    var propValueType = prop.Attributes["type"].Value;
+                                    // unknown value types are treated as strings
+                                    var propValueType = "string";
+
+                                    if (prop.Attributes.Find("type") != null)
+                                        propValueType = prop.Attributes["type"].Value;
 
                                     object propValue;
 
@@ -161,8 +165,6 @@ namespace SPG.Map
                         ObjectData.Add(objProperties);
                     }
                 }
-
-
             }
             catch (Exception e)
             {

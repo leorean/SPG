@@ -19,11 +19,9 @@ namespace Platformer.Main
 {
     public class RoomCamera : Camera
     {
-
         public enum State
         {
             Default,
-            PrepareRoomTransition,
             RoomTransition
         }
         
@@ -60,56 +58,14 @@ namespace Platformer.Main
         /// Is called when a room change is initiated. Provides last room and current room as arguments.
         /// </summary>
         public event EventHandler<Tuple<Room, Room>> OnRoomChange;
-        
-        public RoomCamera(ResolutionRenderer resolutionRenderer) : base(resolutionRenderer) { }
-        
-        public void InitRoomData(List<Dictionary<string, object>> roomData)
+
+        private static RoomCamera instance;
+        public static RoomCamera Current { get => instance; }
+        public RoomCamera(ResolutionRenderer resolutionRenderer) : base(resolutionRenderer)
         {
-            try
-            {
-                foreach (var data in roomData)
-                {
-                    var x = (int)data["x"];
-                    var y = (int)data["y"];
-
-                    var w = data.ContainsKey("width") ? (int)data["width"] : ViewWidth;
-                    var h = data.ContainsKey("height") ? (int)data["height"] : ViewHeight;
-                    var bg = data.ContainsKey("bg") ? (int)data["bg"] : -1;
-
-                    int remX, remY, remW, remH;
-                    Math.DivRem(x, ViewWidth, out remX);
-                    Math.DivRem(y, ViewHeight, out remY);
-                    Math.DivRem(w, ViewWidth, out remW);
-                    Math.DivRem(h, ViewHeight, out remH);
-
-                    if (remX != 0 || remY != 0 || remW != 0 || remH != 0)
-                        throw new ArgumentException($"The room at ({x},{y}) has an incorrect size or position!");
-
-                    var room = new Room(x, y, w, h);
-                    room.Background = bg;
-                    Rooms.Add(room);                    
-                }
-
-                // load rooms of standard size when there is none
-                for(var i = 0; i < MainGame.Current.Map.Width * Globals.TILE; i += ViewWidth)
-                {
-                    for (var j = 0; j < MainGame.Current.Map.Height * Globals.TILE; j += ViewHeight)
-                    {
-                        if (ObjectManager.CollisionPoint<Room>(i + Globals.TILE, j + Globals.TILE).Count == 0)
-                        {
-                            var room = new Room(i, j, ViewWidth, ViewHeight);
-                            Rooms.Add(room);
-                        }
-                    }
-                }
-            }
-            catch(Exception e)
-            {
-                Debug.WriteLine("Unable to initialize room from data: " + e.Message);
-                throw;
-            }
+            instance = this;
         }
-
+        
         public void SetTarget(GameObject target)
         {
             this.target = target;
@@ -180,7 +136,7 @@ namespace Platformer.Main
                     if (CurrentRoom != null)
                     {
                         dirOffsetX = 0;
-                        state = State.PrepareRoomTransition;
+                        state = State.RoomTransition;
 
                         if (CurrentRoom.Background != -1)
                         {
@@ -194,7 +150,7 @@ namespace Platformer.Main
             }
 
             // prepare for transition
-            if (state == State.PrepareRoomTransition)
+            if (state == State.RoomTransition)
             {
                 DisableBounds();
                 

@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Platformer.Main;
+using Platformer.Objects.Main;
 using SPG;
 using SPG.Draw;
 using SPG.Objects;
@@ -31,7 +33,7 @@ namespace Platformer.Objects.Effects
 
             alpha = 1.5f;
 
-            font = MainGame.Current.DamageFont.Copy();
+            font = AssetManager.DamageFont.Copy();
 
             font.Halign = Font.HorizontalAlignment.Center;
             font.Valign = Font.VerticalAlignment.Center;
@@ -53,7 +55,7 @@ namespace Platformer.Objects.Effects
             var c = font.Color;
             font.Color = new Color(c, alpha);
 
-            if (alpha == 0 || Y > MainGame.Current.Camera.ViewY + MainGame.Current.Camera.ViewHeight)
+            if (alpha == 0 || Y > RoomCamera.Current.ViewY + RoomCamera.Current.ViewHeight)
                 Destroy();
         }
 

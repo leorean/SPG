@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Platformer.Objects.Main;
 using SPG.Objects;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace Platformer.Objects.Effects
         {
             Depth = .8f;
             Type = type;
-            AnimationTexture = MainGame.Current.Effects;
+            AnimationTexture = AssetManager.EffectSprites;
             DrawOffset = new Vector2(16, 16);
         }
 

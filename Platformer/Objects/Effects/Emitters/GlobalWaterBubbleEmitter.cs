@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
+using Platformer.Main;
 using Platformer.Objects.Level;
+using Platformer.Objects.Main;
 using SPG.Objects;
 using SPG.Util;
 using System;
@@ -16,7 +18,7 @@ namespace Platformer.Objects.Effects.Emitters
 
         public WaterBubbleParticle(GlobalWaterBubbleEmitter emitter) : base(emitter)
         {
-            var room = MainGame.Current.Camera.CurrentRoom;
+            var room = RoomCamera.Current.CurrentRoom;
 
             var posX = room.X + RND.Int((int)room.BoundingBox.Width);
             var posY = room.Y + RND.Int((int)room.BoundingBox.Height);
@@ -24,7 +26,7 @@ namespace Platformer.Objects.Effects.Emitters
             int tx = MathUtil.Div(posX, Globals.TILE);
             int ty = MathUtil.Div(posY, Globals.TILE);
 
-            var inWater = (MainGame.Current.Map.LayerData[2].Get(tx, ty) != null);
+            var inWater = (GameManager.Current.Map.LayerData[2].Get(tx, ty) != null);
 
             if (ObjectManager.CollisionPoint<Solid>(posX, posY).Count > 0)
             {
@@ -67,7 +69,7 @@ namespace Platformer.Objects.Effects.Emitters
 
             // destroy:
 
-            var inWater = (MainGame.Current.Map.LayerData[2].Get(tx, ty) != null);
+            var inWater = (GameManager.Current.Map.LayerData[2].Get(tx, ty) != null);
             if (ObjectManager.CollisionPoint<Solid>(Position.X, Position.Y).Count > 0)
                 LifeTime = 0;
 

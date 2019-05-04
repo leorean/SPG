@@ -13,6 +13,9 @@ namespace SPG.Objects
     {
         public ParticleEmitter Emitter { get; private set; }
 
+        public Texture2D Texture { get; set; }
+        public float Depth;
+
         public float Angle;
         public Vector2 Scale;
 
@@ -22,6 +25,7 @@ namespace SPG.Objects
         public Vector2 Position;
         public Color Color;
         public float Alpha;
+        public Vector2 DrawOffset;
 
         public int LifeTime;
         
@@ -36,6 +40,9 @@ namespace SPG.Objects
             Emitter.Add(this);
 
             Position = Emitter.Position;
+
+            Texture = Primitives2D.Pixel;
+            Depth = emitter.Depth;
         }
 
         ~Particle()
@@ -56,7 +63,7 @@ namespace SPG.Objects
 
         public virtual void Draw(SpriteBatch sb, GameTime gameTime)
         {
-            sb.Draw(Emitter.Texture, Position, null, new Color(Color, Alpha), Angle, Vector2.Zero, Scale, SpriteEffects.None, Emitter.Depth);
+            sb.Draw(Texture, Position, null, new Color(Color, Alpha), Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
         }
     }
 
@@ -65,7 +72,6 @@ namespace SPG.Objects
     public abstract class ParticleEmitter : GameObject
     {
         protected List<Particle> particles;
-        private Texture2D pixel;
         
         public bool Active { get; set; }
 
@@ -77,13 +83,13 @@ namespace SPG.Objects
 
         public ParticleEmitter(float x, float y) : base(x, y)
         {
-            Texture = Primitives2D.Pixel;
+            Depth = Globals.LAYER_PARTICLE;
 
             particles = new List<Particle>();
 
             SpawnRate = 1;
 
-            Active = true;            
+            Active = true;
         }
 
         public void Add(Particle particle)
@@ -133,17 +139,11 @@ namespace SPG.Objects
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
-            // the emitter doesn't draw itself, instead the texture is used for the particles
+            // the emitter doesn't draw itself
             //base.Draw(gameTime);
             
             foreach (var part in particles)
                 part.Draw(sb, gameTime);
-        }
-        
-        // ++++ PARTICLE ++++
-
-
-    }
-
-    
+        }        
+    }    
 }

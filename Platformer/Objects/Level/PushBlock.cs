@@ -95,8 +95,8 @@ namespace Platformer.Objects.Level
             }
             else
             {
-                if (MainGame.Current.Player.State == Player.PlayerState.PUSH)
-                    MainGame.Current.Player.State = Player.PlayerState.IDLE;
+                if (GameManager.Current.Player.State == Player.PlayerState.PUSH)
+                    GameManager.Current.Player.State = Player.PlayerState.IDLE;
 
                 YVel = Math.Min(YVel + Gravity, 3);
 

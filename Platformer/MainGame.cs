@@ -38,52 +38,29 @@ namespace Platformer
         private Size screenSize;
         private float scale;
 
-        // game variables
-
-        public RoomCamera Camera { get; private set; }
-        public GameMap Map { get; private set; }
-        
-        // input
-
-        Input input;
-
-        // common textures & objects
-
-        public TextureSet TileSet { get; private set; }
-        public TextureSet PlayerSprites { get; private set; }
-        public TextureSet Effects { get; private set; }
-        public TextureSet SaveStatueSprites { get; private set; }
-        
-        public Font DefaultFont { get; private set; }
-        public Font DamageFont { get; private set; }
-        public Font HUDFont { get; private set; }
-
-        // common objects
+        // visual unique objects belong to the MainGame
 
         public HUD HUD { get; private set; }
 
-        public Player Player { get; private set; }
+        // input
 
-        // stores room data
-        private List<Room> loadedRooms;
-
-        // save data
-
-        private SaveGame saveGame;
-        public SaveGame SaveGame { get => saveGame; private set => saveGame = value; }
+        Input input;
         
         private static MainGame instance;
         public static MainGame Current { get => instance; }
-
+        
         public MainGame()
         {
+            Content.RootDirectory = "Content";
+
             // fundamental setup
 
             instance = this;
 
-            graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
+            var gm = new GameManager();
 
+            graphics = new GraphicsDeviceManager(this);
+            
             input = new Input();
 
             // window & screen setup
@@ -107,203 +84,16 @@ namespace Platformer
                 graphics.PreferredBackBufferWidth = w;
                 graphics.PreferredBackBufferHeight = h;
 
-                Camera.ResolutionRenderer.ScreenWidth = w;
-                Camera.ResolutionRenderer.ScreenHeight = h;
+                RoomCamera.Current.ResolutionRenderer.ScreenWidth = w;
+                RoomCamera.Current.ResolutionRenderer.ScreenHeight = h;
 
                 graphics.ApplyChanges();
 
                 Debug.WriteLine($"Size changed to {w}x{h}.");
             };
 
-            // game setup
-
-            SaveGame = new SaveGame("save.dat");
-
-            HUD = new HUD();
-        }
-
-        /// <summary>
-        /// The main Save method.
-        /// </summary>
-        public void Save(float posX, float posY)
-        {
-            SaveGame.playerPosition = new Vector2(posX, posY);
-            SaveGame.playerDirection = Player.Direction;
-            SaveGame.playerStats = Player.Stats;
-            SaveGame.currentBG = Camera.CurrentBG;
-            SaveGame.Save();
-        }
-
-        void UnloadRoomObjects(Room room)
-        {
-            // gather all objects which are inside the specified room
-            var aliveObjects = ObjectManager.Objects.Where(
-                o => o is RoomObject
-                && (o as RoomObject).Room == room)
-                .ToList();
-
-            foreach (var o in aliveObjects)
-            {
-                o.Destroy();
-            }
-
-            // TODO: add all objects that are alive and should be killed
-
-            //var alive = ObjectManager.Objects.Where(o => !(o is Room)).ToList();
-            var alive = ObjectManager.Objects.Where(o => !(o is Room) && !(o is Player)).ToList();
-            alive.ForEach(o => o.Destroy());
-            
-            loadedRooms.Remove(room);            
         }
         
-        /// <summary>
-        /// loads objects from a given room. 
-        /// </summary>
-        void LoadRoomObjects(Room room)
-        {
-            if (room == null || loadedRooms.Contains(room))
-                return;
-
-            var x = MathUtil.Div(room.X, Camera.ViewWidth) * 16;
-            var y = MathUtil.Div(room.Y, Camera.ViewHeight) * 9;
-            var w = MathUtil.Div(room.BoundingBox.Width, Camera.ViewWidth) * 16;
-            var h = MathUtil.Div(room.BoundingBox.Height, Camera.ViewHeight) * 9;
-            
-            var index = Map.LayerDepth.ToList().IndexOf(Map.LayerDepth.First(o => o.Key.ToLower() == "fg"));
-
-            var data = Map.LayerData.ElementAt(index);
-
-            x = (int)((float)x).Clamp(0, data.Width);
-            y = (int)((float)y).Clamp(0, data.Height);
-            
-            var solidCount = 0;
-
-            for(int i = x; i < x + w; i++)
-            {
-                for (int j = y; j < y + h; j++)
-                {
-                    var t = data.Get(i, j);
-
-                    if (t == null || t.ID == -1)
-                        continue;
-
-                    switch (t.ID)
-                    {
-                        case 0: // platforms
-                        case 12:
-                            var platform = new Platform(i * Globals.TILE, j * Globals.TILE, room);
-                            break;
-                        case 387: // mushrooms
-                            var mushroom = new Mushroom(i * Globals.TILE, j * Globals.TILE, room)
-                            {
-                                Texture = TileSet[t.ID]
-                            };
-                            t.Hide();
-                            break;
-                        case 576: // save-statues
-                            var saveSatue = new SaveStatue(i * Globals.TILE, j * Globals.TILE, room);
-                            t.Hide();
-                            break;
-                        case 512: // spikes
-                            var spike = new SpikeBottom(i * Globals.TILE, j * Globals.TILE, room);
-                            break;
-                        case 577:
-                            var bigSpike = new BigSpike(i * Globals.TILE, j * Globals.TILE, room);
-                            break;
-                        case 578: case 641: case 642: break;
-                        case 640: // push-blocks
-                            var pushBlock = new PushBlock(i * Globals.TILE, j * Globals.TILE, room);
-                            pushBlock.Texture = TileSet[t.ID];
-                            t.Hide();
-                            break;
-                        default:                            
-                            var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room)
-                            {
-                            };
-                            solidCount++;
-                            break;
-                    }
-                }
-            }
-
-            Debug.WriteLine("Created " + solidCount + " solid objects.");
-            loadedRooms.Add(room);
-        }
-
-        /// <summary>
-        /// Unloads the whole level.
-        /// </summary>
-        public void UnloadLevel()
-        {
-            Room[] roomList = new Room[loadedRooms.Count];
-            loadedRooms.CopyTo(roomList);
-
-            foreach(var room in roomList)
-            {
-                UnloadRoomObjects(room);
-            }
-
-            Player.Destroy();
-
-            Player = null;
-            Camera.Reset();            
-        }
-
-        /// <summary>
-        /// Loads the whole level.
-        /// </summary>
-        public void LoadLevel()
-        {
-            var playerData = Map.ObjectData.FindFirstDataByTypeName("player");
-            var spawnX = (float)(int)playerData["x"] + 8;
-            var spawnY = (float)(int)playerData["y"] + 7.9f;
-            var dir = (int)playerData["direction"];
-            var direction = (dir == 1) ? Direction.RIGHT : Direction.LEFT;
-            var stats = new PlayerStats
-            {
-                MaxHP = 5,
-                MaxMP = 100,
-                MPRegen = 1
-            };
-
-            bool success = SaveManager.Load(ref saveGame);
-
-            if (success)
-            {
-                spawnX = SaveGame.playerPosition.X;
-                spawnY = SaveGame.playerPosition.Y;
-                direction = SaveGame.playerDirection;
-                stats = SaveGame.playerStats;
-            }            
-            Camera.CurrentBG = saveGame.currentBG;
-
-            ObjectManager.Enable<Room>();
-
-            // find starting room
-            var startRoom = ObjectManager.CollisionPoint<Room>(spawnX, spawnY).FirstOrDefault();
-            
-            if (startRoom == null)
-            {
-                throw new Exception($"No room detected at position {spawnX}x{spawnY}!");
-            }
-
-            var neighbours = startRoom.Neighbors();
-            LoadRoomObjects(startRoom);
-            foreach (var n in neighbours)
-                LoadRoomObjects(n);
-
-            // create player at start position and set camera target
-
-            Player = new Player(spawnX, spawnY);
-            Player.Stats = stats;
-            Player.Direction = direction;
-            Player.AnimationTexture = PlayerSprites;
-
-            Camera.SetTarget(Player);
-            HUD.SetTarget(Player);
-
-        }
-
         /// <summary>
         /// called BEFORE initialize
         /// </summary>
@@ -313,37 +103,28 @@ namespace Platformer
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            
+
             // load textures & texture sets
 
-            TileSet = Content.LoadTextureSet("tiles");
-            SaveStatueSprites = Content.LoadTextureSet("save");
-            PlayerSprites = Content.LoadTextureSet("player", 16, 32);
-            Effects = Content.LoadTextureSet("effects", 32, 32);
-            HUD.Texture = Content.Load<Texture2D>("hud");
+            AssetManager.InitializeContent(Content);
 
             // load map
 
             XmlDocument xml = Xml.Load("worldMap.tmx");
             
-            Map = new GameMap(xml);
+            var map = new GameMap(xml);
 
-            Map.TileSet = TileSet;
-            Map.LayerDepth["FG"] = Globals.LAYER_FG;
-            Map.LayerDepth["WATER"] = Globals.LAYER_WATER;
-            Map.LayerDepth["BG"] = Globals.LAYER_BG;
-            Map.LayerDepth["BG2"] = Globals.LAYER_BG2;
-            
-            // load fonts
+            map.TileSet = AssetManager.TileSet;
+            map.LayerDepth["FG"] = Globals.LAYER_FG;
+            map.LayerDepth["WATER"] = Globals.LAYER_WATER;
+            map.LayerDepth["BG"] = Globals.LAYER_BG;
+            map.LayerDepth["BG2"] = Globals.LAYER_BG2;
 
-            var defaultFont = Content.LoadTextureSet("font", 10, 10);
-            var damageFont = Content.LoadTextureSet("damageFont", 10, 10);
-            var hudFont = Content.LoadTextureSet("hudFont", 9, 14);
+            GameManager.Current.Map = map;
 
-            DefaultFont = new Font(defaultFont, ' ');
-            DamageFont = new Font(damageFont, ' ');
-            HUDFont = new Font(hudFont, ' ');
-            
+            HUD = new HUD();
+            HUD.Texture = AssetManager.HUDTexture;
+
             Debug.WriteLine("Loaded game in " + sw.ElapsedMilliseconds + "ms");
             sw.Stop();
         }
@@ -357,42 +138,13 @@ namespace Platformer
 
             var resolutionRenderer = new ResolutionRenderer(graphics.GraphicsDevice, viewSize.Width, viewSize.Height, screenSize.Width, screenSize.Height);
 
-            Camera = new RoomCamera(resolutionRenderer) { MaxZoom = 2f, MinZoom = .5f, Zoom = 1f };
-            Camera.SetPosition(Vector2.Zero);
+            var cam = new RoomCamera(resolutionRenderer) { MaxZoom = 2f, MinZoom = .5f, Zoom = 1f };
 
             // first, restrict the bounds to the whole map - will be overridden from the room camera afterwards
-            Camera.EnableBounds(new Rectangle(0, 0, Map.Width * Globals.TILE, Map.Height * Globals.TILE));
+            //cam.EnableBounds(new Rectangle(0, 0, gm.Map.Width * Globals.TILE, gm.Map.Height * Globals.TILE));
 
-            // handle room changing <-> object loading/unloading
-            Camera.OnRoomChange += (sender, rooms) =>
-            {
-                // unload all rooms that exist
-                Room[] tmp = new Room[loadedRooms.Count];
-                loadedRooms.CopyTo(tmp);
-
-                foreach(var room in tmp)
-                    UnloadRoomObjects(room);
-
-                // do this, because else the GC would wait to clean huge resources and create a temporary lag
-                GC.Collect();
-
-                // load new room + neighbors
-                var neighbors = rooms.Item2.Neighbors();
-                LoadRoomObjects(rooms.Item2);
-                foreach (var n in neighbors)
-                    LoadRoomObjects(n);                
-            };
-
-            // load room data for the camera
-            var roomData = Map.ObjectData.FindDataByTypeName("room");
-            Camera.InitRoomData(roomData);
-
-            loadedRooms = new List<Room>();
-            
-            var backgrounds = Content.LoadTextureSet("background", 16 * Globals.TILE, 9 * Globals.TILE);
-            Camera.SetBackgrounds(backgrounds);
-
-            LoadLevel();
+            GameManager.Current.Initialize();
+            GameManager.Current.LoadLevel();
         }
 
         /// <summary>
@@ -420,17 +172,17 @@ namespace Platformer
 
             if (input.IsKeyPressed(Keys.D0, Input.State.Pressed))
             {
-                var posX = MathUtil.Div(Player.Position.X, Globals.TILE) * Globals.TILE + 8;
-                var posY = MathUtil.Div(Player.Position.Y, Globals.TILE) * Globals.TILE + 7;
+                var posX = MathUtil.Div(GameManager.Current.Player.Position.X, Globals.TILE) * Globals.TILE + 8;
+                var posY = MathUtil.Div(GameManager.Current.Player.Position.Y, Globals.TILE) * Globals.TILE + 7;
 
-                Save(posX, posY);
+                GameManager.Current.Save(posX, posY);
 
                 Debug.WriteLine("Saved.");
             }
             
             if (input.IsKeyPressed(Keys.C, Input.State.Pressed))
             {
-                SaveGame.Delete();
+                GameManager.Current.SaveGame.Delete();
                 
                 Debug.WriteLine("Deleted save game.");
             }
@@ -442,43 +194,34 @@ namespace Platformer
             else
             {
                 ObjectManager.GameSpeed = 0;
-                if (Player != null)
-                    Player.DebugEnabled = false;
+                if (GameManager.Current.Player != null)
+                    GameManager.Current.Player.DebugEnabled = false;
             }
 
             if (input.IsKeyPressed(Keys.R, Input.State.Pressed))
             {
-                UnloadLevel();
-                LoadLevel();                
+                GameManager.Current.UnloadLevel();
+                GameManager.Current.LoadLevel();                
             }
 
             MouseState mouse = Mouse.GetState();
 
             if (mouse.LeftButton == ButtonState.Pressed)
-            {                
-                Player.Position = Camera.ToVirtual(mouse.Position.ToVector2());                
-                Player.XVel = 0;
-                Player.YVel = 0;
+            {
+                GameManager.Current.Player.Position = RoomCamera.Current.ToVirtual(mouse.Position.ToVector2());
+                GameManager.Current.Player.XVel = 0;
+                GameManager.Current.Player.YVel = 0;
             }
 
-            // enable all solids from neighbors
-            foreach (var room in loadedRooms)
-            {
-                ObjectManager.SetRegionEnabled<Solid>(room.X, room.Y, room.BoundingBox.Width, room.BoundingBox.Height, true);
-            }
-
-            if (Camera?.CurrentRoom != null)
-            {
-                ObjectManager.SetRegionEnabled<GameObject>(Camera.CurrentRoom.X, Camera.CurrentRoom.Y, Camera.CurrentRoom.BoundingBox.Width, Camera.CurrentRoom.BoundingBox.Height, true);
-            }
-            
+            GameManager.Current.Update(gameTime);
+                        
             // ++++ update objects ++++
 
             ObjectManager.UpdateObjects(gameTime);
 
             // ++++ update camera ++++
 
-            Camera.Update(gameTime);
+            RoomCamera.Current.Update(gameTime);
 
             // ++++ update HUD ++++
 
@@ -491,14 +234,14 @@ namespace Platformer
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            Camera.ResolutionRenderer.SetupDraw();
+            RoomCamera.Current.ResolutionRenderer.SetupDraw();
 
             // IMPORTANT HINT: when a texture's alpha is not "pretty", check the Content settings of that texture! Make sure that the texture has premultiplied : true.
 
-            spriteBatch.BeginCamera(Camera, BlendState.NonPremultiplied);
-            Camera.DrawBackground(spriteBatch, gameTime);
+            spriteBatch.BeginCamera(RoomCamera.Current, BlendState.NonPremultiplied);
+            RoomCamera.Current.DrawBackground(spriteBatch, gameTime);
 
-            Map.Draw(spriteBatch, gameTime, Camera);
+            GameManager.Current.Map.Draw(spriteBatch, gameTime, RoomCamera.Current);
             ObjectManager.DrawObjects(spriteBatch, gameTime);
 
             HUD.Draw(spriteBatch, gameTime);

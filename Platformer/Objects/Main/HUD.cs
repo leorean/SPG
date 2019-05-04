@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Platformer.Main;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,10 +45,10 @@ namespace Platformer.Objects.Main
 
         public void Draw(SpriteBatch sb, GameTime gameTime)
         {
-            var x = MainGame.Current.Camera.ViewX;
-            var y = MainGame.Current.Camera.ViewY;
+            var x = RoomCamera.Current.ViewX;
+            var y = RoomCamera.Current.ViewY;
 
-            var font = MainGame.Current.HUDFont;
+            var font = AssetManager.HUDFont;
 
             font.Halign = SPG.Draw.Font.HorizontalAlignment.Left;
             font.Valign = SPG.Draw.Font.VerticalAlignment.Top;

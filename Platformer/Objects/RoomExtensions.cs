@@ -1,4 +1,5 @@
-﻿using SPG;
+﻿using Platformer.Main;
+using SPG;
 using SPG.Objects;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace Platformer.Objects
         {
             List<Room> neighbours = new List<Room>();
 
-            var camera = MainGame.Current.Camera;
+            var camera = RoomCamera.Current;
 
             for (var i = room.X - .5f * camera.ViewWidth; i <= room.X + room.BoundingBox.Width + .5f * camera.ViewWidth; i += camera.ViewWidth)
             {
@@ -32,7 +33,7 @@ namespace Platformer.Objects
                             neighbours.Add(c);
                 }
             }
-            Debug.WriteLine($"Found {neighbours.Count} neighbors.");
+            //Debug.WriteLine($"Found {neighbours.Count} neighbors.");
 
             return neighbours;
         }

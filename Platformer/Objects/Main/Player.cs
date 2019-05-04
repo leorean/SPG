@@ -15,6 +15,7 @@ using Platformer.Main;
 using Microsoft.Xna.Framework.Graphics;
 using Platformer.Objects.Level;
 using Platformer.Objects.Effects.Emitters;
+using Platformer.Objects.Items;
 
 namespace Platformer.Objects.Main
 { 
@@ -31,8 +32,10 @@ namespace Platformer.Objects.Main
         public int MaxHP { get; set; } = 0;
         public int MaxMP { get; set; } = 0;
         public float MPRegen { get; set; } = 0;
-
+        
         public PlayerAbility Abilities { get; set; } = PlayerAbility.NONE;
+
+        public List<Item> Items { get; set; } = new List<Item>();
     }
 
     [Flags]
@@ -56,27 +59,11 @@ namespace Platformer.Objects.Main
         
         public enum PlayerState
         {
-            IDLE,
-            WALK,
-            JUMP_UP,
-            JUMP_DOWN,
-            WALL_IDLE,
-            WALL_CLIMB,
-            OBTAIN,
-            DIE,
-            TURN_AROUND,
-            GET_UP,
-            HIT_AIR,
-            HIT_GROUND,
-            CEIL_IDLE,
-            CEIL_CLIMB,
-            SWIM,
-            DEAD,
-            LEVITATE,
-            PUSH,
-            LIE,
-            SWIM_DIVE_IN,
-            SWIM_TURN_AROUND
+            IDLE, WALK, JUMP_UP, JUMP_DOWN, WALL_IDLE,
+            WALL_CLIMB, OBTAIN, DIE, TURN_AROUND,
+            GET_UP, HIT_AIR, HIT_GROUND, CEIL_IDLE,
+            CEIL_CLIMB, SWIM, DEAD, LEVITATE,
+            PUSH, LIE, SWIM_DIVE_IN, SWIM_TURN_AROUND
         }
 
         public PlayerState State { get; set; }
@@ -128,10 +115,13 @@ namespace Platformer.Objects.Main
 
         private PushBlock pushBlock;
 
+        // misc. timers
+
         private int lieTimer = 0;
+        //private int jumpHoldingTimer = 0;
 
         // constructor
-        
+
         public Player(float x, float y) : base(x, y)
         {
             Name = "Player";
@@ -139,7 +129,7 @@ namespace Platformer.Objects.Main
             
             DrawOffset = new Vector2(8, 24);
             BoundingBox = new RectF(-4, -4, 8, 12);
-            Depth = Globals.LAYER_FG + 0.0010f;
+            Depth = Globals.LAYER_PLAYER;
             State = PlayerState.IDLE;
             Gravity = gravAir;
 
@@ -173,6 +163,8 @@ namespace Platformer.Objects.Main
         public void Hit(int hitPoints, float? angle = null)
         {
             HP = Math.Max(HP - hitPoints, 0);
+
+            var ouch = new OuchEmitter(X, Y);
 
             var dmgFont = new DamageFont(X, Y - Globals.TILE, $"-{hitPoints}");
             dmgFont.Target = this;
@@ -248,10 +240,21 @@ namespace Platformer.Objects.Main
 
             if (input.IsKeyPressed(Keys.D9, Input.State.Pressed))
             {
+                //stats.Abilities = PlayerAbility.NONE;
+
+                // add: flags |= flag
+                // remove: flags &= ~flag
+                // toggle: flags ^= flag
+
                 stats.Abilities ^= PlayerAbility.PUSH;
                 stats.Abilities ^= PlayerAbility.LEVITATE;
             }
-           
+
+            if (input.IsKeyPressed(Keys.O, Input.State.Pressed))
+            {
+                var ouch = new OuchEmitter(X, Y);
+            }
+
             // gamepad overrides keyboard input if pussible
             if (input.GamePadEnabled)
             {
@@ -283,8 +286,6 @@ namespace Platformer.Objects.Main
             k_rightPressed = tk_rightPressed;
             k_leftHolding = tk_leftHolding;
             k_rightHolding = tk_rightHolding;
-
-            // ++++
             
             // ++++ getting hit ++++
 
@@ -311,7 +312,7 @@ namespace Platformer.Objects.Main
 
             // ++++ collision flags ++++
 
-            var currentRoom = MainGame.Current.Camera.CurrentRoom;
+            var currentRoom = RoomCamera.Current.CurrentRoom;
             
             var onWall = !hit && ObjectManager.CollisionPoint<Solid>(this, X + (.5f * BoundingBox.Width + 1) * Math.Sign((int)Direction), Y + 4)
                             .Where(o => o.Room == currentRoom).Count() > 0;
@@ -321,7 +322,7 @@ namespace Platformer.Objects.Main
             int tx = MathUtil.Div(X, Globals.TILE);
             int ty = MathUtil.Div(Y + 4, Globals.TILE);
 
-            var inWater = (MainGame.Current.Map.LayerData[2].Get(tx, ty) != null);
+            var inWater = (GameManager.Current.Map.LayerData[2].Get(tx, ty) != null);
 
             if (!stats.Abilities.HasFlag(PlayerAbility.CLIMB_WALL))
                 onWall = false;
@@ -555,8 +556,16 @@ namespace Platformer.Objects.Main
                 }
                 else
                 {
-                    levitationSine = (float)((levitationSine + .1f) % (2f * Math.PI));
-                    YVel = -Gravity + (float)Math.Sin(levitationSine) * .1f;
+                    if (Math.Abs(YVel) < 1)
+                    {
+                        levitationSine = (float)((levitationSine + .1f) % (2f * Math.PI));
+                        YVel = -Gravity + (float)Math.Sin(levitationSine) * .1f;
+                    }
+                    else
+                    {
+                        YVel -= Gravity;
+                        YVel *= .8f;
+                    }
                 }
                 
                 if (!k_jumpHolding || MP == 0)
@@ -599,9 +608,13 @@ namespace Platformer.Objects.Main
                         Direction = Direction.RIGHT;
                     XVel = Math.Min(XVel + .08f, maxVel);                    
                 }
-
-                if (k_jumpPressed && stats.Abilities.HasFlag(PlayerAbility.LEVITATE))
-                    State = PlayerState.LEVITATE;
+                if (stats.Abilities.HasFlag(PlayerAbility.LEVITATE))
+                {
+                    if (MP > 0) {
+                        if (k_jumpPressed)
+                            State = PlayerState.LEVITATE;
+                    }
+                }                
             }
             // getting back up
             if (State == PlayerState.GET_UP)
@@ -1017,12 +1030,12 @@ namespace Platformer.Objects.Main
             var boundY = Position.Y;
 
             if (boundX < 4) { XVel = 0; }
-            if (boundX > MainGame.Current.Map.Width * Globals.TILE - 4) { XVel = 0; }
+            if (boundX > GameManager.Current.Map.Width * Globals.TILE - 4) { XVel = 0; }
             if (boundY < 4) { YVel = 0; }
-            if (boundY > MainGame.Current.Map.Height * Globals.TILE - 4) { YVel = 0; }
+            if (boundY > GameManager.Current.Map.Height * Globals.TILE - 4) { YVel = 0; }
 
-            boundX = boundX.Clamp(4, MainGame.Current.Map.Width * Globals.TILE - 4);
-            boundY = boundY.Clamp(4, MainGame.Current.Map.Height * Globals.TILE - 4);
+            boundX = boundX.Clamp(4, GameManager.Current.Map.Width * Globals.TILE - 4);
+            boundY = boundY.Clamp(4, GameManager.Current.Map.Height * Globals.TILE - 4);
 
             Position = new Vector2(boundX, boundY);
             levitationEmitter.Position = Position;

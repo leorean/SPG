@@ -32,7 +32,7 @@ namespace Platformer.Objects.Level
             BoundingBox = new RectF(4, 6, Globals.TILE - 8, Globals.TILE - 7);
             Visible = true;
             AnimationSpeed = .1f;
-            AnimationTexture = MainGame.Current.SaveStatueSprites;
+            AnimationTexture = AssetManager.SaveStatueSprites;
             
             floatPosition = Vector2.Zero;
 
@@ -54,7 +54,7 @@ namespace Platformer.Objects.Level
             var burst = new SaveBurstEmitter(emitter.Position.X, emitter.Position.Y);
 
             alreadyActivated = true;
-            MainGame.Current.Save(posX, posY);
+            GameManager.Current.Save(posX, posY);
             Debug.WriteLine("Saved.");            
         }
 
@@ -64,9 +64,9 @@ namespace Platformer.Objects.Level
 
             // ++++ draw <-> state logic ++++
             
-            if (MainGame.Current.SaveGame != null)
+            if (GameManager.Current.SaveGame != null)
             {
-                var saveStatue = ObjectManager.CollisionPoint<SaveStatue>(MainGame.Current.SaveGame.playerPosition.X, MainGame.Current.SaveGame.playerPosition.Y).FirstOrDefault();
+                var saveStatue = ObjectManager.CollisionPoint<SaveStatue>(GameManager.Current.SaveGame.playerPosition.X, GameManager.Current.SaveGame.playerPosition.Y).FirstOrDefault();
 
                 if (saveStatue == this)
                     Active = true;

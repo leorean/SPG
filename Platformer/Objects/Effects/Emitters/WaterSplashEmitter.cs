@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Platformer.Objects.Level;
+using Platformer.Objects.Main;
 using SPG.Objects;
 using SPG.Util;
 using System;
@@ -35,7 +36,7 @@ namespace Platformer.Objects.Effects.Emitters
 
             // destroy:
 
-            var inWater = (MainGame.Current.Map.LayerData[2].Get(tx, ty) != null);
+            var inWater = (GameManager.Current.Map.LayerData[2].Get(tx, ty) != null);
             if (ObjectManager.CollisionPoint<Solid>(Position.X, Position.Y).Count > 0)
                 LifeTime = 0;
 
