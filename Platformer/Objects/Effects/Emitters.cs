@@ -10,92 +10,7 @@ using System.Threading.Tasks;
 
 namespace Platformer.Objects.Effects
 {
-    public class GlobalWaterEmitter : ParticleEmitter
-    {
-        private float sinus;
-        
-        public GlobalWaterEmitter(float x, float y, GameObject parent) : base(x, y)
-        {
-            Parent = parent;
-
-            particleColors = new List<Color>();
-            particleColors.Add(new Color(255, 255, 255));
-            particleColors.Add(new Color(206, 255, 255));
-            particleColors.Add(new Color(168, 248, 248));
-            particleColors.Add(new Color(104, 216, 248));
-
-            SpawnRate = .5f;
-            
-            ParticleInit = (particle) =>
-            {
-                var room = MainGame.Current.Camera.CurrentRoom;
-
-                var posX = room.X + RND.Int((int)room.BoundingBox.Width);
-                var posY = room.Y + RND.Int((int)room.BoundingBox.Height);
-                
-                int tx = MathUtil.Div(posX, Globals.TILE);
-                int ty = MathUtil.Div(posY, Globals.TILE);
-
-                var inWater = (MainGame.Current.Map.LayerData[2].Get(tx, ty) != null);
-
-                if (this.CollisionPoint<Solid>(posX, posY).Count > 0)
-                {
-                    inWater = false;
-                }
-                
-                particle.Alpha = 0;
-
-                if (!inWater)
-                {
-                    particle.LifeTime = 0;
-                } else
-                {
-                    particle.Scale = new Vector2(.5f, .5f);                    
-                    particle.LifeTime = 600;
-                    particle.Position = new Vector2(posX, posY);
-                    particle.CustomProperties.Add("t", RND.Next * 2 * Math.PI);
-                }                
-            };
-
-            ParticleUpdate = (particle) =>
-            {
-                var offset = (double)particle.CustomProperties["t"];
-
-                var t = (offset + sinus) % (2 * Math.PI);
-
-                particle.YVel = Math.Max(particle.YVel - .01f + (float)(RND.Next * .01f), -.25f);                
-                particle.XVel = (float)Math.Sin(t) * .05f;
-
-                particle.XVel = particle.XVel.Clamp(-.25f, .25f);
-
-                var s = Math.Min(particle.Scale.X + .015f, 2);
-                var a = Math.Min(particle.Alpha + .015f, .8f);
-
-                particle.Scale = new Vector2(s);
-                particle.Alpha = a;
-
-                int tx = MathUtil.Div(particle.Position.X, Globals.TILE);
-                int ty = MathUtil.Div(particle.Position.Y, Globals.TILE);
-
-                // destroy:
-
-                var inWater = (MainGame.Current.Map.LayerData[2].Get(tx, ty) != null);
-                if (this.CollisionPoint<Solid>(particle.Position.X, particle.Position.Y).Count > 0)
-                    particle.LifeTime = 0;
-
-                if (!inWater)
-                    particle.LifeTime = 0;                
-            };
-        }
-
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-
-            sinus = (float)((sinus + .1f) % (2 * Math.PI));
-        }
-    }
-
+    /*
     public class WaterSplashEmitter : ParticleEmitter
     {
         public WaterSplashEmitter(float x, float y) : base(x, y)
@@ -264,4 +179,5 @@ namespace Platformer.Objects.Effects
                 Destroy();
         }
     }
+    */
 }

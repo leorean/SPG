@@ -14,6 +14,7 @@ using Platformer.Objects;
 using Platformer.Main;
 using Microsoft.Xna.Framework.Graphics;
 using Platformer.Objects.Level;
+using Platformer.Objects.Effects.Emitters;
 
 namespace Platformer.Objects.Main
 { 
@@ -123,7 +124,7 @@ namespace Platformer.Objects.Main
         private float levitationSine;
         private PlayerLevitationEmitter levitationEmitter;
 
-        private GlobalWaterEmitter globalWaterEmitter;
+        private GlobalWaterBubbleEmitter globalWaterEmitter;
 
         private PushBlock pushBlock;
 
@@ -152,9 +153,9 @@ namespace Platformer.Objects.Main
             // stats:
 
             Stats = new PlayerStats();
-
+            
             levitationEmitter = new PlayerLevitationEmitter(x, y, this);
-            globalWaterEmitter = new GlobalWaterEmitter(x, y, this);
+            globalWaterEmitter = new GlobalWaterBubbleEmitter(x, y, this);
         }
 
         ~Player()
@@ -246,7 +247,10 @@ namespace Platformer.Objects.Main
                 Hit(1);
 
             if (input.IsKeyPressed(Keys.D9, Input.State.Pressed))
+            {
                 stats.Abilities ^= PlayerAbility.PUSH;
+                stats.Abilities ^= PlayerAbility.LEVITATE;
+            }
            
             // gamepad overrides keyboard input if pussible
             if (input.GamePadEnabled)
@@ -365,16 +369,8 @@ namespace Platformer.Objects.Main
                         {
                             State = PlayerState.SWIM_DIVE_IN;
                             YVel = 2;
-                            /*if (YVel > 2)
-                                State = PlayerState.SWIM_DIVE_IN;
-                            else
-                            {
-                                XVel *= .3f;
-                                YVel *= .3f;
-                                State = PlayerState.SWIM;
-                            }*/
-
-                            var splash = new WaterSplashEmitter(X, Y);
+                            
+                            var splash = new WaterSplashEmitter(X, Y, XVel);
                         }
 
                         if (State == PlayerState.HIT_GROUND)
@@ -390,7 +386,7 @@ namespace Platformer.Objects.Main
                     YVel = -1.3f;
                     State = PlayerState.JUMP_UP;
                     
-                    var splash = new WaterSplashEmitter(X, Y);
+                    var splash = new WaterSplashEmitter(X, Y, XVel);
                 }
             }
             

@@ -9,27 +9,64 @@ using System.Text;
 
 namespace SPG.Objects
 {
-
-    // TODO: refactor to generic classes??? then no delegates would be needed.... :|
-
-    public class ParticleEmitter : GameObject
+    public class Particle
     {
-        protected List<Color> particleColors;
+        public ParticleEmitter Emitter { get; private set; }
+
+        public float Angle;
+        public Vector2 Scale;
+
+        public float XVel;
+        public float YVel;
+
+        public Vector2 Position;
+        public Color Color;
+        public float Alpha;
+
+        public int LifeTime;
+        
+        public Particle(ParticleEmitter emitter)
+        {        
+            Color = Color.White;
+            
+            Scale = Vector2.One;
+            Alpha = 1;
+
+            Emitter = emitter;
+            Emitter.Add(this);
+
+            Position = Emitter.Position;
+        }
+
+        ~Particle()
+        {
+            Emitter.Remove(this);
+            Emitter = null;
+        }
+
+        public virtual void Update(GameTime gameTime)
+        {
+            LifeTime = Math.Max(LifeTime - 1, 0);
+
+            if (LifeTime == 0)
+                return;
+            
+            Position = new Vector2(Position.X + XVel, Position.Y + YVel);
+        }
+
+        public virtual void Draw(SpriteBatch sb, GameTime gameTime)
+        {
+            sb.Draw(Emitter.Texture, Position, null, new Color(Color, Alpha), Angle, Vector2.Zero, Scale, SpriteEffects.None, Emitter.Depth);
+        }
+    }
+
+    // ++++ Emitter ++++
+    
+    public abstract class ParticleEmitter : GameObject
+    {
         protected List<Particle> particles;
         private Texture2D pixel;
         
-        public delegate void ParticleDelegate(Particle particle);
-
-        /// <summary>
-        /// This function is called for each particle for each update step.
-        /// </summary>
-        public ParticleDelegate ParticleUpdate;
-
-        /// <summary>
-        ///  This function is called for each particle when it is created.
-        /// </summary>
-        public ParticleDelegate ParticleInit;
-
         public bool Active { get; set; }
 
         /// <summary>
@@ -42,36 +79,30 @@ namespace SPG.Objects
         {
             Texture = Primitives2D.Pixel;
 
-            particleColors = new List<Color>();
             particles = new List<Particle>();
 
             SpawnRate = 1;
 
-            Active = true;
-
-            // default delegates
-
-            ParticleInit = new ParticleDelegate(particle =>  { });
-            ParticleUpdate = new ParticleDelegate(particle => { });
+            Active = true;            
         }
 
-        private void Add(Particle particle)
+        public void Add(Particle particle)
         {
             particles.Add(particle);
         }
 
-        private void Remove(Particle particle)
+        public void Remove(Particle particle)
         {
             if (particles.Contains(particle))
                 particles.Remove(particle);
         }
-        
+
         ~ParticleEmitter()
         {
             particles.Clear();
-            ParticleUpdate = null;
-            ParticleInit = null;
         }
+
+        public abstract void CreateParticle();
 
         public override void Update(GameTime gameTime)
         {
@@ -79,14 +110,11 @@ namespace SPG.Objects
 
             if (Active)
             {
-
                 spawn += SpawnRate;
-
                 int spawnAmount = (int)Math.Floor(spawn);
-
                 for (var i = 0; i < spawnAmount; i++)
                 {
-                    var part = new Particle(this);
+                    CreateParticle();
                 }
                 spawn -= spawnAmount;
             }
@@ -99,8 +127,7 @@ namespace SPG.Objects
                 p.Update(gameTime);
 
                 if (p.LifeTime == 0)
-                    Remove(p);
-                
+                    Remove(p);                
             }
         }
 
@@ -112,66 +139,10 @@ namespace SPG.Objects
             foreach (var part in particles)
                 part.Draw(sb, gameTime);
         }
-
+        
         // ++++ PARTICLE ++++
 
-        public class Particle
-        {
-            private ParticleEmitter emitter;
 
-            public float Angle;
-            public Vector2 Scale;
-
-            public float XVel;
-            public float YVel;
-
-            public Vector2 Position;
-            public Color Color;
-            public float Alpha;
-
-            public int LifeTime;
-
-            public Dictionary<string, object> CustomProperties;
-
-            public Particle(ParticleEmitter emitter)
-            {
-                CustomProperties = new Dictionary<string, object>();
-
-                Color = Color.White;
-                Position = emitter.Position;
-
-                Scale = Vector2.One;
-                Alpha = 1;
-
-                this.emitter = emitter;
-                emitter.Add(this);
-
-                emitter.ParticleInit(this);
-            }
-
-            ~Particle()
-            {
-                emitter.Remove(this);
-                emitter = null;
-            }
-
-            public void Update(GameTime gameTime)
-            {
-                LifeTime = Math.Max(LifeTime - 1, 0);
-
-                if (LifeTime == 0)
-                    return;
-
-                emitter.ParticleUpdate(this);
-
-                Position = new Vector2(Position.X + XVel, Position.Y + YVel);
-            }
-
-            public void Draw(SpriteBatch sb, GameTime gameTime)
-            {
-                sb.Draw(emitter.Texture, Position, null, new Color(Color, Alpha), Angle, Vector2.Zero, Scale, SpriteEffects.None, emitter.Depth);
-            }
-        }
     }
 
     

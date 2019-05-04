@@ -45,6 +45,11 @@
   <ItemGroup>
     <Compile Include="MainGame.cs" />
     <Compile Include="Objects\Common.cs" />
+    <Compile Include="Objects\Effects\Emitters\GlobalWaterBubbleEmitter.cs" />
+    <Compile Include="Objects\Effects\Emitters\PlayerLevitationEmitter.cs" />
+    <Compile Include="Objects\Effects\Emitters\SaveBurstEmitter.cs" />
+    <Compile Include="Objects\Effects\Emitters\SaveStatueEmitter.cs" />
+    <Compile Include="Objects\Effects\Emitters\WaterSplashEmitter.cs" />
     <Compile Include="Objects\Effects\SingularEffect.cs" />
     <Compile Include="Objects\Level\Mushroom.cs" />
     <Compile Include="Objects\Main\HUD.cs" />

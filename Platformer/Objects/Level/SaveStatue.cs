@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Platformer.Objects.Effects;
+using Platformer.Objects.Effects.Emitters;
 using Platformer.Objects.Main;
 using SPG;
 using SPG.Objects;
@@ -20,10 +21,8 @@ namespace Platformer.Objects.Level
         private bool alreadyActivated;
         public bool Active { get; private set; }
 
-        private ParticleEmitter emitter;
-
-        private List<Color> particleColors;
-
+        private SaveStatueEmitter emitter;
+        
         private Vector2 floatPosition;
 
         private float sin;
@@ -35,57 +34,11 @@ namespace Platformer.Objects.Level
             AnimationSpeed = .1f;
             AnimationTexture = MainGame.Current.SaveStatueSprites;
             
-            particleColors = new List<Color>();
-
             floatPosition = Vector2.Zero;
 
             alreadyActivated = true;
 
-            particleColors.Add(new Color(255, 255, 255));
-            particleColors.Add(new Color(206, 255, 255));
-            particleColors.Add(new Color(168, 248, 248));
-            particleColors.Add(new Color(104, 216, 248));
-            
-            emitter = new ParticleEmitter(x + 8, y + 8);
-            
-            emitter.ParticleInit = (particle) =>
-            {
-                var posX = emitter.X - 4 + RND.Next * 8;
-                var posY = emitter.Y + 3;
-
-                particle.LifeTime = 60;
-
-                // reset spawn rate to low rate
-                emitter.SpawnRate = .1f;
-
-                particle.Position = new Vector2((float) posX, (float) posY);
-                
-                particle.YVel = (float) (-.2 - RND.Next * .2);
-                particle.Scale = new Vector2(3, 3);
-                particle.Alpha = 0;
-                
-                particle.Angle = (float)(RND.Next * 360);
-
-                var colorIndex = RND.Int(particleColors.Count - 1);
-                particle.Color = particleColors[colorIndex];
-
-            };
-
-            emitter.ParticleUpdate = (particle) => {
-
-                var s = Math.Max(particle.Scale.X - .025f, 1);
-
-                particle.Scale = new Vector2(s);
-
-                var relativeLifeTime = particle.LifeTime / 60f;
-
-                if (relativeLifeTime > .5f)
-                    particle.Alpha = Math.Min(particle.Alpha + .1f, 1);
-                else
-                {
-                    particle.Alpha = Math.Max(particle.Alpha - .05f, 0);
-                }                
-            };
+            emitter = new SaveStatueEmitter(X + 8, Y + 8);
         }
         
         // methods
@@ -98,7 +51,7 @@ namespace Platformer.Objects.Level
             var posX = MathUtil.Div(X, Globals.TILE) * Globals.TILE + 8f;
             var posY = MathUtil.Div(Y, Globals.TILE) * Globals.TILE + 7.9f;
 
-            var burst = new SaveStatueEmitter(emitter.Position.X, emitter.Position.Y);
+            var burst = new SaveBurstEmitter(emitter.Position.X, emitter.Position.Y);
 
             alreadyActivated = true;
             MainGame.Current.Save(posX, posY);
