@@ -14,10 +14,7 @@ namespace Platformer.Objects.Items
     {
         enum State
         {
-            IDLE,
-            TAKING,
-            RISING,
-            TAKEN
+            IDLE, TAKING, RISING, RISEN, TAKEN
         }
 
         public PlayerAbility Ability { get; private set; }
@@ -39,7 +36,7 @@ namespace Platformer.Objects.Items
             Visible = false;
 
             ObtainShineEmitter = new ObtainShineEmitter(X, Y);
-            ObtainShineEmitter.Active = false;
+            ObtainShineEmitter.Active = true;
             ObtainShineEmitter.Depth = Depth - .001f;
             ObtainShineEmitter.Parent = this;            
             
@@ -79,37 +76,48 @@ namespace Platformer.Objects.Items
                     player.State = Player.PlayerState.OBTAIN;
                     Visible = true;
                     state = State.RISING;
-
-                    var msgBox = new MessageBox(Text, Name);
-                    msgBox.OnCompleted = () => {
-
-                        player.Stats.Abilities |= Ability;                        
-                        state = State.TAKEN;
-                    };
+                    ObtainShineEmitter.Active = true;
+                    obtainParticleEmitter.Active = true;                    
                 }
             }
             if (state == State.RISING)
             {
                 Position = new Vector2(player.X, player.Y + yDist);
-                yDist = Math.Max(yDist - .3f, -2 * Globals.TILE);
+                yDist = Math.Max(yDist - .4f, -2 * Globals.TILE);
 
-                ObtainShineEmitter.Active = true;
-                obtainParticleEmitter.Active = true;
+                if (yDist == -2 * Globals.TILE)
+                {
+                    var msgBox = new MessageBox(Text, Name);
+                    msgBox.OnCompleted = () => {
+
+                        player.Stats.Abilities |= Ability;
+                        state = State.TAKEN;
+                    };
+
+                    state = State.RISEN;
+                }
             }
+            if (state == State.RISEN)
+            {
 
+            }
             if (state == State.TAKEN)
             {
                 ObtainShineEmitter.Active = false;
                 obtainParticleEmitter.Active = false;
 
-                XVel = (player.X - Position.X) / 12f + .8f * player.XVel;
-                YVel = (player.Y - Position.Y) / 12f + .8f * player.YVel;
+                var ty = player.Y - 8;
+
+                XVel = (player.X - Position.X) / 16f + .8f * player.XVel;
+                YVel = (ty - Position.Y) / 16f + .8f * player.YVel;
                 Move(XVel, YVel);
                 
-                if (Math.Abs(X - player.X) < 2 && Math.Abs(Y - player.Y) < 2)
+                if (Math.Abs(X - player.X) < 2 && Math.Abs(Y - ty) < 2)
                 {
                     player.State = Player.PlayerState.IDLE;
-                    var eff = new SaveBurstEmitter(X, Y);
+                    
+                    var eff = new FlashEmitter(X, Y);
+
                     Destroy();
                 }
             }

@@ -263,7 +263,8 @@ namespace Platformer.Objects.Main
             {
                 //var ouch = new OuchEmitter(X, Y);
                 //var message = new MessageBox("Hello World!\nHello World!\nHello World!|What is going on here?!\nI have no idea...|Wow.", "Title");
-                var message = new MessageBox("Hello 'World' what 'is' going 'on'!\nHello World!\nHello World!|What is going on here?!\nI have no idea...|Wow.", "Title");
+                //var message = new MessageBox("Hello 'World' what 'is' going 'on'!\nHello World!\nHello World!|What is going on here?!\nI have no idea...|Wow.", "Title");
+                var flash = new FlashEmitter(X, Y);
             }
 
             // gamepad overrides keyboard input if pussible

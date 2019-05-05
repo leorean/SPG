@@ -19,7 +19,7 @@ namespace Platformer.Objects.Effects.Emitters
             DrawOffset = new Microsoft.Xna.Framework.Vector2(32, 32);
             Texture = AssetManager.WhiteCircleSprite;
 
-            LifeTime = 600;
+            LifeTime = 120;
 
             Scale = new Vector2(s);            
             Depth = emitter.Depth;
@@ -46,7 +46,8 @@ namespace Platformer.Objects.Effects.Emitters
         public ObtainShineEmitter(float x, float y) : base(x, y)
         {
             SpawnTimeout = 15;
-            //GlowAlpha = .5f;
+            GlowScale = .3f;
+            GlowAlpha = .1f;
         }
 
         public override void Update(GameTime gameTime)

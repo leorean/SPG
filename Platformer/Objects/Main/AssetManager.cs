@@ -26,10 +26,11 @@ namespace Platformer.Objects.Main
         public static TextureSet ItemSprites { get; private set; }
 
         public static Texture2D HUDSprite { get; private set; }
-        public static Texture2D OuchSprite { get; private set; }
         public static Texture2D MessageBoxSprite { get; private set; }
 
+        public static Texture2D OuchSprite { get; private set; }
         public static Texture2D WhiteCircleSprite { get; private set; }
+        public static Texture2D FlashSprite { get; private set; }
 
         public static Font DefaultFont { get; private set; }
         public static Font DamageFont { get; private set; }
@@ -46,8 +47,10 @@ namespace Platformer.Objects.Main
             SaveStatueSprites = content.LoadTextureSet("save");
             PlayerSprites = content.LoadTextureSet("player", 16, 32);
             EffectSprites = content.LoadTextureSet("effects", 32, 32);
+
             OuchSprite = content.Load<Texture2D>("ouch");
             WhiteCircleSprite = content.Load<Texture2D>("whiteCircle");
+            FlashSprite = content.Load<Texture2D>("flash");
 
             MessageBoxSprite = content.Load<Texture2D>("messageBox");
             HUDSprite = content.Load<Texture2D>("hud");

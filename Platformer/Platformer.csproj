@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="MainGame.cs" />
     <Compile Include="Objects\Common.cs" />
+    <Compile Include="Objects\Effects\Emitters\FlashEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\GlobalWaterBubbleEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\ObtainParticleEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\ObtainShineEmitter.cs" />

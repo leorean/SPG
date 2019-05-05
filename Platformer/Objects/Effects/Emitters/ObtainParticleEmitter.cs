@@ -47,17 +47,14 @@ namespace Platformer.Objects.Effects.Emitters
 
             var s = Math.Min(Math.Max(Math.Abs(tx - Position.X) / (1 * Globals.TILE), 0), 3);            
             Scale = new Vector2(s);
-
-            //XVel -= ((float)MathUtil.LengthDirX(Angle)) * .02f;
-            //YVel -= ((float)MathUtil.LengthDirY(Angle)) * .02f;
-
+            
             if (Math.Abs(Position.X - Emitter.X) < 8)
             {
                 var shineEmitter = (Emitter.Parent as AbilityItem)?.ObtainShineEmitter;
 
                 if (shineEmitter != null)
                 {
-                    shineEmitter.GlowAlpha = Math.Min(shineEmitter.GlowAlpha + .03f, .125f);
+                    //shineEmitter.GlowAlpha = Math.Min(shineEmitter.GlowAlpha + .03f, .125f);
                     shineEmitter.GlowScale = Math.Min(shineEmitter.GlowScale + .1f, 1f);
                 }
 
