@@ -32,6 +32,7 @@ namespace Platformer.Objects.Items
         public Item(float x, float y, Room room, string name = null) : base(x, y, room, name)
         {
             DrawOffset = new Vector2(8, 8);
+            BoundingBox = new SPG.Util.RectF(-4, -4, 8, 8);
             Depth = Globals.LAYER_ITEM;
         }
 

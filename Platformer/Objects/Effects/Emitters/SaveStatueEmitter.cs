@@ -53,7 +53,7 @@ namespace Platformer.Objects.Effects.Emitters
 
         public SaveStatueEmitter(float x, float y) : base(x, y)
         {
-            SpawnRate = .1f;
+            SpawnTimeout = 10;
 
             particleColors = new List<Color>
             {

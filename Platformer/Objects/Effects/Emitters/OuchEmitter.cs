@@ -48,7 +48,7 @@ namespace Platformer.Objects.Effects.Emitters
     {
         public OuchEmitter(float x, float y) : base(x, y)
         {
-            SpawnRate = 6;            
+            SpawnRate = 6;
         }
 
         public override void Update(GameTime gameTime)

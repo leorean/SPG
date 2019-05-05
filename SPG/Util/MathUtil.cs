@@ -21,7 +21,7 @@ namespace SPG.Util
             return (int)System.Math.Floor((double)(object)value);
         }
 
-        public static bool In<T>(T v1, T v2, T v3)
+        public static bool In<T>(this T v1, T v2, T v3)
         {
             var f1 = (float)(object)v1;
             var f2 = (float)(object)v2;

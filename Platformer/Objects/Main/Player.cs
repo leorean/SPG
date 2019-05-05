@@ -60,7 +60,7 @@ namespace Platformer.Objects.Main
         public enum PlayerState
         {
             IDLE, WALK, JUMP_UP, JUMP_DOWN, WALL_IDLE,
-            WALL_CLIMB, OBTAIN, DIE, TURN_AROUND,
+            WALL_CLIMB, OBTAIN, TURN_AROUND,
             GET_UP, HIT_AIR, HIT_GROUND, CEIL_IDLE,
             CEIL_CLIMB, SWIM, DEAD, LEVITATE,
             PUSH, LIE, SWIM_DIVE_IN, SWIM_TURN_AROUND
@@ -90,6 +90,8 @@ namespace Platformer.Objects.Main
         private bool animationComplete;
 
         private bool onGround;
+        public bool OnGround { get => onGround; }
+
         private float lastGroundY;
         private float lastGroundYbeforeWall;
 
@@ -252,7 +254,8 @@ namespace Platformer.Objects.Main
 
             if (input.IsKeyPressed(Keys.O, Input.State.Pressed))
             {
-                var ouch = new OuchEmitter(X, Y);
+                //var ouch = new OuchEmitter(X, Y);
+                var message = new MessageBox(0, 0, "Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!", "Title");
             }
 
             // gamepad overrides keyboard input if pussible
@@ -930,9 +933,13 @@ namespace Platformer.Objects.Main
             if (State == PlayerState.DEAD)
             {
                 if (onGround)
-                    XVel *= .8f;
-                //XVel = 0;
-                //YVel = 0;
+                    XVel *= .8f;                
+            }
+            // obtaining items:
+            if (State == PlayerState.OBTAIN)
+            {
+                XVel *= .9f;
+                //YVel = Math.Min(YVel + .1f, .2f);
             }
 
             var saveStatue = this.CollisionBounds<SaveStatue>(X, Y).FirstOrDefault();
@@ -1151,6 +1158,11 @@ namespace Platformer.Objects.Main
                     fAmount = 4;
                     fSpd = .25f;
                     loopAnim = false;
+                    break;
+                case PlayerState.OBTAIN:
+                    row = 16;
+                    fAmount = 1;
+                    fSpd = 0;                    
                     break;
             }
 

@@ -113,6 +113,13 @@ namespace SPG.Draw
             texts.RemoveAll(t => t.DecreaseAliveCounter());
         }
 
+        /// <summary>
+        /// Draw text at a position, optionally limiting to a maxWidth in pixels.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="text"></param>
+        /// <param name="maxWidth"></param>     
         public void Draw(SpriteBatch sb, float x, float y, object text, int maxWidth = 0, float scale = 1f, float? depth = null)
         {
             Draw(sb, x, y, text.ToString(), maxWidth, scale, depth);
@@ -125,7 +132,7 @@ namespace SPG.Draw
         /// <param name="y"></param>
         /// <param name="text"></param>
         /// <param name="maxWidth"></param>     
-        public void Draw(SpriteBatch sb, float x, float y, string text, int maxWidth = 0, float scale = 1f, float? depth = null)
+        internal void Draw(SpriteBatch sb, float x, float y, string text, int maxWidth = 0, float scale = 1f, float? depth = null)
         {
             //var sw = Stopwatch.StartNew();
 

@@ -60,7 +60,7 @@ namespace Platformer.Objects.Effects.Emitters
                 new Color(131, 237, 100)
             };
 
-            SpawnRate = .5f;            
+            SpawnTimeout = 1;
         }
 
         public override void CreateParticle()

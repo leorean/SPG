@@ -123,7 +123,7 @@ namespace Platformer
             GameManager.Current.Map = map;
 
             HUD = new HUD();
-            HUD.Texture = AssetManager.HUDTexture;
+            HUD.Texture = AssetManager.HUDSprite;
 
             Debug.WriteLine("Loaded game in " + sw.ElapsedMilliseconds + "ms");
             sw.Stop();
@@ -214,15 +214,15 @@ namespace Platformer
             }
 
             GameManager.Current.Update(gameTime);
-                        
-            // ++++ update objects ++++
-
-            ObjectManager.UpdateObjects(gameTime);
 
             // ++++ update camera ++++
 
             RoomCamera.Current.Update(gameTime);
 
+            // ++++ update objects ++++
+
+            ObjectManager.UpdateObjects(gameTime);
+            
             // ++++ update HUD ++++
 
             HUD.Update(gameTime);

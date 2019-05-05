@@ -75,11 +75,18 @@ namespace SPG.Objects
         
         public bool Active { get; set; }
 
+
         /// <summary>
-        /// Gets or sets the spawn rate. >1 means multiple particles per run
+        /// Gets or sets the amount of particles spawned per spawn
         /// </summary>
-        public float SpawnRate { get; set; }
-        private float spawn;
+        public int SpawnRate { get; set; } = 1;
+
+        /// <summary>
+        /// Gets or sets a number of frames to wait for particles to spawn
+        /// </summary>
+        public int SpawnTimeout { get; set; } = 0;
+
+        protected int currentSpawnTimeout = 0;
 
         public ParticleEmitter(float x, float y) : base(x, y)
         {
@@ -113,16 +120,17 @@ namespace SPG.Objects
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
+            
             if (Active)
             {
-                spawn += SpawnRate;
-                int spawnAmount = (int)Math.Floor(spawn);
-                for (var i = 0; i < spawnAmount; i++)
+                currentSpawnTimeout -= 1;
+                if (currentSpawnTimeout <= 0)
                 {
-                    CreateParticle();
+                    for(var i = 0; i < SpawnRate; i++)
+                        CreateParticle();
+
+                    currentSpawnTimeout = SpawnTimeout;
                 }
-                spawn -= spawnAmount;
             }
             
             Particle[] copy = new Particle[particles.Count];

@@ -44,7 +44,8 @@ namespace Platformer.Main
 
         // player-related vars
 
-        private float dirOffsetX = 0;
+        private float offsetX = 0;
+        private float offsetY = -Globals.TILE;
 
         // background vars
 
@@ -109,13 +110,23 @@ namespace Platformer.Main
                 if (target is Player)
                 {
                     var dir = (target as Player).Direction;
-
-                    dirOffsetX += Math.Sign((int)dir) * 1f;
-                    dirOffsetX = dirOffsetX.Clamp(-4 * Globals.TILE, 4 * Globals.TILE);
+                    
+                    switch ((target as Player).State)
+                    {
+                        
+                        case Player.PlayerState.OBTAIN:
+                        case Player.PlayerState.DEAD:
+                            offsetX *= .9f;
+                            break;
+                        default:
+                            offsetX += Math.Sign((int)dir) * 1f;
+                            offsetX = offsetX.Clamp(-4 * Globals.TILE, 4 * Globals.TILE);                            
+                            break;
+                    }
                 }
 
-                var tarX = Math.Min(Math.Max(target.X + dirOffsetX, CurrentRoom.X + .5f * ViewWidth), CurrentRoom.X + CurrentRoom.BoundingBox.Width - .5f * ViewWidth);
-                var tarY = Math.Min(Math.Max(target.Y - Globals.TILE, CurrentRoom.Y + .5f * ViewHeight), CurrentRoom.Y + CurrentRoom.BoundingBox.Height - .5f * ViewHeight);
+                var tarX = Math.Min(Math.Max(target.X + offsetX, CurrentRoom.X + .5f * ViewWidth), CurrentRoom.X + CurrentRoom.BoundingBox.Width - .5f * ViewWidth);
+                var tarY = Math.Min(Math.Max(target.Y + offsetY, CurrentRoom.Y + .5f * ViewHeight), CurrentRoom.Y + CurrentRoom.BoundingBox.Height - .5f * ViewHeight);
 
                 if (Math.Abs(tarY - Position.Y) > 2 * Globals.TILE || Math.Abs(target.YVel) > 3)
                     dyVel = Math.Max(dyVel - .1f, 1);
@@ -135,7 +146,7 @@ namespace Platformer.Main
 
                     if (CurrentRoom != null)
                     {
-                        dirOffsetX = 0;
+                        offsetX = 0;
                         state = State.RoomTransition;
 
                         if (CurrentRoom.Background != -1)

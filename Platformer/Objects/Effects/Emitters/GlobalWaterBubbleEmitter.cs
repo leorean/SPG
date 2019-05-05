@@ -20,30 +20,35 @@ namespace Platformer.Objects.Effects.Emitters
         {
             var room = RoomCamera.Current.CurrentRoom;
 
-            var posX = room.X + RND.Int((int)room.BoundingBox.Width);
-            var posY = room.Y + RND.Int((int)room.BoundingBox.Height);
-
-            int tx = MathUtil.Div(posX, Globals.TILE);
-            int ty = MathUtil.Div(posY, Globals.TILE);
-
-            var inWater = (GameManager.Current.Map.LayerData[2].Get(tx, ty) != null);
-
-            if (ObjectManager.CollisionPoint<Solid>(posX, posY).Count > 0)
-            {
-                inWater = false;
-            }
-
-            Alpha = 0;
-
-            if (!inWater)
+            if (room == null)
                 LifeTime = 0;
             else
             {
-                Scale = new Vector2(.5f, .5f);
-                LifeTime = 600;
-                Position = new Vector2(posX, posY);
+                var posX = room.X + RND.Int((int)room.BoundingBox.Width);
+                var posY = room.Y + RND.Int((int)room.BoundingBox.Height);
 
-                sinus = (float)(RND.Next * 2 * Math.PI);
+                int tx = MathUtil.Div(posX, Globals.TILE);
+                int ty = MathUtil.Div(posY, Globals.TILE);
+
+                var inWater = (GameManager.Current.Map.LayerData[2].Get(tx, ty) != null);
+
+                if (ObjectManager.CollisionPoint<Solid>(posX, posY).Count > 0)
+                {
+                    inWater = false;
+                }
+
+                Alpha = 0;
+
+                if (!inWater)
+                    LifeTime = 0;
+                else
+                {
+                    Scale = new Vector2(.5f, .5f);
+                    LifeTime = 600;
+                    Position = new Vector2(posX, posY);
+
+                    sinus = (float)(RND.Next * 2 * Math.PI);
+                }
             }
         }
         
@@ -83,19 +88,13 @@ namespace Platformer.Objects.Effects.Emitters
         public GlobalWaterBubbleEmitter(float x, float y, GameObject parent) : base(x, y)
         {
             Parent = parent;
-            
-            SpawnRate = .5f;            
+
+            SpawnRate = 2;
         }
         
         public override void CreateParticle()
         {
-            var part = new WaterBubbleParticle(this);
-
-            //particleColors = new List<Color>();
-            //particleColors.Add(new Color(255, 255, 255));
-            //particleColors.Add(new Color(206, 255, 255));
-            //particleColors.Add(new Color(168, 248, 248));
-            //particleColors.Add(new Color(104, 216, 248));
+            var part = new WaterBubbleParticle(this);            
         }
 
         public override void Update(GameTime gameTime)

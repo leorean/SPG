@@ -46,6 +46,8 @@
     <Compile Include="MainGame.cs" />
     <Compile Include="Objects\Common.cs" />
     <Compile Include="Objects\Effects\Emitters\GlobalWaterBubbleEmitter.cs" />
+    <Compile Include="Objects\Effects\Emitters\ObtainParticleEmitter.cs" />
+    <Compile Include="Objects\Effects\Emitters\ObtainShineEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\OuchEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\PlayerLevitationEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\SaveBurstEmitter.cs" />
@@ -58,6 +60,7 @@
     <Compile Include="Objects\Main\AssetManager.cs" />
     <Compile Include="Objects\Main\GameManager.cs" />
     <Compile Include="Objects\Main\HUD.cs" />
+    <Compile Include="Objects\Main\MessageBox.cs" />
     <Compile Include="Objects\Main\RoomCamera.cs" />
     <Compile Include="Objects\Main\RoomObjectLoader.cs" />
     <Compile Include="Objects\Main\SaveGame.cs" />

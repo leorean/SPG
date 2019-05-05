@@ -1,6 +1,7 @@
 ﻿using Platformer.Main;
 using Platformer.Objects.Items;
 using SPG.Objects;
+using SPG.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -23,6 +24,11 @@ namespace Platformer.Objects.Main
                     var x = (int)data["x"];
                     var y = (int)data["y"];
 
+                    if (!((float)x).In(room.X, room.X + room.BoundingBox.Width) || !((float)y).In(room.Y, room.Y + room.BoundingBox.Height))
+                    {
+                        continue;
+                    }
+
                     var type = data["name"].ToString();
 
                     if (type == "item")
@@ -34,9 +40,8 @@ namespace Platformer.Objects.Main
                         {
                             case 0: // ability item: push
                                 var item = new AbilityItem(x + 8, y + 8, room, PlayerAbility.PUSH, itemName);
-                                item.Texture = AssetManager.ItemSprites[0];
+                                item.Texture = AssetManager.ItemSprites[0];                                
                                 break;
-
                             // TODO: add other item types, collectables etc.
                         }                        
                     }                    
