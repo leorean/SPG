@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objecttypes>
+ <objecttype name="chest" color="#ffaa00">
+  <property name="chestType" type="int" default="0"/>
+  <property name="value" type="int" default="0"/>
+ </objecttype>
+ <objecttype name="door" color="#b9ff35">
+  <property name="tx" type="int" default="0"/>
+  <property name="ty" type="int" default="0"/>
+ </objecttype>
+ <objecttype name="item" color="#61ffdd">
+  <property name="itemName" type="string"/>
+  <property name="itemType" type="int" default="-1"/>
+ </objecttype>
+ <objecttype name="player" color="#ffffff"/>
+ <objecttype name="room" color="#ffec9c">
+  <property name="bg" type="int" default="-1"/>
+ </objecttype>
+ <objecttype name="sign" color="#e5ffe5">
+  <property name="text" type="string"/>
+ </objecttype>
+</objecttypes>

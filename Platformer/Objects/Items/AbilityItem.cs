@@ -22,16 +22,16 @@ namespace Platformer.Objects.Items
 
         public PlayerAbility Ability { get; private set; }
 
+        public string Text { get; set; }
+
         private State state = State.IDLE;
 
         private Player player;
         private float yDist = -3;
-
         private float sin = 0;
-
+        
         public ObtainShineEmitter ObtainShineEmitter { get; private set; }
         private ObtainParticleEmitter obtainParticleEmitter;
-        private float lightScale = .2f;
         
         public AbilityItem(float x, float y, Room room, PlayerAbility ability, string name = null) : base(x, y, room, name)
         {
@@ -52,16 +52,14 @@ namespace Platformer.Objects.Items
         {
             base.Update(gameTime);
 
-            if (GameManager.Current.Player.Stats.Abilities.HasFlag(Ability))
-            {
-                Destroy();
-            }
-            Visible = true;
-
             sin = (float)((sin + .1f) % (2 * Math.PI));
             
             if (state == State.IDLE)
             {
+                if (GameManager.Current.Player.Stats.Abilities.HasFlag(Ability))
+                    Destroy();
+                Visible = true;
+
                 Move(0, (float)Math.Sin(sin) * .1f);
 
                 player = this.CollisionBounds<Player>(X, Y).FirstOrDefault();
@@ -81,6 +79,13 @@ namespace Platformer.Objects.Items
                     player.State = Player.PlayerState.OBTAIN;
                     Visible = true;
                     state = State.RISING;
+
+                    var msgBox = new MessageBox(Text, Name);
+                    msgBox.OnCompleted = () => {
+
+                        player.Stats.Abilities |= Ability;                        
+                        state = State.TAKEN;
+                    };
                 }
             }
             if (state == State.RISING)
@@ -90,19 +95,33 @@ namespace Platformer.Objects.Items
 
                 ObtainShineEmitter.Active = true;
                 obtainParticleEmitter.Active = true;
+            }
 
-                //lightScale = Math.Min(lightScale + .005f, 1f);
-                //ObtainShineEmitter.GlowScale = lightScale;
-                //ObtainShineEmitter.GlowAlpha = Math.Min(ObtainShineEmitter.GlowAlpha + .001f, .125f);
+            if (state == State.TAKEN)
+            {
+                ObtainShineEmitter.Active = false;
+                obtainParticleEmitter.Active = false;
+
+                XVel = (player.X - Position.X) / 12f + .8f * player.XVel;
+                YVel = (player.Y - Position.Y) / 12f + .8f * player.YVel;
+                Move(XVel, YVel);
+                
+                if (Math.Abs(X - player.X) < 2 && Math.Abs(Y - player.Y) < 2)
+                {
+                    player.State = Player.PlayerState.IDLE;
+                    var eff = new SaveBurstEmitter(X, Y);
+                    Destroy();
+                }
             }
 
             ObtainShineEmitter.Position = Position;
-            obtainParticleEmitter.Position = Position;
+            obtainParticleEmitter.Position = Position;            
         }
 
         public override void Take()
         {
             // save to item list so it won't respawn
+            // -> for ability items the check is done via ability flag already
         }
     }
 }

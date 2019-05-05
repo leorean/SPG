@@ -204,6 +204,14 @@ namespace Platformer.Objects.Main
 
             // ++++ input ++++
 
+            if (ObjectManager.Exists<MessageBox>())
+            {
+                input.Enabled = false;
+            } else
+            {
+                input.Enabled = true;
+            }
+
             input.Update(gameTime);
             
             var k_leftPressed = input.IsKeyPressed(Keys.Left, Input.State.Pressed);
@@ -235,7 +243,6 @@ namespace Platformer.Objects.Main
                     Position = new Vector2(Position.X, Position.Y - 9 * Globals.TILE);
                 if (k_downPressed)
                     Position = new Vector2(Position.X, Position.Y + 9 * Globals.TILE);
-
             }
             if (input.IsKeyPressed(Keys.H, Input.State.Pressed))
                 Hit(1);
@@ -255,13 +262,13 @@ namespace Platformer.Objects.Main
             if (input.IsKeyPressed(Keys.O, Input.State.Pressed))
             {
                 //var ouch = new OuchEmitter(X, Y);
-                var message = new MessageBox(0, 0, "Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!Hello World!", "Title");
+                //var message = new MessageBox("Hello World!\nHello World!\nHello World!|What is going on here?!\nI have no idea...|Wow.", "Title");
+                var message = new MessageBox("Hello 'World' what 'is' going 'on'!\nHello World!\nHello World!|What is going on here?!\nI have no idea...|Wow.", "Title");
             }
 
             // gamepad overrides keyboard input if pussible
             if (input.GamePadEnabled)
             {
-
                 k_leftPressed = input.DirectionPressedFromStick(Input.Direction.LEFT, Input.Stick.LeftStick, Input.State.Pressed);
                 k_leftHolding = input.DirectionPressedFromStick(Input.Direction.LEFT, Input.Stick.LeftStick, Input.State.Holding);
                 k_leftReleased = input.DirectionPressedFromStick(Input.Direction.LEFT, Input.Stick.LeftStick, Input.State.Released);

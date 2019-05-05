@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Platformer.Main;
+using SPG;
 using SPG.Draw;
 using SPG.Objects;
 using System;
@@ -13,15 +15,39 @@ namespace Platformer.Objects.Main
 {
     public class MessageBox : GameObject
     {
-        string text;
+        List<string> texts;
         Font font;
         int maxWidth;
 
-        int offY = 5 * Globals.TILE;
+        int offY = 6 * Globals.TILE;
+        int page = 0;
+        string curText = "";
+        float sin = 0;
 
-        public MessageBox(float x, float y, string text, string name = null) : base(x, y, name)
+        Input input;
+
+        int timeOut;
+
+        public Action OnCompleted;
+
+        /// <summary>
+        /// Creates a new message box. Multiple pages can be created by adding '|' as separator.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="text"></param>
+        /// <param name="name"></param>
+        public MessageBox(string text, string name = null) : base(0, 0, name)
         {
-            this.text = text;
+            input = new Input();
+
+            texts = new List<string>();
+
+            var split = text.Split('|');
+
+            foreach (var t in split)
+                texts.Add(t);
+            
             Depth = Globals.LAYER_FONT - .001f;
 
             Texture = AssetManager.MessageBoxSprite;
@@ -33,19 +59,107 @@ namespace Platformer.Objects.Main
             maxWidth = RoomCamera.Current.ViewWidth - Globals.TILE - 4;
         }
 
+        ~MessageBox()
+        {
+            input = null;
+        }
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
+            input.Update(gameTime);
+
+            var kUpPressed = input.IsKeyPressed(Keys.Up, Input.State.Pressed);
+            var kDownPressed = input.IsKeyPressed(Keys.Down, Input.State.Pressed);
+
+            var kAny = input.IsAnyKeyPressed();
+
+            if (input.GamePadEnabled)
+            {
+                kUpPressed = input.DirectionPressedFromStick(Input.Direction.UP, Input.Stick.LeftStick, Input.State.Pressed);
+                kDownPressed = input.DirectionPressedFromStick(Input.Direction.DOWN, Input.Stick.LeftStick, Input.State.Pressed);
+                kAny = input.IsAnyButtonPressed();
+            }
+
             Position = new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY + offY);
             
+            if (kUpPressed)
+            {
+                if (page != 0)
+                    curText = "";
+
+                page = Math.Max(page - 1, 0);
+            }
+            else if (kDownPressed)
+            {
+                if (page == texts.Count - 1)
+                {
+                    if (curText.Length == texts[page].Length)
+                    {
+                        OnCompleted?.Invoke();
+                        OnCompleted = null;
+                        Destroy();
+                    }
+                }
+                if (curText.Length == texts[page].Length)
+                {
+                    if (page < texts.Count - 1)
+                        curText = "";
+                    else
+                        curText = texts[page];
+
+                    page = Math.Min(page + 1, texts.Count - 1);
+                } else
+                {
+                    //curText = texts[page];
+                    //timeOut = 0;
+                }
+            } else if (kAny)
+            {
+                timeOut = 0;
+            }
+
+            timeOut = Math.Max(timeOut - 1, 0);
+            if (timeOut == 0)
+            {
+                if (curText.Length < texts[page].Length)
+                {
+                    curText = curText + texts[page].ElementAt(curText.Length);
+                }
+
+                timeOut = 3;
+            }
+            
+            sin = (float)((sin + .1) % (2 * Math.PI));
         }
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
-            base.Draw(sb, gameTime);
+            //base.Draw(sb, gameTime);
 
-            font.Draw(sb, X + 8 + 2, Y + 8, text, maxWidth);
+            var T = Globals.TILE;
+            var z = (float)Math.Sin(sin);
+
+            sb.Draw(Texture, Position, new Rectangle(0,0, RoomCamera.Current.ViewWidth, 3 * Globals.TILE), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth);
+            
+            if (page == 0)
+            {
+                sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 2 * T + z), new Rectangle(1 * T, 3 * T, T, T), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
+            }
+            else if (page < texts.Count - 1)
+            {
+                sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 0 * T - z), new Rectangle(0 * T, 3 * T, T, T), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
+                sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 2 * T + z), new Rectangle(1 * T, 3 * T, T, T), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
+            } else
+            {
+                sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 2 * T + z), new Rectangle(2 * T, 3 * T, T, T), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
+            }
+
+            
+
+            if (!string.IsNullOrEmpty(curText))
+                font.Draw(sb, X + 8 + 2, Y + 8 + 2, curText, maxWidth);
         }
     }
 }

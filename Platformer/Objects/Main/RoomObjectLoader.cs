@@ -35,12 +35,14 @@ namespace Platformer.Objects.Main
                     {
                         var itemType = data.ContainsKey("itemType") ? (int)data["itemType"] : -1;
                         var itemName = data.ContainsKey("itemName") ? data["itemName"].ToString() : "-unknown-";
+                        var itemText = data.ContainsKey("text") ? data["text"].ToString() : "-unknown-";
 
                         switch (itemType)
                         {
                             case 0: // ability item: push
                                 var item = new AbilityItem(x + 8, y + 8, room, PlayerAbility.PUSH, itemName);
-                                item.Texture = AssetManager.ItemSprites[0];                                
+                                item.Texture = AssetManager.ItemSprites[0];
+                                item.Text = itemText;
                                 break;
                             // TODO: add other item types, collectables etc.
                         }                        
