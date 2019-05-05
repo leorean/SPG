@@ -11,18 +11,12 @@ namespace SPG
     {
         public enum State
         {
-            Pressed,
-            Released,
-            Holding
+            Pressed, Released, Holding
         }
 
         public enum Direction
         {
-            NONE,
-            LEFT,
-            RIGHT,
-            UP,
-            DOWN
+            NONE, LEFT, RIGHT, UP, DOWN
         }
 
         public enum Stick
@@ -52,6 +46,8 @@ namespace SPG
         private bool[] lastUp;
         private bool[] lastDown;
 
+        public bool Enabled { get; set; }
+
         public Input()
         {
             _keyboardState = new KeyboardState();
@@ -71,11 +67,14 @@ namespace SPG
             lastLeft = new[] { false, false };
             lastRight = new[] { false, false };
             lastUp = new[] { false, false };
-            lastDown = new[] { false, false };            
+            lastDown = new[] { false, false };
+
+            Enabled = true;
         }
 
         public Vector2 LeftStick()
         {
+            if (!Enabled) return Vector2.Zero;
             if (!GamePadEnabled) return Vector2.Zero;
 
             return _gamePadState.ThumbSticks.Left;
@@ -83,6 +82,7 @@ namespace SPG
 
         public Vector2 RightStick()
         {
+            if (!Enabled) return Vector2.Zero;
             if (!GamePadEnabled) return Vector2.Zero;
 
             return _gamePadState.ThumbSticks.Right;
@@ -90,6 +90,8 @@ namespace SPG
         
         public bool DirectionPressedFromStick(Direction direction, Stick stick, State keyState = State.Pressed)
         {
+            if (!Enabled) return false;
+
             var i = (int)stick;
             
             var leftPressed = left[i] && !lastLeft[i];
@@ -118,7 +120,6 @@ namespace SPG
                         case Direction.DOWN: return downPressed;
                         default: return false;
                     }
-                //return _keyboardState.IsKeyDown(key) && !_lastKeyboardState.IsKeyDown(key);
                 case State.Released:
                     switch (direction)
                     {
@@ -128,7 +129,6 @@ namespace SPG
                         case Direction.DOWN: return downReleased;
                         default: return false;
                     }
-                //return !_keyboardState.IsKeyDown(key) && _lastKeyboardState.IsKeyDown(key);
                 case State.Holding:
                     switch (direction)
                     {
@@ -138,13 +138,24 @@ namespace SPG
                         case Direction.DOWN: return downHolding;
                         default: return false;
                     }
-                //return _keyboardState.IsKeyDown(key) && _lastKeyboardState.IsKeyDown(key);
                 default: return false;
             }
         }
 
+        public bool IsAnyKeyPressed()
+        {
+            if (!Enabled) return false;
+
+            var defaultState = new KeyboardState();
+            return _keyboardState != defaultState;
+
+            //return _keyboardState.GetPressedKeys().Length > 0;
+        }
+
         public bool IsKeyPressed(Keys key, State keyState = State.Holding)
         {
+            if (!Enabled) return false;
+            
             switch (keyState)
             {
                 case State.Pressed:
@@ -157,8 +168,21 @@ namespace SPG
             }
         }
 
+        public bool IsAnyButtonPressed()
+        {
+            if (!Enabled) return false;
+
+            if (!GamePadEnabled)
+                return false;
+
+            var defaultState = new GamePadState();
+            return _gamePadState != defaultState;
+        }
+
         public bool IsButtonPressed(Buttons key, State keyState = State.Pressed)
         {
+            if (!Enabled) return false;
+
             if (!GamePadEnabled)
                 return false;
 

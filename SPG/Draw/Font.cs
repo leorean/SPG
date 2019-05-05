@@ -9,6 +9,25 @@ using System.Diagnostics;
 
 namespace SPG.Draw
 {
+    public static class StringExtensions
+    {
+        public static List<int> AllIndexesOf(this string str, string value)
+        {
+            List<int> indices = new List<int>();
+
+            if (String.IsNullOrEmpty(value))
+                return indices;
+            
+            for (int i = 0; ; i += value.Length)
+            {
+                i = str.IndexOf(value, i);
+                if (i == -1)
+                    return indices;
+                indices.Add(i);
+            }
+        }
+    }
+
     public class Font
     {
         public enum HorizontalAlignment
@@ -58,6 +77,7 @@ namespace SPG.Draw
         
         public float Depth { get; set; } = Globals.LAYER_FONT;
         public Color Color { get; set; } = Color.White;
+        public Color HighlightColor { get; set; } = Color.LimeGreen;
 
         // private
 
@@ -115,6 +135,7 @@ namespace SPG.Draw
 
         /// <summary>
         /// Draw text at a position, optionally limiting to a maxWidth in pixels.
+        /// \n will make newlines, enclosing a word like 'this' will highlight it with the hightlight color.
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
@@ -124,14 +145,7 @@ namespace SPG.Draw
         {
             Draw(sb, x, y, text.ToString(), maxWidth, scale, depth);
         }
-
-        /// <summary>
-        /// Draw text at a position, optionally limiting to a maxWidth in pixels.
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="text"></param>
-        /// <param name="maxWidth"></param>     
+        
         internal void Draw(SpriteBatch sb, float x, float y, string text, int maxWidth = 0, float scale = 1f, float? depth = null)
         {
             //var sw = Stopwatch.StartNew();
@@ -151,18 +165,31 @@ namespace SPG.Draw
                 texts.Add(textObject);
                 
                 var line = text.Split('\n');
-
+                
                 textObject.LineTextures = new List<Texture2D>();
                 
                 // prepare
                 for (var l = 0; l < line.Length; l++)
                 {
+                    bool highLight = false;
+
                     var txt = line[l];
+                    var highList = txt.AllIndexesOf("'");
+                    
                     Texture2D word = null;
                     for (var i = 0; i < txt.Length; i++)
                     {
                         var c = txt[i];
                         var tex = glyphs.Where(o => o.Key == c).FirstOrDefault().Value;
+                        
+                        if (c == '\'')
+                        {
+                            highLight = !highLight;
+                            continue;
+                        }
+
+                        if (highLight)
+                            tex = tex.ReplaceColor(Color, HighlightColor);
 
                         // draw first texture when glyph is not found in set.
                         if (c != '\n' && tex == null)
@@ -217,7 +244,8 @@ namespace SPG.Draw
                     }
 
                     var pos = new Vector2(posx, posy + i * lineHeight);
-                    sb.Draw(textObject.LineTextures[i], pos, null, Color, 0, Vector2.Zero, scale, SpriteEffects.None, (depth == null) ? Depth : (float)depth);
+                    if (textObject.LineTextures[i] != null)
+                        sb.Draw(textObject.LineTextures[i], pos, null, Color, 0, Vector2.Zero, scale, SpriteEffects.None, (depth == null) ? Depth : (float)depth);
                 }
             }       
         }

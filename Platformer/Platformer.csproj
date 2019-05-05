@@ -56,6 +56,7 @@
     <Compile Include="Objects\Effects\Emitters\WaterSplashEmitter.cs" />
     <Compile Include="Objects\Effects\SingularEffect.cs" />
     <Compile Include="Objects\Items\AbilityItem.cs" />
+    <Compile Include="Objects\Items\Coin.cs" />
     <Compile Include="Objects\Items\Item.cs" />
     <Compile Include="Objects\Level\Mushroom.cs" />
     <Compile Include="Objects\Main\AssetManager.cs" />

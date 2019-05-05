@@ -15,6 +15,7 @@ namespace Platformer.Objects.Main
         private int maxHP;
         private float mp;
         private int maxMP;
+        private int coins;
 
         public Texture2D Texture { get; set; }
 
@@ -41,6 +42,7 @@ namespace Platformer.Objects.Main
             maxHP = stats.MaxHP;
             mp = player.MP;
             maxMP = stats.MaxMP;
+            coins = stats.Coins;
         }
 
         public void Draw(SpriteBatch sb, GameTime gameTime)
@@ -55,6 +57,7 @@ namespace Platformer.Objects.Main
 
             font.Draw(sb, x + 2, y + 2, $"HP: {hp}/{maxHP}", scale: .5f, depth: .991f);
             font.Draw(sb, x + 2, y + 2 + 9, $"MP: {mp}/{maxMP}", scale: .5f, depth: .991f);
+            font.Draw(sb, x + 2, y + 2 + 18, $"Coins: {coins}", scale: .5f, depth: .991f);
 
             //font.Draw(sb, x, y, "24/50", scale:0.5f);
 

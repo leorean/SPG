@@ -64,6 +64,29 @@ namespace SPG.Draw
         }
 
         /// <summary>
+        /// Replaces one specific color and returns a new texture
+        /// </summary>
+        /// <param name="tex"></param>
+        /// <param name="c1"></param>
+        /// <param name="c2"></param>
+        /// <returns></returns>
+        public static Texture2D ReplaceColor(this Texture2D tex, Color c1, Color c2)
+        {
+            Color[] data = tex.GetPixels();
+            Color[] replaced = new Color[data.Length];
+            var newTexture = new Texture2D(tex.GraphicsDevice, tex.Width, tex.Height);
+
+            for (var i = 0; i < data.Length; i++)
+            {
+                var n = (data[i] == c1) ? c2 : data[i];
+                replaced[i] = n;
+            }
+
+            newTexture.SetData(replaced);
+            return newTexture;
+        }
+
+        /// <summary>
         /// Appends a texture on the right side of the current one. Height must be equal.
         /// </summary>
         /// <param name="tex"></param>

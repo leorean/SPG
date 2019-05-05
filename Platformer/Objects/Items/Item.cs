@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Platformer.Objects.Main;
 using SPG.Objects;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace Platformer.Objects.Items
     {
         // properties
 
-        // public bool Taken { get; private set; }
+        public bool Taken { get; set; }
 
         // constructor
 
@@ -38,6 +39,6 @@ namespace Platformer.Objects.Items
 
         // methods
 
-        public abstract void Take();
+        public abstract void Take(Player player);
     }
 }

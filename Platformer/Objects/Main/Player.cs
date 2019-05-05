@@ -27,6 +27,7 @@ namespace Platformer.Objects.Main
         }
     }
     
+    [Serializable]
     public class PlayerStats
     {
         public int MaxHP { get; set; } = 0;
@@ -36,6 +37,20 @@ namespace Platformer.Objects.Main
         public PlayerAbility Abilities { get; set; } = PlayerAbility.NONE;
 
         public List<Item> Items { get; set; } = new List<Item>();
+
+        public Dictionary<int, int> CollectedCoins { get; private set; } = new Dictionary<int, int>();
+
+        public int Coins {
+            get
+            {
+                var val = 0;
+                foreach(var c in CollectedCoins)
+                {
+                    val += c.Value;
+                }
+                return val;
+            }
+        }
     }
 
     [Flags]
@@ -119,9 +134,21 @@ namespace Platformer.Objects.Main
 
         // misc. timers
 
-        private int lieTimer = 0;
-        //private int jumpHoldingTimer = 0;
+        private int coinCounter;
+        public int CoinCounter {
+            get => coinCounter;
+            set 
+            {
+                coinCounter = value;
+                coinTimeout = maxCoinTimeout;
+            }
+        }
+        private int coinTimeout;
+        private int maxCoinTimeout = 60;
+        private Font coinFont;
 
+        private int lieTimer = 0;
+        
         // constructor
 
         public Player(float x, float y) : base(x, y)
@@ -141,6 +168,11 @@ namespace Platformer.Objects.Main
 
             State = PlayerState.LIE;
             lieTimer = 30;
+
+            coinFont = AssetManager.DamageFont.Copy();
+            coinFont.Halign = Font.HorizontalAlignment.Center;
+            coinFont.Valign = Font.VerticalAlignment.Top;
+            coinFont.Color = new Color(153, 229, 80);
 
             // stats:
 
@@ -408,6 +440,12 @@ namespace Platformer.Objects.Main
 
             if (mpRegenTimeout == 0)
                 MP = Math.Min(MP + Stats.MPRegen, Stats.MaxMP);
+
+            // ++++ pickup coins ++++
+
+            var coin = this.CollisionBounds<Coin>(X, Y).FirstOrDefault();
+            if (coin != null)
+                coin.Take(this);
 
             // ++++ state logic ++++
 
@@ -1058,7 +1096,13 @@ namespace Platformer.Objects.Main
             // ++++ previous vars ++++
 
             lastDirection = Direction;
-            
+
+            // ++++ coin counter ++++
+
+            coinTimeout = Math.Max(coinTimeout - 1, 0);
+            if (coinTimeout == 0)
+                CoinCounter = 0;
+
             // ++++ draw <-> state logic ++++
 
             var cols = 8; // how many columns there are in the sheet
@@ -1187,6 +1231,14 @@ namespace Platformer.Objects.Main
         {
             base.Draw(sb, gameTime);
             
+            if (CoinCounter > 0)
+            {
+                float coinAlpha = coinTimeout / (.5f * maxCoinTimeout);
+                coinFont.Color = new Color(coinFont.Color, coinAlpha);
+                coinFont.Draw(sb, X, Y - Globals.TILE, $"+{CoinCounter}");
+            }
+            
+
             //sb.DrawPixel(X, Y + swimVector.Y, Color.AliceBlue);
             //sb.DrawPixel(X + swimVector.X, Y + swimVector.Y, Color.Red);
             //sb.DrawPixel(X, Y, Color.Blue);

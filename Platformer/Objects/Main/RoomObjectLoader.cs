@@ -1,5 +1,7 @@
 ﻿using Platformer.Main;
+using Platformer.Objects.Enemy;
 using Platformer.Objects.Items;
+using Platformer.Objects.Level;
 using SPG.Objects;
 using SPG.Util;
 using System;
@@ -8,12 +10,103 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SPG.Map;
 
 namespace Platformer.Objects.Main
 {
     public static class RoomObjectLoader
     {
-        public static void CreateRoomObjects(List<Dictionary<string, object>> objectData, Room room)
+
+        /// <summary>
+        /// loads objects from a given room. 
+        /// </summary>
+        public static void CreateRoomObjectsFromTiles(Room room)
+        {
+            if (room == null || GameManager.Current.LoadedRooms.Contains(room))
+                return;
+
+            var x = MathUtil.Div(room.X, RoomCamera.Current.ViewWidth) * 16;
+            var y = MathUtil.Div(room.Y, RoomCamera.Current.ViewHeight) * 9;
+            var w = MathUtil.Div(room.BoundingBox.Width, RoomCamera.Current.ViewWidth) * 16;
+            var h = MathUtil.Div(room.BoundingBox.Height, RoomCamera.Current.ViewHeight) * 9;
+
+            var index = GameManager.Current.Map.LayerDepth.ToList().IndexOf(GameManager.Current.Map.LayerDepth.First(o => o.Key.ToLower() == "fg"));
+
+            var data = GameManager.Current.Map.LayerData.ElementAt(index);
+
+            x = (int)((float)x).Clamp(0, data.Width);
+            y = (int)((float)y).Clamp(0, data.Height);
+
+            // load objects from tile data
+
+            var solidCount = 0;
+
+            for (int i = x; i < x + w; i++)
+            {
+                for (int j = y; j < y + h; j++)
+                {
+                    var t = data.Get(i, j);
+
+                    if (t == null || t.ID == -1)
+                        continue;
+
+                    switch (t.ID)
+                    {
+                        case 0: // platforms
+                        case 12:
+                            var platform = new Platform(i * Globals.TILE, j * Globals.TILE, room);
+                            break;
+                        case 387: // mushrooms
+                            var mushroom = new Mushroom(i * Globals.TILE, j * Globals.TILE, room)
+                            {
+                                Texture = GameManager.Current.Map.TileSet[t.ID]
+                            };
+                            t.Hide();
+                            break;
+                        case 576: // save-statues
+                            var saveSatue = new SaveStatue(i * Globals.TILE, j * Globals.TILE, room);
+                            t.Hide();
+                            break;
+                        case 512: // spikes
+                            var spike = new SpikeBottom(i * Globals.TILE, j * Globals.TILE, room);
+                            break;
+                        case 577:
+                            var bigSpike = new BigSpike(i * Globals.TILE, j * Globals.TILE, room);
+                            break;
+                        case 578: case 641: case 642: break;
+                        case 640: // push-blocks
+                            var pushBlock = new PushBlock(i * Globals.TILE, j * Globals.TILE, room);
+                            pushBlock.Texture = GameManager.Current.Map.TileSet[t.ID];
+                            t.Hide();
+                            break;
+
+                        // coins
+                        case 704: case 705: case 706: case 707: case 708: case 709: case 710:
+                            var coin = new Coin(i * Globals.TILE + 8, j * Globals.TILE + 8, room);
+                            coin.Value = (t.ID - 704).TileIDToCoinValue();
+                            t.Hide();
+                            break;
+                        default:
+                            var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room)
+                            {
+                            };
+                            solidCount++;
+                            break;
+                    }
+                }
+            }
+
+            // create room objects from object data for current room
+
+            var itemData = GameManager.Current.Map.ObjectData.FindDataByTypeName("item");
+
+            RoomObjectLoader.CreateRoomObjectsFromData(itemData, room);
+
+            //Debug.WriteLine("Created " + solidCount + " solid objects.");
+            GameManager.Current.LoadedRooms.Add(room);
+        }
+
+        public static void CreateRoomObjectsFromData(List<Dictionary<string, object>> objectData, Room room)
         {
             var camera = RoomCamera.Current;
 

@@ -24,6 +24,7 @@ namespace Platformer.Objects.Main
         public static TextureSet SaveStatueSprites { get; private set; }
 
         public static TextureSet ItemSprites { get; private set; }
+        public static TextureSet CoinSprites { get; private set; }
 
         public static Texture2D HUDSprite { get; private set; }
         public static Texture2D MessageBoxSprite { get; private set; }
@@ -56,6 +57,7 @@ namespace Platformer.Objects.Main
             HUDSprite = content.Load<Texture2D>("hud");
 
             ItemSprites = content.LoadTextureSet("items");
+            CoinSprites = content.LoadTextureSet("coins");
 
             // backgrounds
 

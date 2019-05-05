@@ -126,7 +126,7 @@ namespace Platformer.Objects.Items
             obtainParticleEmitter.Position = Position;            
         }
 
-        public override void Take()
+        public override void Take(Player player)
         {
             // save to item list so it won't respawn
             // -> for ability items the check is done via ability flag already

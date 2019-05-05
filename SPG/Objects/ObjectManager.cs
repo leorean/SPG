@@ -44,6 +44,11 @@ namespace SPG.Objects
             o.ID = int.Parse(strX + strY);
         }
 
+        public static bool Exists<T>() where T:GameObject
+        {
+            return Objects.Find(x => x is T) != null;
+        }
+
         public static bool Exists(GameObject target)
         {
             return target != null && Objects.Find(x => x == target) != null;

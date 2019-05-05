@@ -17,7 +17,7 @@ namespace Platformer.Objects.Main
 {    
     public class GameManager
     {
-        private List<Room> loadedRooms;
+        public List<Room> LoadedRooms { get; private set; }
         
         public Player Player;
         public GameMap Map;
@@ -26,11 +26,11 @@ namespace Platformer.Objects.Main
         
         private static GameManager instance;
         public static GameManager Current { get => instance; }
-
+        
         public GameManager()
         {
             instance = this;
-
+            
             // game setup
 
             SaveGame = new SaveGame("save.dat");            
@@ -48,87 +48,7 @@ namespace Platformer.Objects.Main
             SaveGame.Save();
         }
 
-        /// <summary>
-        /// loads objects from a given room. 
-        /// </summary>
-        public void LoadRoomObjects(Room room)
-        {
-            if (room == null || loadedRooms.Contains(room))
-                return;
-
-            var x = MathUtil.Div(room.X, RoomCamera.Current.ViewWidth) * 16;
-            var y = MathUtil.Div(room.Y, RoomCamera.Current.ViewHeight) * 9;
-            var w = MathUtil.Div(room.BoundingBox.Width, RoomCamera.Current.ViewWidth) * 16;
-            var h = MathUtil.Div(room.BoundingBox.Height, RoomCamera.Current.ViewHeight) * 9;
-
-            var index = Map.LayerDepth.ToList().IndexOf(Map.LayerDepth.First(o => o.Key.ToLower() == "fg"));
-
-            var data = Map.LayerData.ElementAt(index);
-
-            x = (int)((float)x).Clamp(0, data.Width);
-            y = (int)((float)y).Clamp(0, data.Height);
-
-            // load objects from tile data
-
-            var solidCount = 0;
-
-            for (int i = x; i < x + w; i++)
-            {
-                for (int j = y; j < y + h; j++)
-                {
-                    var t = data.Get(i, j);
-
-                    if (t == null || t.ID == -1)
-                        continue;
-
-                    switch (t.ID)
-                    {
-                        case 0: // platforms
-                        case 12:
-                            var platform = new Platform(i * Globals.TILE, j * Globals.TILE, room);
-                            break;
-                        case 387: // mushrooms
-                            var mushroom = new Mushroom(i * Globals.TILE, j * Globals.TILE, room)
-                            {
-                                Texture = Map.TileSet[t.ID]
-                            };
-                            t.Hide();
-                            break;
-                        case 576: // save-statues
-                            var saveSatue = new SaveStatue(i * Globals.TILE, j * Globals.TILE, room);
-                            t.Hide();
-                            break;
-                        case 512: // spikes
-                            var spike = new SpikeBottom(i * Globals.TILE, j * Globals.TILE, room);
-                            break;
-                        case 577:
-                            var bigSpike = new BigSpike(i * Globals.TILE, j * Globals.TILE, room);
-                            break;
-                        case 578: case 641: case 642: break;
-                        case 640: // push-blocks
-                            var pushBlock = new PushBlock(i * Globals.TILE, j * Globals.TILE, room);
-                            pushBlock.Texture = Map.TileSet[t.ID];
-                            t.Hide();
-                            break;
-                        default:
-                            var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room)
-                            {
-                            };
-                            solidCount++;
-                            break;
-                    }
-                }
-            }
-
-            // create room objects from object data for current room
-
-            var itemData = Map.ObjectData.FindDataByTypeName("item");
-
-            RoomObjectLoader.CreateRoomObjects(itemData, room);
-
-            //Debug.WriteLine("Created " + solidCount + " solid objects.");
-            loadedRooms.Add(room);
-        }
+        
 
         public void Initialize()
         {
@@ -136,8 +56,8 @@ namespace Platformer.Objects.Main
             RoomCamera.Current.OnRoomChange += (sender, rooms) =>
             {
                 // unload all rooms that exist
-                Room[] tmp = new Room[loadedRooms.Count];
-                loadedRooms.CopyTo(tmp);
+                Room[] tmp = new Room[LoadedRooms.Count];
+                LoadedRooms.CopyTo(tmp);
 
                 foreach (var room in tmp)
                     UnloadRoomObjects(room);
@@ -147,16 +67,16 @@ namespace Platformer.Objects.Main
 
                 // load new room + neighbors
                 var neighbors = rooms.Item2.Neighbors();
-                LoadRoomObjects(rooms.Item2);
+                RoomObjectLoader.CreateRoomObjectsFromTiles(rooms.Item2);
                 foreach (var n in neighbors)
-                    LoadRoomObjects(n);
+                    RoomObjectLoader.CreateRoomObjectsFromTiles(n);
             };
 
             // load room data for the camera
             var roomData = Map.ObjectData.FindDataByTypeName("room");
             RoomObjectLoader.CreateRoom(roomData);
 
-            loadedRooms = new List<Room>();
+            LoadedRooms = new List<Room>();
 
             RoomCamera.Current.SetBackgrounds(AssetManager.Backgrounds);
         }
@@ -180,7 +100,7 @@ namespace Platformer.Objects.Main
             var alive = ObjectManager.Objects.Where(o => !(o is Room) && !(o is Player)).ToList();
             alive.ForEach(o => o.Destroy());
 
-            loadedRooms.Remove(room);
+            LoadedRooms.Remove(room);
         }
 
         /// <summary>
@@ -222,9 +142,9 @@ namespace Platformer.Objects.Main
             }
 
             var neighbours = startRoom.Neighbors();
-            LoadRoomObjects(startRoom);
+            RoomObjectLoader.CreateRoomObjectsFromTiles(startRoom);
             foreach (var n in neighbours)
-                LoadRoomObjects(n);
+                RoomObjectLoader.CreateRoomObjectsFromTiles(n);
 
             // create player at start position and set camera target
 
@@ -242,16 +162,15 @@ namespace Platformer.Objects.Main
         /// </summary>
         public void UnloadLevel()
         {
-            Room[] roomList = new Room[loadedRooms.Count];
-            loadedRooms.CopyTo(roomList);
+            Room[] roomList = new Room[LoadedRooms.Count];
+            LoadedRooms.CopyTo(roomList);
 
             foreach (var room in roomList)
             {
                 UnloadRoomObjects(room);
             }
 
-            Player.Destroy();
-
+            Player.Destroy();            
             Player = null;
             RoomCamera.Current.Reset();
         }
@@ -259,7 +178,7 @@ namespace Platformer.Objects.Main
         internal void Update(GameTime gameTime)
         {
             // enable all solids from neighbors
-            foreach (var room in loadedRooms)
+            foreach (var room in LoadedRooms)
             {
                 ObjectManager.SetRegionEnabled<Solid>(room.X, room.Y, room.BoundingBox.Width, room.BoundingBox.Height, true);
             }
