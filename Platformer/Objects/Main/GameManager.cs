@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Platformer.Main;
+using Platformer.Objects.Effects.Emitters;
 using Platformer.Objects.Enemy;
 using Platformer.Objects.Level;
 using SPG.Map;
@@ -26,7 +27,9 @@ namespace Platformer.Objects.Main
         
         private static GameManager instance;
         public static GameManager Current { get => instance; }
-        
+
+        private GlobalWaterBubbleEmitter globalWaterEmitter;
+
         public GameManager()
         {
             instance = this;
@@ -104,6 +107,15 @@ namespace Platformer.Objects.Main
         }
 
         /// <summary>
+        /// Reloads the whole level.
+        /// </summary>
+        public void ReloadLevel()
+        {
+            UnloadLevel();
+            LoadLevel();
+        }
+
+        /// <summary>
         /// Loads the whole level.
         /// </summary>
         public void LoadLevel()
@@ -153,6 +165,8 @@ namespace Platformer.Objects.Main
             Player.Direction = direction;
             Player.AnimationTexture = AssetManager.PlayerSprites;
 
+            globalWaterEmitter = new GlobalWaterBubbleEmitter(spawnX, spawnY, Player);
+
             RoomCamera.Current.SetTarget(Player);
             MainGame.Current.HUD.SetTarget(Player);
         }
@@ -175,7 +189,7 @@ namespace Platformer.Objects.Main
             RoomCamera.Current.Reset();
         }
 
-        internal void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
             // enable all solids from neighbors
             foreach (var room in LoadedRooms)
@@ -183,10 +197,12 @@ namespace Platformer.Objects.Main
                 ObjectManager.SetRegionEnabled<Solid>(room.X, room.Y, room.BoundingBox.Width, room.BoundingBox.Height, true);
             }
 
+            ObjectManager.Enable<GlobalWaterBubbleEmitter>();
+
             if (RoomCamera.Current.CurrentRoom != null)
             {
                 ObjectManager.SetRegionEnabled<GameObject>(RoomCamera.Current.CurrentRoom.X, RoomCamera.Current.CurrentRoom.Y, RoomCamera.Current.CurrentRoom.BoundingBox.Width, RoomCamera.Current.CurrentRoom.BoundingBox.Height, true);
             }
-        }
+        }        
     }
 }

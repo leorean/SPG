@@ -15,12 +15,12 @@ namespace Platformer.Objects.Items
         public static Coin.CoinValue TileIDToCoinValue(this int i)
         {
             if (i == 0) return Coin.CoinValue.V1;
-            if (i == 1) return Coin.CoinValue.V5;
-            if (i == 2) return Coin.CoinValue.V10;
-            if (i == 3) return Coin.CoinValue.V20;
-            if (i == 4) return Coin.CoinValue.V50;
-            if (i == 5) return Coin.CoinValue.V100;
-            if (i == 6) return Coin.CoinValue.V200;
+            if (i == 1) return Coin.CoinValue.V2;
+            if (i == 2) return Coin.CoinValue.V3;
+            if (i == 3) return Coin.CoinValue.V4;
+            if (i == 4) return Coin.CoinValue.V5;
+            if (i == 5) return Coin.CoinValue.V6;
+            if (i == 6) return Coin.CoinValue.V7;
 
             throw new ArgumentException("Unable to parse tile ID to coin value!");
         }
@@ -30,7 +30,9 @@ namespace Platformer.Objects.Items
     {
         public enum CoinValue
         {
-            V1 = 1, V5 = 5, V10 = 10, V20 = 20, V50 = 50, V100 = 100, V200 = 200
+            V1 = 1, V2 = 2, V3 = 5, V4 = 10,
+            V5 = 50, V6 = 100,
+            V7 = 200
         }
 
         public CoinValue Value { get; set; }
@@ -79,7 +81,7 @@ namespace Platformer.Objects.Items
                 
                 if (alpha == 0)
                 {
-                    var eff = new SingularEffect(X, Y, 1);                    
+                    //var eff = new SingularEffect(X, Y, 1);                    
                     Destroy();
                 }
             }
@@ -94,22 +96,22 @@ namespace Platformer.Objects.Items
                 case CoinValue.V1:
                     row = 0;
                     break;
-                case CoinValue.V5:
+                case CoinValue.V2:
                     row = 1;
                     break;
-                case CoinValue.V10:
+                case CoinValue.V3:
                     row = 2;
                     break;
-                case CoinValue.V20:
+                case CoinValue.V4:
                     row = 3;
                     break;
-                case CoinValue.V50:
+                case CoinValue.V5:
                     row = 4;
                     break;
-                case CoinValue.V100:
+                case CoinValue.V6:
                     row = 5;
                     break;
-                case CoinValue.V200:
+                case CoinValue.V7:
                     row = 6;
                     break;                
             }

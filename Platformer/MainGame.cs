@@ -175,6 +175,9 @@ namespace Platformer
                 var posX = MathUtil.Div(GameManager.Current.Player.Position.X, Globals.TILE) * Globals.TILE + 8;
                 var posY = MathUtil.Div(GameManager.Current.Player.Position.Y, Globals.TILE) * Globals.TILE + 7;
 
+                Debug.WriteLine("Clearing all coins..");
+                GameManager.Current.Player.Stats.CollectedCoins.Clear();
+
                 GameManager.Current.Save(posX, posY);
 
                 Debug.WriteLine("Saved.");
@@ -200,8 +203,7 @@ namespace Platformer
 
             if (input.IsKeyPressed(Keys.R, Input.State.Pressed))
             {
-                GameManager.Current.UnloadLevel();
-                GameManager.Current.LoadLevel();                
+                GameManager.Current.ReloadLevel();
             }
 
             MouseState mouse = Mouse.GetState();

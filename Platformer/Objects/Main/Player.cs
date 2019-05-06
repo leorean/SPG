@@ -127,9 +127,7 @@ namespace Platformer.Objects.Main
         
         private float levitationSine;
         private PlayerLevitationEmitter levitationEmitter;
-
-        private GlobalWaterBubbleEmitter globalWaterEmitter;
-
+        
         private PushBlock pushBlock;
 
         // misc. timers
@@ -148,7 +146,9 @@ namespace Platformer.Objects.Main
         private Font coinFont;
 
         private int lieTimer = 0;
-        
+
+        private PlayerGhost ghost;
+
         // constructor
 
         public Player(float x, float y) : base(x, y)
@@ -178,8 +178,7 @@ namespace Platformer.Objects.Main
 
             Stats = new PlayerStats();
             
-            levitationEmitter = new PlayerLevitationEmitter(x, y, this);
-            globalWaterEmitter = new GlobalWaterBubbleEmitter(x, y, this);
+            levitationEmitter = new PlayerLevitationEmitter(x, y, this);            
         }
 
         ~Player()
@@ -425,7 +424,7 @@ namespace Platformer.Objects.Main
             {
                 Gravity = gravAir;
 
-                if (State == PlayerState.SWIM)
+                if (State == PlayerState.SWIM || State == PlayerState.SWIM_DIVE_IN || State == PlayerState.SWIM_TURN_AROUND)
                 {
                     YVel = -1.3f;
                     State = PlayerState.JUMP_UP;
@@ -640,6 +639,7 @@ namespace Platformer.Objects.Main
                     var mush = this.CollisionBounds<Mushroom>(X, Y).FirstOrDefault();
                     if (mush != null && !mush.Bouncing)
                     {
+                        lastGroundY = Y;
                         mush.Bounce();
                         YVel = -3;
                     }
@@ -897,13 +897,21 @@ namespace Platformer.Objects.Main
                     var waterAccY = 0.03f;
                     var waterVelMax = 1f;
 
+                    if (State == PlayerState.SWIM_DIVE_IN)
+                    {
+                        if (Direction == Direction.LEFT)
+                            XVel = Math.Min(XVel, 0);
+                        if (Direction == Direction.RIGHT)
+                            XVel = Math.Max(XVel, 0);
+                    }
+
                     if (k_leftHolding)
                     {
                         XVel = Math.Max(XVel - waterAccX, -waterVelMax);
                         if (sx < tSwimVecX)
                         {
                             Direction = Direction.LEFT;
-                            if (lastDirection == Direction.RIGHT)
+                            if (lastDirection == Direction.RIGHT && State != PlayerState.SWIM_DIVE_IN)
                             {
                                 ResetAnimation();
                                 State = PlayerState.SWIM_TURN_AROUND;
@@ -916,7 +924,7 @@ namespace Platformer.Objects.Main
                         if (sx > -tSwimVecX)
                         {
                             Direction = Direction.RIGHT;
-                            if (lastDirection == Direction.LEFT)
+                            if (lastDirection == Direction.LEFT && State != PlayerState.SWIM_DIVE_IN)
                             {
                                 ResetAnimation();
                                 State = PlayerState.SWIM_TURN_AROUND;
@@ -978,6 +986,11 @@ namespace Platformer.Objects.Main
             // death
             if (State == PlayerState.DEAD)
             {
+                if (ghost == null)
+                {
+                    ghost = new PlayerGhost(X, Y, Direction);                    
+                }
+
                 if (onGround)
                     XVel *= .8f;                
             }

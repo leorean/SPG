@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using SPG.Util;
+using SPG.View;
 
 namespace SPG.Objects
 {
@@ -149,9 +151,17 @@ namespace SPG.Objects
         {
             // the emitter doesn't draw itself
             //base.Draw(gameTime);
-            
+
+            // draw only particles which are within the camera bounds
+
             foreach (var part in particles)
-                part.Draw(sb, gameTime);
+            {
+                if (part.Position.X.In(Camera.Current.ViewX, Camera.Current.ViewX + Camera.Current.ViewWidth)
+                    && part.Position.Y.In(Camera.Current.ViewY, Camera.Current.ViewY + Camera.Current.ViewHeight))
+                {
+                    part.Draw(sb, gameTime);
+                }
+            }
         }        
     }    
 }

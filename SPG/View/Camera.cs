@@ -175,8 +175,13 @@ namespace SPG.View
         }
         #endregion
 
+        private static Camera instance;
+        public static Camera Current { get => instance; }
+
         public Camera(ResolutionRenderer resolutionRenderer)
         {
+            instance = this;
+
             ResolutionRenderer = resolutionRenderer;
             _zoom = 0.1f;
             _rotation = 0.0f;

@@ -6,6 +6,7 @@ using SPG.Objects;
 using SPG.Util;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,13 +52,13 @@ namespace Platformer.Objects.Effects.Emitters
                 }
             }
         }
-        
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
             sinus = (float)((sinus + .1f) % (2 * Math.PI));
-            
+
             YVel = Math.Max(YVel - .01f + (float)(RND.Next * .01f), -.25f);
             XVel = (float)Math.Sin(sinus) * .05f;
 
@@ -85,21 +86,52 @@ namespace Platformer.Objects.Effects.Emitters
 
     public class GlobalWaterBubbleEmitter : ParticleEmitter
     {
+        private Room room;
+        private int waterCount;
+
         public GlobalWaterBubbleEmitter(float x, float y, GameObject parent) : base(x, y)
         {
             Parent = parent;
 
-            SpawnRate = 2;
+            SpawnRate = 1;
         }
-        
+
         public override void CreateParticle()
         {
-            var part = new WaterBubbleParticle(this);            
+            var part = new WaterBubbleParticle(this);
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            // measure how many water tiles there are
+            if (room != RoomCamera.Current.CurrentRoom && RoomCamera.Current.CurrentRoom != null)
+            {
+                room = RoomCamera.Current.CurrentRoom;
+
+                var posX = room.X;
+                var posY = room.Y;
+
+                waterCount = 0;
+                for (int i = (int)room.X; i < room.X + room.BoundingBox.Width; i += Globals.TILE)
+                { 
+                    for (int j = (int)room.Y; j < room.Y + room.BoundingBox.Height; j += Globals.TILE)
+                    {
+                        int tx = MathUtil.Div(i, Globals.TILE);
+                        int ty = MathUtil.Div(j, Globals.TILE);
+
+                        if (GameManager.Current.Map.LayerData[2].Get(tx, ty) != null)
+                        {
+                            waterCount++;
+                        }
+                    }
+                }                
+            }
+
+            SpawnRate = 1;
+            if (particles.Count >= waterCount)
+                SpawnRate = 0;
         }
     }
 }
