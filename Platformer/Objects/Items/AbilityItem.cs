@@ -53,17 +53,12 @@ namespace Platformer.Objects.Items
             
             if (state == State.IDLE)
             {
+                // TODO: not necessary
                 if (GameManager.Current.Player.Stats.Abilities.HasFlag(Ability))
                     Destroy();
                 Visible = true;
 
-                Move(0, (float)Math.Sin(sin) * .1f);
-
-                player = this.CollisionBounds<Player>(X, Y).FirstOrDefault();
-                if (player != null)
-                {
-                    state = State.TAKING;
-                }
+                Move(0, (float)Math.Sin(sin) * .1f);                
             }
             if (state == State.TAKING)
             {
@@ -128,8 +123,10 @@ namespace Platformer.Objects.Items
 
         public override void Take(Player player)
         {
-            // save to item list so it won't respawn
-            // -> for ability items the check is done via ability flag already
+            if (state == State.IDLE)
+            {
+                state = State.TAKING;
+            }
         }
     }
 }

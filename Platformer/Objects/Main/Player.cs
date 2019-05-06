@@ -28,29 +28,17 @@ namespace Platformer.Objects.Main
     }
     
     [Serializable]
-    public class PlayerStats
+    public class GameStats
     {
-        public int MaxHP { get; set; } = 0;
-        public int MaxMP { get; set; } = 0;
-        public float MPRegen { get; set; } = 0;
+        public int MaxHP { get; set; } = 5;
+        public int MaxMP { get; set; } = 100;
+        public float MPRegen { get; set; } = 1;
         
         public PlayerAbility Abilities { get; set; } = PlayerAbility.NONE;
 
-        public List<Item> Items { get; set; } = new List<Item>();
+        public int Coins { get; set; } = 0;
 
-        public Dictionary<int, int> CollectedCoins { get; private set; } = new Dictionary<int, int>();
-
-        public int Coins {
-            get
-            {
-                var val = 0;
-                foreach(var c in CollectedCoins)
-                {
-                    val += c.Value;
-                }
-                return val;
-            }
-        }
+        public List<int> Items { get; set; } = new List<int>();
     }
 
     [Flags]
@@ -85,15 +73,8 @@ namespace Platformer.Objects.Main
 
         // stats 
 
-        private PlayerStats stats;
-        public PlayerStats Stats { get => stats;
-            set
-            {
-                stats = value;
-                HP = stats.MaxHP;
-                MP = stats.MaxMP;
-            }
-        }
+        //private GameStats stats;
+        public GameStats Stats { get => GameManager.Current.SaveGame.gameStats; }
         public int HP { get; set; }
         public float MP { get; set; }
         
@@ -174,11 +155,10 @@ namespace Platformer.Objects.Main
             coinFont.Valign = Font.VerticalAlignment.Top;
             coinFont.Color = new Color(153, 229, 80);
 
-            // stats:
+            levitationEmitter = new PlayerLevitationEmitter(x, y, this);
 
-            Stats = new PlayerStats();
-            
-            levitationEmitter = new PlayerLevitationEmitter(x, y, this);            
+            HP = Stats.MaxHP;
+            MP = Stats.MaxMP;
         }
 
         ~Player()
@@ -286,8 +266,8 @@ namespace Platformer.Objects.Main
                 // remove: flags &= ~flag
                 // toggle: flags ^= flag
 
-                stats.Abilities ^= PlayerAbility.PUSH;
-                stats.Abilities ^= PlayerAbility.LEVITATE;
+                Stats.Abilities ^= PlayerAbility.PUSH;
+                Stats.Abilities ^= PlayerAbility.LEVITATE;
             }
 
             if (input.IsKeyPressed(Keys.O, Input.State.Pressed))
@@ -366,9 +346,9 @@ namespace Platformer.Objects.Main
 
             var inWater = (GameManager.Current.Map.LayerData[2].Get(tx, ty) != null);
 
-            if (!stats.Abilities.HasFlag(PlayerAbility.CLIMB_WALL))
+            if (!Stats.Abilities.HasFlag(PlayerAbility.CLIMB_WALL))
                 onWall = false;
-            if (!stats.Abilities.HasFlag(PlayerAbility.CLIMB_CEIL))
+            if (!Stats.Abilities.HasFlag(PlayerAbility.CLIMB_CEIL))
                 onCeil = false;
 
             if (onWall)
@@ -440,11 +420,16 @@ namespace Platformer.Objects.Main
             if (mpRegenTimeout == 0)
                 MP = Math.Min(MP + Stats.MPRegen, Stats.MaxMP);
 
-            // ++++ pickup coins ++++
+            // ++++ pickup items ++++
 
-            var coin = this.CollisionBounds<Coin>(X, Y).FirstOrDefault();
-            if (coin != null)
-                coin.Take(this);
+            if (HP > 0)
+            {
+                var item = this.CollisionBounds<Item>(X, Y).FirstOrDefault();
+                if (item != null)
+                {
+                    item.Take(this);
+                }
+            }
 
             // ++++ state logic ++++
 
@@ -483,7 +468,7 @@ namespace Platformer.Objects.Main
                     {
                         XVel = Math.Min(XVel + .2f, maxVel);
 
-                        if (colSide != null && stats.Abilities.HasFlag(PlayerAbility.PUSH))
+                        if (colSide != null && Stats.Abilities.HasFlag(PlayerAbility.PUSH))
                             State = PlayerState.PUSH;
                     }
                     else
@@ -497,7 +482,7 @@ namespace Platformer.Objects.Main
                     {
                         XVel = Math.Max(XVel - .2f, -maxVel);
 
-                        if (colSide != null && stats.Abilities.HasFlag(PlayerAbility.PUSH))
+                        if (colSide != null && Stats.Abilities.HasFlag(PlayerAbility.PUSH))
                             State = PlayerState.PUSH;
                     }
                     else
@@ -657,7 +642,7 @@ namespace Platformer.Objects.Main
                         Direction = Direction.RIGHT;
                     XVel = Math.Min(XVel + .08f, maxVel);                    
                 }
-                if (stats.Abilities.HasFlag(PlayerAbility.LEVITATE))
+                if (Stats.Abilities.HasFlag(PlayerAbility.LEVITATE))
                 {
                     if (MP > 0) {
                         if (k_jumpPressed)
@@ -852,7 +837,7 @@ namespace Platformer.Objects.Main
                 XVel *= .9f;
                 YVel *= .85f;
 
-                if (Math.Abs(YVel) < .01f)
+                if (Math.Abs(YVel) < .21f)
                 {                    
                     State = PlayerState.SWIM;
                 }
@@ -947,9 +932,9 @@ namespace Platformer.Objects.Main
                     else
                     {
                         YVel = Math.Sign(YVel) * Math.Max(Math.Abs(YVel) - .02f, 0);
-                        if (YVel > 0)
+                        if (YVel > Gravity)
                             YVel -= Gravity;
-                    }                    
+                    }
                 }
                 
                 swimAngle = new Vector2(Math.Sign((int)Direction) * Math.Max(Math.Abs(sx), 1), sy).ToAngle() + 90;
@@ -988,7 +973,8 @@ namespace Platformer.Objects.Main
             {
                 if (ghost == null)
                 {
-                    ghost = new PlayerGhost(X, Y, Direction);                    
+                    ghost = new PlayerGhost(X, Y, Direction);
+                    ghost.Parent = this;
                 }
 
                 if (onGround)

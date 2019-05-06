@@ -12,7 +12,6 @@ namespace Platformer.Objects.Main
 {
     public static class AssetManager
     {
-
         // common textures & objects
 
         public static TextureSet TileSet { get; private set; }
@@ -26,6 +25,7 @@ namespace Platformer.Objects.Main
         // items etc.
 
         public static TextureSet ItemSprites { get; private set; }
+        public static TextureSet PotionSprites { get; private set; }
         public static TextureSet CoinSprites { get; private set; }
 
         // HUD
@@ -57,16 +57,18 @@ namespace Platformer.Objects.Main
             SaveStatueSprites = content.LoadTextureSet("save");
             PlayerSprites = content.LoadTextureSet("player", 16, 32);
             EffectSprites = content.LoadTextureSet("effects", 32, 32);
-
+            
             OuchSprite = content.Load<Texture2D>("ouch");
             WhiteCircleSprite = content.Load<Texture2D>("whiteCircle");
             FlashSprite = content.Load<Texture2D>("flash");
             PlayerGhostSprite = content.Load<Texture2D>("playerGhost");
+            
 
             MessageBoxSprite = content.Load<Texture2D>("messageBox");
             HUDSprite = content.Load<Texture2D>("hud");
 
             ItemSprites = content.LoadTextureSet("items");
+            PotionSprites = content.LoadTextureSet("potions");
             CoinSprites = content.LoadTextureSet("coins");
 
             // backgrounds

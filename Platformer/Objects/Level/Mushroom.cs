@@ -13,6 +13,7 @@ namespace Platformer.Objects.Level
     public class Mushroom : RoomObject
     {
         private float scale = 1f;
+        bool bounced;
 
         public bool Bouncing { get; private set; }
 
@@ -23,18 +24,25 @@ namespace Platformer.Objects.Level
 
         public void Bounce()
         {
-            scale = .5f;
+            bounced = true;            
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
+            if (bounced)
+            {
+                scale = .3f;
+                bounced = false;
+            }
+
             scale = Math.Min(scale + .05f, 1);
             Scale = new Vector2(1f, scale);
 
 
             Bouncing = (scale < 1f);
+            
         }
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)

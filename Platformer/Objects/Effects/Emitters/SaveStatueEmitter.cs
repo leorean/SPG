@@ -49,7 +49,7 @@ namespace Platformer.Objects.Effects.Emitters
 
     public class SaveStatueEmitter : ParticleEmitter
     {
-        List<Color> particleColors;
+        protected List<Color> particleColors;
 
         public SaveStatueEmitter(float x, float y) : base(x, y)
         {

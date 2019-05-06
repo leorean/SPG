@@ -2,6 +2,7 @@
 using Platformer.Main;
 using Platformer.Objects.Effects.Emitters;
 using Platformer.Objects.Enemy;
+using Platformer.Objects.Items;
 using Platformer.Objects.Level;
 using SPG.Map;
 using SPG.Objects;
@@ -28,12 +29,14 @@ namespace Platformer.Objects.Main
         private static GameManager instance;
         public static GameManager Current { get => instance; }
 
+        public List<int> NonRespawnableIDs { get; private set; }
+        
         private GlobalWaterBubbleEmitter globalWaterEmitter;
 
         public GameManager()
         {
             instance = this;
-            
+
             // game setup
 
             SaveGame = new SaveGame("save.dat");            
@@ -46,8 +49,8 @@ namespace Platformer.Objects.Main
         {
             SaveGame.playerPosition = new Vector2(posX, posY);
             SaveGame.playerDirection = Player.Direction;
-            SaveGame.playerStats = Player.Stats;
-            SaveGame.currentBG = RoomCamera.Current.CurrentBG;
+            SaveGame.gameStats = Player.Stats;
+            SaveGame.currentBG = RoomCamera.Current.CurrentBG;            
             SaveGame.Save();
         }
 
@@ -81,7 +84,7 @@ namespace Platformer.Objects.Main
 
             LoadedRooms = new List<Room>();
 
-            RoomCamera.Current.SetBackgrounds(AssetManager.Backgrounds);
+            RoomCamera.Current.SetBackgrounds(AssetManager.Backgrounds);            
         }
 
         public void UnloadRoomObjects(Room room)
@@ -125,13 +128,7 @@ namespace Platformer.Objects.Main
             var spawnY = (float)(int)playerData["y"] + 7.9f;
             var dir = (int)playerData["direction"];
             var direction = (dir == 1) ? Direction.RIGHT : Direction.LEFT;
-            var stats = new PlayerStats
-            {
-                MaxHP = 5,
-                MaxMP = 100,
-                MPRegen = 1
-            };
-
+            
             bool success = SaveManager.Load(ref SaveGame);
 
             if (success)
@@ -139,7 +136,6 @@ namespace Platformer.Objects.Main
                 spawnX = SaveGame.playerPosition.X;
                 spawnY = SaveGame.playerPosition.Y;
                 direction = SaveGame.playerDirection;
-                stats = SaveGame.playerStats;
             }
             RoomCamera.Current.CurrentBG = SaveGame.currentBG;
 
@@ -161,7 +157,6 @@ namespace Platformer.Objects.Main
             // create player at start position and set camera target
 
             Player = new Player(spawnX, spawnY);
-            Player.Stats = stats;
             Player.Direction = direction;
             Player.AnimationTexture = AssetManager.PlayerSprites;
 
@@ -169,6 +164,8 @@ namespace Platformer.Objects.Main
 
             RoomCamera.Current.SetTarget(Player);
             MainGame.Current.HUD.SetTarget(Player);
+
+            NonRespawnableIDs = new List<int>();            
         }
 
         /// <summary>
@@ -187,6 +184,11 @@ namespace Platformer.Objects.Main
             Player.Destroy();            
             Player = null;
             RoomCamera.Current.Reset();
+
+            // reset savegame (will be loaded and updates afterwards)
+            SaveGame = new SaveGame(SaveGame.FileName);
+
+            NonRespawnableIDs.Clear();
         }
 
         public void Update(GameTime gameTime)

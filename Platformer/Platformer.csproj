@@ -51,6 +51,8 @@
     <Compile Include="Objects\Effects\Emitters\ObtainShineEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\OuchEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\PlayerLevitationEmitter.cs" />
+    <Compile Include="Objects\Effects\Emitters\PotionBurstEmitter.cs" />
+    <Compile Include="Objects\Effects\Emitters\PotionEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\SaveBurstEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\SaveStatueEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\WaterSplashEmitter.cs" />
@@ -58,6 +60,7 @@
     <Compile Include="Objects\Items\AbilityItem.cs" />
     <Compile Include="Objects\Items\Coin.cs" />
     <Compile Include="Objects\Items\Item.cs" />
+    <Compile Include="Objects\Items\Potions.cs" />
     <Compile Include="Objects\Level\Mushroom.cs" />
     <Compile Include="Objects\Main\AssetManager.cs" />
     <Compile Include="Objects\Main\GameManager.cs" />

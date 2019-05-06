@@ -19,6 +19,8 @@ namespace Platformer.Objects.Effects
             Type = type;
             AnimationTexture = AssetManager.EffectSprites;
             DrawOffset = new Vector2(16, 16);
+
+            Visible = false;
         }
 
         public override void Update(GameTime gameTime)
@@ -34,9 +36,13 @@ namespace Platformer.Objects.Effects
                 case 0:                    
                     fAmount = 5;
                     break;
+                case 1:
+                    fAmount = 6;                    
+                    break;
             }
 
             SetAnimation(cols * Type, cols * Type + fAmount, fSpd, false);
+            Visible = true;
 
             AnimationComplete += Effect_AnimationComplete;
         }

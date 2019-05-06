@@ -42,21 +42,26 @@ namespace Platformer.Objects.Items
         private double alpha = 2;
         private Vector2 pos;
 
+        //private bool initialized;
+
         // WARNING: currently, it is not possible to spawn coins from anywhere and guarantee save persistance!!
-        
+
         public Coin(float x, float y, Room room, string name = null) : base(x, y, room, name)
         {
             Visible = false;
             AnimationTexture = AssetManager.CoinSprites;
             t = RND.Next * Math.PI * 2;
             pos = Position;
+
+            Save = true;
+            Respawn = false;
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
             
-            if (!Taken && GameManager.Current.Player.Stats.CollectedCoins.ContainsKey(ID))
+            /*if (!Taken && GameManager.Current.Player.Stats.CollectedCoins.ContainsKey(ID))
             {
                 Destroy();
                 return;
@@ -64,6 +69,7 @@ namespace Platformer.Objects.Items
             {
                 Visible = true;
             }
+            initialized = true;*/
 
             if (!Taken)
             {
@@ -120,9 +126,11 @@ namespace Platformer.Objects.Items
 
         public override void Take(Player player)
         {
+            if (!initialized)
+                return;
             if (!Taken)
             {
-                player.Stats.CollectedCoins.Add(ID, (int)Value);
+                player.Stats.Coins += (int)Value;
                 player.CoinCounter += (int)Value;
                 Taken = true;
             }

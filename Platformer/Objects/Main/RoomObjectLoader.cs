@@ -67,10 +67,19 @@ namespace Platformer.Objects.Main
                             var saveSatue = new SaveStatue(i * Globals.TILE, j * Globals.TILE, room);
                             t.Hide();
                             break;
-                        case 512: // spikes
-                            var spike = new SpikeBottom(i * Globals.TILE, j * Globals.TILE, room);
+                        case 512: // spikes (bottom)
+                            new SpikeBottom(i * Globals.TILE, j * Globals.TILE, room);
                             break;
-                        case 577:
+                        case 513: // spikes (top)
+                            new SpikeTop(i * Globals.TILE, j * Globals.TILE, room);
+                            break;
+                        case 514: // spikes (right)
+                            new SpikeRight(i * Globals.TILE, j * Globals.TILE, room);
+                            break;
+                        case 515: // spikes (left)
+                            new SpikeLeft(i * Globals.TILE, j * Globals.TILE, room);
+                            break;
+                        case 577: // BIG spikes (deadly)
                             var bigSpike = new BigSpike(i * Globals.TILE, j * Globals.TILE, room);
                             break;
                         case 578: case 641: case 642: break;
@@ -79,7 +88,14 @@ namespace Platformer.Objects.Main
                             pushBlock.Texture = GameManager.Current.Map.TileSet[t.ID];
                             t.Hide();
                             break;
-
+                        case 579: // hp potion
+                            new Potion(i * Globals.TILE + 8, j * Globals.TILE + 8, room, PotionType.HP);
+                            t.Hide();
+                            break;
+                        case 580: // mp potion
+                            new Potion(i * Globals.TILE + 8, j * Globals.TILE + 8, room, PotionType.MP);
+                            t.Hide();
+                            break;
                         // coins
                         case 704: case 705: case 706: case 707: case 708: case 709: case 710:
                             var coin = new Coin(i * Globals.TILE + 8, j * Globals.TILE + 8, room);

@@ -19,15 +19,28 @@ namespace Platformer.Objects.Enemy
         {
             //Depth = Globals.LAYER_BG - .0005f;
             //Depth = Globals.LAYER_BG2 + .0001f;
+            //DebugEnabled = true;
         }
     }
 
     public class SpikeBottom : Obstacle
     {
-        public SpikeBottom(float x, float y, Room room) : base(x, y, room)
-        {   
-            BoundingBox = new RectF(0, 8, 16, 8);            
-        }
+        public SpikeBottom(float x, float y, Room room) : base(x, y, room) { BoundingBox = new RectF(0, 8, 16, 8); }        
+    }
+
+    public class SpikeTop : Obstacle
+    {
+        public SpikeTop(float x, float y, Room room) : base(x, y, room) { BoundingBox = new RectF(0, 0, 16, 8); }        
+    }
+
+    public class SpikeLeft : Obstacle
+    {
+        public SpikeLeft(float x, float y, Room room) : base(x, y, room) { BoundingBox = new RectF(8, 0, 8, 16); }        
+    }
+
+    public class SpikeRight : Obstacle
+    {
+        public SpikeRight(float x, float y, Room room) : base(x, y, room) { BoundingBox = new RectF(0, 0, 8, 16); }
     }
 
     public class BigSpike : SpikeBottom
