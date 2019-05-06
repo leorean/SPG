@@ -64,7 +64,7 @@ namespace SPG.Objects
             get => (_frames != null) ? _frames[AnimationFrame] : null;
             set
             {
-                if (_frames == null)
+                if (_frames == null || value != _frames[0])
                     _frames = TextureSet.FromTexture(value);
                 _currentFrame = 0;
             }

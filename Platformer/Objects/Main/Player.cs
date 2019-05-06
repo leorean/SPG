@@ -159,6 +159,9 @@ namespace Platformer.Objects.Main
 
             HP = Stats.MaxHP;
             MP = Stats.MaxMP;
+
+            var darkEmitter = new DarkFlashEmitter(X, Y);
+            Debug.WriteLine("Created Player!");
         }
 
         ~Player()

@@ -19,7 +19,7 @@ namespace Platformer.Objects.Effects.Emitters
 
             LifeTime = 90;
 
-            Texture = AssetManager.FlashSprite;
+            Texture = emitter.Texture;
         }
 
         public override void Update(GameTime gameTime)
@@ -30,7 +30,7 @@ namespace Platformer.Objects.Effects.Emitters
 
             if (Alpha == 0)
                 LifeTime = 0;
-
+            
             Position = new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY);
         }
     }
@@ -40,6 +40,7 @@ namespace Platformer.Objects.Effects.Emitters
         public FlashEmitter(float x, float y) : base(x, y)
         {
             SpawnRate = 1;
+            Texture = AssetManager.FlashSprite;
         }
 
         public override void Update(GameTime gameTime)
@@ -55,6 +56,14 @@ namespace Platformer.Objects.Effects.Emitters
         public override void CreateParticle()
         {
             var flash = new FlashParticle(this);
+        }
+    }
+
+    public class DarkFlashEmitter : FlashEmitter
+    {
+        public DarkFlashEmitter(float x, float y) : base(x, y)
+        {
+            base.Texture = AssetManager.DarknessSprite;
         }
     }
 }

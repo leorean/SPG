@@ -38,6 +38,7 @@ namespace Platformer.Objects.Main
         public static Texture2D OuchSprite { get; private set; }
         public static Texture2D WhiteCircleSprite { get; private set; }
         public static Texture2D FlashSprite { get; private set; }
+        public static Texture2D DarknessSprite { get; private set; }
         public static Texture2D PlayerGhostSprite { get; private set; }
 
         // fonts
@@ -61,6 +62,7 @@ namespace Platformer.Objects.Main
             OuchSprite = content.Load<Texture2D>("ouch");
             WhiteCircleSprite = content.Load<Texture2D>("whiteCircle");
             FlashSprite = content.Load<Texture2D>("flash");
+            DarknessSprite = content.Load<Texture2D>("darkness");
             PlayerGhostSprite = content.Load<Texture2D>("playerGhost");
             
 

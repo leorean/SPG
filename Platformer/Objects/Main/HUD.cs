@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Platformer.Main;
+using SPG.Draw;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,11 +20,13 @@ namespace Platformer.Objects.Main
 
         public Texture2D Texture { get; set; }
 
-        private Player player;
 
+        private Font font;
+        private Player player;
+        
         public HUD()
         {
-
+            font = AssetManager.HUDFont;
         }
 
         internal void SetTarget(Player player)
@@ -42,16 +45,14 @@ namespace Platformer.Objects.Main
             maxHP = stats.MaxHP;
             mp = player.MP;
             maxMP = stats.MaxMP;
-            coins = stats.Coins;
+            coins = stats.Coins;            
         }
 
         public void Draw(SpriteBatch sb, GameTime gameTime)
         {
             var x = RoomCamera.Current.ViewX;
             var y = RoomCamera.Current.ViewY;
-
-            var font = AssetManager.HUDFont;
-
+            
             font.Halign = SPG.Draw.Font.HorizontalAlignment.Left;
             font.Valign = SPG.Draw.Font.VerticalAlignment.Top;
 
