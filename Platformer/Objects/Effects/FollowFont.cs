@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Platformer.Objects.Effects
 {
-    class DamageFont : GameObject
+    class FollowFont : GameObject
     {
         string text;
         float alpha;
@@ -26,7 +26,7 @@ namespace Platformer.Objects.Effects
         private GameObject target;
         public GameObject Target { get => target; set { target = value; offX = (X - target.X); offY = (Y - target.Y); } }
 
-        public DamageFont(float x, float y, string text, string name = null) : base(x, y, name)
+        public FollowFont(float x, float y, string text, string name = null) : base(x, y, name)
         {
             Position = new Vector2(x, y);
             this.text = text;
@@ -35,9 +35,10 @@ namespace Platformer.Objects.Effects
 
             font = AssetManager.DamageFont.Copy();
 
+            Color = Color.Red;
+
             font.Halign = Font.HorizontalAlignment.Center;
             font.Valign = Font.VerticalAlignment.Center;
-            font.Color = Color.Red;            
         }
 
         public override void Update(GameTime gameTime)
@@ -52,8 +53,11 @@ namespace Platformer.Objects.Effects
             
             alpha = Math.Max(alpha - .02f, 0);
 
-            var c = font.Color;
-            font.Color = new Color(c, alpha);
+            if (alpha < 1) offY -= .2f;
+
+            var c = Color;
+            Color = new Color(c, alpha);
+            font.Color = Color;
 
             if (alpha == 0 || Y > RoomCamera.Current.ViewY + RoomCamera.Current.ViewHeight)
                 Destroy();

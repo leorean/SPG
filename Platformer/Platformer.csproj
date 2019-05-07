@@ -70,7 +70,7 @@
     <Compile Include="Objects\Main\RoomCamera.cs" />
     <Compile Include="Objects\Main\RoomObjectLoader.cs" />
     <Compile Include="Objects\Main\SaveGame.cs" />
-    <Compile Include="Objects\Effects\DamageFont.cs" />
+    <Compile Include="Objects\Effects\FollowFont.cs" />
     <Compile Include="Objects\Enemy\Obstacles.cs" />
     <Compile Include="Objects\Main\Player.cs" />
     <Compile Include="Objects\Level\PushBlock.cs" />

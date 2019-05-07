@@ -65,6 +65,10 @@ namespace Platformer.Objects.Items
             {
                 case PotionType.HP:
                     player.HP = Math.Min(player.HP + 1, GameManager.Current.SaveGame.gameStats.MaxHP);
+
+                    var fnt = new FollowFont(player.X, player.Y - Globals.TILE, "+1");
+                    fnt.Target = player;
+
                     break;
                 case PotionType.MP:
                     player.MP = GameManager.Current.SaveGame.gameStats.MaxMP;
@@ -73,7 +77,7 @@ namespace Platformer.Objects.Items
             
             var emitter = new PotionBurstEmitter(Center.X, Center.Y, Type);
             var eff = new SingularEffect(Center.X, Center.Y, 1);
-
+            
             Destroy();
         }
     }

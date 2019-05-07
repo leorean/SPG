@@ -57,13 +57,5 @@ namespace Platformer.Objects.Effects.Emitters
         {
             var flash = new FlashParticle(this);
         }
-    }
-
-    public class DarkFlashEmitter : FlashEmitter
-    {
-        public DarkFlashEmitter(float x, float y) : base(x, y)
-        {
-            base.Texture = AssetManager.DarknessSprite;
-        }
-    }
+    }    
 }

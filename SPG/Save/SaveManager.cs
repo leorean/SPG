@@ -75,7 +75,7 @@ namespace SPG.Save
             var fileName = saveGame.GetName();
             var filePath = GetPath(fileName);
 
-            Debug.WriteLine("Loading from " + filePath + "..");
+            Debug.WriteLine("Loading " + filePath + "");
 
             if (!File.Exists(filePath))
             {

@@ -160,7 +160,6 @@ namespace Platformer.Objects.Main
             HP = Stats.MaxHP;
             MP = Stats.MaxMP;
 
-            var darkEmitter = new DarkFlashEmitter(X, Y);
             Debug.WriteLine("Created Player!");
         }
 
@@ -182,7 +181,7 @@ namespace Platformer.Objects.Main
 
             var ouch = new OuchEmitter(X, Y);
 
-            var dmgFont = new DamageFont(X, Y - Globals.TILE, $"-{hitPoints}");
+            var dmgFont = new FollowFont(X, Y - Globals.TILE, $"-{hitPoints}");
             dmgFont.Target = this;
 
             if (State == PlayerState.IDLE || State == PlayerState.WALK || State == PlayerState.GET_UP)
