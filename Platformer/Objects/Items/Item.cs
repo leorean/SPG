@@ -57,7 +57,7 @@ namespace Platformer.Objects.Items
 
             if (!initialized)
             {
-                if (Save && GameManager.Current.Player.Stats.Items.Contains(ID))
+                if (Save && GameManager.Current.Player.Stats.Items.ContainsKey(ID))
                 {
                     Destroy();
                 }
@@ -76,7 +76,7 @@ namespace Platformer.Objects.Items
                 if (!Respawn)
                     GameManager.Current.NonRespawnableIDs.Add(ID);
                 if (Save)
-                    GameManager.Current.Player.Stats.Items.Add(ID);
+                    GameManager.Current.Player.Stats.Items.Add(ID, Name);
             }
 
             Visible = true;

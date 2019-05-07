@@ -126,6 +126,7 @@ namespace Platformer.Objects.Items
             if (state == State.IDLE)
             {
                 state = State.TAKING;
+                this.player = player;
             }
         }
     }

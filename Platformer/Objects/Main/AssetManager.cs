@@ -35,6 +35,7 @@ namespace Platformer.Objects.Main
 
         // misc
 
+        public static Texture2D DoorSprite { get; private set; }
         public static Texture2D OuchSprite { get; private set; }
         public static Texture2D WhiteCircleSprite { get; private set; }
         public static Texture2D FlashSprite { get; private set; }
@@ -58,7 +59,8 @@ namespace Platformer.Objects.Main
             SaveStatueSprites = content.LoadTextureSet("save");
             PlayerSprites = content.LoadTextureSet("player", 16, 32);
             EffectSprites = content.LoadTextureSet("effects", 32, 32);
-            
+
+            DoorSprite = content.Load<Texture2D>("door");
             OuchSprite = content.Load<Texture2D>("ouch");
             WhiteCircleSprite = content.Load<Texture2D>("whiteCircle");
             FlashSprite = content.Load<Texture2D>("flash");

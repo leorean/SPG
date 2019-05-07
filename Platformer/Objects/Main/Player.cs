@@ -38,7 +38,8 @@ namespace Platformer.Objects.Main
 
         public int Coins { get; set; } = 0;
 
-        public List<int> Items { get; set; } = new List<int>();
+        // ID, Typename
+        public Dictionary<int, string> Items { get; set; } = new Dictionary<int, string>();
     }
 
     [Flags]
@@ -422,17 +423,31 @@ namespace Platformer.Objects.Main
             if (mpRegenTimeout == 0)
                 MP = Math.Min(MP + Stats.MPRegen, Stats.MaxMP);
 
-            // ++++ pickup items ++++
-
+            
             if (HP > 0)
             {
+                // ++++ pickup items ++++
+
                 var item = this.CollisionBounds<Item>(X, Y).FirstOrDefault();
                 if (item != null)
                 {
                     item.Take(this);
                 }
-            }
 
+                // ++++ doors ++++
+
+                var door = this.CollisionBounds<Door>(X, Y).FirstOrDefault();
+
+                if (door != null)
+                {
+                    if (k_upPressed)
+                    {
+                        Move(door.Tx * Globals.TILE, door.Ty * Globals.TILE);
+                        RoomCamera.Current.ChangeRoomsFromPosition(Position);
+                    }
+                }
+            }
+            
             // ++++ state logic ++++
 
             var maxVel = 1.2f;

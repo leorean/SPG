@@ -114,9 +114,9 @@ namespace Platformer.Objects.Main
 
             // create room objects from object data for current room
 
-            var itemData = GameManager.Current.Map.ObjectData.FindDataByTypeName("item");
+            var objectData = GameManager.Current.Map.ObjectData.Where(o => !o.Values.Contains("room")).ToList();
 
-            RoomObjectLoader.CreateRoomObjectsFromData(itemData, room);
+            RoomObjectLoader.CreateRoomObjectsFromData(objectData, room);
 
             //Debug.WriteLine("Created " + solidCount + " solid objects.");
             GameManager.Current.LoadedRooms.Add(room);
@@ -155,7 +155,14 @@ namespace Platformer.Objects.Main
                                 break;
                             // TODO: add other item types, collectables etc.
                         }                        
-                    }                    
+                    }
+                    if (type == "door")
+                    {
+                        var tx = data.ContainsKey("tx") ? (int)data["tx"] : 0;
+                        var ty = data.ContainsKey("ty") ? (int)data["ty"] : 0;
+
+                        var door = new Door(x, y, room, tx, ty);
+                    }
                 }
             }
             catch (Exception e)

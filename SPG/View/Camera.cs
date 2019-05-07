@@ -204,25 +204,7 @@ namespace SPG.View
             else ratio = ResolutionRenderer.ViewHeight / (float)rec.Height;
             Zoom = ratio;
         }
-
-        /// <summary>
-        /// Move camera by specified vector
-        /// </summary>
-        /// <param name="amount">Vector movement</param>
-        public void Move(Vector2 amount)
-        {
-            Position += amount;
-        }
-
-        /// <summary>
-        /// Set camera position
-        /// </summary>
-        /// <param name="position">Position</param>
-        public void SetPosition(Vector2 position)
-        {
-            Position = position;
-        }
-
+        
         /// <summary>
         /// Get camera transformation matrix
         /// </summary>
@@ -289,90 +271,13 @@ namespace SPG.View
         {
             ResolutionRenderer = null;
         }
-
-        /*
-        #region SmoothTransition Logic
-        private int _trDuration;
-        public bool IsTransitionActive { get; private set; }
-        private float _trElapsedTime;
-        private Vector2 _trTargetPosition;
-
-        /// <summary>
-        /// Start camera transition to specified position
-        /// </summary>
-        /// <param name="targetPos">Target position</param>
-        /// <param name="duration">Expected transition duration</param>
-        public void StartTransition(Vector2 targetPos, int duration = 5000)
-        {
-            if (IsTransitionActive)
-                ResetTransition();
-            _trTargetPosition = targetPos;
-            IsTransitionActive = true;
-            _trDuration = duration;
-        }
-        /// <summary>
-        /// Start camera transition to specified position
-        /// </summary>
-        /// <param name="targetPos">Target position</param>
-        /// <param name="duration">Expected transition duration</param>
-        public void StartTransition(Point targetPos, int duration = 5000)
-        {
-            StartTransition(new Vector2(targetPos.X, targetPos.Y), duration);
-        }
-        /// <summary>
-        /// Update transition target position without cancelling current transition
-        /// </summary>
-        /// <param name="targetPos">Target position</param>
-        public void UpdateTransitionTarget(Vector2 targetPos)
-        {
-            _trTargetPosition = targetPos;
-        }
-        /// <summary>
-        /// Update transition target position without cancelling current transition
-        /// </summary>
-        /// <param name="targetPos">Target position</param>
-        public void UpdateTransitionTarget(Point targetPos)
-        {
-            _trTargetPosition = new Vector2(targetPos.X, targetPos.Y);
-        }
-        /// <summary>
-        /// Stop and reset transition
-        /// </summary>
-        public void StopTransition()
-        {
-            ResetTransition();
-            IsTransitionActive = false;
-        }
-        /// <summary>
-        /// Reset current transition
-        /// </summary>
-        public void ResetTransition()
-        {
-            _trElapsedTime = 0f;
-        }
-
-        private void UpdateTransition(GameTime gt)
-        {
-            _trElapsedTime += (float)gt.ElapsedGameTime.TotalMilliseconds;
-            var amount = MathHelper.Clamp(_trElapsedTime / _trDuration, 0, 1);
-
-            Vector2 result;
-            Vector2 cpos = Position;
-            Vector2.Lerp(ref cpos, ref _trTargetPosition, amount, out result);
-            SetPosition(result);
-            if (amount >= 1f)
-                StopTransition();
-        }
-        #endregion*/
-
+        
         /// <summary>
         /// Update logic (must be called within main update method)
         /// </summary>
         /// <param name="gt">Game time</param>
         public virtual void Update(GameTime gt)
         {
-            //if (IsTransitionActive)
-            //    UpdateTransition(gt);
         }
     }    
 }

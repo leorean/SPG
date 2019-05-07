@@ -34,11 +34,12 @@ namespace Platformer.Objects.Effects
             alpha = 1.5f;
 
             font = AssetManager.DamageFont.Copy();
-
             Color = Color.Red;
-
+            
             font.Halign = Font.HorizontalAlignment.Center;
             font.Valign = Font.VerticalAlignment.Center;
+
+            Visible = false;
         }
 
         public override void Update(GameTime gameTime)
@@ -54,6 +55,8 @@ namespace Platformer.Objects.Effects
             alpha = Math.Max(alpha - .02f, 0);
 
             if (alpha < 1) offY -= .2f;
+
+            Visible = true;
 
             var c = Color;
             Color = new Color(c, alpha);

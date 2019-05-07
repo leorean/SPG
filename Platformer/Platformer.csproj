@@ -61,6 +61,7 @@
     <Compile Include="Objects\Items\Coin.cs" />
     <Compile Include="Objects\Items\Item.cs" />
     <Compile Include="Objects\Items\Potions.cs" />
+    <Compile Include="Objects\Level\Door.cs" />
     <Compile Include="Objects\Level\Mushroom.cs" />
     <Compile Include="Objects\Main\AssetManager.cs" />
     <Compile Include="Objects\Main\GameManager.cs" />

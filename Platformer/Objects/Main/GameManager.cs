@@ -54,6 +54,25 @@ namespace Platformer.Objects.Main
             SaveGame.Save();
         }
 
+        public void ChangeRoom(Room oldRoom, Room newRoom)
+        {
+            // unload all rooms that exist
+            Room[] tmp = new Room[LoadedRooms.Count];
+            LoadedRooms.CopyTo(tmp);
+
+            foreach (var room in tmp)
+                UnloadRoomObjects(room);
+
+            // do this, because else the GC would wait to clean huge resources and create a temporary lag
+            GC.Collect();
+
+            // load new room + neighbors
+            var neighbors = newRoom.Neighbors();
+            RoomObjectLoader.CreateRoomObjectsFromTiles(newRoom);
+            foreach (var n in neighbors)
+                RoomObjectLoader.CreateRoomObjectsFromTiles(n);
+        }
+
         
 
         public void Initialize()
@@ -61,21 +80,7 @@ namespace Platformer.Objects.Main
             // handle room changing <-> object loading/unloading
             RoomCamera.Current.OnRoomChange += (sender, rooms) =>
             {
-                // unload all rooms that exist
-                Room[] tmp = new Room[LoadedRooms.Count];
-                LoadedRooms.CopyTo(tmp);
-
-                foreach (var room in tmp)
-                    UnloadRoomObjects(room);
-
-                // do this, because else the GC would wait to clean huge resources and create a temporary lag
-                GC.Collect();
-
-                // load new room + neighbors
-                var neighbors = rooms.Item2.Neighbors();
-                RoomObjectLoader.CreateRoomObjectsFromTiles(rooms.Item2);
-                foreach (var n in neighbors)
-                    RoomObjectLoader.CreateRoomObjectsFromTiles(n);
+                ChangeRoom(rooms.Item1, rooms.Item2);
             };
 
             // load room data for the camera

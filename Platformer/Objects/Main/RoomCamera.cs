@@ -38,9 +38,11 @@ namespace Platformer.Main
         public int CurrentBG { get; set; } = 0;
 
         private float curX, curY;
-        private float tx0, ty0;
         private float tx, ty;
         private float dyVel;
+
+        private bool invokeRoomChange;
+        private Vector2 positionChange;
 
         // player-related vars
 
@@ -61,7 +63,7 @@ namespace Platformer.Main
         public event EventHandler<Tuple<Room, Room>> OnRoomChange;
 
         private static RoomCamera instance;
-        public static RoomCamera Current { get => instance; }
+        public static new RoomCamera Current { get => instance; }
         public RoomCamera(ResolutionRenderer resolutionRenderer) : base(resolutionRenderer)
         {
             instance = this;
@@ -73,6 +75,17 @@ namespace Platformer.Main
             Position = target != null ? target.Position : Vector2.Zero;
         }
         
+        public void ChangeRoomsFromPosition(Vector2 position)
+        {
+            //curX, curY;
+            tx = position.X;
+            ty = position.Y;
+            curX = position.X;
+            curY = position.Y;
+            invokeRoomChange = true;
+            positionChange = position;
+        }
+
         public override void Update(GameTime gt)
         {
             base.Update(gt);
@@ -85,8 +98,20 @@ namespace Platformer.Main
 
             ObjectManager.Enable<Room>();
 
-            tx0 = MathUtil.Div(target.X, ViewWidth) * ViewWidth;
-            ty0 = MathUtil.Div(target.Y, ViewHeight) * ViewHeight;
+            if (invokeRoomChange)
+            {
+                var targetRoom = target.CollisionPoint<Room>(target.X, target.Y).FirstOrDefault();
+
+                if (CurrentRoom != targetRoom)
+                    GameManager.Current.ChangeRoom(CurrentRoom, targetRoom);
+
+                Position = positionChange;
+                CurrentRoom = null;
+                state = State.Default;
+                invokeRoomChange = false;
+                
+                return;
+            }
 
             // if no room is available, always resort to this state
             if (state == State.Default)
@@ -104,7 +129,7 @@ namespace Platformer.Main
                         EnableBounds(new Rectangle((int)CurrentRoom.X, (int)CurrentRoom.Y, (int)CurrentRoom.BoundingBox.Width, (int)CurrentRoom.BoundingBox.Height));                        
                     }
                     else
-                        return;
+                        return;                    
                 }
                 
                 if (target is Player)
@@ -175,12 +200,12 @@ namespace Platformer.Main
                 
                 state = State.Default;                
             }
-            
+
             // background interpolation
             backgroundAlpha = Math.Min(backgroundAlpha + .02f, 1);            
         }
 
-        internal void Reset()
+        public void Reset()
         {
             SetTarget(null);
 
