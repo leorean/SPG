@@ -33,6 +33,8 @@ namespace Platformer.Objects.Items
 
         public PotionType Type { get; private set; }
 
+        private int amount;
+
         private PotionEmitter potionEmitter;
 
         public Potion(float x, float y, Room room, PotionType potionType, string name = null) : base(x, y, room, name)
@@ -42,8 +44,16 @@ namespace Platformer.Objects.Items
             potionEmitter = new PotionEmitter(x, y - 6, potionType);
             potionEmitter.Parent = this;
 
-            if (Type == PotionType.HP) Texture = AssetManager.PotionSprites[0];
-            if (Type == PotionType.MP) Texture = AssetManager.PotionSprites[1];
+            if (Type == PotionType.HP)
+            {
+                amount = 5;
+                Texture = AssetManager.PotionSprites[0];
+            }
+            if (Type == PotionType.MP)
+            {
+                amount = 20;
+                Texture = AssetManager.PotionSprites[1];
+            }
             
             Save = false;
             Respawn = false;
@@ -64,14 +74,23 @@ namespace Platformer.Objects.Items
             switch (Type)
             {
                 case PotionType.HP:
-                    player.HP = Math.Min(player.HP + 1, GameManager.Current.SaveGame.gameStats.MaxHP);
+                    player.HP = Math.Min(player.HP + amount, GameManager.Current.SaveGame.gameStats.MaxHP);
 
-                    var fnt = new FollowFont(player.X, player.Y - Globals.TILE, "+1");
-                    fnt.Target = player;
+                    var fntHp = new FollowFont(player.X, player.Y - Globals.TILE, $"+{amount}");
+                    fntHp.Target = player;
+
+                    fntHp.Color = HpColors.First();
 
                     break;
                 case PotionType.MP:
-                    player.MP = GameManager.Current.SaveGame.gameStats.MaxMP;
+                    player.MP = Math.Min(player.MP + amount, GameManager.Current.SaveGame.gameStats.MaxMP);
+
+                    var fntMp = new FollowFont(player.X, player.Y - Globals.TILE, $"+{amount}");
+                    fntMp.Target = player;
+
+                    fntMp.Color = MpColors.First();
+
+                    //player.MP = GameManager.Current.SaveGame.gameStats.MaxMP;
                     break;
             }
             

@@ -15,7 +15,8 @@ namespace Platformer.Objects.Level
         public Door(float x, float y, Room room, int tx, int ty, string name = null) : base(x, y, room, name)
         {
             Depth = Globals.LAYER_BG + .001f;
-
+            
+            BoundingBox = new SPG.Util.RectF(6, 0, 4, 16);
             Texture = AssetManager.DoorSprite;
 
             Tx = tx;
