@@ -29,7 +29,7 @@ namespace Platformer.Objects.Main
         public static TextureSet CoinSprites { get; private set; }
 
         // HUD
-
+        
         public static Texture2D HUDSprite { get; private set; }
         public static Texture2D MessageBoxSprite { get; private set; }
 
@@ -67,7 +67,6 @@ namespace Platformer.Objects.Main
             DarknessSprite = content.Load<Texture2D>("darkness");
             PlayerGhostSprite = content.Load<Texture2D>("playerGhost");
             
-
             MessageBoxSprite = content.Load<Texture2D>("messageBox");
             HUDSprite = content.Load<Texture2D>("hud");
 

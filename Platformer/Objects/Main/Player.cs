@@ -16,6 +16,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Platformer.Objects.Level;
 using Platformer.Objects.Effects.Emitters;
 using Platformer.Objects.Items;
+using Platformer.Util;
 
 namespace Platformer.Objects.Main
 { 
@@ -46,7 +47,7 @@ namespace Platformer.Objects.Main
     public enum PlayerAbility
     {
         NONE = 0,
-        SWIM = 1,
+        BREATHE_UNDERWATER = 1,
         CLIMB_WALL = 2,
         CLIMB_CEIL = 4,
         LEVITATE = 8,
@@ -113,6 +114,11 @@ namespace Platformer.Objects.Main
         
         private PushBlock pushBlock;
 
+        // diving
+
+        int oxygen;
+        int maxOxygen;
+
         // misc. timers
 
         private int coinCounter;
@@ -161,6 +167,9 @@ namespace Platformer.Objects.Main
 
             HP = Stats.MaxHP;
             MP = Stats.MaxMP;
+
+            maxOxygen = 5 * 60;
+            oxygen = maxOxygen;
 
             Debug.WriteLine("Created Player!");
         }
@@ -386,6 +395,14 @@ namespace Platformer.Objects.Main
             }
             if (inWater)
             {
+                if (!Stats.Abilities.HasFlag(PlayerAbility.BREATHE_UNDERWATER))
+                {
+                    oxygen = Math.Max(oxygen - 1, 0);
+
+                    if (oxygen == 0)
+                        HP = 0;
+                }
+
                 Gravity = gravWater;
 
                 if (HP > 0)
@@ -403,9 +420,18 @@ namespace Platformer.Objects.Main
                         if (State == PlayerState.HIT_GROUND)
                             Gravity = -gravWater;
                     }
-                }   
+                } else // 0 hp in water -> dead
+                {
+                    if (State == PlayerState.HIT_AIR || State == PlayerState.HIT_GROUND)
+                    {
+                        YVel = Math.Min(YVel, 1);
+                        State = PlayerState.DEAD;                        
+                    }
+                }
             } else
             {
+                oxygen = Math.Min(oxygen + 5, maxOxygen);
+
                 Gravity = gravAir;
 
                 if (State == PlayerState.SWIM || State == PlayerState.SWIM_DIVE_IN || State == PlayerState.SWIM_TURN_AROUND)
@@ -990,6 +1016,12 @@ namespace Platformer.Objects.Main
             // death
             if (State == PlayerState.DEAD)
             {
+                if (inWater)
+                {
+                    YVel = Math.Max(YVel - .15f, -.2f);
+                    XVel *= .95f;
+                }
+
                 if (ghost == null)
                 {
                     ghost = new PlayerGhost(X, Y, Direction);
@@ -1266,6 +1298,13 @@ namespace Platformer.Objects.Main
                 coinFont.Draw(sb, X, Y - Globals.TILE, $"+{CoinCounter}");
             }
             
+            if (oxygen < maxOxygen && HP > 0)
+            {
+                var fg = new Color(3, 243, 243);
+                var bg = new Color(20, 113, 126);
+
+                sb.DrawBar(Position + new Vector2(0, 12), (int) (1.5 * Globals.TILE), oxygen / (float)maxOxygen, fg, bg, height:2, border:false);                
+            }
 
             //sb.DrawPixel(X, Y + swimVector.Y, Color.AliceBlue);
             //sb.DrawPixel(X + swimVector.X, Y + swimVector.Y, Color.Red);

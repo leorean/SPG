@@ -27,14 +27,14 @@ namespace SPG.Draw
         }
 
         //draws a pixel
-        public static void DrawPixel(this SpriteBatch sb, float x, float y, Color col)
+        public static void DrawPixel(this SpriteBatch sb, float x, float y, Color col, float depth = 1f)
         {
             Setup(sb.GraphicsDevice);
-            sb.Draw(Pixel, new Vector2(x, y), null, col, 0, Vector2.Zero, 1f, SpriteEffects.None, 1);
+            sb.Draw(Pixel, new Vector2(x, y), null, col, 0, Vector2.Zero, 1f, SpriteEffects.None, depth);
         }
 
         //draws a line 
-        public static void DrawLine(this SpriteBatch sb, float x1, float y1, float x2, float y2, Color col)
+        public static void DrawLine(this SpriteBatch sb, float x1, float y1, float x2, float y2, Color col, float depth = 1f)
         {
             float deltax, deltay, x, y, xinc1, xinc2, yinc1, yinc2, den, num, numadd, numpixels, curpixel;
             deltax = Math.Abs(x2 - x1);        // The difference between the x's
@@ -85,7 +85,7 @@ namespace SPG.Draw
 
             for (curpixel = 0; curpixel <= numpixels; curpixel++)
             {
-                DrawPixel(sb, x, y, col);
+                DrawPixel(sb, x, y, col, depth);
                 num += numadd;              // Increase the numerator by the top of the fraction
                 if (num >= den)             // Check if numerator >= denominator
                 {
@@ -98,7 +98,7 @@ namespace SPG.Draw
             }
         }
 
-        public static void DrawRectangle(this SpriteBatch sb, RectF rect, Color col, Boolean filled)
+        public static void DrawRectangle(this SpriteBatch sb, RectF rect, Color col, Boolean filled, float depth = 1f)
         {
             if (filled)
             {
@@ -106,10 +106,10 @@ namespace SPG.Draw
             }
             else
             {
-                DrawLine(sb, rect.X, rect.Y, rect.X + rect.Width, rect.Y, col);
-                DrawLine(sb, rect.X, rect.Y, rect.X, rect.Y + rect.Height, col);
-                DrawLine(sb, rect.X + rect.Width, rect.Y, rect.X + rect.Width, rect.Y + rect.Height, col);
-                DrawLine(sb, rect.X, rect.Y + rect.Height, rect.X + rect.Width, rect.Y + rect.Height, col);
+                DrawLine(sb, rect.X, rect.Y, rect.X + rect.Width, rect.Y, col, depth);
+                DrawLine(sb, rect.X, rect.Y, rect.X, rect.Y + rect.Height, col, depth);
+                DrawLine(sb, rect.X + rect.Width, rect.Y, rect.X + rect.Width, rect.Y + rect.Height, col, depth);
+                DrawLine(sb, rect.X, rect.Y + rect.Height, rect.X + rect.Width, rect.Y + rect.Height, col, depth);
             }
         }
     }
