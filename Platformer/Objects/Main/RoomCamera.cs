@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Platformer.Objects;
+using Platformer.Objects.Effects;
+using Platformer.Objects.Effects.Emitters;
 using Platformer.Objects.Enemy;
 using Platformer.Objects.Main;
 using SPG;
@@ -40,10 +42,7 @@ namespace Platformer.Main
         private float curX, curY;
         private float tx, ty;
         private float dyVel;
-
-        private bool invokeRoomChange;
-        private Vector2 positionChange;
-
+        
         // player-related vars
 
         private float offsetX = 0;
@@ -54,6 +53,15 @@ namespace Platformer.Main
         private TextureSet _backgrounds;
         private float backgroundAlpha = 1f;        
         private int lastBG = 0;
+
+        // transition
+        
+        private Vector2 newPosition;
+        private bool invokeRoomChange;
+
+        // target
+
+        private Player player { get => target as Player; }
 
         // events
 
@@ -75,15 +83,34 @@ namespace Platformer.Main
             Position = target != null ? target.Position : Vector2.Zero;
         }
         
+        private void Transition_1()
+        {
+            player.State = Player.PlayerState.IDLE;
+            player.Position = newPosition;
+
+            tx = newPosition.X;
+            ty = newPosition.Y;
+            curX = newPosition.X;
+            curY = newPosition.Y;
+            invokeRoomChange = true;
+            GameManager.Current.Transition.FadeOut();
+
+            GameManager.Current.Transition.OnTransitionEnd = Transition_2;
+        }
+
+        private void Transition_2()
+        {
+            GameManager.Current.Transition.OnTransitionEnd = null;
+            GameManager.Current.Transition = null;
+        }
+
         public void ChangeRoomsFromPosition(Vector2 position)
         {
-            //curX, curY;
-            tx = position.X;
-            ty = position.Y;
-            curX = position.X;
-            curY = position.Y;
-            invokeRoomChange = true;
-            positionChange = position;
+            player.State = Player.PlayerState.DOOR;
+            GameManager.Current.Transition = new Transition();
+            GameManager.Current.Transition.FadeIn();
+            newPosition = position;
+            GameManager.Current.Transition.OnTransitionEnd = Transition_1;
         }
 
         public override void Update(GameTime gt)
@@ -105,7 +132,7 @@ namespace Platformer.Main
                 if (CurrentRoom != targetRoom)
                     GameManager.Current.ChangeRoom(CurrentRoom, targetRoom);
 
-                Position = positionChange;
+                Position = newPosition;
                 CurrentRoom = null;
                 state = State.Default;
                 invokeRoomChange = false;
@@ -213,7 +240,7 @@ namespace Platformer.Main
             CurrentRoom = null;
             lastRoom = null;
         }
-
+        
         /// <summary>
         /// Loads the backgrounds to the camera so it can display them depending on the room background number.
         /// </summary>
@@ -223,7 +250,7 @@ namespace Platformer.Main
             _backgrounds = backgrounds;
         }
 
-        public void DrawBackground(SpriteBatch sb, GameTime gameTime)
+        public void Draw(SpriteBatch sb, GameTime gameTime)
         {
             if (_backgrounds != null)
             {

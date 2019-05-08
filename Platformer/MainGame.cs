@@ -224,6 +224,10 @@ namespace Platformer
             // ++++ update HUD ++++
 
             HUD.Update(gameTime);
+
+            // ++++ update transition ++++
+
+            GameManager.Current.Transition?.Update(gameTime);
         }
         
         /// <summary>
@@ -237,22 +241,15 @@ namespace Platformer
             // IMPORTANT HINT: when a texture's alpha is not "pretty", check the Content settings of that texture! Make sure that the texture has premultiplied : true.
 
             spriteBatch.BeginCamera(RoomCamera.Current, BlendState.NonPremultiplied);
-            RoomCamera.Current.DrawBackground(spriteBatch, gameTime);
+            RoomCamera.Current.Draw(spriteBatch, gameTime);
 
             GameManager.Current.Map.Draw(spriteBatch, gameTime, RoomCamera.Current);
             ObjectManager.DrawObjects(spriteBatch, gameTime);
-
+            
             HUD.Draw(spriteBatch, gameTime);
 
-            /*if (initialized)
-            {
-                DefaultFont.Halign = Font.HorizontalAlignment.Center;
-                DefaultFont.Valign = Font.VerticalAlignment.Bottom;
-
-                DefaultFont.Draw(spriteBatch, Player.X, Player.Y - 1 * Globals.TILE, "HelloWorld\nWhat's up!\nTEST.", scale: 1f);
-                
-                //DefaultFont.Draw(camera.ViewX + 4, camera.ViewY + 4, Player.HP, 0);
-            }*/
+            GameManager.Current.Transition?.Draw(spriteBatch, gameTime);
+            
             spriteBatch.End();
         }
     }

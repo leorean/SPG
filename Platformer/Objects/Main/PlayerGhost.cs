@@ -45,6 +45,7 @@ namespace Platformer.Objects.Main
 
                 if (alpha == 0)
                 {
+                    //GameManager.Current.Transition
                     Parent = null;
                     Destroy();
                     GameManager.Current.ReloadLevel();

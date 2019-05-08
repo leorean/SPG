@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Platformer.Main;
+using Platformer.Objects.Effects;
 using Platformer.Objects.Effects.Emitters;
 using Platformer.Objects.Enemy;
 using Platformer.Objects.Items;
@@ -31,6 +32,8 @@ namespace Platformer.Objects.Main
 
         public List<int> NonRespawnableIDs { get; private set; }
         
+        public Transition Transition { get; set; }
+
         private GlobalWaterBubbleEmitter globalWaterEmitter;
 
         public GameManager()
@@ -170,7 +173,13 @@ namespace Platformer.Objects.Main
             RoomCamera.Current.SetTarget(Player);
             MainGame.Current.HUD.SetTarget(Player);
 
-            NonRespawnableIDs = new List<int>();            
+            NonRespawnableIDs = new List<int>();
+
+            // fade-in
+
+            Transition = new Transition();
+            Transition.FadeOut();
+            Transition.OnTransitionEnd = () => { Transition = null; };
         }
 
         /// <summary>
@@ -210,6 +219,6 @@ namespace Platformer.Objects.Main
             {
                 ObjectManager.SetRegionEnabled<GameObject>(RoomCamera.Current.CurrentRoom.X, RoomCamera.Current.CurrentRoom.Y, RoomCamera.Current.CurrentRoom.BoundingBox.Width, RoomCamera.Current.CurrentRoom.BoundingBox.Height, true);
             }
-        }        
+        }
     }
 }

@@ -67,7 +67,8 @@ namespace Platformer.Objects.Main
             WALL_CLIMB, OBTAIN, TURN_AROUND,
             GET_UP, HIT_AIR, HIT_GROUND, CEIL_IDLE,
             CEIL_CLIMB, SWIM, DEAD, LEVITATE,
-            PUSH, LIE, SWIM_DIVE_IN, SWIM_TURN_AROUND
+            PUSH, LIE, SWIM_DIVE_IN, SWIM_TURN_AROUND,
+            DOOR
         }
 
         public PlayerState State { get; set; }
@@ -218,7 +219,7 @@ namespace Platformer.Objects.Main
 
             // ++++ input ++++
 
-            if (ObjectManager.Exists<MessageBox>())
+            if (ObjectManager.Exists<MessageBox>() || GameManager.Current.Transition != null)
             {
                 input.Enabled = false;
             } else
@@ -442,8 +443,9 @@ namespace Platformer.Objects.Main
                 {
                     if (k_upPressed)
                     {
-                        Move(door.Tx * Globals.TILE, door.Ty * Globals.TILE);
-                        RoomCamera.Current.ChangeRoomsFromPosition(Position);
+                        var pos = Position + new Vector2(door.Tx * Globals.TILE, door.Ty * Globals.TILE);
+                        RoomCamera.Current.ChangeRoomsFromPosition(pos);
+
                     }
                 }
             }
@@ -1001,7 +1003,12 @@ namespace Platformer.Objects.Main
             if (State == PlayerState.OBTAIN)
             {
                 XVel *= .9f;
-                //YVel = Math.Min(YVel + .1f, .2f);
+            }
+            // entering doors
+            if (State == PlayerState.DOOR)
+            {
+                XVel = 0;
+                YVel = -Gravity;
             }
 
             var saveStatue = this.CollisionBounds<SaveStatue>(X, Y).FirstOrDefault();
@@ -1130,7 +1137,7 @@ namespace Platformer.Objects.Main
 
             switch (State)
             {
-                case PlayerState.IDLE:                    
+                case PlayerState.IDLE:
                     row = 0;
                     fSpd = 0.03f;
                     fAmount = 4;
@@ -1231,6 +1238,11 @@ namespace Platformer.Objects.Main
                     row = 16;
                     fAmount = 1;
                     fSpd = 0;                    
+                    break;
+                case PlayerState.DOOR:
+                    row = 17;
+                    fSpd = 0.05f;
+                    fAmount = 4;
                     break;
             }
 
