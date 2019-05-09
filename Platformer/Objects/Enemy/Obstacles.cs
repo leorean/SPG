@@ -25,22 +25,22 @@ namespace Platformer.Objects.Enemy
 
     public class SpikeBottom : Obstacle
     {
-        public SpikeBottom(float x, float y, Room room) : base(x, y, room) { BoundingBox = new RectF(0, 8, 16, 8); }        
+        public SpikeBottom(float x, float y, Room room) : base(x, y, room) { BoundingBox = new RectF(2, 8, 12, 8); }        
     }
 
     public class SpikeTop : Obstacle
     {
-        public SpikeTop(float x, float y, Room room) : base(x, y, room) { BoundingBox = new RectF(0, 0, 16, 8); }        
+        public SpikeTop(float x, float y, Room room) : base(x, y, room) { BoundingBox = new RectF(2, 0, 12, 8); }        
     }
 
     public class SpikeLeft : Obstacle
     {
-        public SpikeLeft(float x, float y, Room room) : base(x, y, room) { BoundingBox = new RectF(8, 0, 8, 16); }        
+        public SpikeLeft(float x, float y, Room room) : base(x, y, room) { BoundingBox = new RectF(8, 2, 8, 12); }        
     }
 
     public class SpikeRight : Obstacle
     {
-        public SpikeRight(float x, float y, Room room) : base(x, y, room) { BoundingBox = new RectF(0, 0, 8, 16); }
+        public SpikeRight(float x, float y, Room room) : base(x, y, room) { BoundingBox = new RectF(0, 2, 8, 12); }
     }
 
     public class BigSpike : SpikeBottom

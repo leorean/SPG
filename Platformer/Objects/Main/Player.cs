@@ -135,6 +135,7 @@ namespace Platformer.Objects.Main
         private Font coinFont;
 
         private int lieTimer = 0;
+        private int ghostTimer = 60;
 
         private PlayerGhost ghost;
 
@@ -400,7 +401,17 @@ namespace Platformer.Objects.Main
                     oxygen = Math.Max(oxygen - 1, 0);
 
                     if (oxygen == 0)
-                        HP = 0;
+                    {
+                        if (InvincibleTimer == 0 && HP > 0)
+                        {
+                            Hit(1);
+                            
+                            // dampen the hit from oxygen deplation:
+
+                            XVel *= .5f;
+                            YVel *= .5f;
+                        }
+                    }
                 }
 
                 Gravity = gravWater;
@@ -422,11 +433,8 @@ namespace Platformer.Objects.Main
                     }
                 } else // 0 hp in water -> dead
                 {
-                    if (State == PlayerState.HIT_AIR || State == PlayerState.HIT_GROUND)
-                    {
-                        YVel = Math.Min(YVel, 1);
-                        State = PlayerState.DEAD;                        
-                    }
+                    YVel = Math.Min(YVel, 1.5f);
+                    State = PlayerState.DEAD;
                 }
             } else
             {
@@ -593,6 +601,12 @@ namespace Platformer.Objects.Main
                     && pushBlock == null)
                     State = PlayerState.IDLE;
                 
+                if (this.CollisionBounds<PushBlock>(X + Math.Sign((int)Direction), Y).FirstOrDefault() == null)
+                {
+                    State = PlayerState.IDLE;
+                    pushBlock = null;
+                }
+
                 if (hit)
                     State = PlayerState.HIT_GROUND;
             }
@@ -671,7 +685,7 @@ namespace Platformer.Objects.Main
                     {
                         lastGroundY = Y;
                         mush.Bounce();
-                        YVel = -3;
+                        YVel = -3.2f;
                     }
                 }
 
@@ -1016,13 +1030,14 @@ namespace Platformer.Objects.Main
             // death
             if (State == PlayerState.DEAD)
             {
+                ghostTimer = Math.Max(ghostTimer - 1, 0);
                 if (inWater)
                 {
                     YVel = Math.Max(YVel - .15f, -.2f);
                     XVel *= .95f;
                 }
 
-                if (ghost == null)
+                if (ghost == null && ghostTimer == 0)
                 {
                     ghost = new PlayerGhost(X, Y, Direction);
                     ghost.Parent = this;
@@ -1076,7 +1091,7 @@ namespace Platformer.Objects.Main
 
             if (colY.Count == 0)
             {
-                Move(0, YVel);                
+                Move(0, YVel);
             }
             else
             {

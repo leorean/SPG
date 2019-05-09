@@ -25,6 +25,7 @@ namespace Platformer.Objects.Main
 
             Scale = new Vector2(Math.Sign((int)dir), 1);
             spawnY = Y;
+            Color = new Color(Color.White, 0);
         }
 
         public override void Update(GameTime gameTime)
