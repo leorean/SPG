@@ -11,6 +11,11 @@
  <objecttype name="item" color="#61ffdd">
   <property name="itemName" type="string"/>
   <property name="itemType" type="int" default="-1"/>
+  <property name="text" type="string"/>
+ </objecttype>
+ <objecttype name="npc" color="#55557f">
+  <property name="npcType" type="int" default="-1"/>
+  <property name="text" type="string"/>
  </objecttype>
  <objecttype name="player" color="#ffffff"/>
  <objecttype name="room" color="#ffec9c">

@@ -143,7 +143,7 @@ namespace Platformer.Objects.Main
 
             sb.Draw(Texture, Position, new Rectangle(0,0, RoomCamera.Current.ViewWidth, 3 * Globals.TILE), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth);
             
-            if (page == 0)
+            if (page == 0 && texts.Count > 1)
             {
                 sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 2 * T + z), new Rectangle(1 * T, 3 * T, T, T), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
             }

@@ -163,6 +163,12 @@ namespace Platformer.Objects.Main
 
                         var door = new Door(x, y, room, tx, ty);
                     }
+                    if (type == "npc")
+                    {
+                        var npcText = data.ContainsKey("text") ? data["text"].ToString() : "-unknown-";
+                        var npcType = data.ContainsKey("npcType") ? (int)data["npcType"] : -1;
+                        var npc = new NPC(x + 8, y + 8, room, npcType, npcText);
+                    }
                 }
             }
             catch (Exception e)

@@ -477,13 +477,29 @@ namespace Platformer.Objects.Main
                 {
                     if (k_upPressed)
                     {
+                        XVel = 0;
+                        YVel = -Gravity;
+
                         var pos = Position + new Vector2(door.Tx * Globals.TILE, door.Ty * Globals.TILE);
                         RoomCamera.Current.ChangeRoomsFromPosition(pos);
 
                     }
                 }
+
+                // ++++ npcs ++++
+
+                var npc = this.CollisionBounds<NPC>(X, Y).FirstOrDefault();
+
+                if (npc != null)
+                {
+                    if (k_upPressed)
+                    {
+                        npc.Interact(this);
+                    }
+                }
+
             }
-            
+
             // ++++ state logic ++++
 
             var maxVel = 1.2f;
@@ -1054,8 +1070,7 @@ namespace Platformer.Objects.Main
             // entering doors
             if (State == PlayerState.DOOR)
             {
-                XVel = 0;
-                YVel = -Gravity;
+                
             }
 
             var saveStatue = this.CollisionBounds<SaveStatue>(X, Y).FirstOrDefault();
@@ -1118,12 +1133,12 @@ namespace Platformer.Objects.Main
 
                     // trick to "snap" to the bottom:                    
                     var overlap = Bottom - colY.FirstOrDefault().Top;
-                    if (Math.Abs(overlap) <= Math.Abs(YVel))
+                    if (Math.Abs(overlap) <= Math.Abs(YVel) + 1)
                         Move(0, -overlap - Gravity);
-
+                    
                     // deprecated: solved issue with a loop:
-
-                    /*while (true)
+                    /*
+                    while (true)
                     {
                         var cy = this.CollisionBounds<Collider>(X, Y + .01f).FirstOrDefault();
                         Move(0, .01f);

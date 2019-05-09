@@ -20,6 +20,7 @@ namespace Platformer.Objects.Main
 
         public static TextureSet PlayerSprites { get; private set; }
         public static TextureSet EffectSprites { get; private set; }
+        public static TextureSet NPCSprites { get; private set; }
         public static TextureSet SaveStatueSprites { get; private set; }
 
         // items etc.
@@ -56,9 +57,10 @@ namespace Platformer.Objects.Main
 
             // sprites etc.
 
-            SaveStatueSprites = content.LoadTextureSet("save");
             PlayerSprites = content.LoadTextureSet("player", 16, 32);
             EffectSprites = content.LoadTextureSet("effects", 32, 32);
+            NPCSprites = content.LoadTextureSet("npc", 16, 32);
+            SaveStatueSprites = content.LoadTextureSet("save");
 
             DoorSprite = content.Load<Texture2D>("door");
             OuchSprite = content.Load<Texture2D>("ouch");

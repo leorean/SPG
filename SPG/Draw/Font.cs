@@ -173,8 +173,7 @@ namespace SPG.Draw
                 {
                     bool highLight = false;
 
-                    var txt = line[l];
-                    var highList = txt.AllIndexesOf("'");
+                    var txt = line[l];                    
                     
                     Texture2D word = null;
                     for (var i = 0; i < txt.Length; i++)
@@ -182,7 +181,7 @@ namespace SPG.Draw
                         var c = txt[i];
                         var tex = glyphs.Where(o => o.Key == c).FirstOrDefault().Value;
                         
-                        if (c == '\'')
+                        if (c == '~')
                         {
                             highLight = !highLight;
                             continue;
