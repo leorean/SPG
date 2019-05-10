@@ -1330,7 +1330,12 @@ namespace Platformer.Objects.Main
             
             if (oxygen < maxOxygen && HP > 0)
             {
-                var fg = new Color(3, 243, 243);
+                float rel = 1 - (float)oxygen / (float)maxOxygen;
+                var r = 3 + (int)(76 * rel);
+                var g = 243 - (int)(240 * rel);
+                var b = 243;
+
+                var fg = new Color(r, g, b);
                 var bg = new Color(20, 113, 126);
 
                 sb.DrawBar(Position + new Vector2(0, 12), (int) (1.5 * Globals.TILE), oxygen / (float)maxOxygen, fg, bg, height:2, border:false);                

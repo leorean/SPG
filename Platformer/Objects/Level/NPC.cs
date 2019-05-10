@@ -41,6 +41,9 @@ namespace Platformer.Objects.Level
                 p.Direction = (Direction)(-(int)direction);
                 var tx = (X - p.X + Math.Sign((int)direction) * 8) / 20f;
                 p.XVel = tx;
+
+                if (Math.Abs(X - p.X) < 1f)
+                    p.XVel = -1;
             }
 
             // ++++ draw <-> state logic ++++
