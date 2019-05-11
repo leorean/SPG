@@ -218,6 +218,22 @@ namespace Platformer.Objects.Main
             if (RoomCamera.Current.CurrentRoom != null)
             {
                 ObjectManager.SetRegionEnabled<GameObject>(RoomCamera.Current.CurrentRoom.X, RoomCamera.Current.CurrentRoom.Y, RoomCamera.Current.CurrentRoom.BoundingBox.Width, RoomCamera.Current.CurrentRoom.BoundingBox.Height, true);
+
+                // switch state
+                var switches = ObjectManager.Objects.FindAll(o => o is GroundSwitch).Cast<GroundSwitch>();
+                bool found = false;
+                foreach (var s in switches)
+                {
+                    if (s.Active)
+                    {
+                        found = true;
+                        RoomCamera.Current.CurrentRoom.SwitchState = true;
+                        break;
+                    }
+                }
+                if (!found)
+                    RoomCamera.Current.CurrentRoom.SwitchState = false;
+
             }
         }
     }

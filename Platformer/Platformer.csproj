@@ -63,6 +63,7 @@
     <Compile Include="Objects\Items\Item.cs" />
     <Compile Include="Objects\Items\Potions.cs" />
     <Compile Include="Objects\Level\Door.cs" />
+    <Compile Include="Objects\Level\GroundSwitch.cs" />
     <Compile Include="Objects\Level\MovingPlatform.cs" />
     <Compile Include="Objects\Level\Mushroom.cs" />
     <Compile Include="Objects\Level\NPC.cs" />

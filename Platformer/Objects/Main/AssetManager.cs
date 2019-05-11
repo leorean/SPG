@@ -43,6 +43,7 @@ namespace Platformer.Objects.Main
         public static Texture2D Darkness { get; private set; }
         public static Texture2D PlayerGhost { get; private set; }
         public static Texture2D MovingPlatform { get; private set; }
+        public static TextureSet GroundSwitch { get; private set; }
 
         // fonts
 
@@ -70,6 +71,7 @@ namespace Platformer.Objects.Main
             Darkness = content.Load<Texture2D>("darkness");
             PlayerGhost = content.Load<Texture2D>("playerGhost");
             MovingPlatform = content.Load<Texture2D>("movingPlatform");
+            GroundSwitch = content.LoadTextureSet("groundSwitch");
 
             MessageBox = content.Load<Texture2D>("messageBox");
             HUD = content.Load<Texture2D>("hud");

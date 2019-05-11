@@ -88,6 +88,10 @@ namespace Platformer.Objects.Main
                             pushBlock.Texture = GameManager.Current.Map.TileSet[t.ID];
                             t.Hide();
                             break;
+                        case 643: // switches (ground)
+                            var groundSwitch = new GroundSwitch(i * Globals.TILE, j * Globals.TILE, room);
+                            t.Hide();
+                            break;
                         case 579: // hp potion
                             new Potion(i * Globals.TILE + 8, j * Globals.TILE + 8, room, PotionType.HP);
                             t.Hide();
@@ -176,8 +180,8 @@ namespace Platformer.Objects.Main
                         // in tile units
                         var movXrange = data.ContainsKey("xRange") ? (int)data["xRange"] : 0;
                         var movYrange = data.ContainsKey("yRange") ? (int)data["yRange"] : 0;
-
-                        var movingPlatform = new MovingPlatform(x, y, movXvel, movYvel, movXrange, movYrange, room);
+                        var activatable = data.ContainsKey("activatable") ? (bool)data["activatable"] : false;
+                        var movingPlatform = new MovingPlatform(x, y, movXvel, movYvel, movXrange, movYrange, activatable, room);
                     }
                 }
             }
