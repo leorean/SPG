@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Platformer.Objects.Main;
 using System;
 using System.Collections.Generic;
@@ -34,9 +35,10 @@ namespace Platformer.Objects.Level
         public MovingPlatform(float x, float y, float xVel, float yVel, int xRange, int yRange, bool activatable, Room room) : base(x, y, room)
         {
             BoundingBox = new SPG.Util.RectF(0, 0, 2 * Globals.TILE, 1);
-            Visible = true;
-            Depth = Globals.LAYER_PLAYER - 0.0001f;            
-            Texture = AssetManager.MovingPlatform;
+            DrawOffset = new Vector2(0, 16);
+            Visible = true;            
+            
+            AnimationTexture = AssetManager.MovingPlatform;
 
             Activatable = activatable;
 
@@ -62,10 +64,17 @@ namespace Platformer.Objects.Level
             if (Activatable)
                 Active = Room.SwitchState;
 
-            if (!Active)
+            //Texture = Active? AssetManager.MovingPlatform[1] : Texture = AssetManager.MovingPlatform[0];
+
+            if (Active)
             {
+                SetAnimation(1, 3, .3f, true);
+            }
+            else
+            {
+                SetAnimation(1, 1, 0, false);
                 XVel = 0;
-                YVel = 0;
+                YVel = 0;                
                 return;
             }
 
@@ -122,6 +131,17 @@ namespace Platformer.Objects.Level
                 else
                     Move(0, YVel);
             }            
+        }
+
+        public override void Draw(SpriteBatch sb, GameTime gameTime)
+        {
+            if (Texture != null)
+            {
+                sb.Draw(Texture, Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Globals.LAYER_BG + 0.0001f);
+                sb.Draw(AnimationTexture[0], Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Globals.LAYER_FG - 0.0001f);
+                sb.Draw(AnimationTexture[0], Position, null, new Color(Color, 0.5f), Angle, DrawOffset, Scale, SpriteEffects.None, Globals.LAYER_FG + 0.0001f);
+            }
+
         }
     }
 }
