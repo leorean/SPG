@@ -42,8 +42,8 @@ namespace Platformer.Objects.Level
 
             Activatable = activatable;
 
-            this.xv = xVel;
-            this.yv = yVel;
+            this.xv = Math.Abs(xVel);
+            this.yv = Math.Abs(yVel);
             this.xRange = xRange * Globals.TILE;
             this.yRange = yRange * Globals.TILE;
 
@@ -57,9 +57,9 @@ namespace Platformer.Objects.Level
                 Active = false;
         }
 
-        public override void Update(GameTime gameTime)
+        public override void BeginUpdate(GameTime gameTime)
         {
-            base.Update(gameTime);
+            base.BeginUpdate(gameTime);
 
             if (Activatable)
                 Active = Room.SwitchState;

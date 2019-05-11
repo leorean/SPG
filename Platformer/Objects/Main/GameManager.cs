@@ -12,6 +12,7 @@ using SPG.Util;
 using SPG.View;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -71,9 +72,16 @@ namespace Platformer.Objects.Main
 
             // load new room + neighbors
             var neighbors = newRoom.Neighbors();
-            RoomObjectLoader.CreateRoomObjectsFromTiles(newRoom);
+            RoomObjectLoader.CreateRoomObjects(newRoom);
+            
+            // create room objects from object data for current room
+            var objectData = GameManager.Current.Map.ObjectData.Where(o => !o.Values.Contains("room")).ToList();
+            RoomObjectLoader.CreateRoomObjectsFromData(objectData, newRoom);
+
             foreach (var n in neighbors)
-                RoomObjectLoader.CreateRoomObjectsFromTiles(n);
+                RoomObjectLoader.CreateRoomObjects(n);
+
+            RoomObjectLoader.CleanObjectsExceptRoom(newRoom);
         }
 
         
@@ -156,11 +164,20 @@ namespace Platformer.Objects.Main
             {
                 throw new Exception($"No room detected at position {spawnX}x{spawnY}!");
             }
-
+            
             var neighbours = startRoom.Neighbors();
-            RoomObjectLoader.CreateRoomObjectsFromTiles(startRoom);
+            RoomObjectLoader.CreateRoomObjects(startRoom);
+            
+            // create room objects from object data for current room
+            var objectData = GameManager.Current.Map.ObjectData.Where(o => !o.Values.Contains("room")).ToList();
+            RoomObjectLoader.CreateRoomObjectsFromData(objectData, startRoom);
+
             foreach (var n in neighbours)
-                RoomObjectLoader.CreateRoomObjectsFromTiles(n);
+            {
+                RoomObjectLoader.CreateRoomObjects(n);                
+            }
+
+            RoomObjectLoader.CleanObjectsExceptRoom(startRoom);
 
             // create player at start position and set camera target
 

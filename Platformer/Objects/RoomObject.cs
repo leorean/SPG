@@ -1,4 +1,6 @@
-﻿using SPG.Objects;
+﻿using Platformer.Main;
+using Platformer.Objects.Level;
+using SPG.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;

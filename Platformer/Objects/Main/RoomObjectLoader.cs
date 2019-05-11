@@ -20,7 +20,7 @@ namespace Platformer.Objects.Main
         /// <summary>
         /// loads objects from a given room. 
         /// </summary>
-        public static void CreateRoomObjectsFromTiles(Room room)
+        public static void CreateRoomObjects(Room room)
         {
             if (room == null || GameManager.Current.LoadedRooms.Contains(room))
                 return;
@@ -49,7 +49,7 @@ namespace Platformer.Objects.Main
 
                     if (t == null || t.ID == -1)
                         continue;
-
+                    
                     switch (t.ID)
                     {
                         case 0: // platforms
@@ -107,21 +107,13 @@ namespace Platformer.Objects.Main
                             t.Hide();
                             break;
                         default:
-                            var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room)
-                            {
-                            };
+                            var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room);
                             solidCount++;
                             break;
                     }
                 }
             }
-
-            // create room objects from object data for current room
-
-            var objectData = GameManager.Current.Map.ObjectData.Where(o => !o.Values.Contains("room")).ToList();
-
-            RoomObjectLoader.CreateRoomObjectsFromData(objectData, room);
-
+            
             //Debug.WriteLine("Created " + solidCount + " solid objects.");
             GameManager.Current.LoadedRooms.Add(room);
         }
@@ -129,7 +121,7 @@ namespace Platformer.Objects.Main
         public static void CreateRoomObjectsFromData(List<Dictionary<string, object>> objectData, Room room)
         {
             var camera = RoomCamera.Current;
-
+            
             try
             {
                 foreach (var data in objectData)
@@ -191,7 +183,7 @@ namespace Platformer.Objects.Main
                 throw;
             }
         }
-
+        
         /// <summary>
         /// Creates a room object and adds it to the camera room list.
         /// </summary>
@@ -243,6 +235,25 @@ namespace Platformer.Objects.Main
                 Debug.WriteLine("Unable to initialize room from data: " + e.Message);
                 throw;
             }
+        }
+
+        /// <summary>
+        /// After rooms + neighbours are created, call this method to clean all room objects except for the active room
+        /// </summary>
+        /// <param name="room"></param>
+        public static void CleanObjectsExceptRoom(Room room)
+        {
+            var toDelete = ObjectManager.Objects.Where(o => o is RoomObject && !(o is Solid) && (o as RoomObject).Room != room).ToList();
+
+            var arr = new GameObject[toDelete.Count];
+            toDelete.CopyTo(arr);
+
+            foreach (var del in arr)
+            {
+                del.Destroy();
+            }
+            //if (arr.Length > 0)
+            //    Debug.WriteLine($"Deleted {arr.Length} objects");
         }
     }
 }

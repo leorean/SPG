@@ -286,8 +286,10 @@ namespace Platformer.Objects.Main
                 // remove: flags &= ~flag
                 // toggle: flags ^= flag
 
-                Stats.Abilities ^= PlayerAbility.PUSH;
-                Stats.Abilities ^= PlayerAbility.LEVITATE;
+                Stats.Abilities |= PlayerAbility.PUSH;
+                Stats.Abilities |= PlayerAbility.LEVITATE;
+                Stats.Abilities |= PlayerAbility.CLIMB_CEIL;
+                Stats.Abilities |= PlayerAbility.CLIMB_WALL;                
             }
 
             if (input.IsKeyPressed(Keys.O, Input.State.Pressed))
@@ -667,6 +669,9 @@ namespace Platformer.Objects.Main
 
                 if (k_upHolding)
                 {
+                    // prevent down-drifting even though the player already presses up
+                    if (YVel > 0) YVel = 0;
+
                     YVel = Math.Max(YVel - acc - Gravity, -leviMaxVel);
                     levitationSine = (float)Math.PI;
                 }
@@ -1142,6 +1147,8 @@ namespace Platformer.Objects.Main
                             && State != PlayerState.LEVITATE
                             && State != PlayerState.WALL_CLIMB
                             && State != PlayerState.WALL_IDLE
+                            && State != PlayerState.CEIL_CLIMB
+                            && State != PlayerState.CEIL_IDLE
                             && State != PlayerState.DOOR
                             && State != PlayerState.HIT_AIR)
                         {
@@ -1169,6 +1176,12 @@ namespace Platformer.Objects.Main
                     }
                 }
 
+                // this is dangerous!
+                if (movingPlatform != null && movingPlatform.YVel > 0)
+                {
+                    Position = new Vector2(X, movingPlatform.Y - 8);
+                    //Move(0, movYvel);
+                }
                 if (!this.CollisionBounds(movingPlatform, X, Y + movYvel + YVel))
                     movingPlatform = null;
             }
