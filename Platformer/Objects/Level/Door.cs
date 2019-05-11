@@ -17,7 +17,7 @@ namespace Platformer.Objects.Level
             Depth = Globals.LAYER_BG + .001f;
             
             BoundingBox = new SPG.Util.RectF(6, 0, 4, 16);
-            Texture = AssetManager.DoorSprite;
+            Texture = AssetManager.Door;
 
             Tx = tx;
             Ty = ty;

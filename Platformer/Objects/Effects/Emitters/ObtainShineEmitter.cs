@@ -17,7 +17,7 @@ namespace Platformer.Objects.Effects.Emitters
         public ObtainShineParticle(ParticleEmitter emitter) : base(emitter)
         {
             DrawOffset = new Microsoft.Xna.Framework.Vector2(32, 32);
-            Texture = AssetManager.WhiteCircleSprite;
+            Texture = AssetManager.WhiteCircle;
 
             LifeTime = 120;
 

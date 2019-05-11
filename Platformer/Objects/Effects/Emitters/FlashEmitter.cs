@@ -40,7 +40,7 @@ namespace Platformer.Objects.Effects.Emitters
         public FlashEmitter(float x, float y) : base(x, y)
         {
             SpawnRate = 1;
-            Texture = AssetManager.FlashSprite;
+            Texture = AssetManager.Flash;
         }
 
         public override void Update(GameTime gameTime)

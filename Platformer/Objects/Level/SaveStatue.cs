@@ -32,7 +32,7 @@ namespace Platformer.Objects.Level
             BoundingBox = new RectF(4, 6, Globals.TILE - 8, Globals.TILE - 7);
             Visible = true;
             AnimationSpeed = .1f;
-            AnimationTexture = AssetManager.SaveStatueSprites;
+            AnimationTexture = AssetManager.SaveStatue;
             
             floatPosition = Vector2.Zero;
 

@@ -166,7 +166,7 @@ namespace Platformer.Objects.Main
 
             Player = new Player(spawnX, spawnY);
             Player.Direction = direction;
-            Player.AnimationTexture = AssetManager.PlayerSprites;
+            Player.AnimationTexture = AssetManager.Player;
 
             globalWaterEmitter = new GlobalWaterBubbleEmitter(spawnX, spawnY, Player);
 

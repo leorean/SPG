@@ -18,30 +18,31 @@ namespace Platformer.Objects.Main
 
         public static TextureSet Backgrounds { get; private set; }
 
-        public static TextureSet PlayerSprites { get; private set; }
-        public static TextureSet EffectSprites { get; private set; }
-        public static TextureSet NPCSprites { get; private set; }
-        public static TextureSet SaveStatueSprites { get; private set; }
+        public static TextureSet Player { get; private set; }
+        public static TextureSet Effects { get; private set; }
+        public static TextureSet NPCS { get; private set; }
+        public static TextureSet SaveStatue { get; private set; }
 
         // items etc.
 
-        public static TextureSet ItemSprites { get; private set; }
-        public static TextureSet PotionSprites { get; private set; }
-        public static TextureSet CoinSprites { get; private set; }
+        public static TextureSet Items { get; private set; }
+        public static TextureSet Potions { get; private set; }
+        public static TextureSet Coins { get; private set; }
 
         // HUD
         
-        public static Texture2D HUDSprite { get; private set; }
-        public static Texture2D MessageBoxSprite { get; private set; }
+        public static Texture2D HUD { get; private set; }
+        public static Texture2D MessageBox { get; private set; }
 
         // misc
 
-        public static Texture2D DoorSprite { get; private set; }
-        public static Texture2D OuchSprite { get; private set; }
-        public static Texture2D WhiteCircleSprite { get; private set; }
-        public static Texture2D FlashSprite { get; private set; }
-        public static Texture2D DarknessSprite { get; private set; }
-        public static Texture2D PlayerGhostSprite { get; private set; }
+        public static Texture2D Door { get; private set; }
+        public static Texture2D Ouch { get; private set; }
+        public static Texture2D WhiteCircle { get; private set; }
+        public static Texture2D Flash { get; private set; }
+        public static Texture2D Darkness { get; private set; }
+        public static Texture2D PlayerGhost { get; private set; }
+        public static Texture2D MovingPlatform { get; private set; }
 
         // fonts
 
@@ -57,24 +58,25 @@ namespace Platformer.Objects.Main
 
             // sprites etc.
 
-            PlayerSprites = content.LoadTextureSet("player", 16, 32);
-            EffectSprites = content.LoadTextureSet("effects", 32, 32);
-            NPCSprites = content.LoadTextureSet("npc", 16, 32);
-            SaveStatueSprites = content.LoadTextureSet("save");
+            Player = content.LoadTextureSet("player", 16, 32);
+            Effects = content.LoadTextureSet("effects", 32, 32);
+            NPCS = content.LoadTextureSet("npc", 16, 32);
+            SaveStatue = content.LoadTextureSet("save");
 
-            DoorSprite = content.Load<Texture2D>("door");
-            OuchSprite = content.Load<Texture2D>("ouch");
-            WhiteCircleSprite = content.Load<Texture2D>("whiteCircle");
-            FlashSprite = content.Load<Texture2D>("flash");
-            DarknessSprite = content.Load<Texture2D>("darkness");
-            PlayerGhostSprite = content.Load<Texture2D>("playerGhost");
-            
-            MessageBoxSprite = content.Load<Texture2D>("messageBox");
-            HUDSprite = content.Load<Texture2D>("hud");
+            Door = content.Load<Texture2D>("door");
+            Ouch = content.Load<Texture2D>("ouch");
+            WhiteCircle = content.Load<Texture2D>("whiteCircle");
+            Flash = content.Load<Texture2D>("flash");
+            Darkness = content.Load<Texture2D>("darkness");
+            PlayerGhost = content.Load<Texture2D>("playerGhost");
+            MovingPlatform = content.Load<Texture2D>("movingPlatform");
 
-            ItemSprites = content.LoadTextureSet("items");
-            PotionSprites = content.LoadTextureSet("potions");
-            CoinSprites = content.LoadTextureSet("coins");
+            MessageBox = content.Load<Texture2D>("messageBox");
+            HUD = content.Load<Texture2D>("hud");
+
+            Items = content.LoadTextureSet("items");
+            Potions = content.LoadTextureSet("potions");
+            Coins = content.LoadTextureSet("coins");
 
             // backgrounds
 

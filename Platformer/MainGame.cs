@@ -123,7 +123,7 @@ namespace Platformer
             GameManager.Current.Map = map;
 
             HUD = new HUD();
-            HUD.Texture = AssetManager.HUDSprite;
+            HUD.Texture = AssetManager.HUD;
 
             Debug.WriteLine("Loaded game in " + sw.ElapsedMilliseconds + "ms");
             sw.Stop();

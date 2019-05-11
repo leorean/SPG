@@ -20,7 +20,7 @@ namespace Platformer.Objects.Effects
         public delegate void TransitionEnd();
         public TransitionEnd OnTransitionEnd;
 
-        private Texture2D dark = AssetManager.DarknessSprite;
+        private Texture2D dark = AssetManager.Darkness;
         private double alpha = 0f;
         private Fade fade;
         private Color color = new Color(Color.White, 0);

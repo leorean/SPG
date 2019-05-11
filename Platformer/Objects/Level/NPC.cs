@@ -23,7 +23,7 @@ namespace Platformer.Objects.Level
             this.text = text;
             this.type = type;
 
-            AnimationTexture = AssetManager.NPCSprites;
+            AnimationTexture = AssetManager.NPCS;
 
             DrawOffset = new Vector2(8, 24);
             BoundingBox = new RectF(-4, -4, 8, 12);

@@ -17,7 +17,7 @@ namespace Platformer.Objects.Effects
         {
             Depth = .8f;
             Type = type;
-            AnimationTexture = AssetManager.EffectSprites;
+            AnimationTexture = AssetManager.Effects;
             DrawOffset = new Vector2(16, 16);
 
             Visible = false;

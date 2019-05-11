@@ -64,7 +64,7 @@ namespace Platformer.Objects.Effects.Emitters
         public override void CreateParticle()
         {
             var particle = new OuchParticle(this);
-            particle.Texture = AssetManager.OuchSprite;
+            particle.Texture = AssetManager.Ouch;
         }
     }
 }

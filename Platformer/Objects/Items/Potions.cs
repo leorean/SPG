@@ -47,12 +47,12 @@ namespace Platformer.Objects.Items
             if (Type == PotionType.HP)
             {
                 amount = 5;
-                Texture = AssetManager.PotionSprites[0];
+                Texture = AssetManager.Potions[0];
             }
             if (Type == PotionType.MP)
             {
                 amount = 20;
-                Texture = AssetManager.PotionSprites[1];
+                Texture = AssetManager.Potions[1];
             }
             
             Save = false;

@@ -21,7 +21,7 @@ namespace Platformer.Objects.Main
             DrawOffset = new Vector2(8, 24);
             BoundingBox = new RectF(-4, -4, 8, 12);
 
-            Texture = AssetManager.PlayerGhostSprite;
+            Texture = AssetManager.PlayerGhost;
 
             Scale = new Vector2(Math.Sign((int)dir), 1);
             spawnY = Y;

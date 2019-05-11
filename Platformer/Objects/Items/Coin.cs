@@ -49,7 +49,7 @@ namespace Platformer.Objects.Items
         public Coin(float x, float y, Room room, string name = null) : base(x, y, room, name)
         {
             Visible = false;
-            AnimationTexture = AssetManager.CoinSprites;
+            AnimationTexture = AssetManager.Coins;
             t = RND.Next * Math.PI * 2;
             pos = Position;
 

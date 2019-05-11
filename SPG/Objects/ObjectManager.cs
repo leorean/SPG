@@ -168,6 +168,18 @@ namespace SPG.Objects
             return candidates;
         }
 
+        public static bool CollisionBounds(this GameObject self, GameObject other, float x, float y)
+        {
+            if (other == null) return false;
+
+            if (other.Right >= x + self.BoundingBox.X && other.Left <= x + self.BoundingBox.X + self.BoundingBox.Width
+                    &&
+                    other.Bottom >= y + self.BoundingBox.Y && other.Top <= y + self.BoundingBox.Y + self.BoundingBox.Height)
+                return true;
+
+            return false;
+        }
+
         /// <summary>
         /// Finds a list of game objects of a certain type that have their bounding coordinates within the own bounding coordinates, based on x and y value.
         /// </summary>

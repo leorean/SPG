@@ -139,6 +139,10 @@ namespace Platformer.Objects.Main
 
         private PlayerGhost ghost;
 
+        private MovingPlatform movingPlatform;
+        private float movXvel;
+        private float movYvel;
+
         // constructor
 
         public Player(float x, float y) : base(x, y)
@@ -189,6 +193,8 @@ namespace Platformer.Objects.Main
 
         public void Hit(int hitPoints, float? angle = null)
         {
+            //movingPlatform = null;
+
             HP = Math.Max(HP - hitPoints, 0);
 
             var ouch = new OuchEmitter(X, Y);
@@ -292,6 +298,9 @@ namespace Platformer.Objects.Main
                 var flash = new FlashEmitter(X, Y);
             }
 
+            var gamePadLeftXFactor = 1f;
+            var gamePadLeftYFactor = 1f;
+
             // gamepad overrides keyboard input if pussible
             if (input.GamePadEnabled)
             {
@@ -310,7 +319,10 @@ namespace Platformer.Objects.Main
                 k_downPressed = input.DirectionPressedFromStick(Input.Direction.DOWN, Input.Stick.LeftStick, Input.State.Pressed);
 
                 k_jumpPressed = input.IsButtonPressed(Buttons.A, Input.State.Pressed);
-                k_jumpHolding = input.IsButtonPressed(Buttons.A, Input.State.Holding);                
+                k_jumpHolding = input.IsButtonPressed(Buttons.A, Input.State.Holding);
+
+                gamePadLeftXFactor = Math.Abs(input.LeftStick().X);
+                gamePadLeftYFactor = Math.Abs(input.LeftStick().Y);
             }
 
             var tk_leftPressed = k_leftPressed && (k_rightPressed == false);
@@ -535,7 +547,7 @@ namespace Platformer.Objects.Main
                 {
                     if (Direction == Direction.RIGHT)
                     {
-                        XVel = Math.Min(XVel + .2f, maxVel);
+                        XVel = Math.Min(XVel + .2f, maxVel * gamePadLeftXFactor);
 
                         if (colSide != null && Stats.Abilities.HasFlag(PlayerAbility.PUSH))
                             State = PlayerState.PUSH;
@@ -549,7 +561,7 @@ namespace Platformer.Objects.Main
                 {
                     if (Direction == Direction.LEFT)
                     {
-                        XVel = Math.Max(XVel - .2f, -maxVel);
+                        XVel = Math.Max(XVel - .2f, -maxVel * gamePadLeftXFactor);
 
                         if (colSide != null && Stats.Abilities.HasFlag(PlayerAbility.PUSH))
                             State = PlayerState.PUSH;
@@ -580,6 +592,7 @@ namespace Platformer.Objects.Main
 
                 if (k_jumpPressed)
                 {
+                    movingPlatform = null;
                     State = PlayerState.JUMP_UP;
                     YVel = -2;
                     k_jumpPressed = false;
@@ -1070,7 +1083,7 @@ namespace Platformer.Objects.Main
             // entering doors
             if (State == PlayerState.DOOR)
             {
-                
+                // nothing to do here for now
             }
 
             var saveStatue = this.CollisionBounds<SaveStatue>(X, Y).FirstOrDefault();
@@ -1088,29 +1101,90 @@ namespace Platformer.Objects.Main
             YVel += Gravity;
             YVel = Math.Sign(YVel) * Math.Min(Math.Abs(YVel), 4);
 
-            var colY = this.CollisionBounds<Collider>(X, Y + YVel).Where(o => o is Solid).ToList();
-            
+            // moving platform pre-calculations
+
             var platform = this.CollisionBounds<Platform>(X, Y + YVel).FirstOrDefault();
 
-            if (platform != null)
+            // get off platform when not in X-range
+            if (movingPlatform != null)
             {
-                if (Bottom <= platform.Top)
+                if (Left > movingPlatform.Right || Right < movingPlatform.Left)
+                    movingPlatform = null;
+            }
+
+            if (movingPlatform == null)
+            {
+                movXvel = 0f;
+                movYvel = 0f;
+            }
+            else
+            {
+                movXvel = movingPlatform.XVel;
+                movYvel = movingPlatform.YVel;
+            }
+
+            var colY = this.CollisionBounds<Collider>(X, Y + movYvel + YVel).Where(o => o is Solid).ToList();
+            
+            if (platform != null && movingPlatform == null)
+            {
+                if (Bottom <= platform.Top - platform.YVel)
                 {
                     if (YVel >= 0)
                     {
                         colY.Clear();
                         colY.Add(platform);
+
+                        if (State != PlayerState.SWIM
+                            && State != PlayerState.SWIM_DIVE_IN
+                            && State != PlayerState.SWIM_TURN_AROUND
+                            && State != PlayerState.PUSH
+                            && State != PlayerState.OBTAIN
+                            && State != PlayerState.LEVITATE
+                            && State != PlayerState.WALL_CLIMB
+                            && State != PlayerState.WALL_IDLE
+                            && State != PlayerState.DOOR
+                            && State != PlayerState.HIT_AIR)
+                        {
+                            if (movingPlatform == null && platform is MovingPlatform)
+                                movingPlatform = platform as MovingPlatform;
+                        }
                     }
                 }
+            }
+            
+            // get off platform when touching y blocks
+            if (movingPlatform != null)
+            {
+                if (colY.Where(o => o is Solid && !(o is MovingPlatform)).Count() == 0)
+                    colY.Add(movingPlatform);
+                else
+                {
+                    if(movingPlatform.YVel >= 0)
+                        movingPlatform = null;
+                    else
+                    {
+                        colY = this.CollisionBounds<Collider>(X, Y + movYvel + YVel - 1).Where(o => o is Solid).ToList();
+                        if (colY.Count > 0)
+                            movingPlatform = null;
+                    }
+                }
+
+                if (!this.CollisionBounds(movingPlatform, X, Y + movYvel + YVel))
+                    movingPlatform = null;
+            }
+
+            if (movingPlatform != null)
+            {
+                if (Bottom > movingPlatform.Y)
+                    Move(0, -Math.Abs(movingPlatform.YVel));
             }
 
             if (colY.Count == 0)
             {
-                Move(0, YVel);
+                Move(0, YVel + movYvel);                
             }
             else
             {
-
                 if (YVel >= Gravity)
                 {
                     onGround = true;
@@ -1152,11 +1226,11 @@ namespace Platformer.Objects.Main
                 YVel = 0;
             }
             
-            var colX = ObjectManager.CollisionBounds<Solid>(this, X + XVel, Y);
+            var colX = ObjectManager.CollisionBounds<Solid>(this, X + XVel + movXvel, Y);
             
             if (colX.Count == 0)
             {
-                Move(XVel, 0);
+                Move(XVel + movXvel, 0);
             } else
             {
                 XVel = 0;

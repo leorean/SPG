@@ -150,7 +150,7 @@ namespace Platformer.Objects.Main
                         {
                             case 0: // ability item: push
                                 var item = new AbilityItem(x + 8, y + 8, room, PlayerAbility.PUSH, itemName);
-                                item.Texture = AssetManager.ItemSprites[0];
+                                item.Texture = AssetManager.Items[0];
                                 item.Text = itemText;
                                 break;
                             // TODO: add other item types, collectables etc.
@@ -168,6 +168,16 @@ namespace Platformer.Objects.Main
                         var npcText = data.ContainsKey("text") ? data["text"].ToString() : "-unknown-";
                         var npcType = data.ContainsKey("npcType") ? (int)data["npcType"] : -1;
                         var npc = new NPC(x + 8, y + 8, room, npcType, npcText);
+                    }
+                    if (type == "movingPlatform")
+                    {
+                        var movXvel = data.ContainsKey("xVel") ? (float)data["xVel"] : 0f;
+                        var movYvel = data.ContainsKey("yVel") ? (float)data["yVel"] : 0f;
+                        // in tile units
+                        var movXrange = data.ContainsKey("xRange") ? (int)data["xRange"] : 0;
+                        var movYrange = data.ContainsKey("yRange") ? (int)data["yRange"] : 0;
+
+                        var movingPlatform = new MovingPlatform(x, y, movXvel, movYvel, movXrange, movYrange, room);
                     }
                 }
             }

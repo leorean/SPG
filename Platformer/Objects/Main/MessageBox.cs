@@ -50,7 +50,7 @@ namespace Platformer.Objects.Main
             
             Depth = Globals.LAYER_FONT - .001f;
 
-            Texture = AssetManager.MessageBoxSprite;
+            Texture = AssetManager.MessageBox;
 
             font = AssetManager.DefaultFont.Copy();
             font.Halign = Font.HorizontalAlignment.Left;
@@ -70,15 +70,17 @@ namespace Platformer.Objects.Main
 
             input.Update(gameTime);
 
-            var kUpPressed = input.IsKeyPressed(Keys.Up, Input.State.Pressed);
-            var kDownPressed = input.IsKeyPressed(Keys.Down, Input.State.Pressed);
+            var kUpPressed = input.IsKeyPressed(Keys.Up, Input.State.Pressed) || input.IsKeyPressed(Keys.S, Input.State.Pressed);
+            var kDownPressed = input.IsKeyPressed(Keys.Down, Input.State.Pressed) || input.IsKeyPressed(Keys.A, Input.State.Pressed);
 
             var kAny = input.IsAnyKeyPressed();
 
             if (input.GamePadEnabled)
             {
-                kUpPressed = input.DirectionPressedFromStick(Input.Direction.UP, Input.Stick.LeftStick, Input.State.Pressed);
-                kDownPressed = input.DirectionPressedFromStick(Input.Direction.DOWN, Input.Stick.LeftStick, Input.State.Pressed);
+                kUpPressed = input.DirectionPressedFromStick(Input.Direction.UP, Input.Stick.LeftStick, Input.State.Pressed)
+                    || input.IsButtonPressed(Buttons.B);
+                kDownPressed = input.DirectionPressedFromStick(Input.Direction.DOWN, Input.Stick.LeftStick, Input.State.Pressed)
+                    || input.IsButtonPressed(Buttons.A);
                 kAny = input.IsAnyButtonPressed();
             }
 
