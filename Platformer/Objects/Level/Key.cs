@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using SPG.Objects;
 
 namespace Platformer.Objects.Level
-{
+{    
     public class Key : Platform
     {
         public bool Persistent { get; set; }
@@ -21,10 +21,24 @@ namespace Platformer.Objects.Level
         {
             Depth = Globals.LAYER_PLAYER + .001f;
 
+            Texture = GameManager.Current.Map.TileSet[581];
+
             Visible = true;
-            DebugEnabled = true;
+            
             DrawOffset = new Vector2(8, 8);
-            BoundingBox = new SPG.Util.RectF(-4, -8, 8, 16);            
+            BoundingBox = new SPG.Util.RectF(-4, -8, 8, 16);
+            
+        }
+
+        public override void BeginUpdate(GameTime gameTime)
+        {
+            base.BeginUpdate(gameTime);
+
+            if (GameManager.Current.Player?.Stats?.KeyObjectID == ID && player == null)
+                Destroy();
+
+            if (GameManager.Current.Player.Stats.KeysAndKeyblocks.Contains(ID))
+                Destroy();
         }
 
         public override void Update(GameTime gameTime)
@@ -69,16 +83,37 @@ namespace Platformer.Objects.Level
                 var col = this.CollisionBounds<Solid>(X, Y).FirstOrDefault();
                 if (col == null)
                     stuck = false;
-            }
+            }            
+        }
+
+        public void Unlock(KeyBlock keyBlock)
+        {
+            GameManager.Current.Player.Stats.KeysAndKeyblocks.Add(ID);
+
+            var emitter = new Effects.Emitters.KeyBurstEmitter(X, Y, keyBlock.Center);
+            emitter.OnFinishedAction = () =>
+            {
+                GameManager.Current.Player.Stats.KeysAndKeyblocks.Add((keyBlock as GameObject).ID);
+
+                new Effects.SingularEffect(keyBlock.X + 8, keyBlock.Y + 8, 2);
+                new Effects.Emitters.OuchEmitter(keyBlock.X + 8, keyBlock.Y + 8);
+            };
+                        
+            player.Stats.KeyObjectID = -1;
+            Parent = null;
         }
 
         public void Take(Player player)
         {
             Parent = player;
+            player.Stats.KeyObjectID = ID;
         }
 
         public void Throw()
         {
+            if (player == null)
+                return;
+
             Position = new Vector2(X + Math.Sign((int)player.Direction) * Globals.TILE, player.Y - Globals.TILE);
             var emitter = new Effects.Emitters.SaveBurstEmitter(X, Y);
 
@@ -87,15 +122,10 @@ namespace Platformer.Objects.Level
             if (col != null)
                 stuck = true;
 
-            Parent = null;
-        }
+            player.KeyObject = null;
 
-        /*public override void Destroy(bool callGC = false)
-        {
-            if (!Persistent)
-            {
-                base.Destroy(callGC);
-            }
-        }*/
+            player.Stats.KeyObjectID = -1;
+            Parent = null;
+        }        
     }
 }

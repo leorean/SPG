@@ -61,7 +61,25 @@ namespace SPG.Objects
         public static void Remove(GameObject o)
         {
             if (Objects.Contains(o))
-                Objects.Remove(o);            
+                Objects.Remove(o);
+        }
+
+        /// <summary>
+        /// Destroys all game objects that have a specific ID. If not set, it simply destroys all of that type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="specificID"></param>
+        public static void DestroyAll<T>(int specificID = -1) where T : GameObject
+        {
+            var candidates = Objects.Where(o => o is T && ((o.ID == specificID) || specificID == -1)).Cast<T>().ToList();
+            T[] array = new T[candidates.Count];
+
+            candidates.CopyTo(array);
+
+            foreach(var obj in array)
+            {
+                obj.Destroy();
+            }            
         }
 
         public static void SortByID()

@@ -27,7 +27,7 @@ namespace Platformer.Objects.Effects
         {
             base.Update(gameTime);
             
-            var cols = 7; // how many columns there are in the sheet
+            var cols = 8; // how many columns there are in the sheet
             var fSpd = .3f; // frame speed
             var fAmount = 7; // how many frames
 
@@ -37,7 +37,11 @@ namespace Platformer.Objects.Effects
                     fAmount = 5;
                     break;
                 case 1:
-                    fAmount = 6;                    
+                    fAmount = 6;
+                    break;
+                case 2:
+                    fAmount = 8;
+                    fSpd = .4f;
                     break;
             }
 

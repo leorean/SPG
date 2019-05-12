@@ -101,8 +101,11 @@ namespace Platformer.Objects.Main
                             t.Hide();
                             break;
                         case 581: // key
-                            var key = new Key(i * Globals.TILE + 8, j * Globals.TILE + 8, room);
-                            key.Texture = GameManager.Current.Map.TileSet[t.ID];
+                            var key = new Key(i * Globals.TILE + 8, j * Globals.TILE + 8, room);                            
+                            t.Hide();
+                            break;
+                        case 582: // keyblock
+                            new KeyBlock(i * Globals.TILE, j * Globals.TILE, room);
                             t.Hide();
                             break;
                         // coins

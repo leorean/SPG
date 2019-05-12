@@ -51,6 +51,7 @@
     <Compile Include="Objects\Effects\Emitters\ObtainShineEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\OuchEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\PlayerLevitationEmitter.cs" />
+    <Compile Include="Objects\Effects\Emitters\KeyBurstEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\PotionBurstEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\PotionEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\SaveBurstEmitter.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="Objects\Level\Door.cs" />
     <Compile Include="Objects\Level\GroundSwitch.cs" />
     <Compile Include="Objects\Level\Key.cs" />
+    <Compile Include="Objects\Level\KeyBlock.cs" />
     <Compile Include="Objects\Level\MovingPlatform.cs" />
     <Compile Include="Objects\Level\Mushroom.cs" />
     <Compile Include="Objects\Level\NPC.cs" />

@@ -41,6 +41,10 @@ namespace Platformer.Objects.Main
 
         // ID, Typename
         public Dictionary<int, string> Items { get; set; } = new Dictionary<int, string>();
+
+        public int KeyObjectID { get; set; } = -1;
+
+        public List<int> KeysAndKeyblocks { get; set; } = new List<int>();
     }
 
     [Flags]
@@ -158,7 +162,7 @@ namespace Platformer.Objects.Main
         private float movXvel;
         private float movYvel;
 
-        public Key KeyObject { get; private set; }
+        public Key KeyObject { get; set; }
 
         // constructor
 
@@ -191,7 +195,20 @@ namespace Platformer.Objects.Main
             MP = Stats.MaxMP;
 
             maxOxygen = 5 * 60;
-            oxygen = maxOxygen;            
+            oxygen = maxOxygen;
+
+            // re-create previously saved carry-objects
+
+            if (Stats.KeyObjectID != -1)
+            {
+                var obj = new Key(x, y - Globals.TILE, RoomCamera.Current.CurrentRoom);
+                obj.ID = Stats.KeyObjectID;
+                obj.Parent = this;
+                Stats.KeyObjectID = -1;
+
+                ObjectManager.DestroyAll<Key>(obj.ID);
+                obj.Parent = null;
+            }
         }
 
         ~Player()
@@ -545,8 +562,20 @@ namespace Platformer.Objects.Main
                     if (key != null)
                     {
                         KeyObject = key;
-                        key.Take(this);                        
+                        key.Take(this);
                         State = PlayerState.CARRYOBJECT_TAKE;
+                    }
+                }
+
+                // ++++ keyblocks ++++
+                if (State == PlayerState.CARRYOBJECT_IDLE || State == PlayerState.CARRYOBJECT_WALK)
+                {
+                    var keyBlock = this.CollisionBounds<KeyBlock>(X + Math.Sign((int)Direction) * 8, Y).FirstOrDefault();
+
+                    if (keyBlock != null && KeyObject != null && k_downPressed)
+                    {
+                        KeyObject.Unlock(keyBlock);
+                        State = PlayerState.IDLE;
                     }
                 }
 
@@ -1189,8 +1218,7 @@ namespace Platformer.Objects.Main
                 {
                     if (hit || (k_downPressed && State != PlayerState.CARRYOBJECT_TAKE))
                     {
-                        KeyObject.Throw();
-                        KeyObject = null;
+                        KeyObject.Throw();                        
                     }
                 }
 
