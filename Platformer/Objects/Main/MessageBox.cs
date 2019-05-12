@@ -31,7 +31,25 @@ namespace Platformer.Objects.Main
         public Action OnCompleted;
 
         /// <summary>
-        /// Creates a new message box. Multiple pages can be created by adding '|' as separator.
+        /// Creates a new message box.
+        /// 
+        /// Special chars:
+        /// \n ... new line
+        /// | ... new page
+        /// ~ ... toggle highlighting (example: ~word~)
+        /// 
+        /// #l ... left arrow
+        /// #r ... right arrow
+        /// #u ... up arrow
+        /// #d ... down arrow
+        /// 
+        /// #a ... A button
+        /// #b ... B button
+        /// #x ... X button
+        /// #y ... Y button
+        /// #Y ... Y key
+        /// #X ... X key
+        /// 
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
@@ -42,6 +60,19 @@ namespace Platformer.Objects.Main
             input = new Input();
 
             texts = new List<string>();
+
+            text = text.Replace("#l", ((char)128).ToString());
+            text = text.Replace("#r", ((char)129).ToString());
+            text = text.Replace("#u", ((char)130).ToString());
+            text = text.Replace("#d", ((char)131).ToString());
+
+            text = text.Replace("#a", ((char)132).ToString());
+            text = text.Replace("#b", ((char)133).ToString());
+            text = text.Replace("#x", ((char)134).ToString());
+            text = text.Replace("#y", ((char)135).ToString());
+
+            text = text.Replace("#A", ((char)136).ToString());
+            text = text.Replace("#S", ((char)137).ToString());
 
             var split = text.Split('|');
 

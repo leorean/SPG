@@ -49,35 +49,40 @@ namespace Platformer.Objects.Level
                     player.XVel = -1;
             }
 
+            //
+
+            if (GameManager.Current.Player.X < X)
+                direction = Direction.LEFT;
+            else
+                direction = Direction.RIGHT;
+            
+            var xScale = Math.Sign((int)direction);
+            Scale = new Vector2(xScale, 1);
+
             // ++++ draw <-> state logic ++++
 
             var cols = 4; // how many columns there are in the sheet            
             var fSpd = .04f; // frame speed
             var fAmount = 2; // how many frames
             var loopAnim = true; // loop animation?
-            
-            SetAnimation(cols * type, cols * type + fAmount - 1, fSpd, loopAnim);
 
-            if (GameManager.Current.Player.X < X)
+            switch (type)
             {
-                direction = Direction.LEFT;
-            } else
-            {
-                direction = Direction.RIGHT;
+                case 0: // signs
+                    fAmount = 1;
+                    fSpd = 0;
+                    Scale = Vector2.One;
+                    break;
+                case 1:
+                    break;
             }
 
-            var xScale = Math.Sign((int)direction);
-            Scale = new Vector2(xScale, 1);            
+            SetAnimation(cols * type, cols * type + fAmount - 1, fSpd, loopAnim);            
         }
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
-            base.Draw(sb, gameTime);
-
-            /*if (helpTimer > 0)
-            {
-                sb.Draw(AssetManager.ToolTip[AnimationFrame], Position + new Vector2(0, 0), null, Color.White, 0, DrawOffset, Vector2.One, SpriteEffects.None, Depth + 0.001f);
-            }*/
+            base.Draw(sb, gameTime);            
         }
 
         public virtual void Interact(Player player)
@@ -96,7 +101,7 @@ namespace Platformer.Objects.Level
 
         internal void ShowToolTip(Player player)
         {
-            var toolTip = new ToolTip(this, player);            
+            var toolTip = new ToolTip(this, player, type: 0);
         }
     }
 }

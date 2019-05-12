@@ -128,7 +128,13 @@ namespace SPG.Map
                                 foreach (XmlNode prop in node.ChildNodes)
                                 {
                                     var propName = prop.Attributes["name"].Value;
-                                    var propValueString = prop.Attributes["value"].Value;
+                                    
+                                    var propValueString = prop.Attributes.Find("value");
+
+                                    if (propValueString == null)
+                                    {
+                                        propValueString = prop.InnerText;
+                                    }
 
                                     // unknown value types are treated as strings
                                     var propValueType = "string";

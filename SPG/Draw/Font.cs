@@ -135,7 +135,9 @@ namespace SPG.Draw
 
         /// <summary>
         /// Draw text at a position, optionally limiting to a maxWidth in pixels.
-        /// \n will make newlines, enclosing a word like 'this' will highlight it with the hightlight color.
+        /// Special chars:
+        /// \n ... new line
+        /// ~ ... toggle highlighting (example: ~word~)
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
@@ -173,7 +175,7 @@ namespace SPG.Draw
                 {
                     bool highLight = false;
 
-                    var txt = line[l];                    
+                    var txt = line[l];
                     
                     Texture2D word = null;
                     for (var i = 0; i < txt.Length; i++)
