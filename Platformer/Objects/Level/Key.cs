@@ -129,6 +129,7 @@ namespace Platformer.Objects.Level
                     player.State = Player.PlayerState.IDLE;
                 }
 
+                player.KeyObject = null;
                 player.KeyObjectID = -1;
                 Parent = null;
             }
