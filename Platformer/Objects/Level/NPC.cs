@@ -4,7 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Platformer.Objects.Effects;
 using Platformer.Objects.Main;
+using SPG.Objects;
 using SPG.Util;
 
 namespace Platformer.Objects.Level
@@ -16,8 +19,8 @@ namespace Platformer.Objects.Level
 
         private Direction direction;
 
-        private Player p;
-
+        private Player player;
+        
         public NPC(float x, float y, Room room, int type, string text, string name = null) : base(x, y, room, name)
         {
             this.text = text;
@@ -36,14 +39,14 @@ namespace Platformer.Objects.Level
         {
             base.Update(gameTime);
 
-            if (p != null)
+            if (player != null)
             {
-                p.Direction = (Direction)(-(int)direction);
-                var tx = (X - p.X + Math.Sign((int)direction) * 8) / 20f;
-                p.XVel = tx;
+                player.Direction = (Direction)(-(int)direction);
+                var tx = (X - player.X + Math.Sign((int)direction) * 8) / 20f;
+                player.XVel = tx;
 
-                if (Math.Abs(X - p.X) < 1f)
-                    p.XVel = -1;
+                if (Math.Abs(X - player.X) < 1f)
+                    player.XVel = -1;
             }
 
             // ++++ draw <-> state logic ++++
@@ -64,21 +67,36 @@ namespace Platformer.Objects.Level
             }
 
             var xScale = Math.Sign((int)direction);
-            Scale = new Vector2(xScale, 1);
+            Scale = new Vector2(xScale, 1);            
+        }
+
+        public override void Draw(SpriteBatch sb, GameTime gameTime)
+        {
+            base.Draw(sb, gameTime);
+
+            /*if (helpTimer > 0)
+            {
+                sb.Draw(AssetManager.ToolTip[AnimationFrame], Position + new Vector2(0, 0), null, Color.White, 0, DrawOffset, Vector2.One, SpriteEffects.None, Depth + 0.001f);
+            }*/
         }
 
         public virtual void Interact(Player player)
         {
-            p = player;
+            this.player = player;
 
-            p.State = Player.PlayerState.DOOR;
+            this.player.State = Player.PlayerState.DOOR;
 
             var msgBox = new MessageBox(text, "");
             msgBox.OnCompleted = () =>
             {
-                p.State = Player.PlayerState.IDLE;                
-                p = null;
-            };
+                this.player.State = Player.PlayerState.IDLE;                
+                this.player = null;
+            };            
+        }
+
+        internal void ShowToolTip(Player player)
+        {
+            var toolTip = new ToolTip(this, player);            
         }
     }
 }

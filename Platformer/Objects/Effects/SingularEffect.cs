@@ -13,9 +13,15 @@ namespace Platformer.Objects.Effects
     {
         public int Type { get; set; }
 
+        public bool Loop { get; set; }
+
+        protected int cols;
+        protected float fSpd;
+        protected int fAmount;
+
         public SingularEffect(float x, float y, int type = 0) : base(x, y)
         {
-            Depth = .8f;
+            Depth = Globals.LAYER_EFFECT;
             Type = type;
             AnimationTexture = AssetManager.Effects;
             DrawOffset = new Vector2(16, 16);
@@ -27,10 +33,10 @@ namespace Platformer.Objects.Effects
         {
             base.Update(gameTime);
             
-            var cols = 8; // how many columns there are in the sheet
-            var fSpd = .3f; // frame speed
-            var fAmount = 7; // how many frames
-
+            cols = 8; // how many columns there are in the sheet
+            fSpd = .3f; // frame speed
+            fAmount = 7; // how many frames
+            
             switch (Type)
             {
                 case 0:                    
@@ -42,16 +48,17 @@ namespace Platformer.Objects.Effects
                 case 2:
                     fAmount = 8;
                     fSpd = .4f;
-                    break;
+                    break;                
             }
 
-            SetAnimation(cols * Type, cols * Type + fAmount, fSpd, false);
+            SetAnimation(cols * Type, cols * Type + fAmount, fSpd, Loop);
             Visible = true;
 
-            AnimationComplete += Effect_AnimationComplete;
+            if (!Loop)
+                AnimationComplete += Effect_AnimationComplete;
         }
 
-        private void Effect_AnimationComplete(object sender, EventArgs e)
+        protected void Effect_AnimationComplete(object sender, EventArgs e)
         {
             AnimationComplete -= Effect_AnimationComplete;
 

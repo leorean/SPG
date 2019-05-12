@@ -57,6 +57,7 @@
     <Compile Include="Objects\Effects\Emitters\SaveBurstEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\SaveStatueEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\WaterSplashEmitter.cs" />
+    <Compile Include="Objects\Effects\ToolTip.cs" />
     <Compile Include="Objects\Effects\Transition.cs" />
     <Compile Include="Objects\Effects\SingularEffect.cs" />
     <Compile Include="Objects\Items\AbilityItem.cs" />

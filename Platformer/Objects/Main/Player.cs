@@ -561,37 +561,31 @@ namespace Platformer.Objects.Main
                 }
 
                 // ++++ keys ++++
-
-                if (State == PlayerState.IDLE && k_downPressed)
+                
+                var key = this.CollisionBounds<Key>(X, Y + Globals.TILE).FirstOrDefault();
+                if (key != null)
                 {
-                    var key = this.CollisionBounds<Key>(X, Y + Globals.TILE).FirstOrDefault();
-                    if (key != null)
+                    var toolTip = new ToolTip(key, this, new Vector2(0, 8), 1);
+
+                    if (State == PlayerState.IDLE && k_downPressed)
                     {
                         KeyObject = key;
                         key.Take(this);
                         State = PlayerState.CARRYOBJECT_TAKE;
+
+                        ObjectManager.DestroyAll<ToolTip>();
                     }
                 }
-
-                // ++++ keyblocks ++++
-                // moved logic to keys
-                /*if (State == PlayerState.CARRYOBJECT_IDLE || State == PlayerState.CARRYOBJECT_WALK)
-                {
-                    var keyBlock = this.CollisionBounds<KeyBlock>(X + Math.Sign((int)Direction) * 8, Y).FirstOrDefault();
-
-                    if (keyBlock != null && KeyObject != null)// && k_downPressed)
-                    {
-                        KeyObject.Unlock(keyBlock);
-                        State = PlayerState.IDLE;
-                    }
-                }*/
-
+                
                 // ++++ npcs ++++
 
                 var npc = this.CollisionBounds<NPC>(X, Y).FirstOrDefault();
 
                 if (npc != null)
                 {
+                    if (!ObjectManager.Exists<MessageBox>())
+                        npc.ShowToolTip(this);
+
                     if (k_upPressed)
                     {
                         npc.Interact(this);
@@ -1234,7 +1228,7 @@ namespace Platformer.Objects.Main
 
                 if (KeyObject != null)
                 {
-                    if (hit)
+                    if (hit || inWater)
                         KeyObject.Throw();
                     else if (State != PlayerState.CARRYOBJECT_TAKE)
                     {
@@ -1243,10 +1237,14 @@ namespace Platformer.Objects.Main
                             KeyObject.Throw();
                             State = PlayerState.CARRYOBJECT_THROW;
                         }
-                    }                    
+                    }
                 }
+            } else
+            {
+                if (KeyObject != null)
+                    KeyObject.Throw();
             }
-            if (HP == 0 && KeyObject != null) KeyObject.Throw();            
+            //if (HP == 0 && KeyObject != null) KeyObject.Throw();            
             
             // +++++++++++++++++++++
             // AFTER STATE LOGIC
@@ -1357,7 +1355,12 @@ namespace Platformer.Objects.Main
                     onGround = true;
 
                     // transition from falling to getting up again
-                    if (State == PlayerState.JUMP_UP || State == PlayerState.JUMP_DOWN || State == PlayerState.WALL_CLIMB || State == PlayerState.LEVITATE)
+                    if (State == PlayerState.JUMP_UP 
+                        || State == PlayerState.JUMP_DOWN 
+                        || State == PlayerState.WALL_CLIMB 
+                        || State == PlayerState.LEVITATE
+                        || State == PlayerState.CARRYOBJECT_IDLE
+                        || State == PlayerState.CARRYOBJECT_WALK)
                     {
                         if (lastGroundY < Y - 9 * Globals.TILE)
                         {
@@ -1366,10 +1369,13 @@ namespace Platformer.Objects.Main
                             State = PlayerState.LIE;
                             lieTimer = 120;
                         }
-                        else if (lastGroundY < Y - Globals.TILE)
-                            State = PlayerState.GET_UP;
-                        else
-                            State = PlayerState.IDLE;
+                        else if (KeyObject == null)
+                        { 
+                            if (lastGroundY < Y - Globals.TILE)
+                                State = PlayerState.GET_UP;
+                            else
+                                State = PlayerState.IDLE;
+                        }
                     }
 
                     // trick to "snap" to the bottom:                    

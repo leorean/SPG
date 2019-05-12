@@ -224,10 +224,7 @@ namespace SPG.Objects
 
         public virtual void Draw(SpriteBatch sb, GameTime gameTime)
         {            
-            if (Texture == null)
-            {
-                //Debug.WriteLine($"Warning: object '{Name}'({ID}) has no texture!");
-            } else
+            if (Texture != null)
             {
                 sb.Draw(Texture, Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
             }
