@@ -100,6 +100,11 @@ namespace Platformer.Objects.Main
                             new Potion(i * Globals.TILE + 8, j * Globals.TILE + 8, room, PotionType.MP);
                             t.Hide();
                             break;
+                        case 581: // key
+                            var key = new Key(i * Globals.TILE + 8, j * Globals.TILE + 8, room);
+                            key.Texture = GameManager.Current.Map.TileSet[t.ID];
+                            t.Hide();
+                            break;
                         // coins
                         case 704: case 705: case 706: case 707: case 708: case 709: case 710:
                             var coin = new Coin(i * Globals.TILE + 8, j * Globals.TILE + 8, room);
@@ -241,6 +246,7 @@ namespace Platformer.Objects.Main
         /// After rooms + neighbours are created, call this method to clean all room objects except for the active room
         /// </summary>
         /// <param name="room"></param>
+        [Obsolete("TODO: Find a better solution to the inefficient object loading problem!")]
         public static void CleanObjectsExceptRoom(Room room)
         {
             var toDelete = ObjectManager.Objects.Where(o => o is RoomObject && !(o is Solid) && (o as RoomObject).Room != room).ToList();

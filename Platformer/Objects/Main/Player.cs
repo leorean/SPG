@@ -69,7 +69,7 @@ namespace Platformer.Objects.Main
             GET_UP, HIT_AIR, HIT_GROUND, CEIL_IDLE,
             CEIL_CLIMB, SWIM, DEAD, LEVITATE,
             PUSH, LIE, SWIM_DIVE_IN, SWIM_TURN_AROUND,
-            DOOR
+            DOOR, CARRYOBJECT_TAKE, CARRYOBJECT_IDLE, CARRYOBJECT_WALK
         }
 
         public PlayerState State { get; set; }
@@ -100,7 +100,20 @@ namespace Platformer.Objects.Main
         private int mpRegenTimeout = 0;
         private int maxMpRegenTimeout = 60;
 
+        // input vars
+
         Input input = new Input();
+
+        bool k_leftPressed, k_leftHolding, k_leftReleased;
+        bool k_rightPressed, k_rightHolding, k_rightReleased;
+        bool k_upPressed, k_upHolding;
+        bool k_downPressed, k_downHolding;
+        bool k_jumpPressed, k_jumpHolding;
+
+        float gamePadLeftXFactor;
+        float gamePadLeftYFactor;
+
+        // swim vars
 
         private float gravAir = .1f;
         private float gravWater = .03f;
@@ -109,6 +122,8 @@ namespace Platformer.Objects.Main
         private Vector2 swimVector;
         private float targetAngle;
         
+        // levitation vars
+
         private float levitationSine;
         private PlayerLevitationEmitter levitationEmitter;
         
@@ -143,6 +158,8 @@ namespace Platformer.Objects.Main
         private float movXvel;
         private float movYvel;
 
+        public Key KeyObject { get; private set; }
+
         // constructor
 
         public Player(float x, float y) : base(x, y)
@@ -174,9 +191,7 @@ namespace Platformer.Objects.Main
             MP = Stats.MaxMP;
 
             maxOxygen = 5 * 60;
-            oxygen = maxOxygen;
-
-            Debug.WriteLine("Created Player!");
+            oxygen = maxOxygen;            
         }
 
         ~Player()
@@ -226,42 +241,43 @@ namespace Platformer.Objects.Main
         }
 
         // ++++++++++++++++++++++++++
-        // UPDATE
+        // BEGIN UPDATE
         // ++++++++++++++++++++++++++
 
-        public override void Update(GameTime gameTime)
+        public override void BeginUpdate(GameTime gameTime)
         {
-            base.Update(gameTime);
+            base.BeginUpdate(gameTime);
 
             // ++++ input ++++
 
             if (ObjectManager.Exists<MessageBox>() || GameManager.Current.Transition != null)
             {
                 input.Enabled = false;
-            } else
+            }
+            else
             {
                 input.Enabled = true;
             }
 
             input.Update(gameTime);
-            
-            var k_leftPressed = input.IsKeyPressed(Keys.Left, Input.State.Pressed);
-            var k_leftHolding = input.IsKeyPressed(Keys.Left, Input.State.Holding);
-            var k_leftReleased = input.IsKeyPressed(Keys.Left, Input.State.Released);
 
-            var k_rightPressed = input.IsKeyPressed(Keys.Right, Input.State.Pressed);
-            var k_rightHolding = input.IsKeyPressed(Keys.Right, Input.State.Holding);
-            var k_rightReleased = input.IsKeyPressed(Keys.Right, Input.State.Released);
+            k_leftPressed = input.IsKeyPressed(Keys.Left, Input.State.Pressed);
+            k_leftHolding = input.IsKeyPressed(Keys.Left, Input.State.Holding);
+            k_leftReleased = input.IsKeyPressed(Keys.Left, Input.State.Released);
 
-            var k_upPressed = input.IsKeyPressed(Keys.Up, Input.State.Pressed);
-            var k_upHolding = input.IsKeyPressed(Keys.Up, Input.State.Holding);
+            k_rightPressed = input.IsKeyPressed(Keys.Right, Input.State.Pressed);
+            k_rightHolding = input.IsKeyPressed(Keys.Right, Input.State.Holding);
+            k_rightReleased = input.IsKeyPressed(Keys.Right, Input.State.Released);
 
-            var k_downPressed = input.IsKeyPressed(Keys.Down, Input.State.Pressed);
-            var k_downHolding = input.IsKeyPressed(Keys.Down, Input.State.Holding);
+            k_upPressed = input.IsKeyPressed(Keys.Up, Input.State.Pressed);
+            k_upHolding = input.IsKeyPressed(Keys.Up, Input.State.Holding);
 
-            var k_jumpPressed = input.IsKeyPressed(Keys.A, Input.State.Pressed);
-            var k_jumpHolding = input.IsKeyPressed(Keys.A, Input.State.Holding);
-            
+            k_downPressed = input.IsKeyPressed(Keys.Down, Input.State.Pressed);
+            k_downHolding = input.IsKeyPressed(Keys.Down, Input.State.Holding);
+
+            k_jumpPressed = input.IsKeyPressed(Keys.A, Input.State.Pressed);
+            k_jumpHolding = input.IsKeyPressed(Keys.A, Input.State.Holding);
+
             // debug keys
 
             if (input.IsKeyPressed(Keys.LeftShift, Input.State.Holding) || input.IsKeyPressed(Keys.RightShift, Input.State.Holding))
@@ -289,7 +305,7 @@ namespace Platformer.Objects.Main
                 Stats.Abilities |= PlayerAbility.PUSH;
                 Stats.Abilities |= PlayerAbility.LEVITATE;
                 Stats.Abilities |= PlayerAbility.CLIMB_CEIL;
-                Stats.Abilities |= PlayerAbility.CLIMB_WALL;                
+                Stats.Abilities |= PlayerAbility.CLIMB_WALL;
             }
 
             if (input.IsKeyPressed(Keys.O, Input.State.Pressed))
@@ -300,8 +316,8 @@ namespace Platformer.Objects.Main
                 var flash = new FlashEmitter(X, Y);
             }
 
-            var gamePadLeftXFactor = 1f;
-            var gamePadLeftYFactor = 1f;
+            gamePadLeftXFactor = 1f;
+            gamePadLeftYFactor = 1f;
 
             // gamepad overrides keyboard input if pussible
             if (input.GamePadEnabled)
@@ -316,7 +332,7 @@ namespace Platformer.Objects.Main
 
                 k_upHolding = input.DirectionPressedFromStick(Input.Direction.UP, Input.Stick.LeftStick, Input.State.Holding);
                 k_upPressed = input.DirectionPressedFromStick(Input.Direction.UP, Input.Stick.LeftStick, Input.State.Pressed);
-                
+
                 k_downHolding = input.DirectionPressedFromStick(Input.Direction.DOWN, Input.Stick.LeftStick, Input.State.Holding);
                 k_downPressed = input.DirectionPressedFromStick(Input.Direction.DOWN, Input.Stick.LeftStick, Input.State.Pressed);
 
@@ -336,7 +352,16 @@ namespace Platformer.Objects.Main
             k_rightPressed = tk_rightPressed;
             k_leftHolding = tk_leftHolding;
             k_rightHolding = tk_rightHolding;
-            
+        }
+
+        // ++++++++++++++++++++++++++
+        // UPDATE
+        // ++++++++++++++++++++++++++
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+                        
             // ++++ getting hit ++++
 
             InvincibleTimer = Math.Max(InvincibleTimer - 1, 0);
@@ -472,9 +497,21 @@ namespace Platformer.Objects.Main
             if (mpRegenTimeout == 0)
                 MP = Math.Min(MP + Stats.MPRegen, Stats.MaxMP);
 
+            // ++++++++++++++++++++++++++++++
+            // INTERACTION WITH OTHER OBJECTS
+            // ++++++++++++++++++++++++++++++
             
             if (HP > 0)
             {
+                //  +++ save statues
+
+                var saveStatue = this.CollisionBounds<SaveStatue>(X, Y).FirstOrDefault();
+
+                if (saveStatue != null)
+                {
+                    saveStatue.Save();
+                }
+
                 // ++++ pickup items ++++
 
                 var item = this.CollisionBounds<Item>(X, Y).FirstOrDefault();
@@ -500,6 +537,19 @@ namespace Platformer.Objects.Main
                     }
                 }
 
+                // ++++ keys ++++
+
+                if (State == PlayerState.IDLE && k_downPressed)
+                {
+                    var key = this.CollisionBounds<Key>(X, Y + Globals.TILE).FirstOrDefault();
+                    if (key != null)
+                    {
+                        KeyObject = key;
+                        key.Take(this);                        
+                        State = PlayerState.CARRYOBJECT_TAKE;
+                    }
+                }
+
                 // ++++ npcs ++++
 
                 var npc = this.CollisionBounds<NPC>(X, Y).FirstOrDefault();
@@ -514,7 +564,9 @@ namespace Platformer.Objects.Main
 
             }
 
+            // +++++++++++++++++++++
             // ++++ state logic ++++
+            // +++++++++++++++++++++
 
             var maxVel = 1.2f;
 
@@ -526,17 +578,25 @@ namespace Platformer.Objects.Main
             }
 
             // idle
-            if (State == PlayerState.IDLE)
+            if (State == PlayerState.IDLE || State == PlayerState.CARRYOBJECT_IDLE)
             {
                 XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - .2f, 0f);
                 if (k_rightHolding)
                 {
-                    State = PlayerState.WALK;
+                    if (State == PlayerState.IDLE)
+                        State = PlayerState.WALK;
+                    if (State == PlayerState.CARRYOBJECT_IDLE)
+                        State = PlayerState.CARRYOBJECT_WALK;
+
                     Direction = Direction.RIGHT;
                 }
                 if (k_leftHolding)
                 {
-                    State = PlayerState.WALK;
+                    if (State == PlayerState.IDLE)
+                        State = PlayerState.WALK;
+                    if (State == PlayerState.CARRYOBJECT_IDLE)
+                        State = PlayerState.CARRYOBJECT_WALK;
+
                     Direction = Direction.LEFT;
                 }
             }
@@ -1090,14 +1150,62 @@ namespace Platformer.Objects.Main
             {
                 // nothing to do here for now
             }
-
-            var saveStatue = this.CollisionBounds<SaveStatue>(X, Y).FirstOrDefault();
-
-            if(saveStatue != null)
+            // taking stuff
+            if (State == PlayerState.CARRYOBJECT_TAKE)
             {
-                saveStatue.Save();
+                XVel = 0;
+                YVel = -Gravity;
+                
+                if (animationComplete)
+                {
+                    State = PlayerState.CARRYOBJECT_IDLE;
+                }
+            }
+            if (State == PlayerState.CARRYOBJECT_WALK)
+            {
+                
+                if (k_leftHolding)
+                {
+                    Direction = Direction.LEFT;
+                    XVel = Math.Max(XVel - .2f, -1 * gamePadLeftXFactor);
+                }
+                if (k_rightHolding)
+                {
+                    Direction = Direction.RIGHT;
+                    XVel = Math.Min(XVel + .2f, 1 * gamePadLeftXFactor);
+                }
+                if (!k_leftHolding && !k_rightHolding)
+                {
+                    XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - .2f, 0);
+                    if (XVel == 0)
+                    {
+                        State = PlayerState.CARRYOBJECT_IDLE;
+                    }
+                }
+            }
+            if (State == PlayerState.CARRYOBJECT_TAKE || State == PlayerState.CARRYOBJECT_IDLE || State == PlayerState.CARRYOBJECT_WALK)
+            {
+                if (KeyObject != null)
+                {
+                    if (hit || (k_downPressed && State != PlayerState.CARRYOBJECT_TAKE))
+                    {
+                        KeyObject.Throw();
+                        KeyObject = null;
+                    }
+                }
+
+                if (KeyObject == null)
+                {
+                    State = PlayerState.IDLE;
+                }
             }
 
+            // TODO: object-item handling
+
+            // +++++++++++++++++++++
+            // AFTER STATE LOGIC
+            // +++++++++++++++++++++
+            
             // reset hit after state-logic
             hit = false;
 
@@ -1289,11 +1397,9 @@ namespace Platformer.Objects.Main
                 case PlayerState.IDLE:
                     row = 0;
                     fSpd = 0.03f;
-                    fAmount = 4;
                     break;
                 case PlayerState.WALK:                    
                     row = 1;
-                    fAmount = 4;
                     fSpd = 0.1f;
                     break;
                 case PlayerState.TURN_AROUND:                    
@@ -1321,12 +1427,10 @@ namespace Platformer.Objects.Main
                     break;
                 case PlayerState.WALL_IDLE:
                     row = 3;
-                    fAmount = 4;
                     fSpd = 0.1f;
                     break;
                 case PlayerState.WALL_CLIMB:
                     row = 4;
-                    fAmount = 4;
                     fSpd = 0.15f;
                     break;
                 case PlayerState.HIT_AIR:
@@ -1342,18 +1446,15 @@ namespace Platformer.Objects.Main
                     break;
                 case PlayerState.CEIL_IDLE:
                     row = 10;
-                    fAmount = 4;
                     fSpd = 0.05f;
                     break;
                 case PlayerState.CEIL_CLIMB:
                     row = 11;
-                    fAmount = 4;
                     fSpd = 0.15f;
                     break;
                 case PlayerState.SWIM_DIVE_IN:
                 case PlayerState.SWIM:
                     row = 5;
-                    fAmount = 4;
                     fSpd = 0.1f;
                     break;
                 case PlayerState.LEVITATE:
@@ -1379,7 +1480,6 @@ namespace Platformer.Objects.Main
                     break;
                 case PlayerState.SWIM_TURN_AROUND:
                     row = 15;
-                    fAmount = 4;
                     fSpd = .25f;
                     loopAnim = false;
                     break;
@@ -1392,6 +1492,19 @@ namespace Platformer.Objects.Main
                     row = 17;
                     fSpd = 0.05f;
                     fAmount = 4;
+                    break;
+                case PlayerState.CARRYOBJECT_TAKE:
+                    row = 18;
+                    fSpd = 0.2f;
+                    loopAnim = false;
+                    break;
+                case PlayerState.CARRYOBJECT_IDLE:
+                    row = 19;
+                    fSpd = 0.03f;
+                    break;
+                case PlayerState.CARRYOBJECT_WALK:
+                    row = 20;
+                    fSpd = 0.1f;
                     break;
             }
 

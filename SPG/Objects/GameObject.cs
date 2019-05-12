@@ -174,7 +174,7 @@ namespace SPG.Objects
         /// <summary>
         /// Unregisters a game object from the object manager. 
         /// If that game object is child to another game object, it is not destroyed until the parent is destroyed.
-        /// Optionally calls GC afterwards.
+        /// Optionally calls GC afterwards.        
         /// </summary>
         public void Destroy(bool callGC = false)
         {
