@@ -193,10 +193,9 @@ namespace SPG.Objects
             Position = new Vector2(Position.X + xVel, Position.Y + yVel);
         }
 
-        public virtual void BeginUpdate(GameTime gameTime)
-        {
-
-        }
+        public virtual void BeginUpdate(GameTime gameTime) { }
+        
+        public virtual void EndUpdate(GameTime gameTime) { }
 
         public virtual void Update(GameTime gameTime)
         {

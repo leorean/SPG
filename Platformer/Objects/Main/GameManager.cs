@@ -51,6 +51,15 @@ namespace Platformer.Objects.Main
         /// </summary>
         public void Save(float posX, float posY)
         {
+            /*if (Player.Stats.KeyObjectID != -1)
+            {
+                var obj = ObjectManager.Objects.Where(o => o.ID == Player.Stats.KeyObjectID).FirstOrDefault();
+                if (obj != null)
+                {
+                    Player.Stats.KeyObjectPosition = obj.Position;
+                }
+            }*/
+
             SaveGame.playerPosition = new Vector2(posX, posY);
             SaveGame.playerDirection = Player.Direction;
             SaveGame.gameStats = Player.Stats;

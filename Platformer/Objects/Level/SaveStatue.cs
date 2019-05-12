@@ -52,7 +52,7 @@ namespace Platformer.Objects.Level
             var posY = MathUtil.Div(Y, Globals.TILE) * Globals.TILE + 7.9f;
 
             var burst = new SaveBurstEmitter(emitter.Position.X, emitter.Position.Y);
-
+            
             alreadyActivated = true;
             GameManager.Current.Save(posX, posY);
             Debug.WriteLine("Saved.");            

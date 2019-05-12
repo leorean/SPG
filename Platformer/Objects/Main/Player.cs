@@ -42,8 +42,8 @@ namespace Platformer.Objects.Main
         // ID, Typename
         public Dictionary<int, string> Items { get; set; } = new Dictionary<int, string>();
 
-        public int KeyObjectID { get; set; } = -1;
-
+        //public int KeyObjectID { get; set; } = -1;
+        
         public List<int> KeysAndKeyblocks { get; set; } = new List<int>();
     }
 
@@ -57,6 +57,7 @@ namespace Platformer.Objects.Main
         LEVITATE = 8,
         PUSH = 16
         //ideas:
+        //PUSH_BIG <- inspired by zelda
         //WARP
         //STOMP
     }
@@ -73,7 +74,8 @@ namespace Platformer.Objects.Main
             GET_UP, HIT_AIR, HIT_GROUND, CEIL_IDLE,
             CEIL_CLIMB, SWIM, DEAD, LEVITATE,
             PUSH, LIE, SWIM_DIVE_IN, SWIM_TURN_AROUND,
-            DOOR, CARRYOBJECT_TAKE, CARRYOBJECT_IDLE, CARRYOBJECT_WALK
+            DOOR,
+            CARRYOBJECT_TAKE, CARRYOBJECT_IDLE, CARRYOBJECT_WALK, CARRYOBJECT_THROW
         }
 
         public PlayerState State { get; set; }
@@ -84,7 +86,9 @@ namespace Platformer.Objects.Main
         public GameStats Stats { get => GameManager.Current.SaveGame.gameStats; }
         public int HP { get; set; }
         public float MP { get; set; }
-        
+
+        public int KeyObjectID { get; set; } = -1;
+
         // private
 
         public Direction Direction { get; set; } = Direction.RIGHT;
@@ -199,16 +203,18 @@ namespace Platformer.Objects.Main
 
             // re-create previously saved carry-objects
 
-            if (Stats.KeyObjectID != -1)
+            /*if (Stats.KeyObjectID != -1)
             {
-                var obj = new Key(x, y - Globals.TILE, RoomCamera.Current.CurrentRoom);
+                var pos = Stats.KeyObjectPosition;
+
+                var obj = new Key(pos.X, pos.Y, RoomCamera.Current.CurrentRoom);
                 obj.ID = Stats.KeyObjectID;
                 obj.Parent = this;
                 Stats.KeyObjectID = -1;
 
                 ObjectManager.DestroyAll<Key>(obj.ID);
                 obj.Parent = null;
-            }
+            }*/
         }
 
         ~Player()
@@ -568,16 +574,17 @@ namespace Platformer.Objects.Main
                 }
 
                 // ++++ keyblocks ++++
-                if (State == PlayerState.CARRYOBJECT_IDLE || State == PlayerState.CARRYOBJECT_WALK)
+                // moved logic to keys
+                /*if (State == PlayerState.CARRYOBJECT_IDLE || State == PlayerState.CARRYOBJECT_WALK)
                 {
                     var keyBlock = this.CollisionBounds<KeyBlock>(X + Math.Sign((int)Direction) * 8, Y).FirstOrDefault();
 
-                    if (keyBlock != null && KeyObject != null && k_downPressed)
+                    if (keyBlock != null && KeyObject != null)// && k_downPressed)
                     {
                         KeyObject.Unlock(keyBlock);
                         State = PlayerState.IDLE;
                     }
-                }
+                }*/
 
                 // ++++ npcs ++++
 
@@ -1212,24 +1219,35 @@ namespace Platformer.Objects.Main
                     }
                 }
             }
+            // carrying keys/objects
+            if (State == PlayerState.CARRYOBJECT_THROW)
+            {
+                XVel = 0;
+                YVel = -Gravity;
+                if (animationComplete)
+                    State = PlayerState.IDLE;
+            }
             if (State == PlayerState.CARRYOBJECT_TAKE || State == PlayerState.CARRYOBJECT_IDLE || State == PlayerState.CARRYOBJECT_WALK)
             {
+                if (KeyObject == null)
+                    State = PlayerState.IDLE;
+
                 if (KeyObject != null)
                 {
-                    if (hit || (k_downPressed && State != PlayerState.CARRYOBJECT_TAKE))
+                    if (hit)
+                        KeyObject.Throw();
+                    else if (State != PlayerState.CARRYOBJECT_TAKE)
                     {
-                        KeyObject.Throw();                        
-                    }
-                }
-
-                if (KeyObject == null)
-                {
-                    State = PlayerState.IDLE;
+                        if (k_downPressed || k_upPressed || k_jumpPressed)
+                        {
+                            KeyObject.Throw();
+                            State = PlayerState.CARRYOBJECT_THROW;
+                        }
+                    }                    
                 }
             }
-
-            // TODO: object-item handling
-
+            if (HP == 0 && KeyObject != null) KeyObject.Throw();            
+            
             // +++++++++++++++++++++
             // AFTER STATE LOGIC
             // +++++++++++++++++++++
@@ -1533,6 +1551,12 @@ namespace Platformer.Objects.Main
                 case PlayerState.CARRYOBJECT_WALK:
                     row = 20;
                     fSpd = 0.1f;
+                    break;
+                case PlayerState.CARRYOBJECT_THROW:
+                    row = 21;
+                    fAmount = 2;
+                    fSpd = 0.1f;
+                    loopAnim = false;
                     break;
             }
 

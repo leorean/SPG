@@ -24,7 +24,7 @@ namespace Platformer.Objects.Level
             Texture = GameManager.Current.Map.TileSet[581];
 
             Visible = true;
-            
+
             DrawOffset = new Vector2(8, 8);
             BoundingBox = new SPG.Util.RectF(-4, -8, 8, 16);
             
@@ -34,11 +34,12 @@ namespace Platformer.Objects.Level
         {
             base.BeginUpdate(gameTime);
 
-            if (GameManager.Current.Player?.Stats?.KeyObjectID == ID && player == null)
+            // when re-entering room, destroy original object
+            if (GameManager.Current.Player?.KeyObjectID == ID && player == null)
                 Destroy();
-
+            
             if (GameManager.Current.Player.Stats.KeysAndKeyblocks.Contains(ID))
-                Destroy();
+                Destroy();                        
         }
 
         public override void Update(GameTime gameTime)
@@ -46,13 +47,8 @@ namespace Platformer.Objects.Level
             base.Update(gameTime);
 
             YVel += .1f;
-            if (player != null)
-            {
-                XVel = 0;
-                YVel = 0;
-                Position = new Vector2(player.X, player.Y - Globals.TILE);
-            }
-
+            XVel *= .95f;
+            
             var colX = this.CollisionBounds<Solid>(X + XVel, Y).FirstOrDefault();
 
             if (colX == null)
@@ -71,6 +67,7 @@ namespace Platformer.Objects.Level
             }
             else
             {
+                XVel *= .5f;
                 YVel = 0;
             }
 
@@ -83,7 +80,30 @@ namespace Platformer.Objects.Level
                 var col = this.CollisionBounds<Solid>(X, Y).FirstOrDefault();
                 if (col == null)
                     stuck = false;
-            }            
+            }
+
+            if (player != null)
+            {
+                XVel = 0;
+                YVel = 0;
+            }
+
+            var t = 3;
+            var keyBlock = this.CollisionRectangle<KeyBlock>(Left - t, Top - t, Right + t, Bottom + t).FirstOrDefault();
+            if (keyBlock != null)
+            {
+                Unlock(keyBlock);
+            }                
+        }
+
+        public override void EndUpdate(GameTime gameTime)
+        {
+            base.EndUpdate(gameTime);
+
+            if (player != null)
+            {
+                Position = player.Position + new Vector2(0 * Math.Sign((int)player.Direction), -12);
+            }
         }
 
         public void Unlock(KeyBlock keyBlock)
@@ -98,15 +118,26 @@ namespace Platformer.Objects.Level
                 new Effects.SingularEffect(keyBlock.X + 8, keyBlock.Y + 8, 2);
                 new Effects.Emitters.OuchEmitter(keyBlock.X + 8, keyBlock.Y + 8);
             };
-                        
-            player.Stats.KeyObjectID = -1;
-            Parent = null;
+
+            if (player != null)
+            {
+                if (player.State == Player.PlayerState.CARRYOBJECT_IDLE
+                    || player.State == Player.PlayerState.CARRYOBJECT_TAKE
+                    || player.State == Player.PlayerState.CARRYOBJECT_WALK
+                    || player.State == Player.PlayerState.CARRYOBJECT_THROW)
+                {
+                    player.State = Player.PlayerState.IDLE;
+                }
+
+                player.KeyObjectID = -1;
+                Parent = null;
+            }
         }
 
         public void Take(Player player)
         {
             Parent = player;
-            player.Stats.KeyObjectID = ID;
+            player.KeyObjectID = ID;            
         }
 
         public void Throw()
@@ -114,7 +145,11 @@ namespace Platformer.Objects.Level
             if (player == null)
                 return;
 
-            Position = new Vector2(X + Math.Sign((int)player.Direction) * Globals.TILE, player.Y - Globals.TILE);
+            //Position = new Vector2(X + Math.Sign((int)player.Direction) * Globals.TILE, player.Y - Globals.TILE);
+
+            XVel = Math.Sign((int)player.Direction) * 2;
+            YVel = -2;
+
             var emitter = new Effects.Emitters.SaveBurstEmitter(X, Y);
 
             var col = this.CollisionBounds<Solid>(X + XVel, Y + YVel).FirstOrDefault();
@@ -123,8 +158,8 @@ namespace Platformer.Objects.Level
                 stuck = true;
 
             player.KeyObject = null;
-
-            player.Stats.KeyObjectID = -1;
+            
+            player.KeyObjectID = -1;
             Parent = null;
         }        
     }
