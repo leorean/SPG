@@ -93,6 +93,7 @@ namespace Platformer.Main
             curX = newPosition.X;
             curY = newPosition.Y;
             invokeRoomChange = true;
+            DisableBounds();
             GameManager.Current.Transition.FadeOut();
 
             GameManager.Current.Transition.OnTransitionEnd = Transition_2;
