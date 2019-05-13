@@ -55,7 +55,7 @@ namespace Platformer.Objects.Main
         /// <param name="y"></param>
         /// <param name="text"></param>
         /// <param name="name"></param>
-        public MessageBox(string text, string name = null) : base(0, 0, name)
+        public MessageBox(string text, bool centerText = false, string name = null) : base(0, 0, name)
         {
             input = new Input();
 
@@ -84,7 +84,7 @@ namespace Platformer.Objects.Main
             Texture = AssetManager.MessageBox;
 
             font = AssetManager.DefaultFont.Copy();
-            font.Halign = Font.HorizontalAlignment.Left;
+            font.Halign = centerText ? Font.HorizontalAlignment.Center : Font.HorizontalAlignment.Left;
             font.Valign = Font.VerticalAlignment.Top;
 
             maxWidth = RoomCamera.Current.ViewWidth - Globals.TILE - 4;
@@ -189,10 +189,10 @@ namespace Platformer.Objects.Main
                 sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 2 * T + z), new Rectangle(2 * T, 3 * T, T, T), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
             }
 
-            
+            float offX = 0 + Convert.ToInt32(font.Halign == Font.HorizontalAlignment.Center) * (RoomCamera.Current.ViewWidth * .5f - 10);
 
             if (!string.IsNullOrEmpty(curText))
-                font.Draw(sb, X + 8 + 2, Y + 8 + 2, curText, maxWidth);
+                font.Draw(sb, X + 8 + 2 + offX, Y + 8 + 2, curText, maxWidth);
         }
     }
 }

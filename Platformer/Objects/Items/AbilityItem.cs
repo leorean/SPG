@@ -82,7 +82,7 @@ namespace Platformer.Objects.Items
 
                 if (yDist == -2 * Globals.TILE)
                 {
-                    var msgBox = new MessageBox(Text, Name);
+                    var msgBox = new MessageBox(Text, name:Name);
                     msgBox.OnCompleted = () => {
 
                         player.Stats.Abilities |= Ability;
@@ -128,6 +128,6 @@ namespace Platformer.Objects.Items
                 state = State.TAKING;
                 this.player = player;
             }
-        }
+        }        
     }
 }

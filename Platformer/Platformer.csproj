@@ -64,6 +64,7 @@
     <Compile Include="Objects\Items\Coin.cs" />
     <Compile Include="Objects\Items\Item.cs" />
     <Compile Include="Objects\Items\Potions.cs" />
+    <Compile Include="Objects\Items\Chest.cs" />
     <Compile Include="Objects\Level\Door.cs" />
     <Compile Include="Objects\Level\GroundSwitch.cs" />
     <Compile Include="Objects\Level\Key.cs" />

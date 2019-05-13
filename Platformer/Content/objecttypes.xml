@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objecttypes>
- <objecttype name="chest" color="#ffaa00">
-  <property name="chestType" type="int" default="0"/>
-  <property name="value" type="int" default="0"/>
+ <objecttype name="chest" color="#ff5500">
+  <property name="value" type="float" default="0"/>
  </objecttype>
  <objecttype name="door" color="#b9ff35">
   <property name="tx" type="int" default="0"/>
@@ -13,15 +12,20 @@
   <property name="itemType" type="int" default="-1"/>
   <property name="text" type="string"/>
  </objecttype>
+ <objecttype name="movingPlatform" color="#aaaaff">
+  <property name="activatable" type="bool" default="false"/>
+  <property name="xRange" type="int" default="0"/>
+  <property name="xVel" type="float" default="0"/>
+  <property name="yRange" type="int" default="0"/>
+  <property name="yVel" type="float" default="0"/>
+ </objecttype>
  <objecttype name="npc" color="#55557f">
+  <property name="centerText" type="bool" default="false"/>
   <property name="npcType" type="int" default="-1"/>
   <property name="text" type="string"/>
  </objecttype>
  <objecttype name="player" color="#ffffff"/>
  <objecttype name="room" color="#ffec9c">
   <property name="bg" type="int" default="-1"/>
- </objecttype>
- <objecttype name="sign" color="#e5ffe5">
-  <property name="text" type="string"/>
  </objecttype>
 </objecttypes>

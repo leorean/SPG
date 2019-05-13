@@ -9,22 +9,14 @@ using System.Threading.Tasks;
 
 namespace Platformer.Objects.Items
 {
-    /*
-    
-        item concept:
-
-        item floats around somewhere, if player takes it, he holds it up (state)
-     
-         
-         take -> add to player.Stats.items!!!
-         
-        spawn: check if exists ID in player.stats.items, and delete if yes
-         
-    */
-
     public abstract class Item : RoomObject
     {
         // properties
+
+        /// <summary>
+        /// Only set this to true if you handle item destruction in the inheriting class
+        /// </summary>
+        public bool DestroyOnTaken { get; set; } = true;
 
         public bool Taken { get; set; }
         /// <summary>
@@ -59,11 +51,13 @@ namespace Platformer.Objects.Items
             {
                 if (Save && GameManager.Current.Player.Stats.Items.ContainsKey(ID))
                 {
-                    Destroy();
+                    if (DestroyOnTaken)
+                        Destroy();
                 }
                 else if (GameManager.Current.NonRespawnableIDs.Contains(ID))
                 {
-                    Destroy();
+                    if (DestroyOnTaken)
+                        Destroy();
                 }
 
                 initialized = true;
@@ -84,6 +78,6 @@ namespace Platformer.Objects.Items
 
         // methods
 
-        public abstract void Take(Player player);
+        public abstract void Take(Player player);        
     }
 }

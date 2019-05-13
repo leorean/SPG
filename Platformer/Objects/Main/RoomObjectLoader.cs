@@ -110,8 +110,7 @@ namespace Platformer.Objects.Main
                             break;
                         // coins
                         case 704: case 705: case 706: case 707: case 708: case 709: case 710:
-                            var coin = new Coin(i * Globals.TILE + 8, j * Globals.TILE + 8, room);
-                            coin.Value = (t.ID - 704).TileIDToCoinValue();
+                            var coin = new Coin(i * Globals.TILE + 8, j * Globals.TILE + 8, room, (t.ID - 704).TileIDToCoinValue());                            
                             t.Hide();
                             break;
                         default:
@@ -171,7 +170,13 @@ namespace Platformer.Objects.Main
                     {
                         var npcText = data.ContainsKey("text") ? data["text"].ToString() : "-unknown-";
                         var npcType = data.ContainsKey("npcType") ? (int)data["npcType"] : -1;
-                        var npc = new NPC(x + 8, y + 8, room, npcType, npcText);
+                        var npcCenterText = data.ContainsKey("centerText") ? (bool)data["centerText"] : false;
+                        var npc = new NPC(x + 8, y + 8, room, npcType, npcText, npcCenterText);
+                    }
+                    if (type == "chest")
+                    {
+                        var chestValue = data.ContainsKey("value") ? (float)data["value"] : 0.0f;
+                        var chest = new Chest(x, y, room, chestValue);
                     }
                     if (type == "movingPlatform")
                     {

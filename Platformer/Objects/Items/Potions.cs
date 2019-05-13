@@ -98,6 +98,6 @@ namespace Platformer.Objects.Items
             var eff = new SingularEffect(Center.X, Center.Y, 1);
             
             Destroy();
-        }
+        }        
     }
 }

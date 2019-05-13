@@ -20,8 +20,10 @@ namespace Platformer.Objects.Level
         private Direction direction;
 
         private Player player;
+
+        private bool centerText;
         
-        public NPC(float x, float y, Room room, int type, string text, string name = null) : base(x, y, room, name)
+        public NPC(float x, float y, Room room, int type, string text, bool centerText = false, string name = null) : base(x, y, room, name)
         {
             this.text = text;
             this.type = type;
@@ -33,6 +35,7 @@ namespace Platformer.Objects.Level
             Depth = Globals.LAYER_PLAYER - 0.001f;
             
             direction = Direction.RIGHT;
+            this.centerText = centerText;
         }
 
         public override void Update(GameTime gameTime)
@@ -91,7 +94,7 @@ namespace Platformer.Objects.Level
 
             this.player.State = Player.PlayerState.DOOR;
 
-            var msgBox = new MessageBox(text, "");
+            var msgBox = new MessageBox(text, centerText, "");
             msgBox.OnCompleted = () =>
             {
                 this.player.State = Player.PlayerState.IDLE;                

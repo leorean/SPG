@@ -224,10 +224,10 @@ namespace SPG.Draw
                             posx = x;
                             break;
                         case HorizontalAlignment.Center:
-                            posx = x - .5f * textObject.LineTextures[i].Width * scale;
+                            posx = x - .5f * (textObject.LineTextures[i] != null ? textObject.LineTextures[i].Width : 0) * scale;
                             break;
                         case HorizontalAlignment.Right:
-                            posx = x - textObject.LineTextures[i].Width * scale;
+                            posx = x - (textObject.LineTextures[i] != null ? textObject.LineTextures[i].Width : 0) * scale;
                             break;
                     }
 

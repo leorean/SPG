@@ -16,7 +16,7 @@ namespace Platformer.Objects.Main
         private int maxHP;
         private float mp;
         private int maxMP;
-        private int coins;
+        private float coins;
 
         public Texture2D Texture { get; set; }
 

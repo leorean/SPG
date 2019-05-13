@@ -37,7 +37,7 @@ namespace Platformer.Objects.Main
         
         public PlayerAbility Abilities { get; set; } = PlayerAbility.NONE;
 
-        public int Coins { get; set; } = 0;
+        public float Coins { get; set; } = 0;
 
         // ID, Typename
         public Dictionary<int, string> Items { get; set; } = new Dictionary<int, string>();
@@ -144,8 +144,8 @@ namespace Platformer.Objects.Main
 
         // misc. timers
 
-        private int coinCounter;
-        public int CoinCounter {
+        private float coinCounter;
+        public float CoinCounter {
             get => coinCounter;
             set 
             {
@@ -526,7 +526,7 @@ namespace Platformer.Objects.Main
             
             if (HP > 0)
             {
-                //  +++ save statues
+                //  ++++ save statues ++++
 
                 var saveStatue = this.CollisionBounds<SaveStatue>(X, Y).FirstOrDefault();
 
@@ -534,13 +534,13 @@ namespace Platformer.Objects.Main
                 {
                     saveStatue.Save();
                 }
+                
+                // ++++ pickup items, chests, etc. ++++
 
-                // ++++ pickup items ++++
-
-                var item = this.CollisionBounds<Item>(X, Y).FirstOrDefault();
-                if (item != null)
+                var items = this.CollisionBounds<Item>(X, Y);
+                foreach (var item in items)
                 {
-                    item.Take(this);
+                    item.Take(this);                    
                 }
 
                 // ++++ doors ++++

@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Platformer.Objects.Effects;
+using Platformer.Objects.Level;
 using Platformer.Objects.Main;
 using SPG.Util;
+using SPG.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,13 +16,13 @@ namespace Platformer.Objects.Items
     {
         public static Coin.CoinValue TileIDToCoinValue(this int i)
         {
-            if (i == 0) return Coin.CoinValue.V1;
-            if (i == 1) return Coin.CoinValue.V2;
-            if (i == 2) return Coin.CoinValue.V3;
-            if (i == 3) return Coin.CoinValue.V4;
-            if (i == 4) return Coin.CoinValue.V5;
-            if (i == 5) return Coin.CoinValue.V6;
-            if (i == 6) return Coin.CoinValue.V7;
+            if (i == 0) return Coin.CoinValue.C1;
+            if (i == 1) return Coin.CoinValue.C2;
+            if (i == 2) return Coin.CoinValue.C3;
+            if (i == 3) return Coin.CoinValue.C4;
+            if (i == 4) return Coin.CoinValue.C5;
+            if (i == 5) return Coin.CoinValue.C6;
+            if (i == 6) return Coin.CoinValue.C7;
 
             throw new ArgumentException("Unable to parse tile ID to coin value!");
         }
@@ -28,76 +30,151 @@ namespace Platformer.Objects.Items
 
     public class Coin : Item
     {
-        public enum CoinValue
+        public class CoinValue
         {
-            V1 = 1, V2 = 2, V3 = 5, V4 = 10,
-            V5 = 50, V6 = 100,
-            V7 = 200
+            public float Value { get; private set; }
+
+            private CoinValue() { }
+
+            public static CoinValue C1 { get; private set; } = new CoinValue() { Value = V1 };
+            public static CoinValue C2 { get; private set; } = new CoinValue() { Value = V2 };
+            public static CoinValue C3 { get; private set; } = new CoinValue() { Value = V3 };
+            public static CoinValue C4 { get; private set; } = new CoinValue() { Value = V4 };
+            public static CoinValue C5 { get; private set; } = new CoinValue() { Value = V5 };
+            public static CoinValue C6 { get; private set; } = new CoinValue() { Value = V6 };
+            public static CoinValue C7 { get; private set; } = new CoinValue() { Value = V7 };
+
+            public const float V1 = 1f;
+            public const float V2 = 2f;
+            public const float V3 = 5f;
+            public const float V4 = 10f;
+            public const float V5 = 50f;
+            public const float V6 = 100f;
+            public const float V7 = 250f;
         }
 
-        public CoinValue Value { get; set; }
+        public CoinValue Value { get; private set; }
 
         private double t;
         private double sin;
         private double alpha = 2;
         private Vector2 pos;
 
-        //private bool initialized;
-
         // WARNING: currently, it is not possible to spawn coins from anywhere and guarantee save persistance!!
+        
+        private bool isLoose;
 
-        public Coin(float x, float y, Room room, string name = null) : base(x, y, room, name)
+        public Coin(float x, float y, Room room, CoinValue v, bool isLoose = false) : base(x, y, room)
         {
             Visible = false;
             AnimationTexture = AssetManager.Coins;
             t = RND.Next * Math.PI * 2;
             pos = Position;
 
-            Save = true;
+            Save = false;
             Respawn = false;
+
+            Value = v;
+
+            this.isLoose = isLoose;
+            if (isLoose)
+            {
+                XVel = -.5f + (float)(RND.Next * 1f);
+                YVel = -1.8f - (float)(RND.Next * .5f);
+            }
+        }
+        
+        public static void Spawn(float x, float y, Room room, float value)
+        {
+            var stack = value;
+
+            var depth = Globals.LAYER_ITEM;
+
+            while(stack > 0)
+            {
+                var v = CoinValue.C1;
+
+                if (stack >= CoinValue.V7) { v = CoinValue.C7; }
+                else if (stack >= CoinValue.V6) { v = CoinValue.C6; }
+                else if (stack >= CoinValue.V5) { v = CoinValue.C5; }
+                else if (stack >= CoinValue.V4) { v = CoinValue.C4; }
+                else if (stack >= CoinValue.V3) { v = CoinValue.C3; }
+                else if (stack >= CoinValue.V2) { v = CoinValue.C2; }
+                else if (stack >= CoinValue.V1) { v = CoinValue.C1; }
+                else return;
+
+                stack -= v.Value;
+                var c = new Coin(x, y, room, v, true);
+                depth += .00001f;
+                c.Depth = depth;
+            }            
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            
-            /*if (!Taken && GameManager.Current.Player.Stats.CollectedCoins.ContainsKey(ID))
-            {
-                Destroy();
-                return;
-            } else
-            {
-                Visible = true;
-            }
-            initialized = true;*/
 
-            if (!Taken)
+            if (!isLoose)
             {
-                t = (t + .06) % (2 * Math.PI);
-                sin = Math.Sin(t) * 1.5;
-                Position = new Vector2(pos.X, pos.Y + (float)sin);
+
+                if (!Taken)
+                {
+                    if (t < 0) pos = new Vector2(pos.X, pos.Y - .05f);
+
+                    t = (t + .06) % (2 * Math.PI);
+                    sin = Math.Sin(t) * 1.5;
+                    Position = new Vector2(pos.X, pos.Y + (float)sin);
+                }
+                else
+                {
+                    sin = 0;
+                    Move(0, -1f);
+                    alpha = Math.Max(alpha - .1, 0);
+
+                    Color = new Color(Color, (float)alpha);
+
+                    if (alpha == 0)
+                        Destroy();
+                }
             }
             else
             {
-                sin = 0;
-                Move(0, -1f);
-                alpha = Math.Max(alpha - .1, 0);
+                var colX = this.CollisionBounds<Solid>(X + XVel, Y).FirstOrDefault();
 
-                Color = new Color(Color, (float)alpha);
-                
-                if (alpha == 0)
+                if (colX == null)
+                    Move(XVel, 0);
+                else
+                    XVel *= -.5f;
+
+                var colY = this.CollisionBounds<Solid>(X, Y + YVel + 1).FirstOrDefault();
+
+                if (colY == null)
                 {
-                    //var eff = new SingularEffect(X, Y, 1);                    
-                    Destroy();
+                    Move(0, YVel);
+                    YVel += .1f;
                 }
+                else
+                {
+                    if (Math.Abs(XVel) < 1 && Math.Abs(YVel) < 1)
+                    {
+                        XVel = 0;
+                        YVel = 0;
+                        pos = Position;
+                        isLoose = false;
+                        t = -Math.PI;
+                    }
+
+                    //XVel *= .5f;
+                    YVel *= -.3f;
+                }                
             }
-            
+
             // draw logic
 
             int row = 0;
             int cols = 4;
             float fSpd = .13f;
-            switch (Value)
+            switch (Value.Value)
             {
                 case CoinValue.V1:
                     row = 0;
@@ -128,13 +205,16 @@ namespace Platformer.Objects.Items
         {
             if (!initialized)
                 return;
+
+            if (isLoose)
+                return;
+
             if (!Taken)
             {
-                player.Stats.Coins += (int)Value;
-                player.CoinCounter += (int)Value;
+                player.Stats.Coins += Value.Value;
+                player.CoinCounter += Value.Value;
                 Taken = true;
             }
-            //throw new NotImplementedException();
-        }
+        }        
     }
 }
