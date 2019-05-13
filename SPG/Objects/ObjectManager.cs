@@ -170,6 +170,14 @@ namespace SPG.Objects
             return candidates;
         }
 
+        public static bool CollisionRectangle(GameObject o, float x1, float y1, float x2, float y2)
+        {
+            return (x2 >= o.Left && x1 <= o.Right)
+                    &&
+                    (y2 >= o.Top && y1 <= o.Bottom);
+            
+        }
+
         public static List<T> CollisionRectangle<T>(this GameObject self, float x1, float y1, float x2, float y2) where T : GameObject
         {
             List<T> candidates = Objects.Where(o => o != self && o is T && o.Enabled == true).Cast<T>().ToList();

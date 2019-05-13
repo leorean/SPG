@@ -169,6 +169,7 @@ namespace Platformer.Main
                         
                         case Player.PlayerState.OBTAIN:
                         case Player.PlayerState.DEAD:
+                        case Player.PlayerState.DOOR:
                             offsetX *= .9f;
                             break;
                         default:

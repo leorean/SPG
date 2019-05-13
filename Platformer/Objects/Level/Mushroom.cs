@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Platformer.Objects.Effects.Emitters;
 using SPG.Objects;
 using SPG.Util;
 using System;
@@ -24,6 +25,8 @@ namespace Platformer.Objects.Level
 
         public void Bounce()
         {
+            if (!bounced)
+                new OuchEmitter(Center.X, Center.Y);
             bounced = true;            
         }
 

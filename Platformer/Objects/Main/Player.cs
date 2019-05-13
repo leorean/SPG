@@ -17,6 +17,7 @@ using Platformer.Objects.Level;
 using Platformer.Objects.Effects.Emitters;
 using Platformer.Objects.Items;
 using Platformer.Util;
+using SPG.Save;
 
 namespace Platformer.Objects.Main
 { 
@@ -200,21 +201,7 @@ namespace Platformer.Objects.Main
 
             maxOxygen = 5 * 60;
             oxygen = maxOxygen;
-
-            // re-create previously saved carry-objects
-
-            /*if (Stats.KeyObjectID != -1)
-            {
-                var pos = Stats.KeyObjectPosition;
-
-                var obj = new Key(pos.X, pos.Y, RoomCamera.Current.CurrentRoom);
-                obj.ID = Stats.KeyObjectID;
-                obj.Parent = this;
-                Stats.KeyObjectID = -1;
-
-                ObjectManager.DestroyAll<Key>(obj.ID);
-                obj.Parent = null;
-            }*/
+            
         }
 
         ~Player()
@@ -233,7 +220,25 @@ namespace Platformer.Objects.Main
         {
             //movingPlatform = null;
 
+            var hpPrev = HP;
+
             HP = Math.Max(HP - hitPoints, 0);
+
+            // death penalty
+            if (hpPrev > 0 && HP == 0)
+            {
+                var temp = (float)Math.Floor(Stats.Coins * .5f);
+                var amountToDrop = Stats.Coins - temp;
+                
+                var stats = GameManager.Current.SaveGame.gameStats;
+                stats.Coins = temp;
+
+                GameManager.Current.CoinsAfterDeath = temp;
+
+                //GameManager.Current.Save(GameManager.Current.SaveGame.playerPosition.X, GameManager.Current.SaveGame.playerPosition.Y);
+
+                Coin.Spawn(X, Y, RoomCamera.Current.CurrentRoom, amountToDrop);
+            }
 
             var ouch = new OuchEmitter(X, Y);
 
@@ -540,7 +545,19 @@ namespace Platformer.Objects.Main
                 var items = this.CollisionBounds<Item>(X, Y);
                 foreach (var item in items)
                 {
-                    item.Take(this);                    
+                    /*if (item is Chest && !item.Taken)
+                    {
+                        var toolTip = new ToolTip(item, this, new Vector2(0, 8), 0);
+                        if (k_upPressed)
+                        {                            
+                            ObjectManager.DestroyAll<ToolTip>();
+                            item.Take(this);
+                        }
+                    }
+                    else
+                        item.Take(this);
+                    */
+                    item.Take(this);
                 }
 
                 // ++++ doors ++++
@@ -576,11 +593,12 @@ namespace Platformer.Objects.Main
                         ObjectManager.DestroyAll<ToolTip>();
                     }
                 }
-                
+
                 // ++++ npcs ++++
 
+                var t = Globals.TILE;
+                //var npc = this.CollisionRectangle<NPC>(Left - t, Top - t, Right + t, Bottom).FirstOrDefault();
                 var npc = this.CollisionBounds<NPC>(X, Y).FirstOrDefault();
-
                 if (npc != null)
                 {
                     if (!ObjectManager.Exists<MessageBox>())
@@ -1232,12 +1250,15 @@ namespace Platformer.Objects.Main
                         KeyObject.Throw();
                     else if (State != PlayerState.CARRYOBJECT_TAKE)
                     {
-                        if (k_downPressed || k_upPressed || k_jumpPressed)
+                        if (k_downPressed || k_upPressed)// || k_jumpPressed)
                         {
                             KeyObject.Throw();
                             State = PlayerState.CARRYOBJECT_THROW;
                         }
                     }
+
+                    if (onGround && k_jumpPressed)
+                        YVel = -1;
                 }
             } else
             {

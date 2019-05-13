@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Platformer.Objects.Items
 {
@@ -63,7 +64,7 @@ namespace Platformer.Objects.Items
         // WARNING: currently, it is not possible to spawn coins from anywhere and guarantee save persistance!!
         
         private bool isLoose;
-
+        
         public Coin(float x, float y, Room room, CoinValue v, bool isLoose = false) : base(x, y, room)
         {
             Visible = false;
@@ -75,20 +76,26 @@ namespace Platformer.Objects.Items
             Respawn = false;
 
             Value = v;
-
+            
             this.isLoose = isLoose;
             if (isLoose)
             {
                 XVel = -.5f + (float)(RND.Next * 1f);
                 YVel = -1.8f - (float)(RND.Next * .5f);
+                Respawn = true;
             }
         }
         
         public static void Spawn(float x, float y, Room room, float value)
         {
-            var stack = value;
+            if (value < CoinValue.V1)
+                return;
+
+            var stack = value - CoinValue.V1;
 
             var depth = Globals.LAYER_ITEM;
+
+            Coin c = null;
 
             while(stack > 0)
             {
@@ -104,10 +111,14 @@ namespace Platformer.Objects.Items
                 else return;
 
                 stack -= v.Value;
-                var c = new Coin(x, y, room, v, true);
+                c = new Coin(x, y, room, v, true);
                 depth += .00001f;
                 c.Depth = depth;
-            }            
+            }
+
+            c = new Coin(x, y, room, CoinValue.C1, true);
+            depth += .00001f;
+            c.Depth = depth;
         }
 
         public override void Update(GameTime gameTime)
@@ -146,9 +157,9 @@ namespace Platformer.Objects.Items
                 else
                     XVel *= -.5f;
 
-                var colY = this.CollisionBounds<Solid>(X, Y + YVel + 1).FirstOrDefault();
+                var colY = this.CollisionBounds<Collider>(X, Y + YVel + 1).FirstOrDefault();
 
-                if (colY == null)
+                if (colY == null || (colY is Platform && (YVel < 0)))
                 {
                     Move(0, YVel);
                     YVel += .1f;
@@ -166,7 +177,13 @@ namespace Platformer.Objects.Items
 
                     //XVel *= .5f;
                     YVel *= -.3f;
-                }                
+                }
+
+                //unstick
+                if (this.CollisionBounds<Solid>(X, Y).FirstOrDefault() != null)
+                {
+                    MoveTowards(GameManager.Current.Player, 6);
+                }
             }
 
             // draw logic
@@ -213,7 +230,7 @@ namespace Platformer.Objects.Items
             {
                 player.Stats.Coins += Value.Value;
                 player.CoinCounter += Value.Value;
-                Taken = true;
+                Taken = true;                
             }
         }        
     }

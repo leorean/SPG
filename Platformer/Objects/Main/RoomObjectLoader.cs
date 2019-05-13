@@ -257,7 +257,7 @@ namespace Platformer.Objects.Main
         [Obsolete("TODO: Find a better solution to the inefficient object loading problem!")]
         public static void CleanObjectsExceptRoom(Room room)
         {
-            var toDelete = ObjectManager.Objects.Where(o => o is RoomObject && !(o is Solid) && (o as RoomObject).Room != room).ToList();
+            var toDelete = ObjectManager.Objects.Where(o => o is RoomObject && !(o is Collider) && (o as RoomObject).Room != room).ToList();
 
             var arr = new GameObject[toDelete.Count];
             toDelete.CopyTo(arr);

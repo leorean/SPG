@@ -27,11 +27,12 @@ namespace Platformer.Objects.Level
         {
             this.text = text;
             this.type = type;
-
+            
             AnimationTexture = AssetManager.NPCS;
 
             DrawOffset = new Vector2(8, 24);
-            BoundingBox = new RectF(-4, -4, 8, 12);
+            //BoundingBox = new RectF(-4, -4, 8, 12);
+            BoundingBox = new RectF(-8, -8, 16, 16);
             Depth = Globals.LAYER_PLAYER - 0.001f;
             
             direction = Direction.RIGHT;

@@ -193,6 +193,18 @@ namespace SPG.Objects
             Position = new Vector2(Position.X + xVel, Position.Y + yVel);
         }
 
+        /// <summary>
+        /// Moves towards a target center in N steps. 
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="n"></param>
+        public void MoveTowards(GameObject target, int n)
+        {
+            var tx = (target.Center.X - Center.X) / n;
+            var ty = (target.Center.Y - Center.Y) / n;
+            Move(tx, ty);
+        }
+
         public virtual void BeginUpdate(GameTime gameTime) { }
         
         public virtual void EndUpdate(GameTime gameTime) { }

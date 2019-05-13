@@ -54,7 +54,7 @@ namespace Platformer.Objects.Items
                     if (DestroyOnTaken)
                         Destroy();
                 }
-                else if (GameManager.Current.NonRespawnableIDs.Contains(ID))
+                else if (!Respawn && GameManager.Current.NonRespawnableIDs.Contains(ID))
                 {
                     if (DestroyOnTaken)
                         Destroy();

@@ -37,13 +37,16 @@ namespace Platformer.Objects.Main
 
         private GlobalWaterBubbleEmitter globalWaterEmitter;
 
+        public float CoinsAfterDeath { get; set; }
+        private Vector2 originalSpawnPosition;
+
         public GameManager()
         {
             instance = this;
 
             // game setup
 
-            SaveGame = new SaveGame("save.dat");            
+            SaveGame = new SaveGame("save.dat");
         }
 
         /// <summary>
@@ -51,15 +54,6 @@ namespace Platformer.Objects.Main
         /// </summary>
         public void Save(float posX, float posY)
         {
-            /*if (Player.Stats.KeyObjectID != -1)
-            {
-                var obj = ObjectManager.Objects.Where(o => o.ID == Player.Stats.KeyObjectID).FirstOrDefault();
-                if (obj != null)
-                {
-                    Player.Stats.KeyObjectPosition = obj.Position;
-                }
-            }*/
-
             SaveGame.playerPosition = new Vector2(posX, posY);
             SaveGame.playerDirection = Player.Direction;
             SaveGame.gameStats = Player.Stats;
@@ -153,13 +147,21 @@ namespace Platformer.Objects.Main
             var spawnY = (float)(int)playerData["y"] + 7.9f;
             var dir = (int)playerData["direction"];
             var direction = (dir == 1) ? Direction.RIGHT : Direction.LEFT;
-            
+
             bool success = SaveManager.Load(ref SaveGame);
+
+            originalSpawnPosition = new Vector2(spawnX, spawnY);
 
             if (success)
             {
                 spawnX = SaveGame.playerPosition.X;
                 spawnY = SaveGame.playerPosition.Y;
+
+                if (spawnX == 0 && spawnY == 0)
+                {
+                    spawnX = originalSpawnPosition.X;
+                    spawnY = originalSpawnPosition.Y;
+                }
                 direction = SaveGame.playerDirection;
             }
             RoomCamera.Current.CurrentBG = SaveGame.currentBG;
@@ -173,17 +175,17 @@ namespace Platformer.Objects.Main
             {
                 throw new Exception($"No room detected at position {spawnX}x{spawnY}!");
             }
-            
+
             var neighbours = startRoom.Neighbors();
             RoomObjectLoader.CreateRoomObjects(startRoom);
-            
+
             // create room objects from object data for current room
             var objectData = GameManager.Current.Map.ObjectData.Where(o => !o.Values.Contains("room")).ToList();
             RoomObjectLoader.CreateRoomObjectsFromData(objectData, startRoom);
 
             foreach (var n in neighbours)
             {
-                RoomObjectLoader.CreateRoomObjects(n);                
+                RoomObjectLoader.CreateRoomObjects(n);
             }
 
             RoomObjectLoader.CleanObjectsExceptRoom(startRoom);
@@ -206,6 +208,13 @@ namespace Platformer.Objects.Main
             Transition = new Transition();
             Transition.FadeOut();
             Transition.OnTransitionEnd = () => { Transition = null; };
+
+            // death penalty
+            if (CoinsAfterDeath > 0)
+            {
+                Player.Stats.Coins = CoinsAfterDeath;
+                CoinsAfterDeath = 0;
+            }
         }
 
         /// <summary>
