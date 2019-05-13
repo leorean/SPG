@@ -1281,7 +1281,7 @@ namespace Platformer.Objects.Main
 
             // moving platform pre-calculations
 
-            var platform = this.CollisionBounds<Platform>(X, Y + YVel).FirstOrDefault();
+            var platforms = this.CollisionBounds<Platform>(X, Y + YVel).ToList();
 
             // get off platform when not in X-range
             if (movingPlatform != null)
@@ -1298,35 +1298,42 @@ namespace Platformer.Objects.Main
             else
             {
                 movXvel = movingPlatform.XVel;
-                movYvel = movingPlatform.YVel;
+                movYvel = movingPlatform.YVel;                
             }
 
             var colY = this.CollisionBounds<Collider>(X, Y + movYvel + YVel).Where(o => o is Solid).ToList();
             
-            if (platform != null && movingPlatform == null)
+            if (platforms.Count > 0 && movingPlatform == null)
             {
-                if (Bottom <= platform.Top - platform.YVel)
+                for (var i = 0; i < platforms.Count; i++)
                 {
-                    if (YVel >= 0)
+                    if (Bottom <= platforms[i].Top - platforms[i].YVel)
                     {
-                        colY.Clear();
-                        colY.Add(platform);
-
-                        if (State != PlayerState.SWIM
-                            && State != PlayerState.SWIM_DIVE_IN
-                            && State != PlayerState.SWIM_TURN_AROUND
-                            && State != PlayerState.PUSH
-                            && State != PlayerState.OBTAIN
-                            && State != PlayerState.LEVITATE
-                            && State != PlayerState.WALL_CLIMB
-                            && State != PlayerState.WALL_IDLE
-                            && State != PlayerState.CEIL_CLIMB
-                            && State != PlayerState.CEIL_IDLE
-                            && State != PlayerState.DOOR
-                            && State != PlayerState.HIT_AIR)
+                        if (YVel >= 0)
                         {
-                            if (movingPlatform == null && platform is MovingPlatform)
-                                movingPlatform = platform as MovingPlatform;
+                            colY.Clear();
+                            colY.Add(platforms[i]);
+
+                            if (State != PlayerState.SWIM
+                                && State != PlayerState.SWIM_DIVE_IN
+                                && State != PlayerState.SWIM_TURN_AROUND
+                                && State != PlayerState.PUSH
+                                && State != PlayerState.OBTAIN
+                                && State != PlayerState.LEVITATE
+                                && State != PlayerState.WALL_CLIMB
+                                && State != PlayerState.WALL_IDLE
+                                && State != PlayerState.CEIL_CLIMB
+                                && State != PlayerState.CEIL_IDLE
+                                && State != PlayerState.DOOR
+                                && State != PlayerState.HIT_AIR)
+                            {
+
+                                if (platforms[i] is MovingPlatform)
+                                {
+                                    movingPlatform = platforms[i] as MovingPlatform;
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
