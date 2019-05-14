@@ -1266,7 +1266,6 @@ namespace Platformer.Objects.Main
                 if (KeyObject != null)
                     KeyObject.Throw();
             }
-            //if (HP == 0 && KeyObject != null) KeyObject.Throw();            
             
             // +++++++++++++++++++++
             // AFTER STATE LOGIC
@@ -1277,9 +1276,11 @@ namespace Platformer.Objects.Main
 
             // ++++ collision & movement ++++
 
+            // TODO: extract this to a superclass/method for reusing for enemies!
+
             YVel += Gravity;
             YVel = Math.Sign(YVel) * Math.Min(Math.Abs(YVel), 4);
-
+            
             // moving platform pre-calculations
 
             var platforms = this.CollisionBounds<Platform>(X, Y + YVel).ToList();
@@ -1303,8 +1304,9 @@ namespace Platformer.Objects.Main
             }
 
             var colY = this.CollisionBounds<Collider>(X, Y + movYvel + YVel).Where(o => o is Solid).ToList();
-            
-            if (platforms.Count > 0 && movingPlatform == null)
+            Platform storedPlatform = null;
+
+            if (platforms.Count > 0)
             {
                 for (var i = 0; i < platforms.Count; i++)
                 {
@@ -1331,38 +1333,51 @@ namespace Platformer.Objects.Main
 
                                 if (platforms[i] is MovingPlatform)
                                 {
-                                    movingPlatform = platforms[i] as MovingPlatform;
-                                    break;
+                                    if (movingPlatform == null)
+                                        movingPlatform = platforms[i] as MovingPlatform;                                    
+                                } else
+                                {
+                                    storedPlatform = platforms[i];
                                 }
                             }
                         }
                     }
+                }
+                // prevents standing on a movingplatform that goes down and being then able to get down
+                if (movingPlatform != null && movingPlatform.YVel > 0)
+                {
+                    if (storedPlatform != null)
+                        movingPlatform = null;                    
                 }
             }
             
             // get off platform when touching y blocks
             if (movingPlatform != null)
             {
-                if (colY.Where(o => o is Solid && !(o is MovingPlatform)).Count() == 0)
+                // hitting head against blocks
+                if (movingPlatform.YVel < 0)
+                {
+                    var colYnew = this.CollisionBounds<Solid>(X, Y + movYvel + YVel - 1).FirstOrDefault();
+                    if (colYnew != null)
+                    {
+                        colY.Add(colYnew);
+                        movingPlatform = null;
+                    }
+                }
+
+                if (colY.Where(o => o is Solid).Count() == 0)
                     colY.Add(movingPlatform);
                 else
                 {
-                    if(movingPlatform.YVel >= 0)
+                    colY = this.CollisionBounds<Collider>(X, Y + movYvel + YVel - 1).Where(o => o is Solid).ToList();
+                    if (colY.Count > 0)
                         movingPlatform = null;
-                    else
-                    {
-                        colY = this.CollisionBounds<Collider>(X, Y + movYvel + YVel - 1).Where(o => o is Solid).ToList();
-                        if (colY.Count > 0)
-                            movingPlatform = null;
-                    }
                 }
 
                 // this is dangerous!
                 if (movingPlatform != null && movingPlatform.YVel > 0)
-                {
-                    Position = new Vector2(X, movingPlatform.Y - 8);
-                    //Move(0, movYvel);
-                }
+                    Position = new Vector2(X, movingPlatform.Y - 8);                    
+                
                 if (!this.CollisionBounds(movingPlatform, X, Y + movYvel + YVel))
                     movingPlatform = null;
             }
@@ -1371,6 +1386,9 @@ namespace Platformer.Objects.Main
             {
                 if (Bottom > movingPlatform.Y)
                     Move(0, -Math.Abs(movingPlatform.YVel));
+
+                colY.Clear();
+                colY.Add(movingPlatform);
             }
 
             if (colY.Count == 0)
@@ -1437,7 +1455,7 @@ namespace Platformer.Objects.Main
             {
                 XVel = 0;
             }
-
+            
             // ++++ limit positin within room bounds ++++
 
             var boundX = Position.X;
