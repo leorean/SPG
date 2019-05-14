@@ -341,6 +341,8 @@ namespace Platformer.Objects.Main
                 //var ouch = new OuchEmitter(X, Y);
                 //var message = new MessageBox("Hello World!\nHello World!\nHello World!|What is going on here?!\nI have no idea...|Wow.", "Title");
                 //var message = new MessageBox("Hello 'World' what 'is' going 'on'!\nHello World!\nHello World!|What is going on here?!\nI have no idea...|Wow.", "Title");
+                Stats.KeysAndKeyblocks.Clear();
+                Stats.Items.Clear();
                 var flash = new FlashEmitter(X, Y);
             }
 
@@ -1250,15 +1252,14 @@ namespace Platformer.Objects.Main
                         KeyObject.Throw();
                     else if (State != PlayerState.CARRYOBJECT_TAKE)
                     {
-                        if (k_downPressed || k_upPressed)// || k_jumpPressed)
+                        if (k_downPressed || k_upPressed)
                         {
                             KeyObject.Throw();
                             State = PlayerState.CARRYOBJECT_THROW;
                         }
                     }
-
-                    if (onGround && k_jumpPressed)
-                        YVel = -1;
+                    //if (onGround && k_jumpPressed)
+                    //    YVel = -1;
                 }
             } else
             {

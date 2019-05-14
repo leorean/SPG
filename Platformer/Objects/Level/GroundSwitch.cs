@@ -13,9 +13,13 @@ namespace Platformer.Objects.Level
     {
         public bool Active { get; set; }
 
-        public GroundSwitch(float x, float y, Room room, string name = null) : base(x, y, room, name)
+        private bool activateOnce;
+
+        public GroundSwitch(float x, float y, bool activateOnce, Room room, string name = null) : base(x, y, room, name)
         {
-            BoundingBox = new SPG.Util.RectF(2, 13, 12, 3);            
+            BoundingBox = new SPG.Util.RectF(2, 13, 12, 3);
+
+            this.activateOnce = activateOnce;
         }
 
         public override void Update(GameTime gameTime)
@@ -27,13 +31,13 @@ namespace Platformer.Objects.Level
             {
                 Active = true;
             }
-            else
+            else if (!activateOnce)
                 Active = false;
 
-            if (!Active)
-                Texture = AssetManager.GroundSwitch[0];
-            else
-                Texture = AssetManager.GroundSwitch[1];
+            var frame = 1 * Convert.ToInt32(Active) + 2 * Convert.ToInt32(activateOnce);
+
+            Texture = AssetManager.GroundSwitch[frame];
+            
         }
     }
 }

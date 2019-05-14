@@ -32,7 +32,7 @@ namespace Platformer.Objects.Level
         private int moveTimeout;
         private int maxMoveTimeout = 30;
 
-        public MovingPlatform(float x, float y, float xVel, float yVel, int xRange, int yRange, bool activatable, Room room) : base(x, y, room)
+        public MovingPlatform(float x, float y, float xVel, float yVel, int xRange, int yRange, bool activatable, int timeout, Room room) : base(x, y, room)
         {
             BoundingBox = new SPG.Util.RectF(0, 0, 2 * Globals.TILE, 1);
             DrawOffset = new Vector2(0, 16);
@@ -55,6 +55,11 @@ namespace Platformer.Objects.Level
 
             if (Activatable)
                 Active = false;
+
+            if (timeout != -1)
+                maxMoveTimeout = timeout;
+
+            moveTimeout = maxMoveTimeout;
         }
 
         public override void BeginUpdate(GameTime gameTime)

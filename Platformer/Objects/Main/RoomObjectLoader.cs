@@ -89,7 +89,11 @@ namespace Platformer.Objects.Main
                             t.Hide();
                             break;
                         case 643: // switches (ground)
-                            var groundSwitch = new GroundSwitch(i * Globals.TILE, j * Globals.TILE, room);
+                            new GroundSwitch(i * Globals.TILE, j * Globals.TILE, false, room);
+                            t.Hide();
+                            break;
+                        case 644: // switches (ground) - activate once
+                            new GroundSwitch(i * Globals.TILE, j * Globals.TILE, true, room);
                             t.Hide();
                             break;
                         case 579: // hp potion
@@ -185,8 +189,11 @@ namespace Platformer.Objects.Main
                         // in tile units
                         var movXrange = data.ContainsKey("xRange") ? (int)data["xRange"] : 0;
                         var movYrange = data.ContainsKey("yRange") ? (int)data["yRange"] : 0;
+
+                        var moveTimeout = data.ContainsKey("timeOut") ? (int)data["timeOut"] : -1;
                         var activatable = data.ContainsKey("activatable") ? (bool)data["activatable"] : false;
-                        var movingPlatform = new MovingPlatform(x, y, movXvel, movYvel, movXrange, movYrange, activatable, room);
+
+                        var movingPlatform = new MovingPlatform(x, y, movXvel, movYvel, movXrange, movYrange, activatable, moveTimeout, room);
                     }
                 }
             }

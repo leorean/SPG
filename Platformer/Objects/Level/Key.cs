@@ -57,7 +57,7 @@ namespace Platformer.Objects.Level
             base.Update(gameTime);
             
             YVel += .1f;
-            XVel *= .95f;
+            XVel *= .99f;
             
             var colX = this.CollisionBounds<Solid>(X + XVel, Y).FirstOrDefault();
 
@@ -185,12 +185,17 @@ namespace Platformer.Objects.Level
             if (player == null)
                 return;
 
-            //Position = new Vector2(X + Math.Sign((int)player.Direction) * Globals.TILE, player.Y - Globals.TILE);
-
-            XVel = Math.Sign((int)player.Direction) * 2;
-            YVel = -2;
-
-            var emitter = new Effects.Emitters.SaveBurstEmitter(X, Y);
+            var sideBlock = this.CollisionBounds<Solid>(X + Math.Sign((int)player.Direction) * Globals.TILE, Y).FirstOrDefault();
+            if (sideBlock != null)
+            {
+                Position = new Vector2(X + Math.Sign((int)player.Direction) * 8, Y - 8);
+            }
+            else
+            {
+                XVel = Math.Sign((int)player.Direction) * 2;
+                YVel = -1.75f;
+            }
+            var emitter = new Effects.Emitters.OuchEmitter(X, Y);
 
             var col = this.CollisionBounds<Solid>(X + XVel, Y + YVel).FirstOrDefault();
 
