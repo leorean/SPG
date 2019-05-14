@@ -38,7 +38,7 @@ namespace Platformer.Objects.Level
         {
             BoundingBox = new SPG.Util.RectF(0, 0, 2 * Globals.TILE, 1);
             DrawOffset = new Vector2(0, 16);
-            Visible = true;            
+            Visible = true;
             
             AnimationTexture = AssetManager.MovingPlatform;
 

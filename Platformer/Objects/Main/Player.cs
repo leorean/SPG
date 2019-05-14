@@ -588,6 +588,8 @@ namespace Platformer.Objects.Main
                     {
                         KeyObject = key;
                         key.Take(this);
+                        if (MovingPlatform == KeyObject)
+                            MovingPlatform = null;
                         State = PlayerState.CARRYOBJECT_TAKE;
 
                         ObjectManager.DestroyAll<ToolTip>();
@@ -1513,11 +1515,7 @@ namespace Platformer.Objects.Main
                 var bg = new Color(20, 113, 126);
 
                 sb.DrawBar(Position + new Vector2(0, 12), (int) (1.5 * Globals.TILE), oxygen / (float)maxOxygen, fg, bg, height:2, border:false);                
-            }
-
-            //sb.DrawPixel(X, Y + swimVector.Y, Color.AliceBlue);
-            //sb.DrawPixel(X + swimVector.X, Y + swimVector.Y, Color.Red);
-            //sb.DrawPixel(X, Y, Color.Blue);
+            }            
         }
     }
 }

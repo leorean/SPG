@@ -154,13 +154,19 @@ namespace Platformer.Objects
                     //Debug.WriteLine("ASDf");                    
                 }
 
+                //var newPosition = m.MovingPlatform.Position + moveOffset;
+
                 // not touching the moving platform any more -> let go
                 // + 1 because it wouldn't drive the object upwards otherwise..
-                if (!m.CollisionBounds(m.MovingPlatform, m.X, m.Y + movYvel + m.YVel + 1) || m.MovingPlatform.Top < m.Bottom + 2)
+                if (!m.CollisionBounds(m.MovingPlatform, m.X, m.Y + movYvel + m.YVel + 1) || m.MovingPlatform.Top < m.Bottom + moveOffset.Y - 1 || m.Top + moveOffset.Y > m.MovingPlatform.Bottom - 4)
                     m.MovingPlatform = null;
                 else
                 {
-                    m.Position = m.MovingPlatform.Position + moveOffset;// + new Vector2(0, movYvel);
+                    if (m is Player && m.MovingPlatform == (m as Player).KeyObject)
+                    {
+                        Debug.WriteLine("JES");
+                    }
+                    //m.Position = m.MovingPlatform.Position + moveOffset;
                 }
             }
 

@@ -31,13 +31,14 @@ namespace Platformer.Objects.Level
         public Key(float x, float y, Room room) : base(x, y, room)
         {
             Depth = Globals.LAYER_PLAYER + .001f;
-
+            
             Texture = GameManager.Current.Map.TileSet[581];
 
             Visible = true;
+            //DebugEnabled = true;
 
             DrawOffset = new Vector2(8, 8);
-            BoundingBox = new SPG.Util.RectF(-4, -8, 8, 16);
+            BoundingBox = new SPG.Util.RectF(-4, -7.5f, 8, 15);
 
             Gravity = .1f;
 
