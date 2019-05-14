@@ -27,9 +27,7 @@ namespace SPG.Objects
         {
             if (!Objects.Contains(o))
             {
-                //idCounter++;
                 Objects.Add(o);
-                //return idCounter;
             } else
             {                
                 throw new Exception("Object already registered!");
@@ -71,17 +69,19 @@ namespace SPG.Objects
         /// <param name="specificID"></param>
         public static void DestroyAll<T>(int specificID = -1) where T : GameObject
         {
-            var candidates = Objects.Where(o => o is T && ((o.ID == specificID) || specificID == -1)).Cast<T>().ToList();
-            T[] array = new T[candidates.Count];
-
-            candidates.CopyTo(array);
-
-            foreach(var obj in array)
+            for (var i = 0; i < Objects.Count; i++)
             {
-                obj.Destroy();
-            }            
-        }
+                var o = Objects[i];
 
+                if (!(o is T))
+                    continue;
+                if (specificID != -1 || o.ID != specificID)
+                    continue;
+
+                o.Destroy();
+            }
+        }
+        [Obsolete]
         public static void SortByID()
         {
             Objects.Sort(
@@ -93,7 +93,7 @@ namespace SPG.Objects
                 }
             );
         }
-
+        [Obsolete]
         public static void SortByX(this List<GameObject> objects)
         {
             objects.Sort(delegate (GameObject o1, GameObject o2)
@@ -103,7 +103,7 @@ namespace SPG.Objects
                 return 0;
             });
         }
-
+        [Obsolete]
         public static void SortByY(this List<GameObject> objects)
         {
             objects.Sort(delegate (GameObject o1, GameObject o2)
@@ -121,7 +121,13 @@ namespace SPG.Objects
         /// <returns></returns>
         public static int Count<T>() where T : GameObject
         {
-            return Objects.Where(o => o is T).Count();
+            int t = 0;
+            for (var i = 0; i < Objects.Count; i++)
+            {
+                if (Objects[i] is T)
+                    t++;
+            }
+            return t;
         }
 
         /// <summary>
@@ -130,7 +136,15 @@ namespace SPG.Objects
         /// <typeparam name="T"></typeparam>
         public static void Disable<T>() where T : GameObject
         {
-            Objects.Where(o => o is T).ToList().ForEach(o => o.Enabled = false);
+            for (var i = 0; i < Objects.Count; i++)
+            {
+                var o = Objects[i];
+
+                if (!(o is T))
+                    continue;
+
+                o.Enabled = false;
+            }
         }
 
         /// <summary>
@@ -139,12 +153,25 @@ namespace SPG.Objects
         /// <typeparam name="T"></typeparam>
         public static void Enable<T>() where T : GameObject
         {
-            Objects.Where(o => o is T).ToList().ForEach(o => o.Enabled = true);
+            for (var i = 0; i < Objects.Count; i++)
+            {
+                var o = Objects[i];
+
+                if (!(o is T))
+                    continue;
+
+                o.Enabled = true;
+            }
         }
 
-        public static List<T> CollisionPoint<T>(float x, float y) where T : GameObject
+        public static List<T> CollisionPoints<T>(float x, float y) where T : GameObject
         {
-            return CollisionPoint<T>(null, x, y);
+            return CollisionPoints<T>(null, x, y);
+        }
+
+        public static T CollisionPointFirstOrDefault<T>(float x, float y) where T : GameObject
+        {
+            return CollisionPointFirstOrDefault<T>(null, x, y);
         }
 
         /// <summary>
@@ -155,19 +182,48 @@ namespace SPG.Objects
         /// <param name="y"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static List<T> CollisionPoint<T>(this ICollidable self, float x, float y) where T : ICollidable
+        public static List<T> CollisionPoints<T>(this ICollidable self, float x, float y) where T : ICollidable
         {
-            List<T> candidates = Objects.Where(o => o != self && o is T && o.Enabled == true).Cast<T>().ToList();
+            List<T> list = new List<T>();
 
-            if (candidates.Count == 0) return candidates;
+            for (var i = 0; i < Objects.Count; i++)
+            {
+                var o = Objects[i];
 
-            candidates = candidates.Where(
-                o => 
-                    MathUtil.In(x, o.Left, o.Right) 
-                    && MathUtil.In(y, o.Top, o.Bottom)
-                ).ToList();
-            
-            return candidates;
+                if (!o.Enabled)
+                    continue;
+                if (!(o is T))
+                    continue;
+                if (o == self)
+                    continue;
+
+                if (MathUtil.In(x, o.Left, o.Right)
+                    && MathUtil.In(y, o.Top, o.Bottom))
+                    list.Add((T)(object)o);
+            }
+
+            return list;
+        }
+
+        public static T CollisionPointFirstOrDefault<T>(this ICollidable self, float x, float y) where T : ICollidable
+        {
+            for (var i = 0; i < Objects.Count; i++)
+            {
+                var o = Objects[i];
+
+                if (!o.Enabled)
+                    continue;
+                if (!(o is T))
+                    continue;
+                if (o == self)
+                    continue;
+
+                if (MathUtil.In(x, o.Left, o.Right)
+                    && MathUtil.In(y, o.Top, o.Bottom))
+                    return (T)(object)o;
+            }
+
+            return default(T);
         }
 
         public static bool CollisionRectangle(ICollidable o, float x1, float y1, float x2, float y2)
@@ -178,20 +234,52 @@ namespace SPG.Objects
             
         }
 
-        public static List<T> CollisionRectangle<T>(this ICollidable self, float x1, float y1, float x2, float y2) where T : ICollidable
+        public static List<T> CollisionRectangles<T>(this ICollidable self, float x1, float y1, float x2, float y2) where T : ICollidable
         {
-            List<T> candidates = Objects.Where(o => o != self && o is T && o.Enabled == true).Cast<T>().ToList();
+            List<T> list = new List<T>();
 
-            if (candidates.Count == 0) return candidates;
+            for (var i = 0; i < Objects.Count; i++)
+            {
+                var o = Objects[i];
 
-            candidates = candidates.Where(
-                o =>
-                    (x2 >= o.Left && x1 <= o.Right)
+                if (!o.Enabled)
+                    continue;
+                if (!(o is T))
+                    continue;
+                if (o == self)
+                    continue;
+
+                if ((x2 >= o.Left && x1 <= o.Right)
                     &&
-                    (y2 >= o.Top && y1 <= o.Bottom)
-                ).ToList();
+                    (y2 >= o.Top && y1 <= o.Bottom))
+                {
+                    list.Add((T)(object)o);
+                }
+            }
+            return list;
+        }
 
-            return candidates;
+        public static T CollisionRectangleFirstOrDefault<T>(this ICollidable self, float x1, float y1, float x2, float y2) where T : ICollidable
+        {
+            for (var i = 0; i < Objects.Count; i++)
+            {
+                var o = Objects[i];
+
+                if (!o.Enabled)
+                    continue;
+                if (!(o is T))
+                    continue;
+                if (o == self)
+                    continue;
+
+                if ((x2 >= o.Left && x1 <= o.Right)
+                    &&
+                    (y2 >= o.Top && y1 <= o.Bottom))
+                {
+                    return (T)(object)o;
+                }
+            }
+            return default(T);
         }
 
         public static bool CollisionBounds(this ICollidable self, ICollidable other, float x, float y)
@@ -216,18 +304,49 @@ namespace SPG.Objects
         /// <returns></returns>
         public static List<T> CollisionBounds<T>(this ICollidable self, float x, float y) where T : ICollidable
         {
-            List<T> candidates = Objects.Where(o => o != self && o is T && o.Enabled == true).Cast<T>().ToList();
+            List<T> list = new List<T>();
 
-            if (candidates.Count == 0) return candidates;
-            
-            candidates = candidates.Where(
-                o => 
-                    o.Right >= x + self.BoundingBox.X && o.Left <= x + self.BoundingBox.X + self.BoundingBox.Width
+            for(var i = 0; i < Objects.Count; i++)
+            {
+                var o = Objects[i];
+
+                if (!o.Enabled)
+                    continue;
+                if (!(o is T))
+                    continue;
+                if (o == self)
+                    continue;
+
+                if (o.Right >= x + self.BoundingBox.X && o.Left <= x + self.BoundingBox.X + self.BoundingBox.Width
                     &&
-                    o.Bottom >= y + self.BoundingBox.Y && o.Top <= y + self.BoundingBox.Y + self.BoundingBox.Height
-                ).ToList();
+                    o.Bottom >= y + self.BoundingBox.Y && o.Top <= y + self.BoundingBox.Y + self.BoundingBox.Height)
+                    list.Add((T)(object)o);
+                
+            }
 
-            return candidates;
+            return list;
+        }
+
+        public static T CollisionBoundsFirstOrDefault<T>(this ICollidable self, float x, float y) where T : ICollidable
+        {
+            for (var i = 0; i < Objects.Count; i++)
+            {
+                var o = Objects[i];
+
+                if (!o.Enabled)
+                    continue;
+                if (!(o is T))
+                    continue;
+                if (o == self)
+                    continue;
+
+                if (o.Right >= x + self.BoundingBox.X && o.Left <= x + self.BoundingBox.X + self.BoundingBox.Width
+                    &&
+                    o.Bottom >= y + self.BoundingBox.Y && o.Top <= y + self.BoundingBox.Y + self.BoundingBox.Height)
+                    return ((T)(object)o);
+            }
+
+            return default(T);
         }
 
         /// <summary>
@@ -261,9 +380,33 @@ namespace SPG.Objects
             if (ElapsedTime > GameSpeed)
             {
                 ElapsedTime -= GameSpeed;
-                Objects.Where(o => o.Enabled == true).ToList().ForEach(o => o.BeginUpdate(gameTime));
-                Objects.Where(o => o.Enabled == true).ToList().ForEach(o => o.Update(gameTime));
-                Objects.Where(o => o.Enabled == true).ToList().ForEach(o => o.EndUpdate(gameTime));
+
+                for(var i = 0; i < Objects.Count; i++)
+                {
+                    var o = Objects[i];
+                    if (!o.Enabled)
+                        continue;
+                    o.BeginUpdate(gameTime);
+                }
+
+                for (var i = 0; i < Objects.Count; i++)
+                {
+                    var o = Objects[i];
+                    if (!o.Enabled)
+                        continue;
+                    o.Update(gameTime);
+                }
+
+                for (var i = 0; i < Objects.Count; i++)
+                {
+                    var o = Objects[i];
+                    if (!o.Enabled)
+                        continue;
+                    o.EndUpdate(gameTime);
+                }
+                //Objects.Where(o => o.Enabled == true).ToList().ForEach(o => o.BeginUpdate(gameTime));
+                //Objects.Where(o => o.Enabled == true).ToList().ForEach(o => o.Update(gameTime));
+                //Objects.Where(o => o.Enabled == true).ToList().ForEach(o => o.EndUpdate(gameTime));
             }
             ElapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;            
         }
@@ -273,8 +416,17 @@ namespace SPG.Objects
         /// </summary>
         public static void DrawObjects(SpriteBatch sb, GameTime gameTime)
         {
-            SortByID();
-            Objects.Where(o => o.Visible).ToList().ForEach(o => o.Draw(sb, gameTime));
+            //SortByID();
+
+            for (var i = 0; i < Objects.Count; i++)
+            {
+                var o = Objects[i];
+                if (!o.Visible)
+                    continue;
+                o.Draw(sb, gameTime);
+            }
+
+            //Objects.Where(o => o.Visible).ToList().ForEach(o => o.Draw(sb, gameTime));
         }
 
         

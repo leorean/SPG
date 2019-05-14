@@ -169,7 +169,7 @@ namespace Platformer.Objects.Main
             ObjectManager.Enable<Room>();
 
             // find starting room
-            var startRoom = ObjectManager.CollisionPoint<Room>(spawnX, spawnY).FirstOrDefault();
+            var startRoom = ObjectManager.CollisionPoints<Room>(spawnX, spawnY).FirstOrDefault();
 
             if (startRoom == null)
             {

@@ -27,7 +27,7 @@ namespace Platformer.Objects
             {
                 for (var j = room.Y - .5f * camera.ViewHeight; j <= room.Y + room.BoundingBox.Height + .5f * camera.ViewHeight; j += camera.ViewHeight)
                 {
-                    var candidates = ObjectManager.CollisionPoint<Room>(room, i, j);
+                    var candidates = ObjectManager.CollisionPoints<Room>(room, i, j);
                     foreach (var c in candidates)
                         if (!neighbours.Contains(c))
                             neighbours.Add(c);

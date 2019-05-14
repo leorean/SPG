@@ -73,11 +73,10 @@ namespace Platformer.Objects.Level
 
             if (stuck)
             {
-                var tx = (GameManager.Current.Player.X - X) / 8f;
-                var ty = (GameManager.Current.Player.Y - Y) / 8f;
-                Move(tx, ty);
-
-                var col = this.CollisionBounds<Solid>(X, Y).FirstOrDefault();
+                MoveTowards(GameManager.Current.Player, 8);
+                
+                //var col = this.CollisionBounds<Solid>(X, Y).FirstOrDefault();
+                var col = this.CollisionRectangles<Solid>(Left, Top - 1, Right, Bottom + 1).FirstOrDefault();
                 if (col == null)
                     stuck = false;
             }
@@ -90,7 +89,7 @@ namespace Platformer.Objects.Level
             }
 
             var t = 3;
-            var keyBlock = this.CollisionRectangle<KeyBlock>(Left - t, Top - t, Right + t, Bottom + t).FirstOrDefault();
+            var keyBlock = this.CollisionRectangles<KeyBlock>(Left - t, Top - t, Right + t, Bottom + t).FirstOrDefault();
             if (keyBlock != null)
             {
                 Unlock(keyBlock);
@@ -176,19 +175,19 @@ namespace Platformer.Objects.Level
             if (player == null)
                 return;
 
-            var sideBlock = ObjectManager.CollisionPoint<Solid>(player.X + Math.Sign((int)player.Direction) * 8, player.Y).FirstOrDefault();
-            if (sideBlock != null)
-            {
-                Position = new Vector2(X + Math.Sign((int)player.Direction) * 8, Y - 8);
-            }
-            else
+            //var sideBlock = ObjectManager.CollisionPoint<Solid>(player.X + Math.Sign((int)player.Direction) * 8, player.Y).FirstOrDefault();
+            //if (sideBlock != null)
+            //{
+            //    Position = new Vector2(X + Math.Sign((int)player.Direction) * 8, Y - 8);
+            //}
+            //else
             {
                 XVel = Math.Sign((int)player.Direction) * 2;
                 YVel = -1.75f;
             }
             var emitter = new Effects.Emitters.OuchEmitter(X, Y);
 
-            var col = this.CollisionBounds<Solid>(X + XVel, Y + YVel).FirstOrDefault();
+            var col = this.CollisionRectangles<Solid>(Left, Top - 1, Right, Bottom + 1).FirstOrDefault();
 
             if (col != null)
                 stuck = true;

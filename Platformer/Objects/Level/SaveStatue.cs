@@ -66,7 +66,7 @@ namespace Platformer.Objects.Level
             
             if (GameManager.Current.SaveGame != null)
             {
-                var saveStatue = ObjectManager.CollisionPoint<SaveStatue>(GameManager.Current.SaveGame.playerPosition.X, GameManager.Current.SaveGame.playerPosition.Y).FirstOrDefault();
+                var saveStatue = ObjectManager.CollisionPoints<SaveStatue>(GameManager.Current.SaveGame.playerPosition.X, GameManager.Current.SaveGame.playerPosition.Y).FirstOrDefault();
 
                 if (saveStatue == this)
                     Active = true;

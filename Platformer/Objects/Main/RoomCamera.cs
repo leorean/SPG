@@ -128,7 +128,7 @@ namespace Platformer.Main
 
             if (invokeRoomChange)
             {
-                var targetRoom = target.CollisionPoint<Room>(target.X, target.Y).FirstOrDefault();
+                var targetRoom = target.CollisionPoints<Room>(target.X, target.Y).FirstOrDefault();
 
                 if (CurrentRoom != targetRoom)
                     GameManager.Current.ChangeRoom(CurrentRoom, targetRoom);
@@ -147,7 +147,7 @@ namespace Platformer.Main
                 // if no room is yet found, try to find first room
                 if (CurrentRoom == null)
                 {
-                    CurrentRoom = target.CollisionPoint<Room>(target.X, target.Y).FirstOrDefault();
+                    CurrentRoom = target.CollisionPoints<Room>(target.X, target.Y).FirstOrDefault();
                     if (CurrentRoom != null)
                     {
                         lastRoom = CurrentRoom;
@@ -196,7 +196,7 @@ namespace Platformer.Main
                         || !MathUtil.In(target.Y, CurrentRoom.Y, CurrentRoom.Y + CurrentRoom.BoundingBox.Height)))
                 {
                     lastRoom = CurrentRoom;
-                    CurrentRoom = ObjectManager.CollisionPoint<Room>(target, target.X, target.Y).FirstOrDefault();
+                    CurrentRoom = ObjectManager.CollisionPoints<Room>(target, target.X, target.Y).FirstOrDefault();
 
                     if (CurrentRoom != null)
                     {

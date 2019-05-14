@@ -242,7 +242,7 @@ namespace Platformer.Objects.Main
                 {
                     for (var j = 0; j < GameManager.Current.Map.Height * Globals.TILE; j += camera.ViewHeight)
                     {
-                        if (ObjectManager.CollisionPoint<Room>(i + Globals.TILE, j + Globals.TILE).Count == 0)
+                        if (ObjectManager.CollisionPoints<Room>(i + Globals.TILE, j + Globals.TILE).Count == 0)
                         {
                             var room = new Room(i, j, camera.ViewWidth, camera.ViewHeight);
                             camera.Rooms.Add(room);

@@ -33,7 +33,7 @@ namespace Platformer.Objects.Effects.Emitters
 
                 var inWater = (GameManager.Current.Map.LayerData[2].Get(tx, ty) != null);
 
-                if (ObjectManager.CollisionPoint<Solid>(posX, posY).Count > 0)
+                if (ObjectManager.CollisionPoints<Solid>(posX, posY).Count > 0)
                 {
                     inWater = false;
                 }
@@ -76,7 +76,7 @@ namespace Platformer.Objects.Effects.Emitters
             // destroy:
 
             var inWater = (GameManager.Current.Map.LayerData[2].Get(tx, ty) != null);
-            if (ObjectManager.CollisionPoint<Solid>(Position.X, Position.Y).Count > 0)
+            if (ObjectManager.CollisionPoints<Solid>(Position.X, Position.Y).Count > 0)
                 LifeTime = 0;
 
             if (!inWater)

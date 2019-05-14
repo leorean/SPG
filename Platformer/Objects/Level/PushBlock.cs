@@ -40,7 +40,7 @@ namespace Platformer.Objects.Level
 
             this.dir = dir;
 
-            var colX = this.CollisionPoint<Solid>(X + 8 + Math.Sign((int)dir) * Globals.TILE, Y + 8).FirstOrDefault();
+            var colX = this.CollisionPoints<Solid>(X + 8 + Math.Sign((int)dir) * Globals.TILE, Y + 8).FirstOrDefault();
 
             if (colX != null)
                 return false;
@@ -80,11 +80,11 @@ namespace Platformer.Objects.Level
             {
                 lastY = Y;
 
-                var colY = this.CollisionRectangle<Collider>(X + 8, Y + 8, X + 8, Y + 16).FirstOrDefault();
+                var colY = this.CollisionRectangles<Collider>(X + 8, Y + 8, X + 8, Y + 16).FirstOrDefault();
 
                 if (colY == null)
                 {
-                    var player = this.CollisionRectangle<Player>(Left, Top + T, Right, Bottom + T).FirstOrDefault();
+                    var player = this.CollisionRectangles<Player>(Left, Top + T, Right, Bottom + T).FirstOrDefault();
 
                     if (player != null)
                         aboutToFall = true;
@@ -100,7 +100,7 @@ namespace Platformer.Objects.Level
 
                 YVel = Math.Min(YVel + Gravity, 3);
 
-                var colY = this.CollisionRectangle<Collider>(X + 8, Y + 8, X + 8, Y + 16).FirstOrDefault();
+                var colY = this.CollisionRectangles<Collider>(X + 8, Y + 8, X + 8, Y + 16).FirstOrDefault();
                 if (colY != null)
                 {
                     YVel = 0;

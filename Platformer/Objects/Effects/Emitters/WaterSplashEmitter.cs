@@ -37,7 +37,7 @@ namespace Platformer.Objects.Effects.Emitters
             // destroy:
 
             var inWater = (GameManager.Current.Map.LayerData[2].Get(tx, ty) != null);
-            if (ObjectManager.CollisionPoint<Solid>(Position.X, Position.Y).Count > 0)
+            if (ObjectManager.CollisionPoints<Solid>(Position.X, Position.Y).Count > 0)
                 LifeTime = 0;
 
             if (inWater)

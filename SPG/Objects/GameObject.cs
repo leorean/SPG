@@ -217,8 +217,8 @@ namespace SPG.Objects
         /// <param name="n"></param>
         public void MoveTowards(GameObject target, int n)
         {
-            var tx = (target.Center.X - Center.X) / n;
-            var ty = (target.Center.Y - Center.Y) / n;
+            var tx = (target.Center.X - Center.X) / (float)n;
+            var ty = (target.Center.Y - Center.Y) / (float)n;
             Move(tx, ty);
         }
 

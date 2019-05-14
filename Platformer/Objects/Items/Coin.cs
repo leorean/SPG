@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Platformer.Objects.Items
 {
@@ -29,7 +30,7 @@ namespace Platformer.Objects.Items
         }
     }
 
-    public class Coin : Item, IMovable
+    public class Coin : Item//, IMovable
     {
         public class CoinValue
         {
@@ -122,11 +123,16 @@ namespace Platformer.Objects.Items
             depth += .00001f;
             c.Depth = depth;
         }
-
+        
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
+            //var onGround = this.MoveAdvanced(false);
+
+            //var colX = this.CollisionBoundsFirstOrDefault<Solid>(X + XVel, Y);
+            
+            /*
             if (!isLoose)
             {
 
@@ -152,7 +158,7 @@ namespace Platformer.Objects.Items
             }
             else
             {
-                var onGround = this.MoveAdvanced(true);
+                var onGround = this.MoveAdvanced(false);
 
                 if (onGround)
                 {
@@ -166,42 +172,42 @@ namespace Platformer.Objects.Items
                         t = -Math.PI;
                     }
                 }
-                /*
-                var colX = this.CollisionBounds<Solid>(X + XVel, Y).FirstOrDefault();
+                
+                //var colX = this.CollisionBounds<Solid>(X + XVel, Y).FirstOrDefault();
 
-                if (colX == null)
-                    Move(XVel, 0);
-                else
-                    XVel *= -.5f;
+                //if (colX == null)
+                //    Move(XVel, 0);
+                //else
+                //    XVel *= -.5f;
 
-                var colY = this.CollisionBounds<Collider>(X, Y + YVel + 1).FirstOrDefault();
+                //var colY = this.CollisionBounds<Collider>(X, Y + YVel + 1).FirstOrDefault();
 
-                if (colY == null || (colY is Platform && (YVel < 0)))
-                {
-                    Move(0, YVel);
-                    YVel += .1f;
-                }
-                else
-                {
-                    if (Math.Abs(XVel) < 1 && Math.Abs(YVel) < 1)
-                    {
-                        XVel = 0;
-                        YVel = 0;
-                        pos = Position;
-                        isLoose = false;
-                        t = -Math.PI;
-                    }
+                //if (colY == null || (colY is Platform && (YVel < 0)))
+                //{
+                //    Move(0, YVel);
+                //    YVel += .1f;
+                //}
+                //else
+                //{
+                //    if (Math.Abs(XVel) < 1 && Math.Abs(YVel) < 1)
+                //    {
+                //        XVel = 0;
+                //        YVel = 0;
+                //        pos = Position;
+                //        isLoose = false;
+                //        t = -Math.PI;
+                //    }
 
-                    //XVel *= .5f;
-                    YVel *= -.3f;
-                }*/
+                //    //XVel *= .5f;
+                //    YVel *= -.3f;
+                //}
 
                 //unstick
                 if (this.CollisionBounds<Solid>(X, Y).FirstOrDefault() != null)
                 {
                     MoveTowards(GameManager.Current.Player, 6);
                 }
-            }
+            }*/
 
             // draw logic
 

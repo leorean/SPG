@@ -216,7 +216,9 @@ namespace Platformer.Objects.Main
 
         public void Hit(int hitPoints, float? angle = null)
         {
-            //movingPlatform = null;
+            MovingPlatform = null;
+            //if (MovingPlatform != null && MovingPlatform.YVel >= 0)
+            //    MovingPlatform = null;
 
             var hpPrev = HP;
 
@@ -339,6 +341,10 @@ namespace Platformer.Objects.Main
                 //var ouch = new OuchEmitter(X, Y);
                 //var message = new MessageBox("Hello World!\nHello World!\nHello World!|What is going on here?!\nI have no idea...|Wow.", "Title");
                 //var message = new MessageBox("Hello 'World' what 'is' going 'on'!\nHello World!\nHello World!|What is going on here?!\nI have no idea...|Wow.", "Title");
+
+                Coin.Spawn(X, Y, RoomCamera.Current.CurrentRoom, 2000);
+                Debug.WriteLine("Spawned " + ObjectManager.Count<Coin>() + " coins.");
+
                 Stats.KeysAndKeyblocks.Clear();
                 Stats.Items.Clear();
                 var flash = new FlashEmitter(X, Y);
@@ -417,9 +423,9 @@ namespace Platformer.Objects.Main
 
             var currentRoom = RoomCamera.Current.CurrentRoom;
             
-            var onWall = !hit && ObjectManager.CollisionPoint<Solid>(this, X + (.5f * BoundingBox.Width + 1) * Math.Sign((int)Direction), Y + 4)
+            var onWall = !hit && ObjectManager.CollisionPoints<Solid>(this, X + (.5f * BoundingBox.Width + 1) * Math.Sign((int)Direction), Y + 4)
                             .Where(o => o.Room == currentRoom).Count() > 0;
-            var onCeil = !hit && ObjectManager.CollisionPoint<Solid>(this, X, Y - BoundingBox.Height * .5f - 1)
+            var onCeil = !hit && ObjectManager.CollisionPoints<Solid>(this, X, Y - BoundingBox.Height * .5f - 1)
                 .Where(o => o.Room == currentRoom && !(o is PushBlock)).Count() > 0;
 
             int tx = MathUtil.Div(X, Globals.TILE);
@@ -706,8 +712,7 @@ namespace Platformer.Objects.Main
                 {
                     if (MovingPlatform != null)
                     {
-                        //XVel += MovingPlatform.XVel;
-                        YVel = -2 + Math.Min(MovingPlatform.YVel, 0);
+                        YVel = Math.Min(-2, MovingPlatform.YVel - .1f); ;
                     }
                     else
                         YVel = -2;

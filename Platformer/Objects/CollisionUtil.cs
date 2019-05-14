@@ -25,7 +25,7 @@ namespace Platformer.Objects
 
             // moving platform pre-calculations
 
-            var platforms = m.CollisionBounds<Platform>(m.X, m.Y + m.YVel).ToList();
+            var platforms = m.CollisionBounds<Platform>(m.X, m.Y + m.YVel);
 
             // get off platform when not in X-range
             if (m.MovingPlatform != null)
@@ -113,7 +113,7 @@ namespace Platformer.Objects
                 // hitting head against blocks
                 if (m.MovingPlatform.YVel < 0)
                 {
-                    var colYnew = m.CollisionBounds<Solid>(m.X, m.Y + movYvel + m.YVel - 1).FirstOrDefault();
+                    var colYnew = m.CollisionBoundsFirstOrDefault<Solid>(m.X, m.Y + movYvel + m.YVel - 1);
                     if (colYnew != null)
                     {
                         colY.Add(colYnew);
@@ -130,44 +130,15 @@ namespace Platformer.Objects
                         m.MovingPlatform = null;
                 }
 
-                // this is dangerous!
-                if (m.MovingPlatform != null && m.MovingPlatform.YVel > 0)
-                    m.Position = new Vector2(m.X, m.MovingPlatform.Y - (m.Bottom - m.Y));
-
-                //var overlap = m.Bottom - colY.FirstOrDefault().Top;
-                //if (Math.Abs(overlap) <= Math.Abs(m.YVel) + Math.Abs(movYvel))
-
-                if (m.MovingPlatform != null)
-                {
-                    //var overlap = m.Bottom - m.MovingPlatform.Top + m.YVel;
-                    //m.Move(0, -(m.Gravity));// + m.YVel + m.Gravity);
-                    var c = m.CollisionBounds(m.MovingPlatform, m.X, m.Y);
-                    while (c)
-                    {
-                        m.Move(0, -.1f);
-                        c = m.CollisionBounds(m.MovingPlatform, m.X, m.Y);
-                    }
-                }
-                
-                if (m is Player && m.MovingPlatform != null && m.MovingPlatform is Key)
-                {
-                    //Debug.WriteLine("ASDf");                    
-                }
-
-                //var newPosition = m.MovingPlatform.Position + moveOffset;
-
                 // not touching the moving platform any more -> let go
                 // + 1 because it wouldn't drive the object upwards otherwise..
-                if (!m.CollisionBounds(m.MovingPlatform, m.X, m.Y + movYvel + m.YVel + 1) || m.MovingPlatform.Top < m.Bottom + moveOffset.Y - 1 || m.Top + moveOffset.Y > m.MovingPlatform.Bottom - 4)
-                    m.MovingPlatform = null;
-                else
+                if (!m.CollisionBounds(m.MovingPlatform, m.X, m.Y + movYvel + m.YVel + 1)
+                    || m.MovingPlatform.Top < m.Bottom + moveOffset.Y - 1
+                    || m.Top + moveOffset.Y > m.MovingPlatform.Bottom - 4)
                 {
-                    if (m is Player && m.MovingPlatform == (m as Player).KeyObject)
-                    {
-                        Debug.WriteLine("JES");
-                    }
-                    //m.Position = m.MovingPlatform.Position + moveOffset;
+                    m.MovingPlatform = null;
                 }
+                
             }
 
             // actual movement
@@ -201,9 +172,9 @@ namespace Platformer.Objects
                 m.YVel = 0;
             }
 
-            var colX = ObjectManager.CollisionBounds<Solid>(m, m.X + m.XVel + movXvel, m.Y);
+            var colX = ObjectManager.CollisionBoundsFirstOrDefault<Solid>(m, m.X + m.XVel + movXvel, m.Y);
 
-            if (colX.Count == 0)
+            if (colX == null)
             {
                 m.Move(m.XVel + movXvel, 0);
             }
