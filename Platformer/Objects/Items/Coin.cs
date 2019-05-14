@@ -130,7 +130,8 @@ namespace Platformer.Objects.Items
 
             //var onGround = this.MoveAdvanced(false);
 
-            //var colX = this.CollisionBoundsFirstOrDefault<Solid>(X + XVel, Y);
+
+            var colX = this.CollisionBoundsFirstOrDefault<Coin>(X + XVel, Y);
             
             /*
             if (!isLoose)

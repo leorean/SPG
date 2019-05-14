@@ -343,7 +343,7 @@ namespace Platformer.Objects.Main
                 //var message = new MessageBox("Hello 'World' what 'is' going 'on'!\nHello World!\nHello World!|What is going on here?!\nI have no idea...|Wow.", "Title");
 
                 Coin.Spawn(X, Y, RoomCamera.Current.CurrentRoom, 2000);
-                Debug.WriteLine("Spawned " + ObjectManager.Count<Coin>() + " coins.");
+                Debug.WriteLine($"{ObjectManager.Count<Coin>()} coins exist. (Blocks: {ObjectManager.Count<Solid>()}, overall: {ObjectManager.Count<GameObject>()})");
 
                 Stats.KeysAndKeyblocks.Clear();
                 Stats.Items.Clear();
@@ -353,7 +353,7 @@ namespace Platformer.Objects.Main
             gamePadLeftXFactor = 1f;
             gamePadLeftYFactor = 1f;
 
-            // gamepad overrides keyboard input if pussible
+            // gamepad overrides keyboard input if possible
             if (input.GamePadEnabled)
             {
                 k_leftPressed = input.DirectionPressedFromStick(Input.Direction.LEFT, Input.Stick.LeftStick, Input.State.Pressed);
