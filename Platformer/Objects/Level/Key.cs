@@ -9,10 +9,11 @@ using SPG.Objects;
 using Microsoft.Xna.Framework.Graphics;
 using Platformer.Objects.Effects;
 using Platformer.Objects.Effects.Emitters;
+using Platformer.Util;
 
 namespace Platformer.Objects.Level
 {    
-    public class Key : Platform
+    public class Key : Platform, IMovable
     {
         public bool Persistent { get; set; }
 
@@ -21,9 +22,11 @@ namespace Platformer.Objects.Level
         private bool stuck = false;
 
         private int timer = 0;
-        private int maxTimer = 10 * 60;
+        private int maxTimer = 100 * 60;
 
         private Vector2 originalPosition;
+
+        public Collider MovingPlatform { get; set; }
         
         public Key(float x, float y, Room room) : base(x, y, room)
         {
@@ -35,6 +38,8 @@ namespace Platformer.Objects.Level
 
             DrawOffset = new Vector2(8, 8);
             BoundingBox = new SPG.Util.RectF(-4, -8, 8, 16);
+
+            Gravity = .1f;
 
             originalPosition = Position;
             timer = maxTimer;
@@ -56,29 +61,13 @@ namespace Platformer.Objects.Level
         {
             base.Update(gameTime);
             
-            YVel += .1f;
             XVel *= .99f;
-            
-            var colX = this.CollisionBounds<Solid>(X + XVel, Y).FirstOrDefault();
 
-            if (colX == null)
-            {
-                Move(XVel, 0);
-            } else
-            {
-                XVel = 0;
-            }
 
-            var colY = this.CollisionBounds<Solid>(X, Y + YVel).FirstOrDefault();
-
-            if (colY == null)
-            {
-                Move(0, YVel);
-            }
-            else
+            var onGround = this.MoveAdvanced(true);
+            if (onGround)
             {
                 XVel *= .5f;
-                YVel = 0;
             }
 
             if (stuck)
@@ -94,6 +83,7 @@ namespace Platformer.Objects.Level
 
             if (player != null)
             {
+                MovingPlatform = null;
                 XVel = 0;
                 YVel = 0;
             }
@@ -185,7 +175,7 @@ namespace Platformer.Objects.Level
             if (player == null)
                 return;
 
-            var sideBlock = this.CollisionBounds<Solid>(X + Math.Sign((int)player.Direction) * Globals.TILE, Y).FirstOrDefault();
+            var sideBlock = ObjectManager.CollisionPoint<Solid>(player.X + Math.Sign((int)player.Direction) * 8, player.Y).FirstOrDefault();
             if (sideBlock != null)
             {
                 Position = new Vector2(X + Math.Sign((int)player.Direction) * 8, Y - 8);

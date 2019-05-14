@@ -15,6 +15,8 @@ namespace Platformer.Objects.Level
         public bool Active { get; set; } = true;
         public bool Activatable { get; set; } = false;
 
+        //Collider IMovable.MovingPlatform { get => null; set => value = null; }
+
         private int xRange;
         private int yRange;
         private float xv;
@@ -31,7 +33,7 @@ namespace Platformer.Objects.Level
 
         private int moveTimeout;
         private int maxMoveTimeout = 30;
-
+        
         public MovingPlatform(float x, float y, float xVel, float yVel, int xRange, int yRange, bool activatable, int timeout, Room room) : base(x, y, room)
         {
             BoundingBox = new SPG.Util.RectF(0, 0, 2 * Globals.TILE, 1);

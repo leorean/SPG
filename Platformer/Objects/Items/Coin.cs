@@ -29,7 +29,7 @@ namespace Platformer.Objects.Items
         }
     }
 
-    public class Coin : Item
+    public class Coin : Item, IMovable
     {
         public class CoinValue
         {
@@ -60,13 +60,15 @@ namespace Platformer.Objects.Items
         private double sin;
         private double alpha = 2;
         private Vector2 pos;
-
-        // WARNING: currently, it is not possible to spawn coins from anywhere and guarantee save persistance!!
         
         private bool isLoose;
         
+        public Collider MovingPlatform { get; set; }
+
         public Coin(float x, float y, Room room, CoinValue v, bool isLoose = false) : base(x, y, room)
         {
+            Gravity = .1f;
+
             Visible = false;
             AnimationTexture = AssetManager.Coins;
             t = RND.Next * Math.PI * 2;
@@ -150,6 +152,21 @@ namespace Platformer.Objects.Items
             }
             else
             {
+                var onGround = this.MoveAdvanced(true);
+
+                if (onGround)
+                {
+                    XVel *= .5f;
+                    if (Math.Abs(XVel) < 1 && Math.Abs(YVel) < 1)
+                    {
+                        XVel = 0;
+                        YVel = 0;
+                        pos = Position;
+                        isLoose = false;
+                        t = -Math.PI;
+                    }
+                }
+                /*
                 var colX = this.CollisionBounds<Solid>(X + XVel, Y).FirstOrDefault();
 
                 if (colX == null)
@@ -177,7 +194,7 @@ namespace Platformer.Objects.Items
 
                     //XVel *= .5f;
                     YVel *= -.3f;
-                }
+                }*/
 
                 //unstick
                 if (this.CollisionBounds<Solid>(X, Y).FirstOrDefault() != null)

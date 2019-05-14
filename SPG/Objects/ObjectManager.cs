@@ -155,7 +155,7 @@ namespace SPG.Objects
         /// <param name="y"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static List<T> CollisionPoint<T>(this GameObject self, float x, float y) where T : GameObject
+        public static List<T> CollisionPoint<T>(this ICollidable self, float x, float y) where T : ICollidable
         {
             List<T> candidates = Objects.Where(o => o != self && o is T && o.Enabled == true).Cast<T>().ToList();
 
@@ -170,7 +170,7 @@ namespace SPG.Objects
             return candidates;
         }
 
-        public static bool CollisionRectangle(GameObject o, float x1, float y1, float x2, float y2)
+        public static bool CollisionRectangle(ICollidable o, float x1, float y1, float x2, float y2)
         {
             return (x2 >= o.Left && x1 <= o.Right)
                     &&
@@ -178,7 +178,7 @@ namespace SPG.Objects
             
         }
 
-        public static List<T> CollisionRectangle<T>(this GameObject self, float x1, float y1, float x2, float y2) where T : GameObject
+        public static List<T> CollisionRectangle<T>(this ICollidable self, float x1, float y1, float x2, float y2) where T : ICollidable
         {
             List<T> candidates = Objects.Where(o => o != self && o is T && o.Enabled == true).Cast<T>().ToList();
 
@@ -194,7 +194,7 @@ namespace SPG.Objects
             return candidates;
         }
 
-        public static bool CollisionBounds(this GameObject self, GameObject other, float x, float y)
+        public static bool CollisionBounds(this ICollidable self, ICollidable other, float x, float y)
         {
             if (other == null) return false;
 
@@ -214,7 +214,7 @@ namespace SPG.Objects
         /// <param name="y"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static List<T> CollisionBounds<T>(this GameObject self, float x, float y) where T : GameObject
+        public static List<T> CollisionBounds<T>(this ICollidable self, float x, float y) where T : ICollidable
         {
             List<T> candidates = Objects.Where(o => o != self && o is T && o.Enabled == true).Cast<T>().ToList();
 
@@ -255,6 +255,9 @@ namespace SPG.Objects
         /// </summary>
         public static void UpdateObjects(GameTime gameTime)
         {
+            Objects.SortByY();
+            Objects.Reverse();
+
             if (ElapsedTime > GameSpeed)
             {
                 ElapsedTime -= GameSpeed;

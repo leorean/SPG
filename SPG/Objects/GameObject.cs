@@ -15,12 +15,29 @@ using SPG.Util;
 
 namespace SPG.Objects
 {
-    public interface IGameObject
+    public interface ICollidable
     {
-        
+        Vector2 Position { get; set; }
+        Vector2 Center { get; }
+
+        RectF BoundingBox { get; set; }
+
+        float X { get; }
+        float Y { get; }
+
+        float Left { get; }
+        float Right { get; }
+        float Top { get; }
+        float Bottom { get; }
+
+        float XVel { get; set; }
+        float YVel { get; set; }
+        float Gravity { get; set; }
+
+        void Move(float x, float y);
     }
 
-    public abstract class GameObject : IGameObject
+    public abstract class GameObject : ICollidable
     {
         // general props
 

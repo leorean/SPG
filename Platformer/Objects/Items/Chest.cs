@@ -19,9 +19,9 @@ namespace Platformer.Objects.Items
             this.value = value;
             Visible = false;
 
-            BoundingBox = new SPG.Util.RectF(0, 0, 16, 16);
+            BoundingBox = new SPG.Util.RectF(2, 8, 12, 8);
             DrawOffset = Vector2.Zero;
-
+            
             Depth = Globals.LAYER_BG + 0.0001f;
 
             Respawn = true;

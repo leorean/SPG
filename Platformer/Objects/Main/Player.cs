@@ -63,7 +63,7 @@ namespace Platformer.Objects.Main
         //STOMP
     }
     
-    public class Player : GameObject
+    public class Player : GameObject, IMovable
     {
 
         // public
@@ -163,11 +163,9 @@ namespace Platformer.Objects.Main
 
         private PlayerGhost ghost;
 
-        private MovingPlatform movingPlatform;
-        private float movXvel;
-        private float movYvel;
-
         public Key KeyObject { get; set; }
+
+        public Collider MovingPlatform { get; set; }
 
         // constructor
 
@@ -704,9 +702,16 @@ namespace Platformer.Objects.Main
 
                 if (k_jumpPressed)
                 {
-                    movingPlatform = null;
-                    State = PlayerState.JUMP_UP;
-                    YVel = -2;
+                    if (MovingPlatform != null)
+                    {
+                        //XVel += MovingPlatform.XVel;
+                        YVel = -2 + Math.Min(MovingPlatform.YVel, 0);
+                    }
+                    else
+                        YVel = -2;
+
+                    MovingPlatform = null;
+                    State = PlayerState.JUMP_UP;                    
                     k_jumpPressed = false;
                 }
             }
@@ -1237,7 +1242,7 @@ namespace Platformer.Objects.Main
             if (State == PlayerState.CARRYOBJECT_THROW)
             {
                 XVel = 0;
-                YVel = -Gravity;
+                //YVel = -Gravity;
                 if (animationComplete)
                     State = PlayerState.IDLE;
             }
@@ -1276,184 +1281,48 @@ namespace Platformer.Objects.Main
 
             // ++++ collision & movement ++++
 
-            // TODO: extract this to a superclass/method for reusing for enemies!
+            bool moveWithPlatforms = (State != PlayerState.SWIM
+                          && State != PlayerState.SWIM_DIVE_IN
+                          && State != PlayerState.SWIM_TURN_AROUND
+                          && State != PlayerState.PUSH
+                          && State != PlayerState.OBTAIN
+                          && State != PlayerState.LEVITATE
+                          && State != PlayerState.WALL_CLIMB
+                          && State != PlayerState.WALL_IDLE
+                          && State != PlayerState.CEIL_CLIMB
+                          && State != PlayerState.CEIL_IDLE
+                          && State != PlayerState.DOOR
+                          && State != PlayerState.HIT_AIR);
 
-            YVel += Gravity;
-            YVel = Math.Sign(YVel) * Math.Min(Math.Abs(YVel), 4);
+            var g = this.MoveAdvanced(moveWithPlatforms);
             
-            // moving platform pre-calculations
+            if (g)
+            { 
+                onGround = true;
 
-            var platforms = this.CollisionBounds<Platform>(X, Y + YVel).ToList();
-
-            // get off platform when not in X-range
-            if (movingPlatform != null)
-            {
-                if (Left > movingPlatform.Right || Right < movingPlatform.Left)
-                    movingPlatform = null;
-            }
-
-            if (movingPlatform == null)
-            {
-                movXvel = 0f;
-                movYvel = 0f;
-            }
-            else
-            {
-                movXvel = movingPlatform.XVel;
-                movYvel = movingPlatform.YVel;                
-            }
-
-            var colY = this.CollisionBounds<Collider>(X, Y + movYvel + YVel).Where(o => o is Solid).ToList();
-            Platform storedPlatform = null;
-
-            if (platforms.Count > 0)
-            {
-                for (var i = 0; i < platforms.Count; i++)
+                // transition from falling to getting up again
+                if (State == PlayerState.JUMP_UP
+                    || State == PlayerState.JUMP_DOWN
+                    || State == PlayerState.WALL_CLIMB
+                    || State == PlayerState.LEVITATE
+                    || State == PlayerState.CARRYOBJECT_IDLE
+                    || State == PlayerState.CARRYOBJECT_WALK)
                 {
-                    if (Bottom <= platforms[i].Top - platforms[i].YVel)
+                    if (lastGroundY < Y - 9 * Globals.TILE)
                     {
-                        if (YVel >= 0)
-                        {
-                            colY.Clear();
-                            colY.Add(platforms[i]);
-
-                            if (State != PlayerState.SWIM
-                                && State != PlayerState.SWIM_DIVE_IN
-                                && State != PlayerState.SWIM_TURN_AROUND
-                                && State != PlayerState.PUSH
-                                && State != PlayerState.OBTAIN
-                                && State != PlayerState.LEVITATE
-                                && State != PlayerState.WALL_CLIMB
-                                && State != PlayerState.WALL_IDLE
-                                && State != PlayerState.CEIL_CLIMB
-                                && State != PlayerState.CEIL_IDLE
-                                && State != PlayerState.DOOR
-                                && State != PlayerState.HIT_AIR)
-                            {
-
-                                if (platforms[i] is MovingPlatform)
-                                {
-                                    if (movingPlatform == null)
-                                        movingPlatform = platforms[i] as MovingPlatform;                                    
-                                } else
-                                {
-                                    storedPlatform = platforms[i];
-                                }
-                            }
-                        }
+                        var eff = new SingularEffect(X, Y + 8);
+                        Hit(3);
+                        State = PlayerState.LIE;
+                        lieTimer = 120;
+                    }
+                    else if (KeyObject == null)
+                    {
+                        if (lastGroundY < Y - Globals.TILE)
+                            State = PlayerState.GET_UP;
+                        else
+                            State = PlayerState.IDLE;
                     }
                 }
-                // prevents standing on a movingplatform that goes down and being then able to get down
-                if (movingPlatform != null && movingPlatform.YVel > 0)
-                {
-                    if (storedPlatform != null)
-                        movingPlatform = null;                    
-                }
-            }
-            
-            // get off platform when touching y blocks
-            if (movingPlatform != null)
-            {
-                // hitting head against blocks
-                if (movingPlatform.YVel < 0)
-                {
-                    var colYnew = this.CollisionBounds<Solid>(X, Y + movYvel + YVel - 1).FirstOrDefault();
-                    if (colYnew != null)
-                    {
-                        colY.Add(colYnew);
-                        movingPlatform = null;
-                    }
-                }
-
-                if (colY.Where(o => o is Solid).Count() == 0)
-                    colY.Add(movingPlatform);
-                else
-                {
-                    colY = this.CollisionBounds<Collider>(X, Y + movYvel + YVel - 1).Where(o => o is Solid).ToList();
-                    if (colY.Count > 0)
-                        movingPlatform = null;
-                }
-
-                // this is dangerous!
-                if (movingPlatform != null && movingPlatform.YVel > 0)
-                    Position = new Vector2(X, movingPlatform.Y - 8);                    
-                
-                if (!this.CollisionBounds(movingPlatform, X, Y + movYvel + YVel))
-                    movingPlatform = null;
-            }
-
-            if (movingPlatform != null)
-            {
-                if (Bottom > movingPlatform.Y)
-                    Move(0, -Math.Abs(movingPlatform.YVel));
-
-                colY.Clear();
-                colY.Add(movingPlatform);
-            }
-
-            if (colY.Count == 0)
-            {
-                Move(0, YVel + movYvel);                
-            }
-            else
-            {
-                if (YVel >= Gravity)
-                {
-                    onGround = true;
-
-                    // transition from falling to getting up again
-                    if (State == PlayerState.JUMP_UP 
-                        || State == PlayerState.JUMP_DOWN 
-                        || State == PlayerState.WALL_CLIMB 
-                        || State == PlayerState.LEVITATE
-                        || State == PlayerState.CARRYOBJECT_IDLE
-                        || State == PlayerState.CARRYOBJECT_WALK)
-                    {
-                        if (lastGroundY < Y - 9 * Globals.TILE)
-                        {
-                            var eff = new SingularEffect(X, Y + 8);
-                            Hit(3);
-                            State = PlayerState.LIE;
-                            lieTimer = 120;
-                        }
-                        else if (KeyObject == null)
-                        { 
-                            if (lastGroundY < Y - Globals.TILE)
-                                State = PlayerState.GET_UP;
-                            else
-                                State = PlayerState.IDLE;
-                        }
-                    }
-
-                    // trick to "snap" to the bottom:                    
-                    var overlap = Bottom - colY.FirstOrDefault().Top;
-                    if (Math.Abs(overlap) <= Math.Abs(YVel) + 1)
-                        Move(0, -overlap - Gravity);
-                    
-                    // deprecated: solved issue with a loop:
-                    /*
-                    while (true)
-                    {
-                        var cy = this.CollisionBounds<Collider>(X, Y + .01f).FirstOrDefault();
-                        Move(0, .01f);
-                        if (cy != null)
-                        {
-                            Move(0, -.01f);
-                            break;
-                        }
-                    }*/
-                }
-                YVel = 0;
-            }
-            
-            var colX = ObjectManager.CollisionBounds<Solid>(this, X + XVel + movXvel, Y);
-            
-            if (colX.Count == 0)
-            {
-                Move(XVel + movXvel, 0);
-            } else
-            {
-                XVel = 0;
             }
             
             // ++++ limit positin within room bounds ++++

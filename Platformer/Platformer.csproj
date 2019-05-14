@@ -60,6 +60,7 @@
     <Compile Include="Objects\Effects\ToolTip.cs" />
     <Compile Include="Objects\Effects\Transition.cs" />
     <Compile Include="Objects\Effects\SingularEffect.cs" />
+    <Compile Include="Objects\IMovable.cs" />
     <Compile Include="Objects\Items\AbilityItem.cs" />
     <Compile Include="Objects\Items\Coin.cs" />
     <Compile Include="Objects\Items\Item.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Objects\Level\Solid.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Objects\CollisionUtil.cs" />
     <Compile Include="Util\DrawExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
