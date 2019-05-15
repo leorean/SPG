@@ -52,8 +52,11 @@ namespace Platformer.Objects.Main
                     {
                         case 0: // platforms
                         case 12:
+                        case 646:
                             var platform = new Platform(i * Globals.TILE, j * Globals.TILE, room);
                             t.TileOptions.Solid = false;
+                            if (t.ID == 646)
+                                t.TileOptions.Visible = false;
                             break;
                         case 387: // mushrooms
                             var mushroom = new Mushroom(i * Globals.TILE, j * Globals.TILE, room)
@@ -133,6 +136,11 @@ namespace Platformer.Objects.Main
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
                             break;
+                        case 647: // control disabler
+                            new JumpControlDisabler(i * Globals.TILE, j * Globals.TILE, room);
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            break;
                         // coins
                         case 704: case 705: case 706: case 707: case 708: case 709: case 710:
                             var coin = new Coin(i * Globals.TILE + 8, j * Globals.TILE + 8, room, (t.ID - 704).TileIDToCoinValue());
@@ -140,7 +148,9 @@ namespace Platformer.Objects.Main
                             t.TileOptions.Solid = false;
                             break;
                         default:
-                            var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room);                            
+                            var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room);
+                            if (t.ID == 645)
+                                t.TileOptions.Visible = false;
                             break;
                     }
                 }

@@ -162,6 +162,7 @@ namespace Platformer.Objects.Main
         private int ghostTimer = 60;
 
         private PlayerGhost ghost;
+        private bool jumpControlDisabled;
 
         public Key KeyObject { get; set; }
 
@@ -278,7 +279,8 @@ namespace Platformer.Objects.Main
 
             // ++++ input ++++
 
-            if (ObjectManager.Exists<MessageBox>() || GameManager.Current.Transition != null)
+            if (ObjectManager.Exists<MessageBox>() 
+                || GameManager.Current.Transition != null)
             {
                 input.Enabled = false;
             }
@@ -385,7 +387,7 @@ namespace Platformer.Objects.Main
             k_leftPressed = tk_leftPressed;
             k_rightPressed = tk_rightPressed;
             k_leftHolding = tk_leftHolding;
-            k_rightHolding = tk_rightHolding;
+            k_rightHolding = tk_rightHolding;            
         }
 
         // ++++++++++++++++++++++++++
@@ -402,7 +404,7 @@ namespace Platformer.Objects.Main
             
             if (InvincibleTimer == 0 && HP > 0)
             {
-                var obstacle = ObjectManager.CollisionBounds<Obstacle>(this, X, Y).FirstOrDefault();
+                var obstacle = ObjectManager.CollisionBoundsFirstOrDefault<Obstacle>(this, X, Y);
 
                 if (obstacle != null)
                 {
@@ -537,9 +539,9 @@ namespace Platformer.Objects.Main
             
             if (HP > 0)
             {
-                //  ++++ save statues ++++
+                // ++++ save statues ++++
 
-                var saveStatue = this.CollisionBounds<SaveStatue>(X, Y).FirstOrDefault();
+                var saveStatue = this.CollisionBoundsFirstOrDefault<SaveStatue>(X, Y);
 
                 if (saveStatue != null)
                 {
@@ -568,7 +570,7 @@ namespace Platformer.Objects.Main
 
                 // ++++ doors ++++
 
-                var door = this.CollisionBounds<Door>(X, Y).FirstOrDefault();
+                var door = this.CollisionBoundsFirstOrDefault<Door>(X, Y);
 
                 if (door != null)
                 {
@@ -585,7 +587,7 @@ namespace Platformer.Objects.Main
 
                 // ++++ keys ++++
                 
-                var key = this.CollisionBounds<Key>(X, Y + Globals.TILE).FirstOrDefault();
+                var key = this.CollisionBoundsFirstOrDefault<Key>(X, Y + Globals.TILE);
                 if (key != null)
                 {
                     var toolTip = new ToolTip(key, this, new Vector2(0, 8), 1);
@@ -605,8 +607,7 @@ namespace Platformer.Objects.Main
                 // ++++ npcs ++++
 
                 var t = Globals.TILE;
-                //var npc = this.CollisionRectangle<NPC>(Left - t, Top - t, Right + t, Bottom).FirstOrDefault();
-                var npc = this.CollisionBounds<NPC>(X, Y).FirstOrDefault();
+                var npc = this.CollisionBoundsFirstOrDefault<NPC>(X, Y);
                 if (npc != null)
                 {
                     if (!ObjectManager.Exists<MessageBox>())
@@ -659,7 +660,7 @@ namespace Platformer.Objects.Main
             // walk
             if (State == PlayerState.WALK)
             {
-                var colSide = this.CollisionBounds<Solid>(X + Math.Sign((int)Direction), Y).FirstOrDefault();
+                var colSide = this.CollisionBoundsFirstOrDefault<Solid>(X + Math.Sign((int)Direction), Y);
 
                 if (k_rightHolding)
                 {
@@ -727,7 +728,7 @@ namespace Platformer.Objects.Main
             {
                 if (pushBlock == null)
                 {
-                    pushBlock = this.CollisionBounds<PushBlock>(X + Math.Sign((int)Direction), Y).FirstOrDefault();
+                    pushBlock = this.CollisionBoundsFirstOrDefault<PushBlock>(X + Math.Sign((int)Direction), Y);
 
                     if (pushBlock != null && !pushBlock.IsPushing && !pushBlock.IsFalling)
                     {
@@ -754,7 +755,7 @@ namespace Platformer.Objects.Main
                     && pushBlock == null)
                     State = PlayerState.IDLE;
                 
-                if (this.CollisionBounds<PushBlock>(X + Math.Sign((int)Direction), Y).FirstOrDefault() == null)
+                if (this.CollisionBoundsFirstOrDefault<PushBlock>(X + Math.Sign((int)Direction), Y) == null)
                 {
                     State = PlayerState.IDLE;
                     pushBlock = null;
@@ -836,7 +837,7 @@ namespace Platformer.Objects.Main
                 // mushrooms
                 if (YVel > 0)
                 {
-                    var mush = this.CollisionBounds<Mushroom>(X, Y).FirstOrDefault();
+                    var mush = this.CollisionBoundsFirstOrDefault<Mushroom>(X, Y);
                     if (mush != null && !mush.Bouncing)
                     {
                         lastGroundY = Y;
@@ -845,17 +846,27 @@ namespace Platformer.Objects.Main
                     }
                 }
 
-                if (k_leftHolding)
+                if (this.CollisionBoundsFirstOrDefault<JumpControlDisabler>(X, Y) != null)
+                    jumpControlDisabled = true;
+
+                if (!jumpControlDisabled)
                 {
-                    if (XVel < .5)
-                        Direction = Direction.LEFT;
-                    XVel = Math.Max(XVel - .08f, -maxVel);
-                }
-                if (k_rightHolding)
+
+                    if (k_leftHolding)
+                    {
+                        if (XVel < .5)
+                            Direction = Direction.LEFT;
+                        XVel = Math.Max(XVel - .08f, -maxVel);
+                    }
+                    if (k_rightHolding)
+                    {
+                        if (XVel > -.5)
+                            Direction = Direction.RIGHT;
+                        XVel = Math.Min(XVel + .08f, maxVel);
+                    }
+                } else
                 {
-                    if (XVel > -.5)
-                        Direction = Direction.RIGHT;
-                    XVel = Math.Min(XVel + .08f, maxVel);                    
+                    XVel *= .94f;
                 }
                 if (Stats.Abilities.HasFlag(PlayerAbility.LEVITATE))
                 {
@@ -864,6 +875,9 @@ namespace Platformer.Objects.Main
                             State = PlayerState.LEVITATE;
                     }
                 }                
+            } else
+            {
+                jumpControlDisabled = false;
             }
             // getting back up
             if (State == PlayerState.GET_UP)
@@ -1385,14 +1399,14 @@ namespace Platformer.Objects.Main
                     break;
                 case PlayerState.JUMP_UP:
                     row = 2;
-                    fAmount = 2;
-                    fSpd = 0.2f;
+                    fAmount = 1;
+                    fSpd = 0;
                     break;
                 case PlayerState.JUMP_DOWN:
                     row = 2;
-                    offset = 2;
-                    fAmount = 2;
-                    fSpd = 0.2f;
+                    offset = 1 + Convert.ToInt32(jumpControlDisabled);
+                    fAmount = 1;
+                    fSpd = 0;
                     break;
                 case PlayerState.GET_UP:
                     row = 8;
