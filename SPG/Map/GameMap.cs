@@ -144,7 +144,7 @@ namespace SPG.Map
         public List<Dictionary<string, object>> ObjectData { get; set; }
 
         /// <summary>
-        /// Creates a new map from an XML document.
+        /// Creates a new map from an XML document. Format by TileD Version 2018.06.27
         /// </summary>
         /// <param name="xml"></param>
         public GameMap(XmlDocument xml)

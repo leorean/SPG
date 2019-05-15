@@ -22,7 +22,7 @@ namespace Platformer.Objects.Level
         private bool stuck = false;
 
         private int timer = 0;
-        private int maxTimer = 100 * 60;
+        private int maxTimer = 15 * 60;
 
         private Vector2 originalPosition;
 
