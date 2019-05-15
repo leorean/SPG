@@ -460,18 +460,18 @@ namespace SPG.Objects
         {
             //SortByID();
             
-            for (var i = 0; i < Objects.Count; i++)
+            for (var i = 0; i < ActiveObjects.Count; i++)
             {
-                var o = Objects[i];
+                var o = ActiveObjects[i];
                 if (!o.Visible)
                     continue;
 
-                if (visibleRect.Width > 0 && visibleRect.Height > 0)
-                {
-                    if (o.Right < visibleRect.X || o.Left > visibleRect.X + visibleRect.Width
-                        || o.Bottom < visibleRect.Y || o.Top > visibleRect.Y + visibleRect.Height)
-                        continue;
-                }
+                //if (visibleRect.Width > 0 && visibleRect.Height > 0)
+                //{
+                //    if (o.Right < visibleRect.X || o.Left > visibleRect.X + visibleRect.Width
+                //        || o.Bottom < visibleRect.Y || o.Top > visibleRect.Y + visibleRect.Height)
+                //        continue;
+                //}
 
                 o.Draw(sb, gameTime);
             }

@@ -219,6 +219,7 @@ namespace Platformer
             ObjectManager.Enable<Room>();
             ObjectManager.Enable<MessageBox>();
             ObjectManager.Enable<GlobalWaterBubbleEmitter>();
+            ObjectManager.Enable<PlayerGhost>();
 
             // ++++ update camera ++++
 

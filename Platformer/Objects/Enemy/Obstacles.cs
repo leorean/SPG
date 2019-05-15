@@ -50,5 +50,11 @@ namespace Platformer.Objects.Enemy
             BoundingBox = new RectF(0, 16, 32, 16);            
             Damage = 9999;
         }
+
+        public override void Draw(SpriteBatch sb, GameTime gameTime)
+        {
+            base.Draw(sb, gameTime);
+
+        }
     }
 }

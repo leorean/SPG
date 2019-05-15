@@ -59,61 +59,84 @@ namespace Platformer.Objects.Main
                             {
                                 Texture = GameManager.Current.Map.TileSet[t.ID]
                             };
-                            t.Hide();
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
                             break;
                         case 576: // save-statues
                             var saveSatue = new SaveStatue(i * Globals.TILE, j * Globals.TILE, room);
-                            t.Hide();
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
                             break;
                         case 512: // spikes (bottom)
                             new SpikeBottom(i * Globals.TILE, j * Globals.TILE, room);
+                            t.TileOptions.Visible = true;
+                            t.TileOptions.Solid = false;
                             break;
                         case 513: // spikes (top)
                             new SpikeTop(i * Globals.TILE, j * Globals.TILE, room);
+                            t.TileOptions.Visible = true;
+                            t.TileOptions.Solid = false;
                             break;
                         case 514: // spikes (right)
                             new SpikeRight(i * Globals.TILE, j * Globals.TILE, room);
+                            t.TileOptions.Visible = true;
+                            t.TileOptions.Solid = false;
                             break;
                         case 515: // spikes (left)
                             new SpikeLeft(i * Globals.TILE, j * Globals.TILE, room);
+                            t.TileOptions.Visible = true;
+                            t.TileOptions.Solid = false;
                             break;
                         case 577: // BIG spikes (deadly)
                             var bigSpike = new BigSpike(i * Globals.TILE, j * Globals.TILE, room);
+                            t.TileOptions.Visible = true;
+                            t.TileOptions.Solid = false;
                             break;
-                        case 578: case 641: case 642: break;
+                        case 578: case 641: case 642:
+                            t.TileOptions.Visible = true;
+                            t.TileOptions.Solid = false;
+                            break;
                         case 640: // push-blocks
                             var pushBlock = new PushBlock(i * Globals.TILE, j * Globals.TILE, room);
                             pushBlock.Texture = GameManager.Current.Map.TileSet[t.ID];
-                            t.Hide();
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
                             break;
                         case 643: // switches (ground)
                             new GroundSwitch(i * Globals.TILE, j * Globals.TILE, false, room);
-                            t.Hide();
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
                             break;
                         case 644: // switches (ground) - activate once
                             new GroundSwitch(i * Globals.TILE, j * Globals.TILE, true, room);
-                            t.Hide();
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
                             break;
                         case 579: // hp potion
                             new Potion(i * Globals.TILE + 8, j * Globals.TILE + 8, room, PotionType.HP);
-                            t.Hide();
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
                             break;
                         case 580: // mp potion
                             new Potion(i * Globals.TILE + 8, j * Globals.TILE + 8, room, PotionType.MP);
-                            t.Hide();
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
                             break;
                         case 581: // key
-                            var key = new Key(i * Globals.TILE + 8, j * Globals.TILE + 8, room);                            
-                            t.Hide();
+                            var key = new Key(i * Globals.TILE + 8, j * Globals.TILE + 8, room);
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
                             break;
                         case 582: // keyblock
                             new KeyBlock(i * Globals.TILE, j * Globals.TILE, room);
-                            t.Hide();
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
                             break;
                         // coins
                         case 704: case 705: case 706: case 707: case 708: case 709: case 710:
-                            var coin = new Coin(i * Globals.TILE + 8, j * Globals.TILE + 8, room, (t.ID - 704).TileIDToCoinValue());                            
-                            t.Hide();
+                            var coin = new Coin(i * Globals.TILE + 8, j * Globals.TILE + 8, room, (t.ID - 704).TileIDToCoinValue());
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
                             break;
                         default:
                             var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room);                            
@@ -271,3 +294,4 @@ namespace Platformer.Objects.Main
         }
     }
 }
+

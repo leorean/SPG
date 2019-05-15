@@ -48,6 +48,15 @@ namespace SPG.Map
             return list.Where(x => x.Values.Contains(name)).First();
         }
 
+        /// <summary>
+        /// Checks if there is a solid & visible tile at positon x, y. 
+        /// If layer is specified, checks a certain map layer. default: the topmost layer of the map data.
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="layer"></param>
+        /// <returns></returns>
         public static bool CollisionTile(this GameMap map, float x, float y, int layer = -1)
         {
             int tx = MathUtil.Div(x, Globals.TILE);
@@ -58,12 +67,22 @@ namespace SPG.Map
 
             var tile = map.LayerData[layer].Get(tx, ty);
 
-            if (tile != null && (tile.TileOptions == null || tile.TileOptions?.Visible == true))
+            if (tile != null && tile.TileOptions.Solid)
                 return true;
 
             return false;
         }
 
+        /// <summary>
+        /// Checks if there is a solid & visible tile at within the bounds of the gameObject plus a velocity xVel, yVel. 
+        /// If layer is specified, checks a certain map layer. default: the topmost layer of the map data.
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="o"></param>
+        /// <param name="xVel"></param>
+        /// <param name="yVel"></param>
+        /// <param name="layer"></param>
+        /// <returns></returns>
         public static bool CollisionTile(this GameMap map, GameObject o, float xVel, float yVel, int layer = -1)
         {
             //int tx = MathUtil.Div(o.X + xVel, Globals.TILE);
@@ -79,12 +98,15 @@ namespace SPG.Map
 
             Tile tile = null;
 
-            if (tile == null) tile = map.LayerData[layer].Get(tl, tt);
-            if (tile == null) tile = map.LayerData[layer].Get(tr, tt);
-            if (tile == null) tile = map.LayerData[layer].Get(tl, tb);
-            if (tile == null) tile = map.LayerData[layer].Get(tr, tb);
+            if (tile == null || !tile.TileOptions.Solid) tile = map.LayerData[layer].Get(tl, tt);
+            if (tile == null || !tile.TileOptions.Solid) tile = map.LayerData[layer].Get(tr, tt);
+            if (tile == null || !tile.TileOptions.Solid) tile = map.LayerData[layer].Get(tl, tb);
+            if (tile == null || !tile.TileOptions.Solid) tile = map.LayerData[layer].Get(tr, tb);
 
-            if (tile != null && (tile.TileOptions == null || tile.TileOptions?.Visible == true))
+            if (tile == null)
+                return false;
+
+            if (tile.TileOptions.Solid)
                 return true;
 
             return false;
@@ -270,9 +292,8 @@ namespace SPG.Map
 
                         // approach to draw parts of the original set instead of each texture extra:
 
-                        if (tile.TileOptions == null || tile.TileOptions.Visible)
+                        if (tile.TileOptions.Visible)
                         {
-
                             var tid = tile.ID;
 
                             var tix = (tid * Globals.TILE) % TileSet.Width;

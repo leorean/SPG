@@ -37,13 +37,11 @@ namespace Platformer.Objects
                     foreach (var c in candidates)
                         if (!neighbours.Contains(c))
                         {
-                            Debug.WriteLine($"{c.X}, {c.Y}, ... {c.BoundingBox}");
+                            //Debug.WriteLine($"{c.X}, {c.Y}, ... {c.BoundingBox}");
                             neighbours.Add(c);
                         }
                 }
             }
-            //Debug.WriteLine($"Found {neighbours.Count} neighbors.");
-
             return neighbours;
         }
     }
