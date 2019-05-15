@@ -53,6 +53,7 @@ namespace Platformer.Objects.Main
                         case 0: // platforms
                         case 12:
                             var platform = new Platform(i * Globals.TILE, j * Globals.TILE, room);
+                            t.TileOptions.Solid = false;
                             break;
                         case 387: // mushrooms
                             var mushroom = new Mushroom(i * Globals.TILE, j * Globals.TILE, room)

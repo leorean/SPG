@@ -167,6 +167,8 @@ namespace Platformer.Objects.Items
                 {
                     if (YVel >= 0)
                         p = this.CollisionBoundsFirstOrDefault<Platform>(X, Y + YVel + 1);
+                    if (p != null && Bottom > p.Top)
+                        p = null;
                 }
 
                 if (!colY && p == null)
@@ -176,17 +178,26 @@ namespace Platformer.Objects.Items
                 }
                 else
                 {
-                    if (Math.Abs(XVel) < 1 && Math.Abs(YVel) < 1)
+                    //unstick
+                    if (GameManager.Current.Map.CollisionTile(X, Top - 1))
                     {
-                        XVel = 0;
                         YVel = 0;
-                        pos = Position;
-                        isLoose = false;
-                        t = -Math.PI;
+                        Move(0, 1);
                     }
+                    else
+                    {
+                        if (Math.Abs(XVel) < 1 && Math.Abs(YVel) < 1)
+                        {
+                            XVel = 0;
+                            YVel = 0;
+                            pos = Position;
+                            isLoose = false;
+                            t = -Math.PI;
+                        }
 
-                    //XVel *= .5f;
-                    YVel *= -.3f;
+                        //XVel *= .5f;
+                        YVel *= -.3f;
+                    }
                 }
 
                 //unstick

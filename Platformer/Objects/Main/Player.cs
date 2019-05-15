@@ -347,7 +347,7 @@ namespace Platformer.Objects.Main
 
                 Stats.KeysAndKeyblocks.Clear();
                 Stats.Items.Clear();
-                var flash = new FlashEmitter(X, Y);
+                //var flash = new FlashEmitter(X, Y);
             }
 
             gamePadLeftXFactor = 1f;
