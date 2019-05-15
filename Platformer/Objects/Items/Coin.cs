@@ -132,8 +132,9 @@ namespace Platformer.Objects.Items
             //var onGround = this.MoveAdvanced(false);
 
 
-            //var colX = this.CollisionBoundsFirstOrDefault<Coin>(X + XVel, Y);
-            var colX = GameManager.Current.Map.CollisionTile(this, XVel, YVel);
+            var colX = this.CollisionBoundsFirstOrDefault<Coin>(X + XVel, Y) != null;
+
+            //var colX = GameManager.Current.Map.CollisionTile(this, XVel, YVel);
 
             if (colX)
                 Move(0, -1);

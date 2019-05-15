@@ -38,9 +38,7 @@ namespace Platformer.Objects.Main
             y = (int)((float)y).Clamp(0, data.Height);
 
             // load objects from tile data
-
-            var solidCount = 0;
-
+            
             for (int i = x; i < x + w; i++)
             {
                 for (int j = y; j < y + h; j++)
@@ -118,8 +116,7 @@ namespace Platformer.Objects.Main
                             t.Hide();
                             break;
                         default:
-                            var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room);
-                            solidCount++;
+                            var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room);                            
                             break;
                     }
                 }
@@ -234,7 +231,7 @@ namespace Platformer.Objects.Main
 
                     var room = new Room(x, y, w, h);
                     room.Background = bg;
-                    camera.Rooms.Add(room);
+                    //camera.Rooms.Add(room);
                 }
 
                 // load rooms of standard size when there is none
@@ -245,7 +242,7 @@ namespace Platformer.Objects.Main
                         if (ObjectManager.CollisionPoints<Room>(i + Globals.TILE, j + Globals.TILE).Count == 0)
                         {
                             var room = new Room(i, j, camera.ViewWidth, camera.ViewHeight);
-                            camera.Rooms.Add(room);
+                            //camera.Rooms.Add(room);
                         }
                     }
                 }

@@ -35,6 +35,8 @@ namespace SPG.Objects
         float Gravity { get; set; }
 
         void Move(float x, float y);
+
+        bool Enabled { get; }
     }
 
     public abstract class GameObject : ICollidable
@@ -49,13 +51,16 @@ namespace SPG.Objects
         /// If not overridden, the ID will be created based on the coordinates of the object.
         /// </summary>
         public int ID { get; set; }
-        
-        private bool _enabled;
-        public bool Enabled
-        {
-            get => _enabled;
-            set => _enabled = value;
-        }
+
+        //private bool _enabled;
+        //public bool Enabled
+        //{
+        //    get => _enabled;
+        //    set => _enabled = value;
+        //}
+
+        public bool Enabled { get; internal set; } = true;
+
         public bool Visible { get; set; } = true;
 
         // draw/visual
@@ -136,15 +141,12 @@ namespace SPG.Objects
         {
             Position = new Vector2(x, y);
             Name = name == null ? name : GetType().Name;
-            this.CreateID();
-
-            //Debug.WriteLine($"Set ID '{ID}' to object of type '{GetType()}'.");
+            this.CreateID();            
         }
         
         private GameObject()
         {
-            ObjectManager.Add(this);
-            Enabled = true;
+            ObjectManager.Add(this);            
         }
         
         ~GameObject()

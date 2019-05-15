@@ -15,7 +15,9 @@ namespace SPG.Objects
     public static class ObjectManager
     {
         public static List<GameObject> Objects { get; private set; } = new List<GameObject>();
-        
+
+        public static List<GameObject> ActiveObjects { get; private set; } = new List<GameObject>();
+
         //private static int idCounter;
 
         public static double ElapsedTime { get; private set; } = 0;
@@ -28,6 +30,10 @@ namespace SPG.Objects
             if (!Objects.Contains(o))
             {
                 Objects.Add(o);
+                ActiveObjects.Add(o);
+
+                //UpdateActiveObjectList();
+
             } else
             {                
                 throw new Exception("Object already registered!");
@@ -59,7 +65,12 @@ namespace SPG.Objects
         public static void Remove(GameObject o)
         {
             if (Objects.Contains(o))
+            {
                 Objects.Remove(o);
+                //UpdateActiveObjectList();
+            }
+            if (ActiveObjects.Contains(o))
+                ActiveObjects.Remove(o);
         }
 
         /// <summary>
@@ -81,6 +92,7 @@ namespace SPG.Objects
                 o.Destroy();
             }
         }
+
         [Obsolete]
         public static void SortByID()
         {
@@ -136,15 +148,17 @@ namespace SPG.Objects
         /// <typeparam name="T"></typeparam>
         public static void Disable<T>() where T : GameObject
         {
-            for (var i = 0; i < Objects.Count; i++)
+            for (var i = 0; i < ActiveObjects.Count; i++)
             {
-                var o = Objects[i];
+                var o = ActiveObjects[i];
 
                 if (!(o is T))
                     continue;
 
                 o.Enabled = false;
             }
+
+            UpdateActiveObjectList();
         }
 
         /// <summary>
@@ -162,6 +176,17 @@ namespace SPG.Objects
 
                 o.Enabled = true;
             }
+
+            UpdateActiveObjectList();
+        }
+
+        public static void Enable(GameObject gameObject)
+        {
+            if (gameObject == null)
+                return;
+
+            gameObject.Enabled = true;
+            UpdateActiveObjectList();
         }
 
         public static List<T> CollisionPoints<T>(float x, float y) where T : GameObject
@@ -186,12 +211,10 @@ namespace SPG.Objects
         {
             List<T> list = new List<T>();
 
-            for (var i = 0; i < Objects.Count; i++)
+            for (var i = 0; i < ActiveObjects.Count; i++)
             {
-                var o = Objects[i];
-
-                if (!o.Enabled)
-                    continue;
+                var o = ActiveObjects[i];
+                
                 if (!(o is T))
                     continue;
                 if (o == self)
@@ -207,12 +230,10 @@ namespace SPG.Objects
 
         public static T CollisionPointFirstOrDefault<T>(this ICollidable self, float x, float y) where T : ICollidable
         {
-            for (var i = 0; i < Objects.Count; i++)
+            for (var i = 0; i < ActiveObjects.Count; i++)
             {
-                var o = Objects[i];
-
-                if (!o.Enabled)
-                    continue;
+                var o = ActiveObjects[i];
+                
                 if (!(o is T))
                     continue;
                 if (o == self)
@@ -238,12 +259,10 @@ namespace SPG.Objects
         {
             List<T> list = new List<T>();
 
-            for (var i = 0; i < Objects.Count; i++)
+            for (var i = 0; i < ActiveObjects.Count; i++)
             {
-                var o = Objects[i];
-
-                if (!o.Enabled)
-                    continue;
+                var o = ActiveObjects[i];
+                
                 if (!(o is T))
                     continue;
                 if (o == self)
@@ -261,12 +280,10 @@ namespace SPG.Objects
 
         public static T CollisionRectangleFirstOrDefault<T>(this ICollidable self, float x1, float y1, float x2, float y2) where T : ICollidable
         {
-            for (var i = 0; i < Objects.Count; i++)
+            for (var i = 0; i < ActiveObjects.Count; i++)
             {
-                var o = Objects[i];
-
-                if (!o.Enabled)
-                    continue;
+                var o = ActiveObjects[i];
+                
                 if (!(o is T))
                     continue;
                 if (o == self)
@@ -282,9 +299,25 @@ namespace SPG.Objects
             return default(T);
         }
 
+        public static List<T> FindAll<T>() where T : GameObject
+        {
+            List<T> list = new List<T>();
+
+            for (var i = 0; i < ActiveObjects.Count; i++)
+            {
+                var o = ActiveObjects[i];
+                
+                if (!(o is T))
+                    continue;
+
+                list.Add((T)(object)o);
+            }
+            return list;
+        }
+
         public static bool CollisionBounds(this ICollidable self, ICollidable other, float x, float y)
         {
-            if (other == null) return false;
+            if (other == null || !other.Enabled) return false;
 
             if (other.Right >= x + self.BoundingBox.X && other.Left <= x + self.BoundingBox.X + self.BoundingBox.Width
                     &&
@@ -305,10 +338,10 @@ namespace SPG.Objects
         public static List<T> CollisionBounds<T>(this ICollidable self, float x, float y) where T : ICollidable
         {
             List<T> list = new List<T>();
-
-            for(var i = 0; i < Objects.Count; i++)
+            
+            for(var i = 0; i < ActiveObjects.Count; i++)
             {
-                var o = Objects[i];
+                var o = ActiveObjects[i];
 
                 if (!o.Enabled)
                     continue;
@@ -329,9 +362,9 @@ namespace SPG.Objects
 
         public static T CollisionBoundsFirstOrDefault<T>(this ICollidable self, float x, float y) where T : ICollidable
         {
-            for (var i = 0; i < Objects.Count; i++)
+            for (var i = 0; i < ActiveObjects.Count; i++)
             {
-                var o = Objects[i];
+                var o = ActiveObjects[i];
 
                 if (!o.Enabled)
                     continue;
@@ -339,7 +372,7 @@ namespace SPG.Objects
                     continue;
                 if (o == self)
                     continue;
-
+                
                 if (o.Right >= x + self.BoundingBox.X && o.Left <= x + self.BoundingBox.X + self.BoundingBox.Width
                     &&
                     o.Bottom >= y + self.BoundingBox.Y && o.Top <= y + self.BoundingBox.Y + self.BoundingBox.Height)
@@ -367,6 +400,13 @@ namespace SPG.Objects
                     if (o.X >= x && o.Y >= y && o.X < x + width && o.Y < y + height) o.Enabled = enabled;
                 }
             }
+
+            UpdateActiveObjectList();
+        }
+
+        private static void UpdateActiveObjectList()
+        {
+            ActiveObjects = Objects.Where(o => o.Enabled).ToList();
         }
 
         /// <summary>
@@ -374,32 +414,34 @@ namespace SPG.Objects
         /// </summary>
         public static void UpdateObjects(GameTime gameTime)
         {
-            Objects.SortByY();
-            Objects.Reverse();
+            //Objects.SortByY();
+            //Objects.Reverse();
 
+            UpdateActiveObjectList();
+            
             if (ElapsedTime > GameSpeed)
             {
                 ElapsedTime -= GameSpeed;
 
-                for(var i = 0; i < Objects.Count; i++)
+                for(var i = 0; i < ActiveObjects.Count; i++)
                 {
-                    var o = Objects[i];
+                    var o = ActiveObjects[i];
                     if (!o.Enabled)
                         continue;
                     o.BeginUpdate(gameTime);
                 }
 
-                for (var i = 0; i < Objects.Count; i++)
+                for (var i = 0; i < ActiveObjects.Count; i++)
                 {
-                    var o = Objects[i];
+                    var o = ActiveObjects[i];
                     if (!o.Enabled)
                         continue;
                     o.Update(gameTime);
                 }
 
-                for (var i = 0; i < Objects.Count; i++)
+                for (var i = 0; i < ActiveObjects.Count; i++)
                 {
-                    var o = Objects[i];
+                    var o = ActiveObjects[i];
                     if (!o.Enabled)
                         continue;
                     o.EndUpdate(gameTime);
@@ -414,15 +456,23 @@ namespace SPG.Objects
         /// <summary>
         /// Call this between the SpriteBatch.Begin and SpriteBatch.End in your game Draw method.
         /// </summary>
-        public static void DrawObjects(SpriteBatch sb, GameTime gameTime)
+        public static void DrawObjects(SpriteBatch sb, GameTime gameTime, Rectangle visibleRect = new Rectangle())
         {
             //SortByID();
-
+            
             for (var i = 0; i < Objects.Count; i++)
             {
                 var o = Objects[i];
                 if (!o.Visible)
                     continue;
+
+                if (visibleRect.Width > 0 && visibleRect.Height > 0)
+                {
+                    if (o.Right < visibleRect.X || o.Left > visibleRect.X + visibleRect.Width
+                        || o.Bottom < visibleRect.Y || o.Top > visibleRect.Y + visibleRect.Height)
+                        continue;
+                }
+
                 o.Draw(sb, gameTime);
             }
 

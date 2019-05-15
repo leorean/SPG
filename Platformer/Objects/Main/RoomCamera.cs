@@ -33,7 +33,7 @@ namespace Platformer.Main
         
         // room <-> view calculation vars
 
-        public List<Room> Rooms { get; private set; } = new List<Room>();
+        //public List<Room> Rooms { get; private set; } = new List<Room>();
 
         private Room lastRoom;
         public Room CurrentRoom { get; private set; }
@@ -123,12 +123,10 @@ namespace Platformer.Main
             
             if (target == null)
                 return;
-
-            ObjectManager.Enable<Room>();
-
+            
             if (invokeRoomChange)
             {
-                var targetRoom = target.CollisionPoints<Room>(target.X, target.Y).FirstOrDefault();
+                var targetRoom = target.CollisionPointFirstOrDefault<Room>(target.X, target.Y);
 
                 if (CurrentRoom != targetRoom)
                     GameManager.Current.ChangeRoom(CurrentRoom, targetRoom);
@@ -147,7 +145,7 @@ namespace Platformer.Main
                 // if no room is yet found, try to find first room
                 if (CurrentRoom == null)
                 {
-                    CurrentRoom = target.CollisionPoints<Room>(target.X, target.Y).FirstOrDefault();
+                    CurrentRoom = target.CollisionPointFirstOrDefault<Room>(target.X, target.Y);
                     if (CurrentRoom != null)
                     {
                         lastRoom = CurrentRoom;

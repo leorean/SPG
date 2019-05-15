@@ -343,7 +343,7 @@ namespace Platformer.Objects.Main
                 //var message = new MessageBox("Hello 'World' what 'is' going 'on'!\nHello World!\nHello World!|What is going on here?!\nI have no idea...|Wow.", "Title");
 
                 Coin.Spawn(X, Y, RoomCamera.Current.CurrentRoom, 2000);
-                Debug.WriteLine($"{ObjectManager.Count<Coin>()} coins exist. (Blocks: {ObjectManager.Count<Solid>()}, overall: {ObjectManager.Count<GameObject>()})");
+                Debug.WriteLine($"{ObjectManager.Count<Coin>()} coins exist. (Blocks: {ObjectManager.Count<Solid>()}, active: {ObjectManager.ActiveObjects.Count()}, overall: {ObjectManager.Count<GameObject>()})");
 
                 Stats.KeysAndKeyblocks.Clear();
                 Stats.Items.Clear();

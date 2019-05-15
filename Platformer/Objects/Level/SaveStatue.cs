@@ -66,7 +66,7 @@ namespace Platformer.Objects.Level
             
             if (GameManager.Current.SaveGame != null)
             {
-                var saveStatue = ObjectManager.CollisionPoints<SaveStatue>(GameManager.Current.SaveGame.playerPosition.X, GameManager.Current.SaveGame.playerPosition.Y).FirstOrDefault();
+                var saveStatue = ObjectManager.CollisionPointFirstOrDefault<SaveStatue>(GameManager.Current.SaveGame.playerPosition.X, GameManager.Current.SaveGame.playerPosition.Y);
 
                 if (saveStatue == this)
                     Active = true;
@@ -82,7 +82,7 @@ namespace Platformer.Objects.Level
             }
 
             emitter.Active = Active;
-            emitter.Enabled = Enabled;
+            //emitter.Enabled = Enabled;
 
             if (Active)
             {                
@@ -92,7 +92,7 @@ namespace Platformer.Objects.Level
             {
                 sin = Math.Max(sin - .1f, 0);
             }
-
+            
             emitter.Position = Position + floatPosition + new Vector2(8 , 8);
 
             floatPosition = new Vector2(0, -5 - (float)Math.Sin(sin) * 2);

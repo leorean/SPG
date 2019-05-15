@@ -40,7 +40,7 @@ namespace Platformer.Objects.Level
 
             this.dir = dir;
 
-            var colX = this.CollisionPoints<Solid>(X + 8 + Math.Sign((int)dir) * Globals.TILE, Y + 8).FirstOrDefault();
+            var colX = this.CollisionPointFirstOrDefault<Solid>(X + 8 + Math.Sign((int)dir) * Globals.TILE, Y + 8);
 
             if (colX != null)
                 return false;

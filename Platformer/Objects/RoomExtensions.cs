@@ -25,12 +25,21 @@ namespace Platformer.Objects
 
             for (var i = room.X - .5f * camera.ViewWidth; i <= room.X + room.BoundingBox.Width + .5f * camera.ViewWidth; i += camera.ViewWidth)
             {
+                if (i < 0)
+                    continue;
+                
                 for (var j = room.Y - .5f * camera.ViewHeight; j <= room.Y + room.BoundingBox.Height + .5f * camera.ViewHeight; j += camera.ViewHeight)
                 {
-                    var candidates = ObjectManager.CollisionPoints<Room>(room, i, j);
+                    if (j < 0)
+                        continue;
+
+                    var candidates = ObjectManager.CollisionPoints<Room>(room, i, j).Where(o => !neighbours.Contains(o));
                     foreach (var c in candidates)
                         if (!neighbours.Contains(c))
+                        {
+                            Debug.WriteLine($"{c.X}, {c.Y}, ... {c.BoundingBox}");
                             neighbours.Add(c);
+                        }
                 }
             }
             //Debug.WriteLine($"Found {neighbours.Count} neighbors.");

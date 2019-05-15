@@ -246,9 +246,15 @@ namespace Platformer.Objects.Main
             ObjectManager.Disable<GameObject>();
 
             // enable all solids from neighbors
-            foreach (var room in LoadedRooms)
+            /*foreach (var room in LoadedRooms)
             {
                 ObjectManager.SetRegionEnabled<Solid>(room.X, room.Y, room.BoundingBox.Width, room.BoundingBox.Height, true);
+            }*/
+            
+            var room = RoomCamera.Current.CurrentRoom;
+            if (room != null)
+            {
+                ObjectManager.SetRegionEnabled<Collider>(room.X - Globals.TILE, room.Y - Globals.TILE, room.BoundingBox.Width + 2 * Globals.TILE, room.BoundingBox.Height + 2 * Globals.TILE, true);
             }
 
             ObjectManager.Enable<GlobalWaterBubbleEmitter>();
@@ -258,7 +264,7 @@ namespace Platformer.Objects.Main
                 ObjectManager.SetRegionEnabled<GameObject>(RoomCamera.Current.CurrentRoom.X, RoomCamera.Current.CurrentRoom.Y, RoomCamera.Current.CurrentRoom.BoundingBox.Width, RoomCamera.Current.CurrentRoom.BoundingBox.Height, true);
 
                 // switch state
-                var switches = ObjectManager.Objects.FindAll(o => o is GroundSwitch).Cast<GroundSwitch>();
+                var switches = ObjectManager.FindAll<GroundSwitch>();
                 bool found = false;
                 foreach (var s in switches)
                 {

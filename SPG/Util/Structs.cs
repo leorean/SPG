@@ -83,6 +83,11 @@ namespace SPG.Util
             Width = w;
             Height = h;
         }
+
+        public override string ToString()
+        {
+            return $"x:{X}, y:{Y}, w:{Width}, h:{Height}";
+        }
     }
     
     public struct Size

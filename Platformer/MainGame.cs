@@ -21,6 +21,7 @@ using System.Threading;
 using Platformer.Objects.Effects;
 using Platformer.Objects.Main;
 using Platformer.Objects.Level;
+using Platformer.Objects.Effects.Emitters;
 
 namespace Platformer
 {
@@ -213,10 +214,19 @@ namespace Platformer
 
             GameManager.Current.Update(gameTime);
 
+            // ++++ enable global objects ++++
+
+            ObjectManager.Enable<Room>();
+            ObjectManager.Enable<MessageBox>();
+            ObjectManager.Enable<GlobalWaterBubbleEmitter>();
+
             // ++++ update camera ++++
 
             RoomCamera.Current.Update(gameTime);
 
+            ObjectManager.Disable<Room>();
+            ObjectManager.Enable(RoomCamera.Current.CurrentRoom);
+            
             // ++++ update objects ++++
 
             ObjectManager.UpdateObjects(gameTime);
@@ -243,8 +253,10 @@ namespace Platformer
             spriteBatch.BeginCamera(RoomCamera.Current, BlendState.NonPremultiplied);
             RoomCamera.Current.Draw(spriteBatch, gameTime);
 
+            var visibleRect = new Rectangle((int)RoomCamera.Current.ViewX, (int)RoomCamera.Current.ViewY, RoomCamera.Current.ViewWidth, RoomCamera.Current.ViewHeight);
+
             GameManager.Current.Map.Draw(spriteBatch, gameTime, RoomCamera.Current);
-            ObjectManager.DrawObjects(spriteBatch, gameTime);
+            ObjectManager.DrawObjects(spriteBatch, gameTime, visibleRect);
             
             HUD.Draw(spriteBatch, gameTime);
 
