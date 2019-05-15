@@ -57,7 +57,7 @@ namespace Platformer.Objects.Effects.Emitters
 
             SpawnRate = 0;
 
-            if (particles.Count == 0)
+            if (Particles.Count == 0)
                 Destroy();
         }
 

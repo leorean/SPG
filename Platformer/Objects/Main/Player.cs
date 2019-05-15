@@ -621,6 +621,35 @@ namespace Platformer.Objects.Main
 
             }
 
+            var waterFalls = ObjectManager.FindAll<WaterFallEmitter>();
+
+            foreach (var waterFall in waterFalls)
+            {
+                if (waterFall.X < Right && waterFall.X + waterFall.BoundingBox.Width > Left && waterFall.Y < Top)
+                {
+                    foreach (var part in waterFall.Particles)
+                    {
+                        //if (!(part is WaterFallParticle))
+                        //    continue;
+
+                        if (part.Position.X > Left - 2&& part.Position.Y + part.YVel > Top && part.Position.X < Right + 2 && part.Position.Y + part.YVel < Bottom)
+                        {
+                            if (part is WaterFallParticle)
+                                (part as WaterFallParticle).Collision = true;
+                            if (part is WaterSplashParticle && part.YVel > 0)
+                            {
+                                part.XVel *= .5f;
+                                part.YVel = -1f;
+
+                                part.Alpha = Math.Max(part.Alpha - .3f, 0);
+                                if (part.Alpha == 0)
+                                    part.LifeTime = 0;                                
+                            }
+                        }
+                    }                    
+                }
+            }
+
             // +++++++++++++++++++++
             // ++++ state logic ++++
             // +++++++++++++++++++++

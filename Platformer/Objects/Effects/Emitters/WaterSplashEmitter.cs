@@ -9,11 +9,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Platformer.Objects.Effects.Emitters
 {
     public class WaterSplashParticle : Particle
     {
+        private bool visible;
+
         public WaterSplashParticle(ParticleEmitter emitter, float xVel = 0) : base(emitter)
         {
             Scale = new Vector2(2f, 2f);
@@ -36,16 +39,13 @@ namespace Platformer.Objects.Effects.Emitters
             };
 
             var colorIndex = RND.Int(particleColors.Count - 1);
-            Color = particleColors[colorIndex];
+            Color = particleColors[colorIndex];            
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            //int tx = MathUtil.Div(Position.X, Globals.TILE);
-            //int ty = MathUtil.Div(Position.Y + YVel, Globals.TILE);
-
+            
             // destroy:
 
             var inWater = GameManager.Current.Map.CollisionTile(Position.X, Position.Y, GameMap.WATER_INDEX);
@@ -62,11 +62,19 @@ namespace Platformer.Objects.Effects.Emitters
             }
             else
             {
-                YVel = Math.Min(YVel + .15f, 3f);
+                YVel = Math.Min(YVel + .15f, 1.5f);
             }
 
             if (Alpha == 0)
                 LifeTime = 0;
+
+            visible = true;
+        }
+
+        public override void Draw(SpriteBatch sb, GameTime gameTime)
+        {
+            if (visible)
+                base.Draw(sb, gameTime);
         }
     }
 
@@ -89,7 +97,7 @@ namespace Platformer.Objects.Effects.Emitters
 
             SpawnRate = 0;
 
-            if (particles.Count == 0)
+            if (Particles.Count == 0)
                 Destroy();
         }
 

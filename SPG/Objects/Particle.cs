@@ -73,7 +73,7 @@ namespace SPG.Objects
     
     public abstract class ParticleEmitter : GameObject
     {
-        protected List<Particle> particles;
+        public List<Particle> Particles { get; protected set; }
         
         public bool Active { get; set; }
 
@@ -94,7 +94,7 @@ namespace SPG.Objects
         {
             Depth = Globals.LAYER_PARTICLE;
 
-            particles = new List<Particle>();
+            Particles = new List<Particle>();
 
             SpawnRate = 1;
 
@@ -103,18 +103,18 @@ namespace SPG.Objects
 
         public void Add(Particle particle)
         {
-            particles.Add(particle);
+            Particles.Add(particle);
         }
 
         public void Remove(Particle particle)
         {
-            if (particles.Contains(particle))
-                particles.Remove(particle);
+            if (Particles.Contains(particle))
+                Particles.Remove(particle);
         }
 
         ~ParticleEmitter()
         {
-            particles.Clear();
+            Particles.Clear();
         }
 
         public abstract void CreateParticle();
@@ -135,8 +135,8 @@ namespace SPG.Objects
                 }
             }
             
-            Particle[] copy = new Particle[particles.Count];
-            particles.CopyTo(copy);
+            Particle[] copy = new Particle[Particles.Count];
+            Particles.CopyTo(copy);
 
             foreach (var p in copy)
             {
@@ -154,10 +154,12 @@ namespace SPG.Objects
 
             // draw only particles which are within the camera bounds
 
-            foreach (var part in particles)
+            var t = Globals.TILE;
+
+            foreach (var part in Particles)
             {
-                if (part.Position.X.In(Camera.Current.ViewX, Camera.Current.ViewX + Camera.Current.ViewWidth)
-                    && part.Position.Y.In(Camera.Current.ViewY, Camera.Current.ViewY + Camera.Current.ViewHeight))
+                if (part.Position.X.In(Camera.Current.ViewX - t, Camera.Current.ViewX + Camera.Current.ViewWidth + t)
+                    && part.Position.Y.In(Camera.Current.ViewY - t, Camera.Current.ViewY + Camera.Current.ViewHeight + t))
                 {
                     part.Draw(sb, gameTime);
                 }

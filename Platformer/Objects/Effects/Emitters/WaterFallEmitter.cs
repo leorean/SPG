@@ -15,6 +15,7 @@ namespace Platformer.Objects.Effects.Emitters
     public class WaterFallParticle : Particle
     {
         bool stuck;
+        public bool Collision { get; set; }
 
         private float trail = 5f;
 
@@ -47,17 +48,22 @@ namespace Platformer.Objects.Effects.Emitters
                     stuck = false;
             }
 
-            var water = GameManager.Current.Map.CollisionTile(Position.X, Position.Y - trail * Scale.X, GameMap.WATER_INDEX)
-                || (!stuck && GameManager.Current.Map.CollisionTile(Position.X, Position.Y - trail * Scale.X, GameMap.FG_INDEX));
-            if (water)
+            if (!Collision)
+                Collision = GameManager.Current.Map.CollisionTile(Position.X, Position.Y - trail * 1, GameMap.WATER_INDEX)
+                || (!stuck && GameManager.Current.Map.CollisionTile(Position.X, Position.Y - trail * 1, GameMap.FG_INDEX));
+            if (Collision)
             {
                 LifeTime = 0;
-                var splash = new WaterSplashParticle(Emitter);
-                splash.Position = Position - new Vector2(0, trail * Scale.Y);
+                var random = RND.Int(4) > 2;
 
-                splash.XVel = -.2f + (float)(RND.Next * .4f);
-                splash.YVel = -.5f - (float)(RND.Next * 1f);                
+                if (random)
+                {
+                    var splash = new WaterSplashParticle(Emitter);
+                    splash.Position = Position - new Vector2(0, trail * Scale.Y);
 
+                    splash.XVel = -.2f + (float)(RND.Next * .4f);
+                    splash.YVel = -.5f - (float)(RND.Next * 1f);
+                }
             } else
             {
                 if (LifeTime < 60)

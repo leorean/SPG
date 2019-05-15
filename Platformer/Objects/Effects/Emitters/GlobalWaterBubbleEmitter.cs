@@ -128,7 +128,7 @@ namespace Platformer.Objects.Effects.Emitters
             SpawnRate = 1;
             SpawnTimeout = 1;
 
-            if (particles.Count >= waterCount)
+            if (Particles.Count >= waterCount)
                 SpawnRate = 0;
         }
     }
