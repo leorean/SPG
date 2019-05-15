@@ -26,6 +26,17 @@ namespace Platformer.Objects.Effects.Emitters
 
             XVel = -1 + (float)(RND.Next * 2f) + xVel;
             YVel = -1.5f - (float)(RND.Next * 1f);
+
+            List<Color> particleColors = new List<Color>
+            {
+                new Color(255, 255, 255),
+                new Color(206, 255, 255),
+                new Color(168, 248, 248),
+                new Color(104, 216, 248)
+            };
+
+            var colorIndex = RND.Int(particleColors.Count - 1);
+            Color = particleColors[colorIndex];
         }
 
         public override void Update(GameTime gameTime)
@@ -61,19 +72,11 @@ namespace Platformer.Objects.Effects.Emitters
 
     public class WaterSplashEmitter : ParticleEmitter
     {
-        List<Color> particleColors;
-
         private float xVel;
 
         public WaterSplashEmitter(float x, float y, float xVel = 0) : base(x, y)
         {
-            particleColors = new List<Color>
-            {
-                new Color(255, 255, 255),
-                new Color(206, 255, 255),
-                new Color(168, 248, 248),
-                new Color(104, 216, 248)
-            };
+            
 
             SpawnRate = 15;
 
@@ -92,10 +95,7 @@ namespace Platformer.Objects.Effects.Emitters
 
         public override void CreateParticle()
         {
-            var particle = new WaterSplashParticle(this, xVel);
-
-            var colorIndex = RND.Int(particleColors.Count - 1);
-            particle.Color = particleColors[colorIndex];
+            var particle = new WaterSplashParticle(this, xVel);            
         }        
     }
 }

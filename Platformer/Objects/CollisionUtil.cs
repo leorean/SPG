@@ -166,7 +166,7 @@ namespace Platformer.Objects
 
                     // trick to "snap" to the bottom:
                     var overlap = m.Bottom - colY.FirstOrDefault().Top;
-                    if (Math.Abs(overlap) <= Math.Abs(m.YVel) + Math.Abs(movYvel))
+                    if (Math.Abs(overlap) <= Math.Abs(m.YVel) + Math.Abs(movYvel) + Math.Abs(colY.First().YVel))
                         m.Move(0, -overlap - m.Gravity);
 
                 }

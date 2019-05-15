@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SPG.Map;
+using Platformer.Objects.Effects.Emitters;
 
 namespace Platformer.Objects.Main
 {
@@ -113,6 +114,12 @@ namespace Platformer.Objects.Main
                             break;
                         case 644: // switches (ground) - activate once
                             new GroundSwitch(i * Globals.TILE, j * Globals.TILE, true, room);
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            break;
+                        case 648: // waterfall (bright)
+                        case 649: // waterfall (cave)
+                            new WaterFall(i * Globals.TILE, j * Globals.TILE, room, (t.ID - 648));
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
                             break;

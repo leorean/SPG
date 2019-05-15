@@ -56,6 +56,7 @@
     <Compile Include="Objects\Effects\Emitters\PotionEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\SaveBurstEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\SaveStatueEmitter.cs" />
+    <Compile Include="Objects\Effects\Emitters\WaterFallEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\WaterSplashEmitter.cs" />
     <Compile Include="Objects\Effects\ToolTip.cs" />
     <Compile Include="Objects\Effects\Transition.cs" />
