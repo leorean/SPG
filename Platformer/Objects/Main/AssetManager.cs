@@ -87,7 +87,7 @@ namespace Platformer.Objects.Main
 
             // backgrounds
 
-            Backgrounds = content.LoadTextureSet("background", 16 * Globals.TILE, 9 * Globals.TILE);
+            Backgrounds = content.LoadTextureSet("backgrounds", 16 * Globals.TILE, 9 * Globals.TILE);
 
             // load fonts
 
