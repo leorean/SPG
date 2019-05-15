@@ -4,6 +4,7 @@ using Platformer.Objects.Level;
 using Platformer.Objects.Main;
 using SPG.Objects;
 using SPG.Util;
+using SPG.Map;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -69,16 +70,13 @@ namespace Platformer.Objects.Effects.Emitters
 
             Scale = new Vector2(s);
             Alpha = a;
-
-            int tx = MathUtil.Div(Position.X, Globals.TILE);
-            int ty = MathUtil.Div(Position.Y, Globals.TILE);
-
+            
             // destroy:
 
-            var inWater = (GameManager.Current.Map.LayerData[2].Get(tx, ty) != null);
-            if (ObjectManager.CollisionPoints<Solid>(Position.X, Position.Y).Count > 0)
+            if (GameManager.Current.Map.CollisionTile(Position.X, Position.Y))
                 LifeTime = 0;
-
+            var inWater = GameManager.Current.Map.CollisionTile(Position.X, Position.Y, GameMap.WATER_INDEX);
+                
             if (!inWater)
                 LifeTime = 0;
         }
@@ -91,9 +89,7 @@ namespace Platformer.Objects.Effects.Emitters
 
         public GlobalWaterBubbleEmitter(float x, float y, GameObject parent) : base(x, y)
         {
-            Parent = parent;
-
-            SpawnRate = 1;
+            Parent = parent;            
         }
 
         public override void CreateParticle()
@@ -121,15 +117,17 @@ namespace Platformer.Objects.Effects.Emitters
                         int tx = MathUtil.Div(i, Globals.TILE);
                         int ty = MathUtil.Div(j, Globals.TILE);
 
-                        if (GameManager.Current.Map.LayerData[2].Get(tx, ty) != null)
+                        if (GameManager.Current.Map.LayerData[GameMap.WATER_INDEX].Get(tx, ty) != null)
                         {
                             waterCount++;
                         }
                     }
-                }                
+                }
             }
 
             SpawnRate = 1;
+            SpawnTimeout = 3;
+
             if (particles.Count >= waterCount)
                 SpawnRate = 0;
         }

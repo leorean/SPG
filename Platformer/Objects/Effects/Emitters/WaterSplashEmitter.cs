@@ -2,6 +2,7 @@
 using Platformer.Objects.Level;
 using Platformer.Objects.Main;
 using SPG.Objects;
+using SPG.Map;
 using SPG.Util;
 using System;
 using System.Collections.Generic;
@@ -31,13 +32,13 @@ namespace Platformer.Objects.Effects.Emitters
         {
             base.Update(gameTime);
 
-            int tx = MathUtil.Div(Position.X, Globals.TILE);
-            int ty = MathUtil.Div(Position.Y + YVel, Globals.TILE);
+            //int tx = MathUtil.Div(Position.X, Globals.TILE);
+            //int ty = MathUtil.Div(Position.Y + YVel, Globals.TILE);
 
             // destroy:
 
-            var inWater = (GameManager.Current.Map.LayerData[2].Get(tx, ty) != null);
-            if (ObjectManager.CollisionPoints<Solid>(Position.X, Position.Y).Count > 0)
+            var inWater = GameManager.Current.Map.CollisionTile(Position.X, Position.Y, GameMap.WATER_INDEX);
+            if (GameManager.Current.Map.CollisionTile(Position.X, Position.Y))
                 LifeTime = 0;
 
             if (inWater)

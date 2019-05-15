@@ -3,6 +3,7 @@ using Platformer.Objects.Effects;
 using Platformer.Objects.Level;
 using Platformer.Objects.Main;
 using SPG.Util;
+using SPG.Map;
 using SPG.Objects;
 using System;
 using System.Collections.Generic;
@@ -131,7 +132,11 @@ namespace Platformer.Objects.Items
             //var onGround = this.MoveAdvanced(false);
 
 
-            var colX = this.CollisionBoundsFirstOrDefault<Coin>(X + XVel, Y);
+            //var colX = this.CollisionBoundsFirstOrDefault<Coin>(X + XVel, Y);
+            var colX = GameManager.Current.Map.CollisionTile(this, XVel, YVel);
+
+            if (colX)
+                Move(0, -1);
             
             /*
             if (!isLoose)

@@ -202,7 +202,7 @@ namespace SPG.Objects
         {
             ObjectManager.Remove(this);
             if (callGC)
-                GC.Collect();
+                GC.Collect();            
         }
 
         public void Move(float xVel, float yVel)

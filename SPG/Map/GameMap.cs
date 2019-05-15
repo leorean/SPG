@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SPG.Objects;
 using SPG.Util;
 using SPG.View;
 using System;
@@ -46,6 +47,48 @@ namespace SPG.Map
         {
             return list.Where(x => x.Values.Contains(name)).First();
         }
+
+        public static bool CollisionTile(this GameMap map, float x, float y, int layer = -1)
+        {
+            int tx = MathUtil.Div(x, Globals.TILE);
+            int ty = MathUtil.Div(y, Globals.TILE);
+
+            if (layer == -1)
+                layer = GameMap.FG_INDEX;
+
+            var tile = map.LayerData[layer].Get(tx, ty);
+
+            if (tile != null && (tile.TileOptions == null || tile.TileOptions?.Visible == true))
+                return true;
+
+            return false;
+        }
+
+        public static bool CollisionTile(this GameMap map, GameObject o, float xVel, float yVel, int layer = -1)
+        {
+            //int tx = MathUtil.Div(o.X + xVel, Globals.TILE);
+            //int ty = MathUtil.Div(o.Y + yVel, Globals.TILE);
+
+            int tl = MathUtil.Div(o.Left + xVel, Globals.TILE);
+            int tt = MathUtil.Div(o.Top + yVel, Globals.TILE);
+            int tr = MathUtil.Div(o.Right + xVel, Globals.TILE);
+            int tb = MathUtil.Div(o.Bottom + yVel, Globals.TILE);
+
+            if (layer == -1)
+                layer = map.LayerData.Count - 1;
+
+            Tile tile = null;
+
+            if (tile == null) tile = map.LayerData[layer].Get(tl, tt);
+            if (tile == null) tile = map.LayerData[layer].Get(tr, tt);
+            if (tile == null) tile = map.LayerData[layer].Get(tl, tb);
+            if (tile == null) tile = map.LayerData[layer].Get(tr, tb);
+
+            if (tile != null && (tile.TileOptions == null || tile.TileOptions?.Visible == true))
+                return true;
+
+            return false;
+        }
     }
 
     /// <summary>
@@ -61,6 +104,11 @@ namespace SPG.Map
         /// Gets the height in tile units.
         /// </summary>
         public int Height { get; private set; }
+
+        public static readonly int BG2_INDEX = 0;
+        public static readonly int BG_INDEX = 1;
+        public static readonly int WATER_INDEX = 2;
+        public static readonly int FG_INDEX = 3;
 
         public List<Grid<Tile>> LayerData { get; set; } //BG2, BG, WATER, FG
 

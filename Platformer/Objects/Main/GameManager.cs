@@ -242,6 +242,9 @@ namespace Platformer.Objects.Main
 
         public void Update(GameTime gameTime)
         {
+
+            ObjectManager.Disable<GameObject>();
+
             // enable all solids from neighbors
             foreach (var room in LoadedRooms)
             {

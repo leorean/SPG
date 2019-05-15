@@ -270,11 +270,7 @@ namespace Platformer.Objects.Main
             toDelete.CopyTo(arr);
 
             foreach (var del in arr)
-            {
-                del.Destroy();
-            }
-            //if (arr.Length > 0)
-            //    Debug.WriteLine($"Deleted {arr.Length} objects");
+                del.Destroy();            
         }
     }
 }
