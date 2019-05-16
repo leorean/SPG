@@ -53,11 +53,11 @@ namespace Platformer.Objects.Main
                     {
                         case 0: // platforms
                         case 12:
+                        case 535:
                         case 646:
                             var platform = new Platform(i * Globals.TILE, j * Globals.TILE, room);
                             t.TileOptions.Solid = false;
-                            if (t.ID == 646)
-                                t.TileOptions.Visible = false;
+                            if (t.ID == 646) t.TileOptions.Visible = false; // <- invisible platform
                             break;
                         case 387: // mushrooms
                             var mushroom = new Mushroom(i * Globals.TILE, j * Globals.TILE, room)
@@ -156,8 +156,7 @@ namespace Platformer.Objects.Main
                             break;
                         default:
                             var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room);
-                            if (t.ID == 645)
-                                t.TileOptions.Visible = false;
+                            if (t.ID == 645) t.TileOptions.Visible = false;  // <- invisible blocks
                             break;
                     }
                 }
