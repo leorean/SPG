@@ -51,25 +51,27 @@ namespace Platformer.Objects.Level
         {
             base.Update(gameTime);
 
+            //
+
+            var lookDir = GameManager.Current.Player.X < X ? Direction.LEFT : Direction.RIGHT;
+
+            if (lookAtPlayer)
+                direction = lookDir;
+            
+            //
+
             if (player != null)
             {
-                player.Direction = (Direction)(-(int)direction);
-                var tx = (X - player.X + Math.Sign((int)direction) * 8) / 20f;
+                player.Direction = (Direction)(-(int)lookDir);
+
+                var tx = (X - player.X + Math.Sign((int)lookDir) * 8) / 20f;
                 player.XVel = tx;
 
                 if (Math.Abs(X - player.X) < 1f)
                     player.XVel = -1;
             }
 
-            //
-
-            if (lookAtPlayer)
-            {
-                if (GameManager.Current.Player.X < X)
-                    direction = Direction.LEFT;
-                else
-                    direction = Direction.RIGHT;
-            }
+            
             var xScale = Math.Sign((int)direction);
             Scale = new Vector2(xScale, 1);
 

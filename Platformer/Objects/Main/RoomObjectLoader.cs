@@ -101,6 +101,11 @@ namespace Platformer.Objects.Main
                             t.TileOptions.Visible = true;
                             t.TileOptions.Solid = false;
                             break;
+                        case 599: // chimney smoke 
+                            new Smoke(i * Globals.TILE + 8, j * Globals.TILE + 8, room);
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            break;
                         case 640: // push-blocks
                             var pushBlock = new PushBlock(i * Globals.TILE, j * Globals.TILE, room);
                             pushBlock.Texture = GameManager.Current.Map.TileSet[t.ID];
