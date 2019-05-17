@@ -99,12 +99,22 @@ namespace Platformer.Objects
                 }
 
                 // prevents standing on a movingplatform that goes down and being then able to get down
-                if (m.MovingPlatform != null && m.MovingPlatform.YVel > 0)
+                if (m.MovingPlatform != null && m.MovingPlatform.YVel >= 0)
                 {
+                    var plt = m.CollisionBoundsFirstOrDefault<Platform>(m.X, m.Y + movYvel + m.YVel);
+                    
+                    if (plt != m.MovingPlatform)
+                        storedPlatform = plt ?? null;
+                    if (storedPlatform != null)
+                    {
+                        m.MovingPlatform = null;
+                        colY.Add(plt);
+                    }
+
                     // disables moving platform collision in water
                     var inWater = GameManager.Current.Map.CollisionTile((m as GameObject), m.XVel, m.YVel, GameMap.WATER_INDEX);
 
-                    if (storedPlatform != null || inWater)
+                    if (inWater)
                         m.MovingPlatform = null;
                 }
             }

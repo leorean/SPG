@@ -1,1 +1,16 @@
 ~~ The Void Paradoxon ~~
+
+
+
+
+
+
+~~ Lybianna~
+
+NPCS:
+   - shin
+   
+Houses:
+
+- Smith/Shop
+- Watermill

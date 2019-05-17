@@ -34,10 +34,10 @@ namespace Platformer.Objects.Level
             lastPosition = Position;
         }
 
-        public override void BeginUpdate(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
-            base.BeginUpdate(gameTime);
-
+            base.Update(gameTime);
+        
             double ang = (MathUtil.RadToDeg(Parent.Angle) + angle) % 360f;
 
             Position = new Vector2(Parent.X + dist * (float)MathUtil.LengthDirX((float)ang), Parent.Y + dist * (float)MathUtil.LengthDirY((float)ang));
