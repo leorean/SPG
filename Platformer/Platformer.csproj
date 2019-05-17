@@ -73,8 +73,11 @@
     <Compile Include="Objects\Level\Key.cs" />
     <Compile Include="Objects\Level\KeyBlock.cs" />
     <Compile Include="Objects\Level\MovingPlatform.cs" />
+    <Compile Include="Objects\Level\LinearMovingPlatform.cs" />
     <Compile Include="Objects\Level\Mushroom.cs" />
     <Compile Include="Objects\Level\NPC.cs" />
+    <Compile Include="Objects\Level\WaterMill.cs" />
+    <Compile Include="Objects\Level\WaterMillMovingPlatform.cs" />
     <Compile Include="Objects\Main\AssetManager.cs" />
     <Compile Include="Objects\Main\GameManager.cs" />
     <Compile Include="Objects\Main\HUD.cs" />

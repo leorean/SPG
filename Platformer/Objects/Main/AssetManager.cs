@@ -1,7 +1,9 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using SPG.Draw;
 using SPG.Map;
+using SPG.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,7 +49,8 @@ namespace Platformer.Objects.Main
         public static TextureSet MovingPlatform { get; private set; }
         public static TextureSet GroundSwitch { get; private set; }
         public static TextureSet ToolTip { get; private set; }
-
+        public static Texture2D WaterMill { get; private set; }
+        public static Texture2D WaterMillPlatform { get; private set; }
         // fonts
 
         public static Font DefaultFont { get; private set; }
@@ -76,6 +79,10 @@ namespace Platformer.Objects.Main
             MovingPlatform = content.LoadTextureSet("movingPlatform", 32, 32);
             GroundSwitch = content.LoadTextureSet("groundSwitch");
             ToolTip = content.LoadTextureSet("toolTip", 32, 32);
+
+            var waterMillSheet = content.Load<Texture2D>("watermill");
+            WaterMill = waterMillSheet.Crop(new Rectangle(0, 0, 128, 128));
+            WaterMillPlatform = waterMillSheet.Crop(new Rectangle(128, 0, 16, 16));
 
             MessageBox = content.Load<Texture2D>("messageBox");
             HUD = content.Load<Texture2D>("hud");

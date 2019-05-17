@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using SPG.Map;
 using Microsoft.Xna.Framework;
 using Platformer.Objects.Main;
 using Platformer.Objects;
@@ -101,7 +101,10 @@ namespace Platformer.Objects
                 // prevents standing on a movingplatform that goes down and being then able to get down
                 if (m.MovingPlatform != null && m.MovingPlatform.YVel > 0)
                 {
-                    if (storedPlatform != null)
+                    // disables moving platform collision in water
+                    var inWater = GameManager.Current.Map.CollisionTile((m as GameObject), m.XVel, m.YVel, GameMap.WATER_INDEX);
+
+                    if (storedPlatform != null || inWater)
                         m.MovingPlatform = null;
                 }
             }
@@ -165,9 +168,14 @@ namespace Platformer.Objects
                     onGround = true;
 
                     // trick to "snap" to the bottom:
-                    var overlap = m.Bottom - colY.FirstOrDefault().Top;
+
+                    var overlap = m.Bottom - colY.FirstOrDefault().Top + m.Gravity;
                     if (Math.Abs(overlap) <= Math.Abs(m.YVel) + Math.Abs(movYvel) + Math.Abs(colY.First().YVel))
-                        m.Move(0, -overlap - m.Gravity);
+                        m.Move(0, -overlap);
+
+                    //var overlap = m.Bottom - colY.FirstOrDefault().Top;
+                    //if (Math.Abs(overlap) <= Math.Abs(m.YVel) + Math.Abs(movYvel) + Math.Abs(colY.First().YVel))
+                    //    m.Move(0, -overlap - m.Gravity);
 
                 }
                 m.YVel = 0;

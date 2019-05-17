@@ -22,21 +22,29 @@ namespace Platformer.Objects.Level
         private Player player;
 
         private bool centerText;
+        private bool lookAtPlayer;
         
-        public NPC(float x, float y, Room room, int type, string text, bool centerText = false, string name = null) : base(x, y, room, name)
+        public NPC(float x, float y, Room room, int type, string text, bool centerText = false, Direction dir = Direction.NONE, string name = null) : base(x, y, room, name)
         {
             this.text = text;
             this.type = type;
             
             AnimationTexture = AssetManager.NPCS;
-
-            DrawOffset = new Vector2(8, 24);
-            //BoundingBox = new RectF(-4, -4, 8, 12);
+            
+            DrawOffset = new Vector2(8, 24);            
             BoundingBox = new RectF(-8, -8, 16, 16);
             Depth = Globals.LAYER_PLAYER - 0.001f;
-            
-            direction = Direction.RIGHT;
-            this.centerText = centerText;
+
+            if (dir == Direction.NONE)
+            {
+                direction = Direction.RIGHT;
+                lookAtPlayer = true;
+            } else
+            {
+                direction = dir;
+            }
+
+            this.centerText = centerText;            
         }
 
         public override void Update(GameTime gameTime)
@@ -55,11 +63,13 @@ namespace Platformer.Objects.Level
 
             //
 
-            if (GameManager.Current.Player.X < X)
-                direction = Direction.LEFT;
-            else
-                direction = Direction.RIGHT;
-            
+            if (lookAtPlayer)
+            {
+                if (GameManager.Current.Player.X < X)
+                    direction = Direction.LEFT;
+                else
+                    direction = Direction.RIGHT;
+            }
             var xScale = Math.Sign((int)direction);
             Scale = new Vector2(xScale, 1);
 

@@ -211,8 +211,9 @@ namespace Platformer.Objects.Main
                     {
                         var npcText = data.ContainsKey("text") ? data["text"].ToString() : "-unknown-";
                         var npcType = data.ContainsKey("npcType") ? (int)data["npcType"] : -1;
+                        var npcDirection = data.ContainsKey("direction") ? (Direction)(int)data["direction"] : Direction.NONE;
                         var npcCenterText = data.ContainsKey("centerText") ? (bool)data["centerText"] : false;
-                        var npc = new NPC(x + 8, y + 8, room, npcType, npcText, npcCenterText);
+                        var npc = new NPC(x + 8, y + 8, room, npcType, npcText, npcCenterText, npcDirection);
                     }
                     if (type == "chest")
                     {
@@ -230,7 +231,11 @@ namespace Platformer.Objects.Main
                         var moveTimeout = data.ContainsKey("timeOut") ? (int)data["timeOut"] : -1;
                         var activatable = data.ContainsKey("activatable") ? (bool)data["activatable"] : false;
 
-                        var movingPlatform = new MovingPlatform(x, y, movXvel, movYvel, movXrange, movYrange, activatable, moveTimeout, room);
+                        var movingPlatform = new LinearMovingPlatform(x, y, movXvel, movYvel, movXrange, movYrange, activatable, moveTimeout, room);
+                    }
+                    if (type == "waterMill")
+                    {
+                        new WaterMill(x + 8, y + 8, room);
                     }
                 }
             }

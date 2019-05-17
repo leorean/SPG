@@ -22,6 +22,7 @@
  </objecttype>
  <objecttype name="npc" color="#55557f">
   <property name="centerText" type="bool" default="false"/>
+  <property name="direction" type="int" default="0"/>
   <property name="npcType" type="int" default="-1"/>
   <property name="text" type="string"/>
  </objecttype>

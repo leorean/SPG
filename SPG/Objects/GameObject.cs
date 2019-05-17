@@ -88,7 +88,7 @@ namespace SPG.Objects
                 _currentFrame = 0;
             }
         }
-
+        
         public event EventHandler AnimationComplete;
 
         public TextureSet AnimationTexture { get { return _frames; } set { _frames = value; } }

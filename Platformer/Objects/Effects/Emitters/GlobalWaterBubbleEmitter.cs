@@ -101,11 +101,18 @@ namespace Platformer.Objects.Effects.Emitters
         {
             base.Update(gameTime);
 
+            var roomSize = 0;
+            if (RoomCamera.Current.CurrentRoom != null)
+            {
+                roomSize = MathUtil.Div(RoomCamera.Current.CurrentRoom.BoundingBox.Width, RoomCamera.Current.ViewWidth) 
+                    * MathUtil.Div(RoomCamera.Current.CurrentRoom.BoundingBox.Height, RoomCamera.Current.ViewHeight);                
+            }
+
             // measure how many water tiles there are
             if (room != RoomCamera.Current.CurrentRoom && RoomCamera.Current.CurrentRoom != null)
             {
                 room = RoomCamera.Current.CurrentRoom;
-
+                
                 var posX = room.X;
                 var posY = room.Y;
 
@@ -125,7 +132,7 @@ namespace Platformer.Objects.Effects.Emitters
                 }
             }
 
-            SpawnRate = 1;
+            SpawnRate = (int)Math.Ceiling(roomSize * .5f);
             SpawnTimeout = 1;
 
             if (Particles.Count >= waterCount)

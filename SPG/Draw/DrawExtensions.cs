@@ -135,6 +135,20 @@ namespace SPG.Draw
             return newTexture;
         }
 
+        public static Texture2D Crop(this Texture2D original, Rectangle rect)
+        {
+            //Color[] originalData = new Color[original.Width * original.Height];
+            //original.GetData(originalData);
+            
+            Texture2D newTexture = new Texture2D(original.GraphicsDevice, rect.Width, rect.Height);
+            Color[] newTextureData = new Color[rect.Width * rect.Height];
+
+            original.GetData(0, rect, newTextureData, 0, newTextureData.Length);
+            newTexture.SetData(newTextureData);
+
+            return newTexture;            
+        }
+
         public static Texture2D CropLeftRight(this Texture2D tex, int left, int right)
         {
             if (left >= right)

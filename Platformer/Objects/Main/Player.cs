@@ -1343,11 +1343,20 @@ namespace Platformer.Objects.Main
                           && State != PlayerState.CEIL_IDLE
                           && State != PlayerState.DOOR
                           && State != PlayerState.HIT_AIR);
-
+            
             var g = this.MoveAdvanced(moveWithPlatforms);
             
             if (g)
-            { 
+            {
+                // TODO: FIX GAP TO GET TO GROUND!
+
+                //var groundBlock = this.CollisionBoundsFirstOrDefault<Solid>(X, Y + 3);
+                //if (groundBlock != null)
+                //{
+                //    if (YVel > 0)
+                //        Move(0, Math.Abs(groundBlock.Top - Bottom - Gravity));
+                //}
+
                 onGround = true;
 
                 // transition from falling to getting up again
