@@ -547,7 +547,11 @@ namespace Platformer.Objects.Main
 
             if (k_attackPressed)
             {
-                Orb.MoveToAttack();
+                //Orb.MoveToAttack();
+            }
+            if (k_attackReleased)
+            {
+                Orb.State = Orb.OrbState.FOLLOW; 
             }
 
             // ++++++++++++++++++++++++++++++

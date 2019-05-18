@@ -224,6 +224,12 @@ namespace SPG.Objects
             Move(tx, ty);
         }
 
+        public void MoveTowards(Vector2 target, int n)
+        {
+            var tx = (target.X - Center.X) / (float)n;
+            var ty = (target.Y - Center.Y) / (float)n;
+            Move(tx, ty);
+        }
         public virtual void BeginUpdate(GameTime gameTime) { }
         
         public virtual void EndUpdate(GameTime gameTime) { }

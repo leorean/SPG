@@ -22,7 +22,7 @@ namespace SPG.Objects
 
         public static double ElapsedTime { get; private set; } = 0;
         
-        public static double GameSpeed { get; set; }
+        public static double GameDelay { get; set; }
         public static RectF Region { get; set; }
 
         public static void Add(GameObject o)
@@ -419,9 +419,9 @@ namespace SPG.Objects
 
             UpdateActiveObjectList();
             
-            if (ElapsedTime > GameSpeed)
+            if (ElapsedTime > GameDelay)
             {
-                ElapsedTime -= GameSpeed;
+                ElapsedTime -= GameDelay;
 
                 for(var i = 0; i < ActiveObjects.Count; i++)
                 {

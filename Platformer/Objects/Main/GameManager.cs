@@ -244,13 +244,7 @@ namespace Platformer.Objects.Main
         {
 
             ObjectManager.Disable<GameObject>();
-
-            // enable all solids from neighbors
-            /*foreach (var room in LoadedRooms)
-            {
-                ObjectManager.SetRegionEnabled<Solid>(room.X, room.Y, room.BoundingBox.Width, room.BoundingBox.Height, true);
-            }*/
-            
+                        
             var room = RoomCamera.Current.CurrentRoom;
             if (room != null)
             {
@@ -277,6 +271,25 @@ namespace Platformer.Objects.Main
                     RoomCamera.Current.CurrentRoom.SwitchState = false;
 
             }
+
+            // ++++ enable global objects ++++
+
+            ObjectManager.Enable<Room>();
+            ObjectManager.Enable<MessageBox>();
+            ObjectManager.Enable<GlobalWaterBubbleEmitter>();
+            ObjectManager.Enable<PlayerGhost>();
+            ObjectManager.Enable<Orb>();
+
+            // ++++ update camera ++++
+
+            RoomCamera.Current.Update(gameTime);
+
+            ObjectManager.Disable<Room>();
+            ObjectManager.Enable(RoomCamera.Current.CurrentRoom);
+
+            // ++++ update objects ++++
+
+            ObjectManager.UpdateObjects(gameTime);
         }
     }
 }

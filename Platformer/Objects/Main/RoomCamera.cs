@@ -88,6 +88,8 @@ namespace Platformer.Main
             player.State = Player.PlayerState.IDLE;
             player.Position = newPosition;
 
+            player.Orb.Position = player.Position;
+
             tx = newPosition.X;
             ty = newPosition.Y;
             curX = newPosition.X;
@@ -118,7 +120,7 @@ namespace Platformer.Main
         {
             base.Update(gt);
 
-            if (ObjectManager.ElapsedTime < ObjectManager.GameSpeed)
+            if (ObjectManager.ElapsedTime < ObjectManager.GameDelay)
                 return;
             
             if (target == null)

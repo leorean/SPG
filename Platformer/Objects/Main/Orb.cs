@@ -12,7 +12,18 @@ namespace Platformer.Objects.Main
 {
     public class Orb : GameObject
     {
+        public enum OrbState
+        {
+            FOLLOW,
+            IDLE,
+            ATTACK
+        }
+
+        public OrbState State { get; set; }
+
         private Player player { get => Parent as Player; }
+
+        private Vector2 targetPosition;
 
         public Orb(Player player) : base(player.X, player.Y)
         {
@@ -31,6 +42,19 @@ namespace Platformer.Objects.Main
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
             base.Draw(sb, gameTime);
+
+            switch (State)
+            {
+                case OrbState.FOLLOW:
+
+                    targetPosition = player.Position + new Vector2(-Math.Sign((int)player.Direction) * 8, -6);
+                    MoveTowards(targetPosition, 12);
+                    break;
+                case OrbState.IDLE:
+                    break;
+                case OrbState.ATTACK:
+                    break;                
+            }            
         }
     }
 }

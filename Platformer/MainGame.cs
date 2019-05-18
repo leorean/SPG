@@ -189,13 +189,11 @@ namespace Platformer
 
             if (input.IsKeyPressed(Keys.Space, Input.State.Holding))
             {
-                ObjectManager.GameSpeed = 120;
+                ObjectManager.GameDelay = 120;
             }
             else
             {
-                ObjectManager.GameSpeed = 0;
-                if (GameManager.Current.Player != null)
-                    GameManager.Current.Player.DebugEnabled = false;
+                ObjectManager.GameDelay = 0;
             }
 
             if (input.IsKeyPressed(Keys.R, Input.State.Pressed))
@@ -212,26 +210,10 @@ namespace Platformer
                 GameManager.Current.Player.YVel = 0;
             }
 
+            // ++++ HANDLES ALL OBJECT ACTIVATION ++++
+
             GameManager.Current.Update(gameTime);
-
-            // ++++ enable global objects ++++
-
-            ObjectManager.Enable<Room>();
-            ObjectManager.Enable<MessageBox>();
-            ObjectManager.Enable<GlobalWaterBubbleEmitter>();
-            ObjectManager.Enable<PlayerGhost>();
-
-            // ++++ update camera ++++
-
-            RoomCamera.Current.Update(gameTime);
-
-            ObjectManager.Disable<Room>();
-            ObjectManager.Enable(RoomCamera.Current.CurrentRoom);
-            
-            // ++++ update objects ++++
-
-            ObjectManager.UpdateObjects(gameTime);
-            
+                        
             // ++++ update HUD ++++
 
             HUD.Update(gameTime);
