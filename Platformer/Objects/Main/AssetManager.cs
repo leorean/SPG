@@ -50,10 +50,11 @@ namespace Platformer.Objects.Main
         public static TextureSet ToolTip { get; private set; }
         public static Texture2D WaterMill { get; private set; }
         public static Texture2D WaterMillPlatform { get; private set; }
-        
+
         // orb
 
         public static Texture2D Orb { get; private set; }
+        public static Texture2D OrbReflection { get; private set; }
 
         // fonts
 
@@ -90,6 +91,7 @@ namespace Platformer.Objects.Main
 
             var orbSheet = content.Load<Texture2D>("orb");
             Orb = orbSheet.Crop(new Rectangle(0, 0, 32, 32));
+            OrbReflection = orbSheet.Crop(new Rectangle(0, 32, 32, 32));
 
             MessageBox = content.Load<Texture2D>("messageBox");
             HUD = content.Load<Texture2D>("hud");

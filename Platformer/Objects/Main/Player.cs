@@ -18,6 +18,7 @@ using Platformer.Objects.Effects.Emitters;
 using Platformer.Objects.Items;
 using Platformer.Util;
 using SPG.Save;
+using Platformer.Objects.Main.Orbs;
 using SPG.Map;
 
 namespace Platformer.Objects.Main
@@ -431,8 +432,8 @@ namespace Platformer.Objects.Main
                 if (obstacle != null)
                 {
                     var vec = Position - (obstacle.Center + new Vector2(0, 0));
-                    var angle = vec.ToAngle();                    
-                    Hit(obstacle.Damage, angle);
+                    var angle = vec.VectorToAngle();                    
+                    Hit(obstacle.Damage, (float)angle);
                 }                
             }
 
@@ -554,15 +555,24 @@ namespace Platformer.Objects.Main
 
             // ++++ attacking ++++
 
-            if (k_attackPressed)
-            {
-                //if (Orb.State == Orb.OrbState.FOLLOW)
+            if (k_attackHolding && !inWater && HP > 0 
+                && (State == PlayerState.IDLE 
+                || State == PlayerState.WALK 
+                || State == PlayerState.TURN_AROUND 
+                || State == PlayerState.JUMP_UP 
+                || State == PlayerState.JUMP_DOWN
+                || State == PlayerState.GET_UP))
+            {                
                     Orb.State = OrbState.ATTACK;
-            }
-            if (k_attackReleased)
+            } else
             {
-                Orb.State = OrbState.IDLE;
+                if (Orb.State == OrbState.ATTACK)
+                    Orb.State = OrbState.IDLE;
             }
+            //if (k_attackReleased || inWater || HP == 0)
+            //{
+            //    Orb.State = OrbState.IDLE;
+            //}
 
             // ++++++++++++++++++++++++++++++
             // INTERACTION WITH OTHER OBJECTS
@@ -1226,12 +1236,12 @@ namespace Platformer.Objects.Main
                     }
                 }
                 
-                swimAngle = new Vector2(Math.Sign((int)Direction) * Math.Max(Math.Abs(sx), 1), sy).ToAngle() + 90;
+                swimAngle = (float)new Vector2(Math.Sign((int)Direction) * Math.Max(Math.Abs(sx), 1), sy).VectorToAngle() + 90;
 
                 if (State == PlayerState.SWIM_DIVE_IN)
                 {
                     //swimAngle = 180;
-                    swimAngle = new Vector2(XVel, YVel).ToAngle() + 90;
+                    swimAngle = (float)new Vector2(XVel, YVel).VectorToAngle() + 90;
                     targetAngle = swimAngle;
                 }
 
@@ -1454,10 +1464,12 @@ namespace Platformer.Objects.Main
             {
                 case PlayerState.IDLE:
                     row = 0;
+                    offset = 4 * Convert.ToInt32(Orb?.State == OrbState.ATTACK);
                     fSpd = 0.03f;
                     break;
-                case PlayerState.WALK:                    
+                case PlayerState.WALK:
                     row = 1;
+                    offset = 4 * Convert.ToInt32(Orb?.State == OrbState.ATTACK);
                     fSpd = 0.1f;
                     break;
                 case PlayerState.TURN_AROUND:                    

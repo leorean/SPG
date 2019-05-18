@@ -2,6 +2,13 @@
 
 ~~~ The Orbs ~~~
 
+- Star Orb:
+	- Shoots stars in direction
+	- Stars destroy blocks
+	
+- Lightning Orb:
+	- 
+
 - Fire:
 - Water:
 - Lightning:

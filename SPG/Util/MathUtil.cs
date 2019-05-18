@@ -40,14 +40,14 @@ namespace SPG.Util
             return angle * (180.0 / Math.PI);
         }
 
-        public static float ToAngle(this Vector2 vector, bool inRadiant = false)
+        public static double VectorToAngle(this Vector2 vector, bool inRadiant = false)
         {
-            var rad = (float)Math.Atan2(vector.Y, vector.X);
+            var rad = Math.Atan2(vector.Y, vector.X);
 
             if (inRadiant)
                 return rad;
 
-            return (float)(rad / (2f * Math.PI)) * 360;
+            return RadToDeg(rad);
         }
 
         public static Vector2 Vector2(this Vector3 vec)
@@ -55,17 +55,17 @@ namespace SPG.Util
             return new Vector2(vec.X, vec.Y);
         }
 
-        public static double LengthDirX(float angle)
+        public static double LengthDirX(double degAngle)
         {
-            var rad = (angle / 360f) * 2 * Math.PI;
+            var rad = (degAngle / 360f) * 2 * Math.PI;
 
             return Math.Cos(rad);
             
         }
 
-        public static double LengthDirY(float angle)
+        public static double LengthDirY(double degAngle)
         {
-            var rad = (angle / 360f) * 2 * Math.PI;
+            var rad = (degAngle / 360f) * 2 * Math.PI;
 
             return Math.Sin(rad);
         }

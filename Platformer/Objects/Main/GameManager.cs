@@ -5,6 +5,7 @@ using Platformer.Objects.Effects.Emitters;
 using Platformer.Objects.Enemy;
 using Platformer.Objects.Items;
 using Platformer.Objects.Level;
+using Platformer.Objects.Main.Orbs;
 using SPG.Map;
 using SPG.Objects;
 using SPG.Save;
@@ -109,15 +110,15 @@ namespace Platformer.Objects.Main
         public void UnloadRoomObjects(Room room)
         {
             // gather all objects which are inside the specified room
-            var aliveObjects = ObjectManager.Objects.Where(
-                o => o is RoomObject
-                && (o as RoomObject).Room == room)
-                .ToList();
+            //var aliveObjects = ObjectManager.Objects.Where(
+            //    o => o is RoomObject
+            //    && (o as RoomObject).Room == room)
+            //    .ToList();
 
-            foreach (var o in aliveObjects)
-            {
-                o.Destroy();
-            }
+            //foreach (var o in aliveObjects)
+            //{
+            //    o.Destroy();
+            //}
 
             // TODO: add all objects that are alive and should be killed
 
