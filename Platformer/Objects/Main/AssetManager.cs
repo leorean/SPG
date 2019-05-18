@@ -31,8 +31,7 @@ namespace Platformer.Objects.Main
         public static TextureSet Potions { get; private set; }
         public static TextureSet Coins { get; private set; }
         public static TextureSet Chest { get; private set; }
-
-
+        
         // HUD
 
         public static Texture2D HUD { get; private set; }
@@ -51,6 +50,11 @@ namespace Platformer.Objects.Main
         public static TextureSet ToolTip { get; private set; }
         public static Texture2D WaterMill { get; private set; }
         public static Texture2D WaterMillPlatform { get; private set; }
+        
+        // orb
+
+        public static Texture2D Orb { get; private set; }
+
         // fonts
 
         public static Font DefaultFont { get; private set; }
@@ -83,6 +87,9 @@ namespace Platformer.Objects.Main
             var waterMillSheet = content.Load<Texture2D>("watermill");
             WaterMill = waterMillSheet.Crop(new Rectangle(0, 0, 128, 128));
             WaterMillPlatform = waterMillSheet.Crop(new Rectangle(128, 0, 16, 16));
+
+            var orbSheet = content.Load<Texture2D>("orb");
+            Orb = orbSheet.Crop(new Rectangle(0, 0, 32, 32));
 
             MessageBox = content.Load<Texture2D>("messageBox");
             HUD = content.Load<Texture2D>("hud");

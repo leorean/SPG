@@ -18,6 +18,7 @@ using Platformer.Objects.Effects.Emitters;
 using Platformer.Objects.Items;
 using Platformer.Util;
 using SPG.Save;
+using SPG.Map;
 
 namespace Platformer.Objects.Main
 { 
@@ -118,6 +119,7 @@ namespace Platformer.Objects.Main
         bool k_upPressed, k_upHolding;
         bool k_downPressed, k_downHolding;
         bool k_jumpPressed, k_jumpHolding;
+        bool k_attackPressed, k_attackHolding, k_attackReleased;
 
         float gamePadLeftXFactor;
         float gamePadLeftYFactor;
@@ -164,9 +166,11 @@ namespace Platformer.Objects.Main
         private PlayerGhost ghost;
         private bool jumpControlDisabled;
 
-        public Key KeyObject { get; set; }
+        // other objects
 
+        public Key KeyObject { get; set; }
         public Collider MovingPlatform { get; set; }
+        public Orb Orb { get; set; }
 
         // constructor
 
@@ -200,7 +204,8 @@ namespace Platformer.Objects.Main
 
             maxOxygen = 5 * 60;
             oxygen = maxOxygen;
-            
+
+            Orb = new Orb(this);
         }
 
         ~Player()
@@ -308,6 +313,10 @@ namespace Platformer.Objects.Main
             k_jumpPressed = input.IsKeyPressed(Keys.A, Input.State.Pressed);
             k_jumpHolding = input.IsKeyPressed(Keys.A, Input.State.Holding);
 
+            k_attackPressed = input.IsKeyPressed(Keys.S, Input.State.Pressed);
+            k_attackHolding = input.IsKeyPressed(Keys.S, Input.State.Holding);
+            k_attackReleased = input.IsKeyPressed(Keys.S, Input.State.Released);
+
             // debug keys
 
             if (input.IsKeyPressed(Keys.LeftShift, Input.State.Holding) || input.IsKeyPressed(Keys.RightShift, Input.State.Holding))
@@ -375,6 +384,10 @@ namespace Platformer.Objects.Main
                 k_jumpPressed = input.IsButtonPressed(Buttons.A, Input.State.Pressed);
                 k_jumpHolding = input.IsButtonPressed(Buttons.A, Input.State.Holding);
 
+                k_attackPressed= input.IsButtonPressed(Buttons.X, Input.State.Pressed);
+                k_attackHolding = input.IsButtonPressed(Buttons.X, Input.State.Holding);
+                k_attackReleased = input.IsButtonPressed(Buttons.X, Input.State.Released);
+
                 gamePadLeftXFactor = Math.Abs(input.LeftStick().X);
                 gamePadLeftYFactor = Math.Abs(input.LeftStick().Y);
             }
@@ -430,10 +443,7 @@ namespace Platformer.Objects.Main
             var onCeil = !hit && ObjectManager.CollisionPoints<Solid>(this, X, Y - BoundingBox.Height * .5f - 1)
                 .Where(o => o.Room == currentRoom && !(o is PushBlock)).Count() > 0;
 
-            int tx = MathUtil.Div(X, Globals.TILE);
-            int ty = MathUtil.Div(Y + 4, Globals.TILE);
-
-            var inWater = (GameManager.Current.Map.LayerData[2].Get(tx, ty) != null);
+            var inWater = GameManager.Current.Map.CollisionTile(X, Y + 4, GameMap.WATER_INDEX);
 
             if (!Stats.Abilities.HasFlag(PlayerAbility.CLIMB_WALL))
                 onWall = false;
@@ -532,6 +542,13 @@ namespace Platformer.Objects.Main
 
             if (mpRegenTimeout == 0)
                 MP = Math.Min(MP + Stats.MPRegen, Stats.MaxMP);
+
+            // ++++ attacking ++++
+
+            if (k_attackPressed)
+            {
+                Orb.MoveToAttack();
+            }
 
             // ++++++++++++++++++++++++++++++
             // INTERACTION WITH OTHER OBJECTS

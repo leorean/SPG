@@ -1,6 +1,14 @@
 ~~ The Void Paradoxon ~~
 
+~~~ The Orbs ~~~
 
+- Fire:
+- Water:
+- Lightning:
+- Ice:
+- Stone:
+- Light:
+- Shadow:
 
 
 
