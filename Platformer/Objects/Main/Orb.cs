@@ -10,20 +10,20 @@ using System.Threading.Tasks;
 
 namespace Platformer.Objects.Main
 {
+    public enum OrbState
+    {
+        FOLLOW,
+        IDLE,
+        ATTACK
+    }
+
     public class Orb : GameObject
     {
-        public enum OrbState
-        {
-            FOLLOW,
-            IDLE,
-            ATTACK
-        }
-
+        public Direction Direction { get; set; }
         public OrbState State { get; set; }
-
         private Player player { get => Parent as Player; }
-
         private Vector2 targetPosition;
+        private int headBackTimer;
 
         public Orb(Player player) : base(player.X, player.Y)
         {
@@ -39,9 +39,11 @@ namespace Platformer.Objects.Main
             //DebugEnabled = true;
         }
 
-        public override void Draw(SpriteBatch sb, GameTime gameTime)
+        public override void BeginUpdate(GameTime gameTime)
         {
-            base.Draw(sb, gameTime);
+            base.BeginUpdate(gameTime);
+
+            targetPosition += new Vector2(player.XVel, player.YVel);
 
             switch (State)
             {
@@ -51,8 +53,23 @@ namespace Platformer.Objects.Main
                     MoveTowards(targetPosition, 12);
                     break;
                 case OrbState.IDLE:
+
+                    MoveTowards(targetPosition, 6);
+                    
+                    headBackTimer = Math.Max(headBackTimer - 1, 0);
+                    if (headBackTimer == 0)
+                    {
+                        State = OrbState.FOLLOW;
+                    }
+
                     break;
                 case OrbState.ATTACK:
+
+                    headBackTimer = 20;
+
+                    targetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 12, 12 * Math.Sign((int)player.LookDirection));
+                    MoveTowards(targetPosition, 6);
+                    Move(player.XVel, player.YVel);
                     break;                
             }            
         }

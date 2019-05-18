@@ -96,6 +96,9 @@ namespace Platformer.Objects.Main
         public Direction Direction { get; set; } = Direction.RIGHT;
         private Direction lastDirection;
 
+        // for up/down regarding orbs
+        public Direction LookDirection { get; set; }
+
         private bool animationComplete;
 
         private bool onGround;
@@ -410,7 +413,13 @@ namespace Platformer.Objects.Main
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-                        
+
+            // ++++ look direction ++++
+
+            if (k_upHolding) LookDirection = Direction.UP;
+            else if (k_downHolding) LookDirection = Direction.DOWN;
+            else LookDirection = Direction.NONE;
+
             // ++++ getting hit ++++
 
             InvincibleTimer = Math.Max(InvincibleTimer - 1, 0);
@@ -547,11 +556,12 @@ namespace Platformer.Objects.Main
 
             if (k_attackPressed)
             {
-                //Orb.MoveToAttack();
+                //if (Orb.State == Orb.OrbState.FOLLOW)
+                    Orb.State = OrbState.ATTACK;
             }
             if (k_attackReleased)
             {
-                Orb.State = Orb.OrbState.FOLLOW; 
+                Orb.State = OrbState.IDLE;
             }
 
             // ++++++++++++++++++++++++++++++

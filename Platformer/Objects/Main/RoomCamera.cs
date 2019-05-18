@@ -59,6 +59,8 @@ namespace Platformer.Main
         private Vector2 newPosition;
         private bool invokeRoomChange;
 
+        private int lookLocked;
+
         // target
 
         private Player player { get => target as Player; }
@@ -144,12 +146,16 @@ namespace Platformer.Main
             // if no room is available, always resort to this state
             if (state == State.Default)
             {
+                lookLocked = Math.Max(lookLocked - 1, 0);
+
                 // if no room is yet found, try to find first room
                 if (CurrentRoom == null)
-                {
+                {                    
                     CurrentRoom = target.CollisionPointFirstOrDefault<Room>(target.X, target.Y);
                     if (CurrentRoom != null)
                     {
+                        lookLocked = 30;
+                        
                         lastRoom = CurrentRoom;
                         lastBG = CurrentBG;
                         if (CurrentRoom.Background != -1)
@@ -177,6 +183,24 @@ namespace Platformer.Main
                             offsetX = offsetX.Clamp(-4 * Globals.TILE, 4 * Globals.TILE);                            
                             break;
                     }
+
+                    
+                    if (lookLocked == 0)
+                    {
+                        switch ((target as Player).LookDirection)
+                        {
+                            case Direction.UP:
+                                offsetY = Math.Max(offsetY - .5f, -3 * Globals.TILE);
+                                break;
+                            case Direction.DOWN:
+                                offsetY = Math.Min(offsetY + .5f, 2 * Globals.TILE);
+                                break;
+                            default:
+                                offsetY = -Globals.TILE;
+                                break;
+                        }
+                    } else
+                        offsetY = -Globals.TILE;                    
                 }
 
                 var tarX = Math.Min(Math.Max(target.X + offsetX, CurrentRoom.X + .5f * ViewWidth), CurrentRoom.X + CurrentRoom.BoundingBox.Width - .5f * ViewWidth);
@@ -191,15 +215,21 @@ namespace Platformer.Main
 
                 Position = new Vector2(Position.X + vel.X, Position.Y + vel.Y);
                 
+                if (lookLocked> 0)
+                    Position = new Vector2(Position.X, Math.Min(Math.Max(target.Y + offsetY, CurrentRoom.Y + .5f * ViewHeight), CurrentRoom.Y + CurrentRoom.BoundingBox.Height - .5f * ViewHeight));
+
                 // if outside view, try to find new room                
                 if ((!MathUtil.In(target.X, CurrentRoom.X, CurrentRoom.X + CurrentRoom.BoundingBox.Width)
                         || !MathUtil.In(target.Y, CurrentRoom.Y, CurrentRoom.Y + CurrentRoom.BoundingBox.Height)))
                 {
+                    
                     lastRoom = CurrentRoom;
                     CurrentRoom = ObjectManager.CollisionPoints<Room>(target, target.X, target.Y).FirstOrDefault();
-
+                    
                     if (CurrentRoom != null)
                     {
+                        lookLocked = 30;
+                        
                         offsetX = 0;
                         state = State.RoomTransition;
 
@@ -226,7 +256,7 @@ namespace Platformer.Main
                 curY = ty;
                 
                 OnRoomChange?.Invoke(this, new Tuple<Room,Room>(lastRoom, CurrentRoom));
-                
+
                 state = State.Default;                
             }
 
