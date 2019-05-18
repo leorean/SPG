@@ -3,12 +3,20 @@
 ~~~ The Orbs ~~~
 
 - Star Orb:
-	- Shoots stars in direction
+	- Shoots stars in linear direction
 	- Stars destroy blocks
 	
 - Lightning Orb:
-	- 
+	- Shoot lightning towards first enemy + 2 more as chain reaction
 
+- Earth Orb:
+	- shoot balistic stones (strong but high cooldown?)
+
+- Fire Orb:
+	- Breathes fire (very fast, low damage)
+
+
+	
 - Fire:
 - Water:
 - Lightning:

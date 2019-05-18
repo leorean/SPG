@@ -17,16 +17,27 @@ namespace Platformer.Objects.Main.Orbs
         ATTACK
     }
 
+    public enum OrbType
+    {
+        STAR = 0,
+        LIGHTNING,
+        ROCK,
+        FIRE,
+    }
+
     public class Orb : GameObject
     {
         public Direction Direction { get; set; }
         public OrbState State { get; set; }
+        public OrbType Type { get; set; }
+
         private Player player { get => Parent as Player; }
-        private Vector2 targetPosition;
-        private int headBackTimer;
-
-
+        private Vector2 targetPosition;        
+        private int headBackTimer;        
         private int cooldown;
+        
+        double t;
+        private Vector2 lastPosition;
 
         public Orb(Player player) : base(player.X, player.Y)
         {
@@ -39,6 +50,7 @@ namespace Platformer.Objects.Main.Orbs
 
             Parent = player;
             targetPosition = player.Position;
+            lastPosition = targetPosition;            
         }
 
         public override void BeginUpdate(GameTime gameTime)
@@ -53,8 +65,16 @@ namespace Platformer.Objects.Main.Orbs
             {
                 case OrbState.FOLLOW:
 
-                    targetPosition = player.Position + new Vector2(-Math.Sign((int)player.Direction) * 8, -6);
+                    targetPosition = player.Position + new Vector2(-Math.Sign((int)player.Direction) * 10, -6);
+
+                    t = (t + .2f) % (2 * Math.PI);
+
+                    XVel = (float)Math.Sin(t) * .1f * Math.Sign((int)player.Direction);
+                    YVel = (float)Math.Cos(t) * .1f;
+
                     MoveTowards(targetPosition, 12);
+                    Move(XVel, YVel);
+
                     break;
                 case OrbState.IDLE:
 
@@ -71,26 +91,56 @@ namespace Platformer.Objects.Main.Orbs
 
                     headBackTimer = 20;
 
-                    targetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 12, 12 * Math.Sign((int)player.LookDirection));
+                    targetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 14, 14 * Math.Sign((int)player.LookDirection));
+                                        
                     MoveTowards(targetPosition, 6);
                     Move(player.XVel, player.YVel);
 
+                    XVel *= .8f;
+                    YVel *= .8f;
+
                     // attack projectiles
 
-                    if (cooldown == 0)
+                    switch (Type)
                     {
-                        cooldown = 10;
+                        case OrbType.STAR:
 
-                        var proj = new StarProjectile(X, Y);
+                            if (cooldown == 0)
+                            {
+                                cooldown = 25;
 
-                        var degAngle = MathUtil.VectorToAngle(new Vector2(targetPosition.X - player.X, targetPosition.Y - player.Y));
-                        
-                        proj.XVel = (float)MathUtil.LengthDirX(degAngle) * 3;
-                        proj.YVel = (float)MathUtil.LengthDirY(degAngle) * 3;
+                                var proj = new StarProjectile(X, Y);
+
+                                var degAngle = MathUtil.VectorToAngle(new Vector2(targetPosition.X - player.X, targetPosition.Y - player.Y));
+
+                                var coilX = (float)MathUtil.LengthDirX(degAngle);
+                                var coilY = (float)MathUtil.LengthDirY(degAngle);
+
+                                proj.XVel = coilX * 3;
+                                proj.YVel = coilY * 3;
+
+                                XVel += -2 * coilX;
+                                YVel += -2 * coilY;
+
+                            }
+
+                            break;
+                        case OrbType.LIGHTNING:
+                            break;
+                        case OrbType.ROCK:
+                            break;
+                        case OrbType.FIRE:
+                            break;
+                        default:
+                            break;
                     }
+                    
+                    Move(XVel, YVel);
+                    break;
+            }
 
-                    break;                
-            }            
+
+            lastPosition = Position;
         }
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)
