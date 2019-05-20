@@ -22,6 +22,7 @@ namespace Platformer.Objects.Main
 
         public static TextureSet Player { get; private set; }
         public static TextureSet Effects { get; private set; }
+        public static TextureSet Projectiles { get; private set; }
         public static TextureSet NPCS { get; private set; }
         public static TextureSet SaveStatue { get; private set; }
 
@@ -53,9 +54,8 @@ namespace Platformer.Objects.Main
 
         // orb
 
-        public static Texture2D Orb { get; private set; }
-        public static Texture2D OrbReflection { get; private set; }
-
+        public static TextureSet Orbs { get; private set; }
+        
         // fonts
 
         public static Font DefaultFont { get; private set; }
@@ -72,6 +72,7 @@ namespace Platformer.Objects.Main
 
             Player = content.LoadTextureSet("player", 16, 32);
             Effects = content.LoadTextureSet("effects", 32, 32);
+            Projectiles = content.LoadTextureSet("projectiles", 16, 16);
             NPCS = content.LoadTextureSet("npc", 16, 32);
             SaveStatue = content.LoadTextureSet("save");
 
@@ -89,9 +90,7 @@ namespace Platformer.Objects.Main
             WaterMill = waterMillSheet.Crop(new Rectangle(0, 0, 128, 128));
             WaterMillPlatform = waterMillSheet.Crop(new Rectangle(128, 0, 16, 16));
 
-            var orbSheet = content.Load<Texture2D>("orb");
-            Orb = orbSheet.Crop(new Rectangle(0, 0, 32, 32));
-            OrbReflection = orbSheet.Crop(new Rectangle(0, 32, 32, 32));
+            Orbs = content.LoadTextureSet("orb", 32, 32);
 
             MessageBox = content.Load<Texture2D>("messageBox");
             HUD = content.Load<Texture2D>("hud");

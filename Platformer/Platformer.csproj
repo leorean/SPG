@@ -84,7 +84,8 @@
     <Compile Include="Objects\Main\HUD.cs" />
     <Compile Include="Objects\Main\MessageBox.cs" />
     <Compile Include="Objects\Main\Orbs\Orb.cs" />
-    <Compile Include="Objects\Main\Orbs\StarProjectile.cs" />
+    <Compile Include="Objects\Projectiles\PlayerProjectile.cs" />
+    <Compile Include="Objects\Projectiles\StarProjectile.cs" />
     <Compile Include="Objects\Main\PlayerGhost.cs" />
     <Compile Include="Objects\Main\RoomCamera.cs" />
     <Compile Include="Objects\Main\RoomObjectLoader.cs" />

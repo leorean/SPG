@@ -30,17 +30,20 @@ namespace Platformer.Objects.Main
             return (Direction)(-(int)dir);
         }
     }
-    
+
     [Serializable]
     public class GameStats
     {
         public int MaxHP { get; set; } = 5;
-        public int MaxMP { get; set; } = 100;
-        public float MPRegen { get; set; } = 1;
-        
+        public int MaxMP { get; set; } = 30;
+        public float MPRegen { get; set; } = .1f;
+
         public PlayerAbility Abilities { get; set; } = PlayerAbility.NONE;
 
         public float Coins { get; set; } = 0;
+
+        public Dictionary<SpellType, SpellLevel> Spells { get; set; } = new Dictionary<SpellType, SpellLevel> { { SpellType.NONE, SpellLevel.ONE } };
+        public SpellType CurrentSpell { get; set; } = SpellType.NONE;
 
         // ID, Typename
         public Dictionary<int, string> Items { get; set; } = new Dictionary<int, string>();
@@ -58,7 +61,8 @@ namespace Platformer.Objects.Main
         CLIMB_WALL = 2,
         CLIMB_CEIL = 4,
         LEVITATE = 8,
-        PUSH = 16
+        PUSH = 16,
+        ORB = 32
         //ideas:
         //PUSH_BIG <- inspired by zelda
         //WARP
@@ -209,7 +213,7 @@ namespace Platformer.Objects.Main
             maxOxygen = 5 * 60;
             oxygen = maxOxygen;
 
-            Orb = new Orb(this);
+            //Orb = new Orb(this);
         }
 
         ~Player()
@@ -345,6 +349,7 @@ namespace Platformer.Objects.Main
                 // remove: flags &= ~flag
                 // toggle: flags ^= flag
 
+                Stats.Abilities |= PlayerAbility.ORB;
                 Stats.Abilities |= PlayerAbility.PUSH;
                 Stats.Abilities |= PlayerAbility.LEVITATE;
                 Stats.Abilities |= PlayerAbility.CLIMB_CEIL;
@@ -414,7 +419,7 @@ namespace Platformer.Objects.Main
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
+            
             // ++++ look direction ++++
 
             if (k_upHolding) LookDirection = Direction.UP;
@@ -555,20 +560,33 @@ namespace Platformer.Objects.Main
 
             // ++++ attacking ++++
 
-            if (k_attackHolding && !inWater && HP > 0 
-                && (State == PlayerState.IDLE 
-                || State == PlayerState.WALK 
-                || State == PlayerState.TURN_AROUND 
-                || State == PlayerState.JUMP_UP 
+            if (Stats.Abilities.HasFlag(PlayerAbility.ORB))
+            {
+                if (Orb == null)
+                {
+                    new SaveBurstEmitter(X, Y);
+                    Orb = new Orb(this);
+                }
+
+                if (k_attackHolding && !inWater && HP > 0
+                && !jumpControlDisabled
+                && (State == PlayerState.IDLE
+                || State == PlayerState.WALK
+                || State == PlayerState.TURN_AROUND
+                || State == PlayerState.JUMP_UP
                 || State == PlayerState.JUMP_DOWN
                 || State == PlayerState.GET_UP))
-            {                
+                {
                     Orb.State = OrbState.ATTACK;
-            } else
-            {
-                if (Orb.State == OrbState.ATTACK)
-                    Orb.State = OrbState.IDLE;
+                    mpRegenTimeout = Math.Min(mpRegenTimeout + 2, maxMpRegenTimeout);
+                }
+                else
+                {
+                    if (Orb.State == OrbState.ATTACK)
+                        Orb.State = OrbState.IDLE;
+                }
             }
+            
             //if (k_attackReleased || inWater || HP == 0)
             //{
             //    Orb.State = OrbState.IDLE;
@@ -1465,7 +1483,7 @@ namespace Platformer.Objects.Main
                 case PlayerState.IDLE:
                     row = 0;
                     offset = 4 * Convert.ToInt32(Orb?.State == OrbState.ATTACK);
-                    fSpd = 0.03f;
+                    fSpd = 0.03f;                                        
                     break;
                 case PlayerState.WALK:
                     row = 1;
@@ -1481,11 +1499,15 @@ namespace Platformer.Objects.Main
                 case PlayerState.JUMP_UP:
                     row = 2;
                     fAmount = 1;
+                    offset = 4 * Convert.ToInt32(Orb?.State == OrbState.ATTACK);
                     fSpd = 0;
                     break;
                 case PlayerState.JUMP_DOWN:
                     row = 2;
-                    offset = 1 + Convert.ToInt32(jumpControlDisabled);
+                    if (jumpControlDisabled)
+                        offset = 2;
+                    else
+                        offset = 1 + 4 * Convert.ToInt32(Orb?.State == OrbState.ATTACK);
                     fAmount = 1;
                     fSpd = 0;
                     break;
