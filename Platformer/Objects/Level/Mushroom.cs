@@ -26,7 +26,7 @@ namespace Platformer.Objects.Level
         public void Bounce()
         {
             if (!bounced)
-                new OuchEmitter(Center.X, Center.Y);
+                new StarEmitter(Center.X, Center.Y);
             bounced = true;            
         }
 

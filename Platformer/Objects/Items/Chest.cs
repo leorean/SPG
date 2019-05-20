@@ -49,7 +49,7 @@ namespace Platformer.Objects.Items
             if (Taken)
                 return;
 
-            new OuchEmitter(X + 8, Y + 8);            
+            new StarEmitter(X + 8, Y + 8);            
             Coin.Spawn(X + 8, Y + 8, Room, value);
 
             Taken = true;

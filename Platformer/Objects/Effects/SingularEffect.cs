@@ -42,10 +42,11 @@ namespace Platformer.Objects.Effects
                 case 0:                    
                     fAmount = 5;
                     break;
-                case 1:
+                case 1:                
                     fAmount = 6;
                     break;
                 case 2:
+                case 4:
                     fAmount = 8;
                     fSpd = .4f;
                     break;                

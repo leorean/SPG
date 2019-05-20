@@ -42,9 +42,9 @@ namespace Platformer.Objects.Main
 
         public float Coins { get; set; } = 0;
 
-        public Dictionary<SpellType, SpellLevel> Spells { get; set; } = new Dictionary<SpellType, SpellLevel> { { SpellType.NONE, SpellLevel.ONE } };
-        public SpellType CurrentSpell { get; set; } = SpellType.NONE;
-
+        public Dictionary<SpellType, SpellLevel> Spells { get; set; } = new Dictionary<SpellType, SpellLevel> { { SpellType.NONE, SpellLevel.ONE }, { SpellType.STAR, SpellLevel.ONE } };
+        public int SpellIndex;
+        
         // ID, Typename
         public Dictionary<int, string> Items { get; set; } = new Dictionary<int, string>();
 
@@ -129,6 +129,8 @@ namespace Platformer.Objects.Main
         bool k_jumpPressed, k_jumpHolding;
         bool k_attackPressed, k_attackHolding, k_attackReleased;
 
+        bool k_LPressed, k_RPressed;
+
         float gamePadLeftXFactor;
         float gamePadLeftYFactor;
 
@@ -179,7 +181,7 @@ namespace Platformer.Objects.Main
         public Key KeyObject { get; set; }
         public Collider MovingPlatform { get; set; }
         public Orb Orb { get; set; }
-
+        
         // constructor
 
         public Player(float x, float y) : base(x, y)
@@ -211,9 +213,7 @@ namespace Platformer.Objects.Main
             MP = Stats.MaxMP;
 
             maxOxygen = 5 * 60;
-            oxygen = maxOxygen;
-
-            //Orb = new Orb(this);
+            oxygen = maxOxygen;            
         }
 
         ~Player()
@@ -254,7 +254,7 @@ namespace Platformer.Objects.Main
                 Coin.Spawn(X, Y, RoomCamera.Current.CurrentRoom, amountToDrop);
             }
 
-            var ouch = new OuchEmitter(X, Y);
+            var ouch = new StarEmitter(X, Y);
 
             var dmgFont = new FollowFont(X, Y - Globals.TILE, $"-{hitPoints}");
             dmgFont.Target = this;
@@ -324,6 +324,9 @@ namespace Platformer.Objects.Main
             k_attackPressed = input.IsKeyPressed(Keys.S, Input.State.Pressed);
             k_attackHolding = input.IsKeyPressed(Keys.S, Input.State.Holding);
             k_attackReleased = input.IsKeyPressed(Keys.S, Input.State.Released);
+
+            k_LPressed = input.IsKeyPressed(Keys.Q, Input.State.Pressed);
+            k_RPressed = input.IsKeyPressed(Keys.E, Input.State.Pressed);
 
             // debug keys
 
@@ -396,6 +399,9 @@ namespace Platformer.Objects.Main
                 k_attackPressed= input.IsButtonPressed(Buttons.X, Input.State.Pressed);
                 k_attackHolding = input.IsButtonPressed(Buttons.X, Input.State.Holding);
                 k_attackReleased = input.IsButtonPressed(Buttons.X, Input.State.Released);
+
+                k_LPressed = input.IsButtonPressed(Buttons.LeftShoulder, Input.State.Released);
+                k_RPressed = input.IsButtonPressed(Buttons.RightShoulder, Input.State.Released);
 
                 gamePadLeftXFactor = Math.Abs(input.LeftStick().X);
                 gamePadLeftYFactor = Math.Abs(input.LeftStick().Y);
@@ -473,9 +479,9 @@ namespace Platformer.Objects.Main
                     ||
                     State == PlayerState.JUMP_DOWN)
                 {
-                    if ((Direction == Direction.LEFT && k_leftHolding)
+                    if (!k_attackHolding && ((Direction == Direction.LEFT && k_leftHolding)
                         ||
-                        (Direction == Direction.RIGHT && k_rightHolding)
+                        (Direction == Direction.RIGHT && k_rightHolding))
                     )
                     {
                         lastGroundYbeforeWall = lastGroundY;
@@ -489,7 +495,7 @@ namespace Platformer.Objects.Main
                 if ((State == PlayerState.JUMP_UP || State == PlayerState.WALL_CLIMB)
                     && 
                     (k_jumpHolding || k_upHolding)
-                    && !k_downHolding)
+                    && !k_downHolding && !k_attackHolding)
                 {
                     State = PlayerState.CEIL_IDLE;
                 }
@@ -565,7 +571,7 @@ namespace Platformer.Objects.Main
                 if (Orb == null)
                 {
                     new SaveBurstEmitter(X, Y);
-                    Orb = new Orb(this);
+                    Orb = new Orb(this);                    
                 }
 
                 if (k_attackHolding && !inWater && HP > 0
@@ -578,24 +584,38 @@ namespace Platformer.Objects.Main
                 || State == PlayerState.GET_UP))
                 {
                     Orb.State = OrbState.ATTACK;
-                    mpRegenTimeout = Math.Min(mpRegenTimeout + 2, maxMpRegenTimeout);
+                    mpRegenTimeout = Math.Min(mpRegenTimeout + 2, maxMpRegenTimeout);                    
                 }
                 else
                 {
                     if (Orb.State == OrbState.ATTACK)
-                        Orb.State = OrbState.IDLE;
+                        Orb.State = OrbState.IDLE;                    
                 }
+
+                if (k_RPressed)
+                {
+                    Orb.ChangeType(Direction.RIGHT);
+                    Stats.SpellIndex++;
+                }
+                if (k_LPressed)
+                {
+                    Orb.ChangeType(Direction.LEFT);
+                    Stats.SpellIndex--;
+                }
+                
+                if (Stats.SpellIndex > Stats.Spells.Count - 1)
+                    Stats.SpellIndex = 0;
+                if (Stats.SpellIndex < 0)
+                    Stats.SpellIndex = Stats.Spells.Count - 1;
+
+                Orb.Type = Stats.Spells.ElementAt(Stats.SpellIndex).Key;
+                Orb.Level = Stats.Spells.ElementAt(Stats.SpellIndex).Value;
             }
-            
-            //if (k_attackReleased || inWater || HP == 0)
-            //{
-            //    Orb.State = OrbState.IDLE;
-            //}
 
             // ++++++++++++++++++++++++++++++
             // INTERACTION WITH OTHER OBJECTS
             // ++++++++++++++++++++++++++++++
-            
+
             if (HP > 0)
             {
                 // ++++ save statues ++++

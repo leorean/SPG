@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Platformer.Objects.Effects;
 using Platformer.Objects.Effects.Emitters;
 using Platformer.Objects.Projectiles;
 using SPG.Objects;
@@ -48,10 +49,16 @@ namespace Platformer.Objects.Main.Orbs
         private int headBackTimer;        
         private int cooldown;
 
+        private float alpha = 1;
+        private int alphaTimeout;
+        private Direction lastChangeDir;
+
         public Dictionary<SpellType, Dictionary<SpellLevel, int>> MpCost { get; private set; } = new Dictionary<SpellType, Dictionary<SpellLevel, int>>();
 
         private double t;
         private Vector2 lastPosition;
+
+        private SpellEmitter spellEmitter;
 
         public Orb(Player player) : base(player.X, player.Y)
         {
@@ -65,6 +72,10 @@ namespace Platformer.Objects.Main.Orbs
             targetPosition = player.Position;
             lastPosition = targetPosition;
 
+            spellEmitter = new SpellEmitter(X, Y, this);
+            spellEmitter.Parent = this;
+            spellEmitter.Active = false;
+            
             MpCost.Add(SpellType.NONE, new Dictionary<SpellLevel, int>
             {
                 {SpellLevel.ONE, 0 },
@@ -89,10 +100,23 @@ namespace Platformer.Objects.Main.Orbs
 
             cooldown = Math.Max(cooldown - 1, 0);
 
+            if (alphaTimeout > 0)
+            {
+                alphaTimeout = Math.Max(alphaTimeout - 1, 0);
+                State = OrbState.IDLE;
+
+                if (alphaTimeout == 0)
+                {
+                    Position -= new Vector2(7 * Math.Sign((int)lastChangeDir), 0);
+                    //new SingularEffect(X, Y, 6);                    
+                }
+            } else
+                alpha = Math.Min(alpha + .1f, 1);
+
             switch (State)
             {
                 case OrbState.FOLLOW:
-
+                    headBackTimer = 60;
                     targetPosition = player.Position + new Vector2(-Math.Sign((int)player.Direction) * 10, -6);
 
                     t = (t + .05f) % (2 * Math.PI);
@@ -116,9 +140,7 @@ namespace Platformer.Objects.Main.Orbs
 
                     break;
                 case OrbState.ATTACK:
-
                     headBackTimer = 20;
-
                     targetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 14, 14 * Math.Sign((int)player.LookDirection));
 
                     MoveTowards(targetPosition, 6);
@@ -132,6 +154,9 @@ namespace Platformer.Objects.Main.Orbs
                     
                     if (player.MP >= MpCost[Type][Level] && cooldown == 0)
                     {
+                        if (Type != SpellType.NONE)
+                            spellEmitter.Active = true;
+
                         player.MP -= MpCost[Type][Level];
 
                         switch (Type)
@@ -173,11 +198,13 @@ namespace Platformer.Objects.Main.Orbs
                         }
                     } else
                     {
+                        spellEmitter.Active = false;
+
                         if (cooldown == 0)
                         {
                             XVel = -2 + (float)RND.Next * 2;
                             YVel = -2 + (float)RND.Next * 2;
-                            new OuchEmitter(X, Y);
+                            new StarEmitter(X, Y);
                             cooldown = 25;
                         }
 
@@ -195,10 +222,22 @@ namespace Platformer.Objects.Main.Orbs
         {
             //base.Draw(sb, gameTime);
 
-            sb.Draw(AssetManager.Orbs[(int)Type], Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
-            
-            //if (State == OrbState.ATTACK)
-            //    sb.Draw(AssetManager.OrbReflection, Position, null, new Color(Color, .75f), Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0001f);
+            sb.Draw(AssetManager.Orbs[(int)Type], Position, null, new Color(Color, alpha), Angle, DrawOffset, Scale, SpriteEffects.None, Depth);            
+        }
+
+        public void ChangeType(Direction direction)
+        {
+            if (alphaTimeout == 0)
+            {
+                var eff = new SingularEffect(X, Y, 4);
+                eff.Scale = new Vector2(.5f);
+            }
+            lastChangeDir = direction;
+            //Position -= new Vector2(7 * Math.Sign((int)direction), 0);
+            State = OrbState.IDLE;
+
+            alphaTimeout = 20;
+            alpha = 0;
         }
     }
 }

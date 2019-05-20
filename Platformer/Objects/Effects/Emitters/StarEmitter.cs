@@ -13,14 +13,14 @@ using Platformer.Objects.Main;
 
 namespace Platformer.Objects.Effects.Emitters
 {
-    public class OuchParticle : Particle
+    public class StarParticle : Particle
     {
         float maxLifeTime = 40f;
 
-        public OuchParticle(ParticleEmitter emitter) : base(emitter)
+        public StarParticle(ParticleEmitter emitter) : base(emitter)
         {
             LifeTime = (int)maxLifeTime;
-
+            
             Scale = new Vector2(.3f, .3f);
 
             Angle = (float)(RND.Next * 360);
@@ -44,9 +44,9 @@ namespace Platformer.Objects.Effects.Emitters
         }        
     }
 
-    public class OuchEmitter : ParticleEmitter
+    public class StarEmitter : ParticleEmitter
     {
-        public OuchEmitter(float x, float y) : base(x, y)
+        public StarEmitter(float x, float y) : base(x, y)
         {
             SpawnRate = 6;
         }
@@ -63,8 +63,8 @@ namespace Platformer.Objects.Effects.Emitters
 
         public override void CreateParticle()
         {
-            var particle = new OuchParticle(this);
-            particle.Texture = AssetManager.Ouch;
+            var particle = new StarParticle(this);
+            particle.Texture = AssetManager.StarParticle;
         }
     }
 }
