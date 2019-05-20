@@ -292,5 +292,16 @@ namespace Platformer.Objects.Main
 
             ObjectManager.UpdateObjects(gameTime);
         }
+
+        public void AddSpell(SpellType spellType)
+        {
+            if (!Player.Stats.Spells.ContainsKey(spellType))
+            {
+                Player.Stats.Spells.Add(spellType, SpellLevel.ONE);
+                Player.Stats.SpellEXP.Add(spellType, 0);
+
+                Player.Stats.SpellIndex = Player.Stats.Spells.Count - 1;
+            }            
+        }
     }
 }

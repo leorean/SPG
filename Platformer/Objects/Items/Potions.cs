@@ -40,7 +40,9 @@ namespace Platformer.Objects.Items
         public Potion(float x, float y, Room room, PotionType potionType, string name = null) : base(x, y, room, name)
         {
             Type = potionType;
-            
+
+            DrawOffset = new Vector2(8);
+
             potionEmitter = new PotionEmitter(x, y - 6, potionType);
             potionEmitter.Parent = this;
 

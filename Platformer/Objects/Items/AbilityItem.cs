@@ -16,9 +16,7 @@ namespace Platformer.Objects.Items
         {
             IDLE, TAKING, RISING, RISEN, TAKEN
         }
-
-        public PlayerAbility Ability { get; private set; }
-
+        
         public string Text { get; set; }
 
         private State state = State.IDLE;
@@ -29,10 +27,12 @@ namespace Platformer.Objects.Items
         
         public ObtainShineEmitter ObtainShineEmitter { get; private set; }
         private ObtainParticleEmitter obtainParticleEmitter;
-        
-        public AbilityItem(float x, float y, Room room, PlayerAbility ability, string name = null) : base(x, y, room, name)
+
+        public delegate void OnAbility();
+        public OnAbility OnAbilityMethod;
+
+        public AbilityItem(float x, float y, Room room, string name = null) : base(x, y, room, name)
         {
-            Ability = ability;
             Visible = false;
 
             ObtainShineEmitter = new ObtainShineEmitter(X, Y);
@@ -43,6 +43,9 @@ namespace Platformer.Objects.Items
             obtainParticleEmitter = new ObtainParticleEmitter(X, Y);
             obtainParticleEmitter.Active = false;
             obtainParticleEmitter.Parent = this;
+
+            Respawn = false;
+            Save = true;
         }
 
         public override void Update(GameTime gameTime)
@@ -50,12 +53,12 @@ namespace Platformer.Objects.Items
             base.Update(gameTime);
 
             sin = (float)((sin + .1f) % (2 * Math.PI));
-            
+
+            if (Taken)
+                Destroy();
+
             if (state == State.IDLE)
             {
-                // TODO: not necessary
-                if (GameManager.Current.Player.Stats.Abilities.HasFlag(Ability))
-                    Destroy();
                 Visible = true;
 
                 Move(0, (float)Math.Sin(sin) * .1f);                
@@ -83,9 +86,7 @@ namespace Platformer.Objects.Items
                 if (yDist == -2 * Globals.TILE)
                 {
                     var msgBox = new MessageBox(Text, name:Name);
-                    msgBox.OnCompleted = () => {
-
-                        player.Stats.Abilities |= Ability;
+                    msgBox.OnCompleted = () => {                        
                         state = State.TAKEN;
                     };
 
@@ -113,7 +114,9 @@ namespace Platformer.Objects.Items
                     
                     var eff = new FlashEmitter(X, Y);
 
-                    Destroy();
+                    OnAbilityMethod?.Invoke();
+
+                    Taken = true;
                 }
             }
 
@@ -123,6 +126,9 @@ namespace Platformer.Objects.Items
 
         public override void Take(Player player)
         {
+            if (Taken)
+                return;
+
             if (state == State.IDLE)
             {
                 state = State.TAKING;

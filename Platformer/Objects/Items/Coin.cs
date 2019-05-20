@@ -69,6 +69,8 @@ namespace Platformer.Objects.Items
 
         public Coin(float x, float y, Room room, CoinValue v, bool isLoose = false) : base(x, y, room)
         {
+            DrawOffset = new Vector2(8);
+
             Gravity = .1f;
 
             Visible = false;

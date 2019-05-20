@@ -42,13 +42,12 @@ namespace Platformer.Objects.Main
 
         public float Coins { get; set; } = 0;
 
-        public Dictionary<SpellType, SpellLevel> Spells { get; set; } = new Dictionary<SpellType, SpellLevel> { { SpellType.NONE, SpellLevel.ONE }, { SpellType.STAR, SpellLevel.THREE } };
+        public Dictionary<SpellType, SpellLevel> Spells { get; set; } = new Dictionary<SpellType, SpellLevel> { { SpellType.NONE, SpellLevel.ONE } };
+        public Dictionary<SpellType, int> SpellEXP { get; set; } = new Dictionary<SpellType, int> { { SpellType.NONE, 0 } };
         public int SpellIndex;
         
         // ID, Typename
         public Dictionary<int, string> Items { get; set; } = new Dictionary<int, string>();
-
-        //public int KeyObjectID { get; set; } = -1;
         
         public List<int> KeysAndKeyblocks { get; set; } = new List<int>();
     }
@@ -231,15 +230,68 @@ namespace Platformer.Objects.Main
         public void Hit(int hitPoints, float? angle = null)
         {
             MovingPlatform = null;
-            //if (MovingPlatform != null && MovingPlatform.YVel >= 0)
-            //    MovingPlatform = null;
-
+            
             var hpPrev = HP;
-
+            
             HP = Math.Max(HP - hitPoints, 0);
 
-            // death penalty
-            if (hpPrev > 0 && HP == 0)
+            // deduct spell EXP
+            if (Orb != null)
+            {
+                var currentSpellType = Stats.Spells.ElementAt(Stats.SpellIndex).Key;
+                var currentSpellLevel = Stats.Spells.ElementAt(Stats.SpellIndex).Value;
+
+                var maxSpellExpForLevel = Orb.MaxEXP[currentSpellType][currentSpellLevel];
+
+                int expHit = 0;
+
+                switch (currentSpellLevel)
+                {
+                    case SpellLevel.ONE:
+                        expHit = (int)Math.Ceiling(Orb.MaxEXP[currentSpellType][currentSpellLevel] * .15f);
+                        break;
+                    case SpellLevel.TWO:
+                        expHit = (int)Math.Ceiling(Orb.MaxEXP[currentSpellType][currentSpellLevel] * .3f);
+                        break;
+                    case SpellLevel.THREE:
+                        expHit = (int)Math.Ceiling(Orb.MaxEXP[currentSpellType][currentSpellLevel] * .6f);
+                        break;
+                    default:
+                        break;
+                }
+
+                // don't deduct exp from "none" spell
+                if (currentSpellType == SpellType.NONE)
+                    expHit = 0;
+
+                var expAfterHit = Math.Max(Stats.SpellEXP[currentSpellType] - expHit, 0);
+                Stats.SpellEXP[currentSpellType] = expAfterHit;
+
+                Debug.WriteLine($"Hit with {expHit} points. Remaining: {expAfterHit}");
+                if (expAfterHit == 0)
+                {
+                    switch (currentSpellLevel)
+                    {
+                        case SpellLevel.ONE:
+                            break;
+                        case SpellLevel.TWO:
+                            new SpellFont(Orb, 0, -8, SpellFont.SpellChange.LVDOWN);                            
+                            Stats.Spells[currentSpellType] = SpellLevel.ONE;
+                            Stats.SpellEXP[currentSpellType] = Orb.MaxEXP[currentSpellType][SpellLevel.ONE];
+                            break;
+                        case SpellLevel.THREE:
+                            new SpellFont(Orb, 0, -8, SpellFont.SpellChange.LVDOWN);
+                            Stats.Spells[currentSpellType] = SpellLevel.TWO;
+                            Stats.SpellEXP[currentSpellType] = Orb.MaxEXP[currentSpellType][SpellLevel.TWO];
+                            break;
+                        default:
+                            break;
+                    }
+                }                
+            }
+
+                // death penalty
+                if (hpPrev > 0 && HP == 0)
             {
                 var temp = (float)Math.Floor(Stats.Coins * .5f);
                 var amountToDrop = Stats.Coins - temp;
@@ -247,10 +299,7 @@ namespace Platformer.Objects.Main
                 var stats = GameManager.Current.SaveGame.gameStats;
                 stats.Coins = temp;
 
-                GameManager.Current.CoinsAfterDeath = temp;
-
-                //GameManager.Current.Save(GameManager.Current.SaveGame.playerPosition.X, GameManager.Current.SaveGame.playerPosition.Y);
-
+                GameManager.Current.CoinsAfterDeath = temp;                
                 Coin.Spawn(X, Y, RoomCamera.Current.CurrentRoom, amountToDrop);
             }
 
@@ -584,7 +633,8 @@ namespace Platformer.Objects.Main
                 || State == PlayerState.GET_UP))
                 {
                     Orb.State = OrbState.ATTACK;
-                    mpRegenTimeout = Math.Min(mpRegenTimeout + 2, maxMpRegenTimeout);                    
+                    if (Stats.Spells.ElementAt(Stats.SpellIndex).Key != SpellType.NONE)
+                        mpRegenTimeout = Math.Min(mpRegenTimeout + 2, maxMpRegenTimeout);                    
                 }
                 else
                 {
@@ -626,7 +676,48 @@ namespace Platformer.Objects.Main
                 {
                     saveStatue.Save();
                 }
-                
+
+                // ++++ spell EXP ++++
+
+                var spellExp = this.CollisionBounds<SpellEXP>(X, Y);
+                if (Orb != null)
+                {
+                    foreach (var s in spellExp)
+                    {
+                        var currentSpellType = Stats.Spells.ElementAt(Stats.SpellIndex).Key;
+                        var currentSpellLevel = Stats.Spells.ElementAt(Stats.SpellIndex).Value;
+
+                        var maxSpellExpForLevel = Orb.MaxEXP[currentSpellType][currentSpellLevel];
+
+                        // only add EXP to spells other than "none"
+                        if (currentSpellType != SpellType.NONE)
+                        {
+
+                            Stats.SpellEXP[currentSpellType] = Math.Min(Stats.SpellEXP[currentSpellType] + (int)s.Exp, maxSpellExpForLevel);
+
+                            if (Stats.SpellEXP[currentSpellType] == maxSpellExpForLevel)
+                            {
+                                switch (Stats.Spells[currentSpellType])
+                                {
+                                    case SpellLevel.ONE:
+                                        Stats.Spells[currentSpellType] = SpellLevel.TWO;
+                                        Stats.SpellEXP[currentSpellType] = 0;
+
+                                        new SpellFont(Orb, 0, -8, SpellFont.SpellChange.LVUP);
+                                        break;
+                                    case SpellLevel.TWO:
+                                        new SpellFont(Orb, 0, -8, SpellFont.SpellChange.LVUP);
+                                        Stats.Spells[currentSpellType] = SpellLevel.THREE;
+                                        Stats.SpellEXP[currentSpellType] = 0;
+                                        break;
+                                }
+                            }
+                        }
+
+                        s.Destroy();
+                    }
+                }
+
                 // ++++ pickup items, chests, etc. ++++
 
                 var items = this.CollisionBounds<Item>(X, Y);

@@ -17,16 +17,16 @@ namespace Platformer.Objects.Effects
 {
     class FollowFont : GameObject
     {
-        string text;
-        float alpha;
+        protected string text;
+        protected float alpha;
 
-        Font font;
+        protected Font font;
         
         private float offX, offY;
         private GameObject target;
         public GameObject Target { get => target; set { target = value; offX = (X - target.X); offY = (Y - target.Y); } }
 
-        public FollowFont(float x, float y, string text, string name = null) : base(x, y, name)
+        public FollowFont(float x, float y, string text) : base(x, y)
         {
             Position = new Vector2(x, y);
             this.text = text;

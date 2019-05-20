@@ -22,6 +22,7 @@ using Platformer.Objects.Effects;
 using Platformer.Objects.Main;
 using Platformer.Objects.Level;
 using Platformer.Objects.Effects.Emitters;
+using Platformer.Objects.Items;
 
 namespace Platformer
 {
@@ -171,6 +172,8 @@ namespace Platformer
 
             input.Update(gameTime);
 
+            MouseState mouse = Mouse.GetState();
+
             if (input.IsKeyPressed(Keys.D0, Input.State.Pressed))
             {
                 var posX = MathUtil.Div(GameManager.Current.Player.Position.X, Globals.TILE) * Globals.TILE + 8;
@@ -180,11 +183,20 @@ namespace Platformer
 
                 Debug.WriteLine("Saved.");
             }
-            
+
             if (input.IsKeyPressed(Keys.C, Input.State.Pressed))
             {
-                GameManager.Current.SaveGame.Delete();                
+                GameManager.Current.SaveGame.Delete();
                 Debug.WriteLine("Deleted save game.");
+            }
+
+            if (mouse.RightButton == ButtonState.Pressed)
+            {
+                var sep = RoomCamera.Current.ToVirtual(mouse.Position.ToVector2());
+                if (ObjectManager.CollisionPointFirstOrDefault<SpellEXP>(sep.X, sep.Y) == null)
+                {
+                    SpellEXP.Spawn(sep.X, sep.Y, 17);
+                }
             }
 
             if (input.IsKeyPressed(Keys.Space, Input.State.Holding))
@@ -200,9 +212,7 @@ namespace Platformer
             {
                 GameManager.Current.ReloadLevel();
             }
-
-            MouseState mouse = Mouse.GetState();
-
+            
             if (mouse.LeftButton == ButtonState.Pressed)
             {
                 GameManager.Current.Player.Position = RoomCamera.Current.ToVirtual(mouse.Position.ToVector2());

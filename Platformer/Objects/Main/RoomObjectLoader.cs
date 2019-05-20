@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SPG.Map;
 using Platformer.Objects.Effects.Emitters;
+using Microsoft.Xna.Framework;
 
 namespace Platformer.Objects.Main
 {
@@ -195,14 +196,32 @@ namespace Platformer.Objects.Main
                         var itemName = data.ContainsKey("itemName") ? data["itemName"].ToString() : "-unknown-";
                         var itemText = data.ContainsKey("text") ? data["text"].ToString() : "-unknown-";
 
+                        AbilityItem item = null;
+
                         switch (itemType)
                         {
                             case 0: // ability item: push
-                                var item = new AbilityItem(x + 8, y + 8, room, PlayerAbility.PUSH, itemName);
+                                item = new AbilityItem(x + 8, y + 8, room, itemName);
                                 item.Texture = AssetManager.Items[0];
                                 item.Text = itemText;
+                                item.OnAbilityMethod = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.PUSH; };
                                 break;
-                            // TODO: add other item types, collectables etc.
+                            case 1: // ability item: orb
+                                item = new AbilityItem(x + 8, y + 8, room, itemName);
+                                item.Texture = AssetManager.Items[1];
+                                item.OnAbilityMethod = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.ORB; };
+                                item.Scale = new Vector2(.5f);
+                                item.Text = itemText;
+                                break;
+                            case 2: // spell: shoot star
+                                item = new AbilityItem(x + 8, y + 8, room, itemName);
+                                item.Texture = AssetManager.Items[2];
+                                item.OnAbilityMethod = () => {
+                                    GameManager.Current.AddSpell(Orbs.SpellType.STAR);
+                                };  
+                                item.Text = itemText;
+                                break;
+                                // TODO: add other item types, collectables etc.
                         }                        
                     }
                     if (type == "door")

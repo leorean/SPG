@@ -54,6 +54,7 @@ namespace Platformer.Objects.Main.Orbs
         private Direction lastChangeDir;
 
         public Dictionary<SpellType, Dictionary<SpellLevel, int>> MpCost { get; private set; } = new Dictionary<SpellType, Dictionary<SpellLevel, int>>();
+        public Dictionary<SpellType, Dictionary<SpellLevel, int>> MaxEXP { get; private set; } = new Dictionary<SpellType, Dictionary<SpellLevel, int>>();
 
         private double t;
         private Vector2 lastPosition;
@@ -76,6 +77,8 @@ namespace Platformer.Objects.Main.Orbs
             spellEmitter.Parent = this;
             spellEmitter.Active = false;
             
+            // add MP costs here!
+
             MpCost.Add(SpellType.NONE, new Dictionary<SpellLevel, int>
             {
                 {SpellLevel.ONE, 0 },
@@ -90,6 +93,21 @@ namespace Platformer.Objects.Main.Orbs
                 {SpellLevel.THREE, 1 },
             });
 
+            // add max EXP here!
+
+            MaxEXP.Add(SpellType.NONE, new Dictionary<SpellLevel, int>
+            {
+                {SpellLevel.ONE, 0 },
+                {SpellLevel.TWO, 0 },
+                {SpellLevel.THREE, 0 },
+            });
+
+            MaxEXP.Add(SpellType.STAR, new Dictionary<SpellLevel, int>
+            {
+                {SpellLevel.ONE, 25 },
+                {SpellLevel.TWO, 80 },
+                {SpellLevel.THREE, 200 },
+            });
         }
 
         public override void BeginUpdate(GameTime gameTime)
@@ -153,7 +171,7 @@ namespace Platformer.Objects.Main.Orbs
 
                     // attack projectiles
 
-                    spellEmitter.Active = true;
+                    //spellEmitter.Active = true;
 
                     if (player.MP >= MpCost[Type][Level])
                     {

@@ -32,7 +32,8 @@ namespace Platformer.Objects.Main
         public static TextureSet Potions { get; private set; }
         public static TextureSet Coins { get; private set; }
         public static TextureSet Chest { get; private set; }
-        
+        public static TextureSet SpellEXP { get; private set; }
+
         // HUD
 
         public static Texture2D HUD { get; private set; }
@@ -95,10 +96,11 @@ namespace Platformer.Objects.Main
             MessageBox = content.Load<Texture2D>("messageBox");
             HUD = content.Load<Texture2D>("hud");
 
-            Items = content.LoadTextureSet("items");
+            Items = content.LoadTextureSet("items", 32, 32);
             Potions = content.LoadTextureSet("potions");
             Coins = content.LoadTextureSet("coins");
             Chest = content.LoadTextureSet("chest");
+            SpellEXP = content.LoadTextureSet("spellexp");
 
             // backgrounds
 
