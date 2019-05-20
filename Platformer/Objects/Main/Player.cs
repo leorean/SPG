@@ -684,6 +684,9 @@ namespace Platformer.Objects.Main
                 {
                     foreach (var s in spellExp)
                     {
+                        if (s.Taken)
+                            continue;
+
                         var currentSpellType = Stats.Spells.ElementAt(Stats.SpellIndex).Key;
                         var currentSpellLevel = Stats.Spells.ElementAt(Stats.SpellIndex).Value;
 
@@ -714,7 +717,7 @@ namespace Platformer.Objects.Main
                             }
                         }
 
-                        s.Destroy();
+                        s.Taken = true;
                     }
                 }
 

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Platformer.Main;
+using SPG.Objects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,4 +16,17 @@ namespace Platformer.Objects
         UP = -2,
         DOWN = 2
     }    
+
+    public static class ObjectExtensions
+    {
+        public static bool IsOutsideCurrentRoom(this GameObject o)
+        {
+            var cam = RoomCamera.Current;
+
+            if (cam == null)
+                return true;
+
+            return o.X < cam.ViewX || o.Y < cam.ViewY || o.X > cam.ViewX + cam.ViewWidth || o.Y > cam.ViewY + cam.ViewHeight;
+        }
+    }
 }

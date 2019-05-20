@@ -32,6 +32,9 @@ namespace Platformer.Objects.Items
 
         float t = (float)Math.PI;
 
+        public bool Taken { get; set; }
+        private float alpha = 2;
+
         public SpellEXP(float x, float y, SpellEXPValue value) : base(x, y)
         {
             AnimationTexture = AssetManager.SpellEXP;
@@ -44,60 +47,71 @@ namespace Platformer.Objects.Items
 
             angVel = -.1f + (float)RND.Next * .2f;
 
-            XVel = -1f + (float)RND.Next * 2f;
-            YVel = -2;
+            XVel = -.75f + (float)RND.Next * 1.5f;
+            YVel = -1 - (float)RND.Next * .5f;
 
             Gravity = .1f;
 
             lifeTime = 6 * 60;
 
-            Exp = value;
+            Exp = value;            
         }
         
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            //XVel *= .9f;
+            if (this.IsOutsideCurrentRoom())
+                Destroy();
 
-            var yp = YVel;
-
-            if (kinetic)
+            if (!Taken)
             {
+                var yp = YVel;
 
-                var onGround = CollisionExtensions.MoveAdvanced(this, false);
-
-                if (onGround)
+                if (kinetic)
                 {
-                    angVel = -.1f + (float)RND.Next * .2f;
-                    YVel = -.5f * yp;
 
-                    XVel *= .5f;
+                    var onGround = CollisionExtensions.MoveAdvanced(this, false);
 
-                    if (Math.Abs(yp) < .2f)
-                        kinetic = false;
+                    if (onGround)
+                    {
+                        angVel = -.1f + (float)RND.Next * .2f;
+                        YVel = -.5f * yp;
+
+                        XVel *= .5f;
+
+                        if (Math.Abs(yp) < .2f)
+                            kinetic = false;
+                    }
                 }
-            } else
-            {
-                lifeTime = Math.Max(lifeTime - 1, 0);
-                angVel *= .9f;
+                else
+                {
+                    lifeTime = Math.Max(lifeTime - 1, 0);
+                    angVel *= .9f;
 
-                t = (t + .1f) % (float)(2 * Math.PI);
-                YVel = .05f * (float)Math.Sin(t);
-                Move(0, YVel);
-            }
+                    t = (t + .1f) % (float)(2 * Math.PI);
+                    YVel = .05f * (float)Math.Sin(t);
+                    Move(0, YVel);
+                }
 
-            Angle = (Angle + angVel) % (float)(2* Math.PI);
-            
-            if (lifeTime > 2 * 60)
+                Angle = (Angle + angVel) % (float)(2 * Math.PI);
+
+                if (lifeTime > 2 * 60)
+                {
+                    Visible = true;
+                }
+                else
+                {
+                    Visible = lifeTime % 6 > 3;
+                }
+            } else // taken
             {
                 Visible = true;
-            } else
-            {
-                Visible = lifeTime % 6 > 3;                    
+                Move(0, -1);
+                alpha = Math.Max(alpha - .1f, 0);
             }
 
-            if (lifeTime == 0)
+            if (lifeTime == 0 || alpha == 0)
                 Destroy();
 
             int row = 0;
@@ -115,6 +129,7 @@ namespace Platformer.Objects.Items
                     break;
             }
             SetAnimation(row * cols, (row * cols) + 3, .2f, true);
+            Color = new Color(Color, alpha);
         }
 
         ////////////////
