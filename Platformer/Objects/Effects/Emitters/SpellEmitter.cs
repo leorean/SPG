@@ -23,7 +23,7 @@ namespace Platformer.Objects.Effects.Emitters
             Position = new Vector2(emitter.Position.X - 4 + (float)RND.Next * 8, emitter.Position.Y - 4 + (float)RND.Next * 8);
 
             Depth = Globals.LAYER_PLAYER + .00005f;
-            Scale = new Vector2(1 + (float)RND.Next * .5f);
+            Scale = new Vector2(1.5f + (float)RND.Next * .5f);
             Alpha = 0f;
             Angle = (float)(RND.Next * 2 * Math.PI);
         }
@@ -32,9 +32,9 @@ namespace Platformer.Objects.Effects.Emitters
         {
             base.Update(gameTime);
 
-            Alpha = Math.Min(Alpha + .1f, 1f);
+            Alpha = Math.Min(Alpha + .3f, 1f);
 
-            var player = Emitter.Parent as Player;
+            var player = Emitter.Parent?.Parent as Player;
 
             var tx = target.X - 4 + (float)RND.Next * 8;
             var ty = target.Y - 4 + (float)RND.Next * 8;
@@ -51,14 +51,15 @@ namespace Platformer.Objects.Effects.Emitters
                 //part.Depth = Depth;
                 //part.XVel *= .5f;
                 //part.YVel *= .5f;
-                if (RND.Next * 100 < 20)
-                {
-                    var part = new PlayerLevitationParticle(Emitter);
-                    part.XVel = -.1f + (float)RND.Next * .2f;
-                    part.YVel = -.1f + (float)RND.Next * .2f;
-                    part.Position = Position + new Vector2((float)MathUtil.LengthDirX(part.Angle) * 4, (float)MathUtil.LengthDirY(part.Angle) * 4);
-                    part.Depth = Depth;
-                }
+
+                //if (RND.Next * 100 < 20)
+                //{
+                //    var part = new PlayerLevitationParticle(Emitter);
+                //    part.XVel = -.1f + (float)RND.Next * .2f;
+                //    part.YVel = -.1f + (float)RND.Next * .2f;
+                //    part.Position = Position + new Vector2((float)MathUtil.LengthDirX(part.Angle) * 4, (float)MathUtil.LengthDirY(part.Angle) * 4);
+                //    part.Depth = Depth;
+                //}
                 LifeTime = 0;
             }
         }

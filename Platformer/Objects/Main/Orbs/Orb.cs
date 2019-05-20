@@ -85,8 +85,8 @@ namespace Platformer.Objects.Main.Orbs
 
             MpCost.Add(SpellType.STAR, new Dictionary<SpellLevel, int>
             {
-                {SpellLevel.ONE, 3 },
-                {SpellLevel.TWO, 5 },
+                {SpellLevel.ONE, 1 },
+                {SpellLevel.TWO, 2 },
                 {SpellLevel.THREE, 1 },
             });
 
@@ -113,6 +113,8 @@ namespace Platformer.Objects.Main.Orbs
             } else
                 alpha = Math.Min(alpha + .1f, 1);
 
+            spellEmitter.Active = false;
+
             switch (State)
             {
                 case OrbState.FOLLOW:
@@ -137,7 +139,7 @@ namespace Platformer.Objects.Main.Orbs
                     {
                         State = OrbState.FOLLOW;
                     }
-
+                    
                     break;
                 case OrbState.ATTACK:
                     headBackTimer = 20;
@@ -151,50 +153,51 @@ namespace Platformer.Objects.Main.Orbs
 
                     // attack projectiles
 
-                    
-                    if (player.MP >= MpCost[Type][Level] && cooldown == 0)
+                    spellEmitter.Active = true;
+
+                    if (player.MP >= MpCost[Type][Level])
                     {
-                        if (Type != SpellType.NONE)
-                            spellEmitter.Active = true;
-
-                        player.MP -= MpCost[Type][Level];
-
-                        switch (Type)
+                        if (cooldown == 0)
                         {
-                            case SpellType.STAR:
-                                
-                                switch (Level)
-                                {
-                                    case SpellLevel.ONE:
-                                        cooldown = 25;
-                                        break;
-                                    case SpellLevel.TWO:
-                                        cooldown = 15;
-                                        break;
-                                    case SpellLevel.THREE:
-                                        cooldown = 8;
-                                        break;
-                                }
+                            player.MP -= MpCost[Type][Level];
 
-                                var proj = new StarProjectile(X, Y, Level);
+                            switch (Type)
+                            {
+                                case SpellType.STAR:
 
-                                // recoil + projectile speed:
+                                    switch (Level)
+                                    {
+                                        case SpellLevel.ONE:
+                                            cooldown = 25;
+                                            break;
+                                        case SpellLevel.TWO:
+                                            cooldown = 15;
+                                            break;
+                                        case SpellLevel.THREE:
+                                            cooldown = 8;
+                                            break;
+                                    }
 
-                                var degAngle = MathUtil.VectorToAngle(new Vector2(targetPosition.X - player.X, targetPosition.Y - player.Y));
+                                    var proj = new StarProjectile(X, Y, Level);
 
-                                var coilX = (float)MathUtil.LengthDirX(degAngle);
-                                var coilY = (float)MathUtil.LengthDirY(degAngle);
+                                    // recoil + projectile speed:
 
-                                proj.XVel = coilX * 3;
-                                proj.YVel = coilY * 3;
+                                    var degAngle = MathUtil.VectorToAngle(new Vector2(targetPosition.X - player.X, targetPosition.Y - player.Y));
 
-                                XVel += -2 * coilX;
-                                YVel += -2 * coilY;
-                                
-                                break;
-                            // TODO: other spells!!!
-                            default:
-                                break;
+                                    var coilX = (float)MathUtil.LengthDirX(degAngle);
+                                    var coilY = (float)MathUtil.LengthDirY(degAngle);
+
+                                    proj.XVel = coilX * 3;
+                                    proj.YVel = coilY * 3;
+
+                                    XVel += -2 * coilX;
+                                    YVel += -2 * coilY;
+
+                                    break;
+                                // TODO: other spells!!!
+                                default:
+                                    break;
+                            }
                         }
                     } else
                     {
@@ -207,7 +210,7 @@ namespace Platformer.Objects.Main.Orbs
                             new StarEmitter(X, Y);
                             cooldown = 25;
                         }
-
+                        
                     }
 
                     Move(XVel, YVel);

@@ -42,7 +42,7 @@ namespace Platformer.Objects.Main
 
         public float Coins { get; set; } = 0;
 
-        public Dictionary<SpellType, SpellLevel> Spells { get; set; } = new Dictionary<SpellType, SpellLevel> { { SpellType.NONE, SpellLevel.ONE }, { SpellType.STAR, SpellLevel.ONE } };
+        public Dictionary<SpellType, SpellLevel> Spells { get; set; } = new Dictionary<SpellType, SpellLevel> { { SpellType.NONE, SpellLevel.ONE }, { SpellType.STAR, SpellLevel.THREE } };
         public int SpellIndex;
         
         // ID, Typename

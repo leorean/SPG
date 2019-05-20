@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Platformer.Main;
 using Platformer.Objects.Level;
 using Platformer.Objects.Main;
@@ -68,6 +69,13 @@ namespace Platformer.Objects.Projectiles
                 new Effects.SingularEffect(X, Y, 3);
                 Destroy();
             }
+        }
+        public override void Draw(SpriteBatch sb, GameTime gameTime)
+        {
+            //base.Draw(sb, gameTime);
+            sb.Draw(Texture, Position - new Vector2(2f * XVel, 2f * YVel), null, new Color(Color, .4f), Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0002f);
+            sb.Draw(Texture, Position - new Vector2(1f * XVel, 1f * YVel), null, new Color(Color, .7f), Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0001f);
+            sb.Draw(Texture, Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
         }
     }
 }
