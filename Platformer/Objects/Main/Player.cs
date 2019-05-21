@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SPG;
 using SPG.Draw;
-using Platformer.Objects.Enemy;
+using Platformer.Objects.Enemies;
 using Platformer.Objects.Effects;
 using Platformer.Objects;
 using Platformer.Main;
@@ -697,6 +697,8 @@ namespace Platformer.Objects.Main
                         {
 
                             Stats.SpellEXP[currentSpellType] = Math.Min(Stats.SpellEXP[currentSpellType] + (int)s.Exp, maxSpellExpForLevel);
+
+                            MP = Math.Min(MP + (int)s.Exp, Stats.MaxMP);
 
                             if (Stats.SpellEXP[currentSpellType] == maxSpellExpForLevel)
                             {

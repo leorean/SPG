@@ -8,7 +8,10 @@ namespace Platformer.Objects.Level
 
     public abstract class Collider : RoomObject
     {
-        public Collider(float x, float y, Room room) : base(x, y, room) { }
+        public Collider(float x, float y, Room room) : base(x, y, room)
+        {
+            //Room.Colliders.Add(this);
+        }
     }
 
     public class Platform : Collider

@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Platformer.Objects;
 using Platformer.Objects.Effects;
 using Platformer.Objects.Effects.Emitters;
-using Platformer.Objects.Enemy;
+using Platformer.Objects.Enemies;
 using Platformer.Objects.Main;
 using SPG;
 using SPG.Map;

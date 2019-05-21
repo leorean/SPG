@@ -88,8 +88,8 @@ namespace Platformer.Objects.Main.Orbs
 
             MpCost.Add(SpellType.STAR, new Dictionary<SpellLevel, int>
             {
-                {SpellLevel.ONE, 1 },
-                {SpellLevel.TWO, 2 },
+                {SpellLevel.ONE, 2 },
+                {SpellLevel.TWO, 3 },
                 {SpellLevel.THREE, 1 },
             });
 
@@ -104,9 +104,9 @@ namespace Platformer.Objects.Main.Orbs
 
             MaxEXP.Add(SpellType.STAR, new Dictionary<SpellLevel, int>
             {
-                {SpellLevel.ONE, 25 },
-                {SpellLevel.TWO, 80 },
-                {SpellLevel.THREE, 200 },
+                {SpellLevel.ONE, 20 },
+                {SpellLevel.TWO, 40 },
+                {SpellLevel.THREE, 120 },
             });
         }
 
@@ -186,7 +186,7 @@ namespace Platformer.Objects.Main.Orbs
                                     switch (Level)
                                     {
                                         case SpellLevel.ONE:
-                                            cooldown = 25;
+                                            cooldown = 20;
                                             break;
                                         case SpellLevel.TWO:
                                             cooldown = 15;

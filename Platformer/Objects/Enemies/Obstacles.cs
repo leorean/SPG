@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SPG.Draw;
 
-namespace Platformer.Objects.Enemy
+namespace Platformer.Objects.Enemies
 {
     public abstract class Obstacle : RoomObject
     {

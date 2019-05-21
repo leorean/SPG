@@ -40,7 +40,7 @@ namespace Platformer.Objects.Items
             BoundingBox = new SPG.Util.RectF(-4, -4, 8, 8);
             Depth = Globals.LAYER_ITEM;
             
-            Visible = false;
+            Visible = false;            
         }
 
         public override void Update(GameTime gameTime)

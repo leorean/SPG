@@ -2,7 +2,7 @@
 using Platformer.Main;
 using Platformer.Objects.Effects;
 using Platformer.Objects.Effects.Emitters;
-using Platformer.Objects.Enemy;
+using Platformer.Objects.Enemies;
 using Platformer.Objects.Items;
 using Platformer.Objects.Level;
 using Platformer.Objects.Main.Orbs;
@@ -64,6 +64,10 @@ namespace Platformer.Objects.Main
 
         public void ChangeRoom(Room oldRoom, Room newRoom)
         {
+
+            //oldRoom.Colliders.Clear();
+            //newRoom.Colliders.Clear();
+
             // unload all rooms that exist
             Room[] tmp = new Room[LoadedRooms.Count];
             LoadedRooms.CopyTo(tmp);
@@ -280,6 +284,11 @@ namespace Platformer.Objects.Main
             ObjectManager.Enable<GlobalWaterBubbleEmitter>();
             ObjectManager.Enable<PlayerGhost>();
             ObjectManager.Enable<Orb>();
+
+            // todo: solve more smoothly?
+            foreach (var o in ObjectManager.Objects.Where(o => o is Enemy && (o as RoomObject).Room == room)) {
+                ObjectManager.Enable(o);
+            }
 
             // ++++ update camera ++++
 

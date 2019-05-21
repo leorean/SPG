@@ -15,7 +15,7 @@ using Platformer.Main;
 using Platformer.Objects;
 using SPG.Draw;
 using SPG.Save;
-using Platformer.Objects.Enemy;
+using Platformer.Objects.Enemies;
 using System.Threading.Tasks;
 using System.Threading;
 using Platformer.Objects.Effects;

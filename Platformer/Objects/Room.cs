@@ -17,7 +17,9 @@ namespace Platformer.Objects
         public int Background { get; set; } = -1;
 
         public bool SwitchState { get; set; }
-        
+
+        //public List<ICollidable> Colliders { get; set; } = new List<ICollidable>();
+
         public Room(int x, int y, int width, int height) : base(x, y, "room")
         {
             BoundingBox = new RectF(0, 0, width, height);            

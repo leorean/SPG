@@ -1,5 +1,5 @@
 ﻿using Platformer.Main;
-using Platformer.Objects.Enemy;
+using Platformer.Objects.Enemies;
 using Platformer.Objects.Items;
 using Platformer.Objects.Level;
 using SPG.Objects;

@@ -15,11 +15,12 @@ using SPG.Draw;
 using SPG.Objects;
 using SPG.Util;
 
-namespace Platformer.Objects.Enemy
+namespace Platformer.Objects.Enemies
 {
     public abstract class Enemy : Obstacle , IMovable
     {
         public int HP { get; protected set; }
+        public int EXP { get; protected set; } = 3;
 
         public Direction Direction { get; set; }
 
@@ -96,25 +97,22 @@ namespace Platformer.Objects.Enemy
                     var vec = Position - (projectile.Position + new Vector2(0, 0));
                     var angle = vec.VectorToAngle();
                     Hit(projectile.Damage, (float)angle);
-
-                    //Hit(projectile.Damage);
+                    
                     projectile.Kill();
-                }
-
-                //if (obstacle != null)
-                //{
-                //    var vec = Position - (obstacle.Center + new Vector2(0, 0));
-                //    var angle = vec.VectorToAngle();
-                //    Hit(obstacle.Damage, (float)angle);
-                //}
+                }                
             }
             else // death
             {
                 hitTimeout = 0;
                 hitPointsReceived = 0;
 
-                SpellEXP.Spawn(X, Y, 5);
+                SpellEXP.Spawn(X, Y, EXP);
+
                 new SingularEffect(X, Y);
+
+                if (RND.Next * 100 < 20)
+                    new Potion(X, Y, Room, PotionType.HP);
+
                 Destroy();
             }
             

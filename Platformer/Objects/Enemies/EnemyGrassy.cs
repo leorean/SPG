@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SPG.Map;
 
-namespace Platformer.Objects.Enemy
+namespace Platformer.Objects.Enemies
 {
     class EnemyGrassy : Enemy
     {
@@ -34,6 +34,7 @@ namespace Platformer.Objects.Enemy
             Direction = Direction.RIGHT;
 
             HP = 20;
+            EXP = 12;
             Damage = 2;
 
             Gravity = .1f;
@@ -86,6 +87,9 @@ namespace Platformer.Objects.Enemy
                 case State.FOLLOW_PLAYER:
 
                     onGround = this.MoveAdvanced(false);
+
+                    if (onGround && Math.Abs(X - player.X) < 1 * Globals.TILE)
+                        YVel = -1.5f;
 
                     Direction = (Direction)Math.Sign(player.X - X);
 

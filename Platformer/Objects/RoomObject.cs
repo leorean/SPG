@@ -17,7 +17,7 @@ namespace Platformer.Objects
         {
             Room = room;
             Position = new Microsoft.Xna.Framework.Vector2(x, y);
-            Depth = Globals.LAYER_BG + .001f;
+            Depth = Globals.LAYER_BG + .001f;            
         }
     }    
 }

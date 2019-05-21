@@ -63,8 +63,8 @@
     <Compile Include="Objects\Effects\ToolTip.cs" />
     <Compile Include="Objects\Effects\Transition.cs" />
     <Compile Include="Objects\Effects\SingularEffect.cs" />
-    <Compile Include="Objects\Enemy\Enemy.cs" />
-    <Compile Include="Objects\Enemy\EnemyGrassy.cs" />
+    <Compile Include="Objects\Enemies\Enemy.cs" />
+    <Compile Include="Objects\Enemies\EnemyGrassy.cs" />
     <Compile Include="Objects\IMovable.cs" />
     <Compile Include="Objects\Items\AbilityItem.cs" />
     <Compile Include="Objects\Items\Coin.cs" />
@@ -96,7 +96,7 @@
     <Compile Include="Objects\Main\RoomObjectLoader.cs" />
     <Compile Include="Objects\Main\SaveGame.cs" />
     <Compile Include="Objects\Effects\FollowFont.cs" />
-    <Compile Include="Objects\Enemy\Obstacles.cs" />
+    <Compile Include="Objects\Enemies\Obstacles.cs" />
     <Compile Include="Objects\Main\Player.cs" />
     <Compile Include="Objects\Level\PushBlock.cs" />
     <Compile Include="Objects\Room.cs" />
