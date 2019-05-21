@@ -37,6 +37,10 @@ namespace Platformer.Objects.Effects.Emitters
                     colorIndex = RND.Int(Potion.MpColors.Count - 1);
                     Color = Potion.MpColors[colorIndex];
                     break;
+                case PotionType.Regen:
+                    colorIndex = RND.Int(Potion.RegenColors.Count - 1);
+                    Color = Potion.RegenColors[colorIndex];
+                    break;
             }
         }
 

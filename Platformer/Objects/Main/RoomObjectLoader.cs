@@ -171,6 +171,11 @@ namespace Platformer.Objects.Main
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
                             break;
+                        case 713: // MP Regen +
+                            new StatUpItem(i * Globals.TILE + 8, j * Globals.TILE + 8, room, StatType.Regen);
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            break;
                         case 769:
                             new EnemyGrassy(i * Globals.TILE + 8, j * Globals.TILE + 8, room);
                             t.TileOptions.Visible = false;

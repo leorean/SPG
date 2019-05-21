@@ -12,7 +12,7 @@ namespace Platformer.Objects.Items
 {
     public class AbilityItem : Item
     {
-        enum State
+        protected enum State
         {
             IDLE, TAKING, RISING, RISEN, TAKEN
         }
@@ -22,7 +22,7 @@ namespace Platformer.Objects.Items
         public delegate void OnAbility();
         public OnAbility OnObtain;
 
-        private State state = State.IDLE;
+        protected State state = State.IDLE;
 
         protected Player player;
         protected float maxYDist = 2 * Globals.TILE;

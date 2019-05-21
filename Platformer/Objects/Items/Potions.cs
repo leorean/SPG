@@ -12,7 +12,7 @@ namespace Platformer.Objects.Items
 {
     public enum PotionType
     {
-        HP, MP//, Regen
+        HP, MP, Regen
     }
 
     public class Potion : Item
@@ -29,6 +29,13 @@ namespace Platformer.Objects.Items
             new Color(3, 243, 243),
             new Color(143, 255, 249),
             new Color(95, 205, 208)
+        };
+
+        public static List<Color> RegenColors = new List<Color>
+        {
+            new Color(242, 255, 156),
+            new Color(170, 233, 60),
+            new Color(104, 197, 100)
         };
 
         public PotionType Type { get; private set; }
@@ -56,7 +63,11 @@ namespace Platformer.Objects.Items
                 amount = 20;
                 Texture = AssetManager.Potions[1];
             }
-            
+            if (Type == PotionType.Regen)
+            {
+                throw new NotImplementedException("A MP regen potion doesn't make sense at this point!");
+            }
+
             Save = false;
             Respawn = false;
         }
