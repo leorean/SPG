@@ -19,18 +19,22 @@ namespace Platformer.Objects.Items
         
         public string Text { get; set; }
 
+        public delegate void OnAbility();
+        public OnAbility OnObtain;
+
         private State state = State.IDLE;
 
-        private Player player;
+        protected Player player;
+        protected float maxYDist = 2 * Globals.TILE;
+
+        protected bool flashOnTaken = true;
+
         private float yDist = -3;
         private float sin = 0;
         
         public ObtainShineEmitter ObtainShineEmitter { get; private set; }
-        private ObtainParticleEmitter obtainParticleEmitter;
-
-        public delegate void OnAbility();
-        public OnAbility OnAbilityMethod;
-
+        protected ObtainParticleEmitter obtainParticleEmitter;
+                
         public AbilityItem(float x, float y, Room room, string name = null) : base(x, y, room, name)
         {
             Visible = false;
@@ -81,9 +85,9 @@ namespace Platformer.Objects.Items
             if (state == State.RISING)
             {
                 Position = new Vector2(player.X, player.Y + yDist);
-                yDist = Math.Max(yDist - .4f, -2 * Globals.TILE);
+                yDist = Math.Max(yDist - .4f, -maxYDist);
 
-                if (yDist == -2 * Globals.TILE)
+                if (yDist == -maxYDist)
                 {
                     var msgBox = new MessageBox(Text, name:Name);
                     msgBox.OnCompleted = () => {                        
@@ -99,6 +103,9 @@ namespace Platformer.Objects.Items
             }
             if (state == State.TAKEN)
             {
+                if (Taken)
+                    return;
+
                 ObtainShineEmitter.Active = false;
                 obtainParticleEmitter.Active = false;
 
@@ -111,10 +118,13 @@ namespace Platformer.Objects.Items
                 if (Math.Abs(X - player.X) < 2 && Math.Abs(Y - ty) < 2)
                 {
                     player.State = Player.PlayerState.IDLE;
-                    
-                    var eff = new FlashEmitter(X, Y);
 
-                    OnAbilityMethod?.Invoke();
+                    if (flashOnTaken)
+                    {
+                        var eff = new FlashEmitter(X, Y);
+                    }
+
+                    OnObtain?.Invoke();
 
                     Taken = true;
                 }

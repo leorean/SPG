@@ -20,7 +20,7 @@ namespace Platformer.Main
 
         public GameStats gameStats;
         
-        public List<int> items;
+        //public List<int> items;
 
         public int currentBG = -1;
         
@@ -29,7 +29,7 @@ namespace Platformer.Main
         public SaveGame(string fileName)
         {
             FileName = fileName;
-            items = new List<int>();
+            //items = new List<int>();
             gameStats = new GameStats();
         }
 

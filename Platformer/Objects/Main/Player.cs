@@ -1482,7 +1482,7 @@ namespace Platformer.Objects.Main
                         KeyObject.Throw();
                     else if (State != PlayerState.CARRYOBJECT_TAKE)
                     {
-                        if (k_downPressed || k_upPressed)
+                        if (k_attackPressed)
                         {
                             KeyObject.Throw();
                             State = PlayerState.CARRYOBJECT_THROW;

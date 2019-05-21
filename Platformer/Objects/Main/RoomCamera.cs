@@ -90,7 +90,8 @@ namespace Platformer.Main
             player.State = Player.PlayerState.IDLE;
             player.Position = newPosition;
 
-            player.Orb.Position = player.Position;
+            if (player.Orb != null)
+                player.Orb.Position = player.Position;
 
             tx = newPosition.X;
             ty = newPosition.Y;

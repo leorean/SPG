@@ -72,6 +72,7 @@
     <Compile Include="Objects\Items\Potions.cs" />
     <Compile Include="Objects\Items\Chest.cs" />
     <Compile Include="Objects\Items\SpellEXP.cs" />
+    <Compile Include="Objects\Items\StatUpItem.cs" />
     <Compile Include="Objects\Level\JumpControlDisabler.cs" />
     <Compile Include="Objects\Level\Door.cs" />
     <Compile Include="Objects\Level\GroundSwitch.cs" />

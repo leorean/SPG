@@ -30,7 +30,7 @@ namespace Platformer.Objects.Level
         
         public Key(float x, float y, Room room) : base(x, y, room)
         {
-            Depth = Globals.LAYER_PLAYER + .001f;
+            Depth = Globals.LAYER_PLAYER + .00001f;
             
             Texture = GameManager.Current.Map.TileSet[581];
 

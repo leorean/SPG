@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using SPG.Map;
 using Platformer.Objects.Effects.Emitters;
 using Microsoft.Xna.Framework;
+using static Platformer.Objects.Items.StatUpItem;
 
 namespace Platformer.Objects.Main
 {
@@ -160,11 +161,21 @@ namespace Platformer.Objects.Main
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
                             break;
+                        case 711: // max HP
+                            new StatUpItem(i * Globals.TILE + 8, j * Globals.TILE + 8, room, StatType.HP);
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            break;
+                        case 712: // max MP
+                            new StatUpItem(i * Globals.TILE + 8, j * Globals.TILE + 8, room, StatType.MP);
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            break;
                         case 769:
                             new EnemyGrassy(i * Globals.TILE + 8, j * Globals.TILE + 8, room);
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
-                            break;
+                            break;                        
                         default:
                             var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room);
                             if (t.ID == 645) t.TileOptions.Visible = false;  // <- invisible blocks
@@ -209,23 +220,23 @@ namespace Platformer.Objects.Main
                                 item = new AbilityItem(x + 8, y + 8, room, itemName);
                                 item.Texture = AssetManager.Items[0];
                                 item.Text = itemText;
-                                item.OnAbilityMethod = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.PUSH; };
+                                item.OnObtain = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.PUSH; };
                                 break;
                             case 1: // ability item: orb
                                 item = new AbilityItem(x + 8, y + 8, room, itemName);
                                 item.Texture = AssetManager.Items[1];
-                                item.OnAbilityMethod = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.ORB; };
+                                item.OnObtain = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.ORB; };
                                 item.Scale = new Vector2(.5f);
                                 item.Text = itemText;
                                 break;
                             case 2: // spell: shoot star
                                 item = new AbilityItem(x + 8, y + 8, room, itemName);
                                 item.Texture = AssetManager.Items[2];
-                                item.OnAbilityMethod = () => {
+                                item.OnObtain = () => {
                                     GameManager.Current.AddSpell(Orbs.SpellType.STAR);
                                 };  
                                 item.Text = itemText;
-                                break;
+                                break;                            
                                 // TODO: add other item types, collectables etc.
                         }                        
                     }
