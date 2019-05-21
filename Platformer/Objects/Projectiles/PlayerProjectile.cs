@@ -8,7 +8,7 @@ using Platformer.Main;
 
 namespace Platformer.Objects.Projectiles
 {
-    public class PlayerProjectile : SPG.Objects.GameObject
+    public abstract class PlayerProjectile : SPG.Objects.GameObject
     {
         public int Damage { get; protected set; } = 1;
 
@@ -23,5 +23,7 @@ namespace Platformer.Objects.Projectiles
                 Destroy();
 
         }
+
+        public abstract void Kill();
     }
 }

@@ -76,7 +76,7 @@ namespace Platformer.Objects.Items
                     if (onGround)
                     {
                         angVel = -.1f + (float)RND.Next * .2f;
-                        YVel = -.5f * yp;
+                        YVel = -.8f * yp;
 
                         XVel *= .5f;
 

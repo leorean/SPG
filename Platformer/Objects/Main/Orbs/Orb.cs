@@ -200,7 +200,8 @@ namespace Platformer.Objects.Main.Orbs
 
                                     // recoil + projectile speed:
 
-                                    var degAngle = MathUtil.VectorToAngle(new Vector2(targetPosition.X - player.X, targetPosition.Y - player.Y));
+                                    //var degAngle = MathUtil.VectorToAngle(new Vector2(targetPosition.X - player.X, targetPosition.Y - player.Y));
+                                    var degAngle = MathUtil.VectorToAngle(new Vector2(targetPosition.X - player.X, 0));
 
                                     var coilX = (float)MathUtil.LengthDirX(degAngle);
                                     var coilY = (float)MathUtil.LengthDirY(degAngle);

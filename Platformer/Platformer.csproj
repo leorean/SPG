@@ -63,6 +63,8 @@
     <Compile Include="Objects\Effects\ToolTip.cs" />
     <Compile Include="Objects\Effects\Transition.cs" />
     <Compile Include="Objects\Effects\SingularEffect.cs" />
+    <Compile Include="Objects\Enemy\Enemy.cs" />
+    <Compile Include="Objects\Enemy\EnemyGrassy.cs" />
     <Compile Include="Objects\IMovable.cs" />
     <Compile Include="Objects\Items\AbilityItem.cs" />
     <Compile Include="Objects\Items\Coin.cs" />

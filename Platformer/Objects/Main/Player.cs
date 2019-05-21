@@ -290,8 +290,8 @@ namespace Platformer.Objects.Main
                 }                
             }
 
-                // death penalty
-                if (hpPrev > 0 && HP == 0)
+            // death penalty
+            if (hpPrev > 0 && HP == 0)
             {
                 var temp = (float)Math.Floor(Stats.Coins * .5f);
                 var amountToDrop = Stats.Coins - temp;

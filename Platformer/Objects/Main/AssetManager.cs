@@ -53,6 +53,10 @@ namespace Platformer.Objects.Main
         public static Texture2D WaterMill { get; private set; }
         public static Texture2D WaterMillPlatform { get; private set; }
 
+        // enemies
+
+        public static TextureSet EnemyGrassy { get; private set; }
+
         // orb
 
         public static TextureSet Orbs { get; private set; }
@@ -90,6 +94,8 @@ namespace Platformer.Objects.Main
             var waterMillSheet = content.Load<Texture2D>("watermill");
             WaterMill = waterMillSheet.Crop(new Rectangle(0, 0, 128, 128));
             WaterMillPlatform = waterMillSheet.Crop(new Rectangle(128, 0, 16, 16));
+
+            EnemyGrassy = content.LoadTextureSet("enemyGrassy");
 
             Orbs = content.LoadTextureSet("orb", 32, 32);
 

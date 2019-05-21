@@ -66,8 +66,7 @@ namespace Platformer.Objects.Projectiles
             
             if (solid || tooFar)
             {
-                new Effects.SingularEffect(X, Y, 3);
-                Destroy();
+                Kill();
             }
         }
         public override void Draw(SpriteBatch sb, GameTime gameTime)
@@ -76,6 +75,12 @@ namespace Platformer.Objects.Projectiles
             sb.Draw(Texture, Position - new Vector2(2f * XVel, 2f * YVel), null, new Color(Color, .4f), Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0002f);
             sb.Draw(Texture, Position - new Vector2(1f * XVel, 1f * YVel), null, new Color(Color, .7f), Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0001f);
             sb.Draw(Texture, Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
+        }
+
+        public override void Kill()
+        {
+            new Effects.SingularEffect(X, Y, 3);
+            Destroy();
         }
     }
 }
