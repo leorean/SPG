@@ -306,6 +306,7 @@ namespace Platformer.Objects.Main
             var ouch = new StarEmitter(X, Y);
 
             var dmgFont = new FollowFont(X, Y - Globals.TILE, $"-{hitPoints}");
+            dmgFont.Color = Color.Red;
             dmgFont.Target = this;
 
             if (State == PlayerState.IDLE || State == PlayerState.WALK || State == PlayerState.GET_UP)

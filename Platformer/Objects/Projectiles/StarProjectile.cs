@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Platformer.Main;
+using Platformer.Objects.Effects.Emitters;
 using Platformer.Objects.Level;
 using Platformer.Objects.Main;
 using Platformer.Objects.Main.Orbs;
@@ -38,7 +39,7 @@ namespace Platformer.Objects.Projectiles
                     Damage = 2;
                     break;
                 case SpellLevel.THREE:
-                    Texture = AssetManager.Projectiles[0];
+                    Texture = AssetManager.Projectiles[2];
                     maxDist = 8 * Globals.TILE;
                     Damage = 1;
                     break;
@@ -79,7 +80,8 @@ namespace Platformer.Objects.Projectiles
 
         public override void Kill()
         {
-            new Effects.SingularEffect(X, Y, 3);
+            //new Effects.SingularEffect(X, Y, 3);
+            new StarEmitter(X, Y, 2, 0);
             Destroy();
         }
     }

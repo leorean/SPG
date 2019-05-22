@@ -22,6 +22,8 @@ namespace Platformer.Objects.Items
         public delegate void OnAbility();
         public OnAbility OnObtain;
 
+        protected Color? hiColor = null;
+
         protected State state = State.IDLE;
 
         protected Player player;
@@ -89,7 +91,7 @@ namespace Platformer.Objects.Items
 
                 if (yDist == -maxYDist)
                 {
-                    var msgBox = new MessageBox(Text, name:Name);
+                    var msgBox = new MessageBox(Text, name:Name, hiColor:hiColor);
                     msgBox.OnCompleted = () => {                        
                         state = State.TAKEN;
                     };

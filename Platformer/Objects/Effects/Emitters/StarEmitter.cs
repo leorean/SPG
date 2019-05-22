@@ -17,7 +17,7 @@ namespace Platformer.Objects.Effects.Emitters
     {
         float maxLifeTime = 40f;
 
-        public StarParticle(ParticleEmitter emitter) : base(emitter)
+        public StarParticle(ParticleEmitter emitter, float initialSpeed) : base(emitter)
         {
             LifeTime = (int)maxLifeTime;
             
@@ -26,7 +26,7 @@ namespace Platformer.Objects.Effects.Emitters
             Angle = (float)(RND.Next * 360);
             DrawOffset = new Vector2(8, 8);
 
-            float spd = .5f + (float)(RND.Next * 1.5f);
+            float spd = .5f + (float)(RND.Next * initialSpeed);
 
             XVel = (float)MathUtil.LengthDirX(Angle) * spd;
             YVel = (float)MathUtil.LengthDirY(Angle) * spd;
@@ -46,9 +46,12 @@ namespace Platformer.Objects.Effects.Emitters
 
     public class StarEmitter : ParticleEmitter
     {
-        public StarEmitter(float x, float y) : base(x, y)
+        private float initialSpeed;
+
+        public StarEmitter(float x, float y, int spawnRate = 6, float initialSpeed = 1.5f) : base(x, y)
         {
-            SpawnRate = 6;
+            SpawnRate = spawnRate;
+            this.initialSpeed = initialSpeed;
         }
 
         public override void Update(GameTime gameTime)
@@ -63,8 +66,9 @@ namespace Platformer.Objects.Effects.Emitters
 
         public override void CreateParticle()
         {
-            var particle = new StarParticle(this);
+            var particle = new StarParticle(this, initialSpeed);
             particle.Texture = AssetManager.StarParticle;
+            particle.Color = Color;
         }
     }
 }

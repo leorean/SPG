@@ -125,6 +125,7 @@ namespace Platformer.Objects.Enemies
                 {
                     var font = new FollowFont(X, Top - 8, $"-{hitPointsReceived}");
                     font.Target = this;
+                    font.Color = Color.Red;
                 }
                 hitPointsReceived = 0;
             }

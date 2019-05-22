@@ -31,10 +31,10 @@ namespace Platformer.Objects.Effects
             Position = new Vector2(x, y);
             this.text = text;
 
-            alpha = 1.5f;
+            alpha = 2f;
 
             font = AssetManager.DamageFont.Copy();
-            Color = Color.Red;
+            Color = Color.White;
             
             font.Halign = Font.HorizontalAlignment.Center;
             font.Valign = Font.VerticalAlignment.Center;
@@ -52,9 +52,9 @@ namespace Platformer.Objects.Effects
                 Position = new Vector2(Target.X + offX, Target.Y + offY);
             }
             
-            alpha = Math.Max(alpha - .02f, 0);
+            alpha = Math.Max(alpha - .03f, 0);
 
-            if (alpha < 1) offY -= .2f;
+            if (alpha < 1) offY -= .5f;
 
             Visible = true;
 

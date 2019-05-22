@@ -19,6 +19,7 @@ namespace Platformer.Objects.Items
     {
         public static List<Color> HpColors = new List<Color>
         {
+            new Color(248, 40, 40),
             new Color(218, 36, 0),
             new Color(231, 99, 73),
             new Color(255, 90, 0)
@@ -89,7 +90,7 @@ namespace Platformer.Objects.Items
                 case PotionType.HP:
                     player.HP = Math.Min(player.HP + amount, GameManager.Current.SaveGame.gameStats.MaxHP);
 
-                    var fntHp = new FollowFont(player.X, player.Y - Globals.TILE, $"+{amount}");
+                    var fntHp = new FollowFont(player.X, player.Y - Globals.TILE, $"+{amount} HP");
                     fntHp.Target = player;
 
                     fntHp.Color = HpColors.First();
@@ -98,7 +99,7 @@ namespace Platformer.Objects.Items
                 case PotionType.MP:
                     player.MP = Math.Min(player.MP + amount, GameManager.Current.SaveGame.gameStats.MaxMP);
 
-                    var fntMp = new FollowFont(player.X, player.Y - Globals.TILE, $"+{amount}");
+                    var fntMp = new FollowFont(player.X, player.Y - Globals.TILE, $"+{amount} MP");
                     fntMp.Target = player;
 
                     fntMp.Color = MpColors.First();

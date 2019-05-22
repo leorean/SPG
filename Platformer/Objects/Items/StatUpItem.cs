@@ -35,13 +35,16 @@ namespace Platformer.Objects.Items
             switch (type)
             {
                 case StatType.HP:
-                    potionEmitter = new PotionEmitter(X, Y - 8, PotionType.HP);                    
-                    Texture = AssetManager.Items[3];                    
+                    potionEmitter = new PotionEmitter(X, Y - 8, PotionType.HP);
+                    Texture = AssetManager.Items[3];
+
+                    hiColor = new Color(248, 40, 40);
+
                     Name = "HP-Up";
-                    Text = "Increased max. HP by 5.";
+                    Text = "~Max. HP~ increased by 3.";
                     OnObtain = () => 
                     {
-                        player.Stats.MaxHP += 5;
+                        player.Stats.MaxHP += 3;
                         player.HP = player.Stats.MaxHP;
                         new PotionBurstEmitter(X, Y, PotionType.HP);
                     };
@@ -50,10 +53,10 @@ namespace Platformer.Objects.Items
                     potionEmitter = new PotionEmitter(X, Y - 8, PotionType.MP);
                     Name = "MP-Up";
                     Texture = AssetManager.Items[4];
-                    Text = "Increased max. MP by 10.";
+                    Text = "Max. MP increased by 5.";
                     OnObtain = () => 
                     {
-                        player.Stats.MaxMP += 10;
+                        player.Stats.MaxMP += 5;
                         player.MP = player.Stats.MaxMP;
                         new PotionBurstEmitter(X, Y, PotionType.MP);
                     };
@@ -62,10 +65,10 @@ namespace Platformer.Objects.Items
                     potionEmitter = new PotionEmitter(X, Y - 8, PotionType.Regen);
                     Name = "MP-Regen-Up";
                     Texture = AssetManager.Items[5];
-                    Text = "Increased MP regen.";
+                    Text = "MP regeneration rate increased.";
                     OnObtain = () =>
                     {
-                        player.Stats.MPRegen += .2f;
+                        player.Stats.MPRegen += .1f;
                         player.MP = player.Stats.MaxMP;
                         new PotionBurstEmitter(X, Y, PotionType.Regen);
                     };

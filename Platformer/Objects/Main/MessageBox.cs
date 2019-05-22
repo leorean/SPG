@@ -28,6 +28,8 @@ namespace Platformer.Objects.Main
 
         int timeOut;
 
+        Color? hiColor;
+
         public Action OnCompleted;
 
         /// <summary>
@@ -47,15 +49,15 @@ namespace Platformer.Objects.Main
         /// #b ... B button
         /// #x ... X button
         /// #y ... Y button
-        /// #Y ... Y key
-        /// #X ... X key
+        /// #A ... A key
+        /// #S ... S key
         /// 
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="text"></param>
         /// <param name="name"></param>
-        public MessageBox(string text, bool centerText = false, string name = null) : base(0, 0, name)
+        public MessageBox(string text, bool centerText = false, string name = null, Color? hiColor = null) : base(0, 0, name)
         {
             input = new Input();
 
@@ -83,10 +85,12 @@ namespace Platformer.Objects.Main
 
             Texture = AssetManager.MessageBox;
 
+            this.hiColor = hiColor;
+
             font = AssetManager.DefaultFont.Copy();
             font.Halign = centerText ? Font.HorizontalAlignment.Center : Font.HorizontalAlignment.Left;
             font.Valign = Font.VerticalAlignment.Top;
-
+            
             maxWidth = RoomCamera.Current.ViewWidth - Globals.TILE - 4;
         }
 
@@ -100,6 +104,9 @@ namespace Platformer.Objects.Main
             base.Update(gameTime);
 
             input.Update(gameTime);
+
+            if (hiColor != null)
+                font.HighlightColor = (Color)hiColor;
 
             var kUpPressed = input.IsKeyPressed(Keys.Up, Input.State.Pressed) || input.IsKeyPressed(Keys.S, Input.State.Pressed);
             var kDownPressed = input.IsKeyPressed(Keys.Down, Input.State.Pressed) || input.IsKeyPressed(Keys.A, Input.State.Pressed);
