@@ -38,7 +38,7 @@ namespace Platformer.Objects.Items
                     potionEmitter = new PotionEmitter(X, Y - 8, PotionType.HP);
                     Texture = AssetManager.Items[3];
 
-                    hiColor = new Color(248, 40, 40);
+                    hiColor = Potion.HpColors.First();
 
                     Name = "HP-Up";
                     Text = "~Max. HP~ increased by 3.";
@@ -51,9 +51,12 @@ namespace Platformer.Objects.Items
                     break;
                 case StatType.MP:
                     potionEmitter = new PotionEmitter(X, Y - 8, PotionType.MP);
-                    Name = "MP-Up";
                     Texture = AssetManager.Items[4];
-                    Text = "Max. MP increased by 5.";
+
+                    hiColor = Potion.MpColors.First();
+
+                    Name = "MP-Up";
+                    Text = "~Max. MP~ increased by 5.";
                     OnObtain = () => 
                     {
                         player.Stats.MaxMP += 5;
@@ -63,9 +66,12 @@ namespace Platformer.Objects.Items
                     break;
                 case StatType.Regen:
                     potionEmitter = new PotionEmitter(X, Y - 8, PotionType.Regen);
-                    Name = "MP-Regen-Up";
                     Texture = AssetManager.Items[5];
-                    Text = "MP regeneration rate increased.";
+
+                    hiColor = Potion.RegenColors.First();
+
+                    Name = "MP-Regen-Up";
+                    Text = "~MP regeneration~ rate increased.";
                     OnObtain = () =>
                     {
                         player.Stats.MPRegen += .1f;

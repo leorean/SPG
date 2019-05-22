@@ -66,7 +66,8 @@ namespace Platformer.Objects.Main
         public static Font DefaultFont { get; private set; }
         public static Font DamageFont { get; private set; }
         public static Font HUDFont { get; private set; }
-        
+        public static Font HUDFontSmall { get; private set; }
+
         public static void InitializeContent(ContentManager content)
         {
             // tileset
@@ -117,10 +118,12 @@ namespace Platformer.Objects.Main
             var defaultFont = content.LoadTextureSet("font", 10, 10);
             var damageFont = content.LoadTextureSet("damageFont", 10, 10);
             var hudFont = content.LoadTextureSet("hudFont", 9, 14);
+            var hudFontSmall = content.LoadTextureSet("hudFontSmall", 10, 10);
 
             DefaultFont = new Font(defaultFont, ' ');
             DamageFont = new Font(damageFont, ' ');
             HUDFont = new Font(hudFont, ' ');
+            HUDFontSmall = new Font(hudFontSmall, ' ');
 
         }
     }

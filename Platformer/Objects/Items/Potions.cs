@@ -34,8 +34,8 @@ namespace Platformer.Objects.Items
 
         public static List<Color> RegenColors = new List<Color>
         {
-            new Color(242, 255, 156),
             new Color(170, 233, 60),
+            new Color(242, 255, 156),
             new Color(104, 197, 100)
         };
 

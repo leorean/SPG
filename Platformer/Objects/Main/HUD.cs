@@ -26,8 +26,8 @@ namespace Platformer.Objects.Main
         
         public HUD()
         {
-            //font = AssetManager.HUDFont;
-            font = AssetManager.DamageFont;
+            font = AssetManager.HUDFontSmall;
+            //font = AssetManager.DamageFont;
         }
 
         internal void SetTarget(Player player)
@@ -63,9 +63,10 @@ namespace Platformer.Objects.Main
 
             font.Halign = Font.HorizontalAlignment.Center;
             
-            //font.Draw(sb, x + 16, y + 4, $"1{hp}/1{maxHP}", scale: .5f, depth: .991f);
+
+            font.Draw(sb, x + 24, y + 9.5f, $"{hp}/{maxHP}", scale: .5f, depth: .991f);
             //font.Draw(sb, x + 48, y + 4, $"1{Math.Floor(mp)}/1{maxMP}", scale: .5f, depth: .991f);
-            sb.Draw(AssetManager.HUD, new Vector2(x, y), new Rectangle(0, 0, 256, 144), Color.White, 0, Vector2.Zero, new Vector2(.5f), SpriteEffects.None, .990f);
+            sb.Draw(AssetManager.HUD, new Vector2(x, y), new Rectangle(0, 0, 512, 144), Color.White, 0, Vector2.Zero, new Vector2(.5f), SpriteEffects.None, .990f);
 
             // HP
 
