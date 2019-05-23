@@ -86,6 +86,21 @@ namespace SPG.Draw
             return newTexture;
         }
 
+        public static Texture2D AppendSpacingRight(this Texture2D tex, uint spacing)
+        {
+            if (spacing == 0)
+                return tex;
+
+            Texture2D newTex = new Texture2D(tex.GraphicsDevice, (int)spacing, tex.Height);
+
+            var arr = new Color[spacing * tex.Height];
+            arr = Array.ConvertAll(arr, a => new Color(0, 0, 0, 0));
+
+            newTex.SetData(arr);
+
+            return tex.AppendRight(newTex);
+        }
+
         /// <summary>
         /// Appends a texture on the right side of the current one. Height must be equal.
         /// </summary>

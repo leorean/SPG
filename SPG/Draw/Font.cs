@@ -78,7 +78,7 @@ namespace SPG.Draw
         public float Depth { get; set; } = Globals.LAYER_FONT;
         public Color Color { get; set; } = Color.White;
         public Color HighlightColor { get; set; } = Color.LimeGreen;
-
+        public uint Spacing { get; set; }
         // private
 
         private Dictionary<char, Texture2D> glyphs;
@@ -92,13 +92,15 @@ namespace SPG.Draw
         /// <param name="texture"></param>
         /// <param name="startCharacter"></param>
         /// <param name="spacing"></param>
-        public Font(TextureSet texture, int startCharacter, int spacing = 1)
+        public Font(TextureSet texture, int startCharacter, uint spacing = 1)
         {
             glyphs = new Dictionary<char, Texture2D>();
-            
+
+            Spacing = spacing;
+
             for (var i = 0; i < texture.Count; i++)
             {
-                var tex = texture[i].CropFromBackgroundColor(spacing);
+                var tex = texture[i].CropFromBackgroundColor(0);
                 glyphs.Add((char)(startCharacter + i), tex);
             }
 
@@ -202,6 +204,7 @@ namespace SPG.Draw
                             word = tex;
                             continue;
                         }
+                        tex = tex.AppendSpacingRight(Spacing);
 
                         word = (word == null) ? tex : word.AppendRight(tex);
                     }

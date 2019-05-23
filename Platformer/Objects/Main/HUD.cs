@@ -26,8 +26,8 @@ namespace Platformer.Objects.Main
         
         public HUD()
         {
-            font = AssetManager.HUDFontSmall;
-            //font = AssetManager.DamageFont;
+            //font = AssetManager.HUDFontSmall;
+            font = AssetManager.DamageFont;
         }
 
         internal void SetTarget(Player player)
@@ -54,18 +54,24 @@ namespace Platformer.Objects.Main
             var x = RoomCamera.Current.ViewX;
             var y = RoomCamera.Current.ViewY;
             
-            //font.Halign = Font.HorizontalAlignment.Left;
+            font.Halign = Font.HorizontalAlignment.Center;
             font.Valign = Font.VerticalAlignment.Top;
 
             //font.Draw(sb, x + 2, y + 2, $"HP: {hp}/{maxHP}", scale: .5f, depth: .991f);
             //font.Draw(sb, x + 2, y + 2 + 9, $"MP: {Math.Floor(mp)}/{maxMP}", scale: .5f, depth: .991f);
             //font.Draw(sb, x + 2, y + 2 + 18, $"Coins: {coins}", scale: .5f, depth: .991f);
 
-            font.Halign = Font.HorizontalAlignment.Center;
-            
+            //font.Halign = Font.HorizontalAlignment.Center;
 
-            font.Draw(sb, x + 24, y + 9.5f, $"{hp}/{maxHP}", scale: .5f, depth: .991f);
-            //font.Draw(sb, x + 48, y + 4, $"1{Math.Floor(mp)}/1{maxMP}", scale: .5f, depth: .991f);
+
+            //font.Draw(sb, x + 20, y + 5.5f, $"{hp}/{maxHP}", scale: .5f, depth: .991f);
+            //font.Draw(sb, x + 20, y + 5.5f, $"{hp}/{maxHP}", scale: .5f, depth: .991f);
+            font.Draw(sb, x + 24f, y + 5.5f, $"{hp * 10}", scale: .5f, depth: .991f);
+
+            //font.Draw(sb, x + 8f, y + 18.5f, $"Lv. 1", scale: .5f, depth: .991f);
+            font.Draw(sb, x + 21f, y + 19.5f, $"{mp * 10}", scale: .5f, depth: .991f);
+
+            //font.Draw(sb, x + 8, y + 13, $"1{Math.Floor(mp)}/1{maxMP}", scale: .5f, depth: .991f);
             sb.Draw(AssetManager.HUD, new Vector2(x, y), new Rectangle(0, 0, 512, 144), Color.White, 0, Vector2.Zero, new Vector2(.5f), SpriteEffects.None, .990f);
 
             // HP
