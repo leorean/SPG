@@ -68,7 +68,7 @@ namespace Platformer.Objects.Effects
 
         public void Draw(SpriteBatch sb, GameTime gameTime)
         {
-            sb.Draw(dark, new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY), null, color, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, Globals.LAYER_UI - .001f);
+            sb.Draw(dark, new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY), null, color, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, Globals.LAYER_UI + .001f);
         }
     }    
 }

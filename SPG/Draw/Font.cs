@@ -118,15 +118,7 @@ namespace SPG.Draw
 
         public Font Copy()
         {
-            var copy = new Font();
-
-            copy.Color = Color;
-            copy.Depth = Depth;
-            copy.glyphs = glyphs;
-            copy.Halign = Halign;
-            copy.Valign = Valign;
-            
-            return copy;
+            return (Font)MemberwiseClone();            
         }
 
         public void Update()
