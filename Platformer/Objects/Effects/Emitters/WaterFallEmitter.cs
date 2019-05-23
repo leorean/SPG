@@ -33,7 +33,7 @@ namespace Platformer.Objects.Effects.Emitters
 
             this.particleAlpha = particleAlpha;
 
-            Alpha = particleAlpha;
+            Alpha = particleAlpha;            
             
             stuck = true;
         }

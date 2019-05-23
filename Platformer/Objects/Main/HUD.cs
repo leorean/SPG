@@ -22,12 +22,14 @@ namespace Platformer.Objects.Main
 
 
         private Font font;
+        private Font hudFont;
         private Player player;
         
         public HUD()
         {
             //font = AssetManager.HUDFontSmall;
             font = AssetManager.DamageFont;
+            hudFont = AssetManager.HUDFont;
         }
 
         internal void SetTarget(Player player)
@@ -44,7 +46,7 @@ namespace Platformer.Objects.Main
             
             hp = player.HP;
             maxHP = stats.MaxHP;
-            mp = player.MP;
+            mp = (float)Math.Floor(player.MP);
             maxMP = stats.MaxMP;
             coins = stats.Coins;            
         }
@@ -56,33 +58,41 @@ namespace Platformer.Objects.Main
 
             var s = .5f;
 
-            font.Halign = Font.HorizontalAlignment.Center;
             font.Valign = Font.VerticalAlignment.Top;
 
-            //font.Draw(sb, x + 2, y + 2, $"HP: {hp}/{maxHP}", scale: .5f, depth: .991f);
-            //font.Draw(sb, x + 2, y + 2 + 9, $"MP: {Math.Floor(mp)}/{maxMP}", scale: .5f, depth: .991f);
-            //font.Draw(sb, x + 2, y + 2 + 18, $"Coins: {coins}", scale: .5f, depth: .991f);
-
-            //font.Halign = Font.HorizontalAlignment.Center;
-
-
-            //font.Draw(sb, x + 20, y + 5.5f, $"{hp}/{maxHP}", scale: .5f, depth: .991f);
-            //font.Draw(sb, x + 20, y + 5.5f, $"{hp}/{maxHP}", scale: .5f, depth: .991f);
-
-            //font.Draw(sb, x + 8f, y + 18.5f, $"Lv. 1", scale: .5f, depth: .991f);
-            
-            //font.Draw(sb, x + 8, y + 13, $"1{Math.Floor(mp)}/1{maxMP}", scale: .5f, depth: .991f);
+            // ----- left -----
 
             // HP
-            sb.Draw(AssetManager.HUD, new Vector2(x, y), new Rectangle(0, 0, 96, 32), Color.White, 0, Vector2.Zero, new Vector2(s), SpriteEffects.None, Globals.LAYER_UI + .00001f);
-            sb.Draw(AssetManager.HUD, new Vector2(x + 8 * s, y), new Rectangle(96, 0, (int)(80 * hp / maxHP), 32), Color.White, 0, Vector2.Zero, new Vector2(s), SpriteEffects.None, Globals.LAYER_UI + .00002f);
-            font.Draw(sb, x + 48 * s, y + 11 * s, $"{hp}", scale: .5f, depth: Globals.LAYER_UI + .00003f);
 
+            var hpx = x + RoomCamera.Current.ViewWidth - 40 - 2;
+            var hpy = y;
+
+            font.Halign = Font.HorizontalAlignment.Center;
+
+            sb.Draw(AssetManager.HUD, new Vector2(hpx + 2 * s, hpy), new Rectangle(0, 0, 80, 32), Color.White, 0, Vector2.Zero, new Vector2(s), SpriteEffects.None, Globals.LAYER_UI + .00001f);
+            sb.Draw(AssetManager.HUD, new Vector2(hpx + 2 * s + 8 * s, hpy), new Rectangle(80, 0, (int)(64 * hp / maxHP), 32), Color.White, 0, Vector2.Zero, new Vector2(s), SpriteEffects.None, Globals.LAYER_UI + .00002f);
+            
+            //if (hp > 0)
+                //font.Draw(sb, hpx + 80 * s - 6 * s, hpy + 11 * s, $"{hp}", scale: .5f, depth: Globals.LAYER_UI + .00003f);
+            font.Draw(sb, hpx + 42 * s, hpy + 4 * s, $"{hp}/{maxHP}", scale: .5f, depth: Globals.LAYER_UI + .00003f);
+
+            // ----- right -----
+
+            var mpx = x + 2;
+            var mpy = y;
+
+            // COIN
+
+            sb.Draw(AssetManager.HUD, new Vector2(hpx + 80 * s - 16 * s, hpy + 32 * s), new Rectangle(0, 112, 16, 16), Color.White, 0, Vector2.Zero, new Vector2(s), SpriteEffects.None, Globals.LAYER_UI + .00001f);
+
+            hudFont.Valign = Font.VerticalAlignment.Top;
+            hudFont.Halign = Font.HorizontalAlignment.Right;
+            hudFont.Draw(sb, hpx + 80 * s - 16 * s, hpy + 33 * s, $"{coins}", scale: .5f, depth: Globals.LAYER_UI + .00003f);
+            
             if (player.Orb != null)
             {
 
                 var spell = player.Stats.Spells.ElementAt(player.Stats.SpellIndex).Key;
-
                 var spellLevel = (int)player.Stats.Spells[spell] - 1;
 
                 int maxExp = player.Orb.MaxEXP[spell][player.Stats.Spells[spell]];
@@ -91,47 +101,20 @@ namespace Platformer.Objects.Main
                     expRatio = player.Stats.SpellEXP[spell] / (float)maxExp;
 
                 // MP
-                sb.Draw(AssetManager.HUD, new Vector2(x, y + 24 * s), new Rectangle(0, 32 + 32 * spellLevel, 80, 32), Color.White, 0, Vector2.Zero, new Vector2(s), SpriteEffects.None, Globals.LAYER_UI + .00001f);
-                sb.Draw(AssetManager.HUD, new Vector2(x, y + 24 * s), new Rectangle(80, 32 + 32 * spellLevel, (int)(80 * expRatio), 32), Color.White, 0, Vector2.Zero, new Vector2(s), SpriteEffects.None, Globals.LAYER_UI + .00002f);
-                sb.Draw(AssetManager.HUD, new Vector2(x + 8 * s, y + 24 * s), new Rectangle(160, 32, (int)(64 * mp / maxMP), 32), Color.White, 0, Vector2.Zero, new Vector2(s), SpriteEffects.None, Globals.LAYER_UI + .00003f);
-                font.Draw(sb, x + 42 * s, y + 24 * s + 11 * s, $"{Math.Floor(mp)}", scale: .5f, depth: Globals.LAYER_UI + .00004f);
-            }
 
-            /*
-            var width = 5 * Globals.TILE;
+                font.Halign = Font.HorizontalAlignment.Left;
 
-            for(var i = 0; i < width; i++)
-            {
-                float t1 = (float)i / (float)width;
-                float t2 = (float)hp / (float)maxHP;
+                sb.Draw(AssetManager.HUD, new Vector2(mpx + 30 * s, mpy), new Rectangle(0, 32, 80, 32), Color.White, 0, Vector2.Zero, new Vector2(s), SpriteEffects.None, Globals.LAYER_UI + .00001f);
+                sb.Draw(AssetManager.HUD, new Vector2(mpx + 30 * s + 8 * s, mpy), new Rectangle(160, 32 + 32 * spellLevel, (int)(64 * mp / maxMP), 32), Color.White, 0, Vector2.Zero, new Vector2(s), SpriteEffects.None, Globals.LAYER_UI + .00003f);
+                font.Draw(sb, mpx + 40 * s, mpy + 11 * s, $"{mp}", scale: .5f, depth: Globals.LAYER_UI + .00004f);
 
-                var row = 1 - Convert.ToInt32(t1 < t2);
-                var col = 1;
-
-                if (i == 0)
-                    col = 0;
-                if(i == width - 1)
-                    col = 2;
-
-                sb.Draw(Texture, new Vector2(x + i * scale, y), new Rectangle(col, 16 * row, 1, 10), Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, .99f);
-            }
-
-            /*
-            // magic
-
-            sb.Draw(Texture, new Vector2(x + 12, y + 8), new Rectangle(0, 16, 11, 12), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 1);
-
-            var mpFactor = .25f;
-
-            for (var i = 0; i < maxMP * mpFactor; i++)
-            {
-                var col = 0 + Convert.ToInt32(i < mp * mpFactor);
-
-                if (i == 0 || i == maxMP * mpFactor - 1)
-                    col = 2;
-
-                sb.Draw(Texture, new Vector2(x + 12 + 12 + i, y + 8), new Rectangle(16 + col, 16, 1, 7), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 1);
-            }*/
+                // EXP
+                sb.Draw(AssetManager.HUD, new Vector2(mpx, mpy + 14 * s), new Rectangle(0, 64, 112, 16), Color.White, 0, Vector2.Zero, new Vector2(s), SpriteEffects.None, Globals.LAYER_UI + .00002f);
+                sb.Draw(AssetManager.HUD, new Vector2(mpx, mpy + 14 * s), new Rectangle(0, 80, (int)(112 * expRatio), 16), Color.White, 0, Vector2.Zero, new Vector2(s), SpriteEffects.None, Globals.LAYER_UI + .00003f);
+                
+                // LV
+                sb.Draw(AssetManager.HUD, new Vector2(mpx + 8 * s, mpy + 8 * s), new Rectangle(16 * spellLevel, 96, 16, 16), Color.White, 0, Vector2.Zero, new Vector2(s), SpriteEffects.None, Globals.LAYER_UI + .00002f);                
+            }            
         }
     }
 }
