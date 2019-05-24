@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Platformer.Objects.Effects;
 using Platformer.Objects.Effects.Emitters;
 using Platformer.Util;
+using SPG.Map;
 
 namespace Platformer.Objects.Level
 {    
@@ -63,6 +64,12 @@ namespace Platformer.Objects.Level
             base.Update(gameTime);
             
             XVel *= .99f;
+
+            var inWater = GameManager.Current.Map.CollisionTile(this, 0, -1, GameMap.WATER_INDEX);
+            if (inWater)
+            {
+                YVel = Math.Max(YVel - Gravity - .01f, -1);
+            }
 
 
             var onGround = this.MoveAdvanced(true);

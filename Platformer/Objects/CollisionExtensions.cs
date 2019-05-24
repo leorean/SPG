@@ -112,7 +112,7 @@ namespace Platformer.Objects
                     }
 
                     // disables moving platform collision in water
-                    var inWater = GameManager.Current.Map.CollisionTile((m as GameObject), m.XVel, m.YVel, GameMap.WATER_INDEX);
+                    var inWater = GameManager.Current.Map.CollisionTile((m as GameObject), m.XVel, m.YVel - 1, GameMap.WATER_INDEX);
 
                     // special case for player because he is shifted a bit for water collision
                     if (m is Player)

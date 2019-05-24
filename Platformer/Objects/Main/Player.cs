@@ -751,7 +751,7 @@ namespace Platformer.Objects.Main
 
                 if (door != null)
                 {
-                    if (k_upPressed)
+                    if (k_upPressed && onGround)
                     {
                         XVel = 0;
                         YVel = -Gravity;
