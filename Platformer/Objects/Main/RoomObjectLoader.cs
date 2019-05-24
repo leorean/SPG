@@ -176,6 +176,12 @@ namespace Platformer.Objects.Main
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
                             break;
+                        case 714:
+                        case 715:
+                            var destroyBlock = new DestroyBlock(i * Globals.TILE, j * Globals.TILE, room, t.ID - 714 + 1);
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            break;
                         case 769:
                             new EnemyGrassy(i * Globals.TILE + 8, j * Globals.TILE + 8, room);
                             t.TileOptions.Visible = false;

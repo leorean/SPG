@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="MainGame.cs" />
     <Compile Include="Objects\Common.cs" />
+    <Compile Include="Objects\Effects\Emitters\DestroyBlockEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\FlashEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\GlobalWaterBubbleEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\ObtainParticleEmitter.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Objects\Items\Chest.cs" />
     <Compile Include="Objects\Items\SpellEXP.cs" />
     <Compile Include="Objects\Items\StatUpItem.cs" />
+    <Compile Include="Objects\Level\DestroyBlock.cs" />
     <Compile Include="Objects\Level\JumpControlDisabler.cs" />
     <Compile Include="Objects\Level\Door.cs" />
     <Compile Include="Objects\Level\GroundSwitch.cs" />

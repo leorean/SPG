@@ -42,7 +42,7 @@ namespace Platformer.Objects.Main
         // misc
 
         public static Texture2D Door { get; private set; }
-        public static Texture2D StarParticle { get; private set; }
+        public static TextureSet Particles { get; private set; }
         public static Texture2D WhiteCircle { get; private set; }
         public static Texture2D Flash { get; private set; }
         public static Texture2D Darkness { get; private set; }
@@ -83,7 +83,7 @@ namespace Platformer.Objects.Main
             SaveStatue = content.LoadTextureSet("save");
 
             Door = content.Load<Texture2D>("door");
-            StarParticle = content.Load<Texture2D>("ouch");
+            Particles = content.LoadTextureSet("particles", 16, 16);
             WhiteCircle = content.Load<Texture2D>("whiteCircle");
             Flash = content.Load<Texture2D>("flash");
             Darkness = content.Load<Texture2D>("darkness");

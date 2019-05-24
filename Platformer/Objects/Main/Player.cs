@@ -789,7 +789,7 @@ namespace Platformer.Objects.Main
                     if (!ObjectManager.Exists<MessageBox>())
                         npc.ShowToolTip(this);
 
-                    if (k_upPressed)
+                    if (k_upPressed && !k_attackHolding)
                     {
                         npc.Interact(this);
                     }

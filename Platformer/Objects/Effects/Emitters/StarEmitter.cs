@@ -67,7 +67,7 @@ namespace Platformer.Objects.Effects.Emitters
         public override void CreateParticle()
         {
             var particle = new StarParticle(this, initialSpeed);
-            particle.Texture = AssetManager.StarParticle;
+            particle.Texture = AssetManager.Particles[0];
             particle.Color = Color;
         }
     }

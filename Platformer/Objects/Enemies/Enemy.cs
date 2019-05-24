@@ -66,8 +66,6 @@ namespace Platformer.Objects.Enemies
 
             HP = Math.Max(HP - hitPoints, 0);
 
-            // TODO: other effect
-            //var ouch = new StarEmitter(X, Y);
             new SingularEffect(X - 4 + (float)(RND.Next * 8), Y - 4 + (float)(RND.Next * 8), 5);
 
             var ldx = MathUtil.LengthDirX((float)angle) * .5f;

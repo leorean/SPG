@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace SPG.Util
 {
@@ -17,6 +18,11 @@ namespace SPG.Util
             var rnd = Next * maxVal;
 
             return (int)Math.Round(rnd);
+        }
+
+        public static T Choose<T>(params T[] p)
+        {
+            return p[Int(p.Length - 1)];            
         }
     }
 }

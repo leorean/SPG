@@ -180,9 +180,11 @@ namespace SPG.Objects
         /// <summary>
         /// Unregisters a game object from the object manager. 
         /// If that game object is child to another game object, it is not destroyed until the parent is destroyed.
-        /// Optionally calls GC afterwards.        
+        /// Optionally calls GC afterwards.
+        /// 
+        /// WARNING: do not override unless you know what you're doing!
         /// </summary>
-        public void Destroy(bool callGC = false)
+        public virtual void Destroy(bool callGC = false)
         {
             if (Parent != null && ObjectManager.Objects.Contains(Parent))
                 return;

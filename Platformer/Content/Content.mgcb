@@ -241,7 +241,7 @@
 /processorParam:TextureFormat=Color
 /build:orb.png
 
-#begin ouch.png
+#begin particles.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -251,7 +251,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:ouch.png
+/build:particles.png
 
 #begin player.png
 /importer:TextureImporter
