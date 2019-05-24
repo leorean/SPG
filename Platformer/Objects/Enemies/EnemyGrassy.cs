@@ -33,7 +33,7 @@ namespace Platformer.Objects.Enemies
             AnimationTexture = AssetManager.EnemyGrassy;
             Direction = Direction.RIGHT;
 
-            HP = 20;
+            HP = 10;
             EXP = 12;
             Damage = 2;
 
@@ -63,7 +63,7 @@ namespace Platformer.Objects.Enemies
                             YVel = -3;
                             seenPlayer = true;                            
                         }
-                        SetAnimation(0, 1, .05, true);
+                        SetAnimation(0, 1, .025, true);
                     }
                     else
                     {

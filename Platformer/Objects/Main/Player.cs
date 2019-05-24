@@ -235,7 +235,7 @@ namespace Platformer.Objects.Main
             
             HP = Math.Max(HP - hitPoints, 0);
 
-            // deduct spell EXP
+            // spell EXP penalty
             if (Orb != null)
             {
                 var currentSpellType = Stats.Spells.ElementAt(Stats.SpellIndex).Key;
@@ -251,10 +251,10 @@ namespace Platformer.Objects.Main
                         expHit = (int)Math.Ceiling(Orb.MaxEXP[currentSpellType][currentSpellLevel] * .15f);
                         break;
                     case SpellLevel.TWO:
-                        expHit = (int)Math.Ceiling(Orb.MaxEXP[currentSpellType][currentSpellLevel] * .3f);
+                        expHit = (int)Math.Ceiling(Orb.MaxEXP[currentSpellType][currentSpellLevel] * .25f);
                         break;
                     case SpellLevel.THREE:
-                        expHit = (int)Math.Ceiling(Orb.MaxEXP[currentSpellType][currentSpellLevel] * .6f);
+                        expHit = (int)Math.Ceiling(Orb.MaxEXP[currentSpellType][currentSpellLevel] * .35f);
                         break;
                     default:
                         break;

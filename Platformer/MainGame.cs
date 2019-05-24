@@ -195,7 +195,7 @@ namespace Platformer
                 var sep = RoomCamera.Current.ToVirtual(mouse.Position.ToVector2());
                 if (ObjectManager.CollisionPointFirstOrDefault<SpellEXP>(sep.X, sep.Y) == null)
                 {
-                    SpellEXP.Spawn(sep.X, sep.Y, 1);
+                    SpellEXP.Spawn(sep.X, sep.Y, 11);
                 }
             }
 

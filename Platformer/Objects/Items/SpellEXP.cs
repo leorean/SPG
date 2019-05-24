@@ -15,8 +15,8 @@ namespace Platformer.Objects.Items
     public enum SpellEXPValue
     {
         Small = 1,
-        Medium = 3,
-        Large = 10
+        Medium = 2,
+        Large = 4
     }
 
     public class SpellEXP : GameObject, IMovable
@@ -54,7 +54,9 @@ namespace Platformer.Objects.Items
 
             lifeTime = 6 * 60;
 
-            Exp = value;            
+            Exp = value;
+
+            Scale = new Vector2(.5f);
         }
         
         public override void Update(GameTime gameTime)
@@ -129,6 +131,7 @@ namespace Platformer.Objects.Items
                     break;
             }
             SetAnimation(row * cols, (row * cols) + 3, .2f, true);
+            //SetAnimation(row * cols, (row * cols) + 3, 0, true);
             Color = new Color(Color, alpha);
         }
 
