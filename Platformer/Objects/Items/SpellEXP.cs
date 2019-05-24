@@ -33,7 +33,7 @@ namespace Platformer.Objects.Items
         float t = (float)Math.PI;
 
         public bool Taken { get; set; }
-        private float alpha = 2;
+        private float alpha = .75f;
 
         public SpellEXP(float x, float y, SpellEXPValue value) : base(x, y)
         {
@@ -110,7 +110,7 @@ namespace Platformer.Objects.Items
             {
                 Visible = true;
                 Move(0, -1);
-                alpha = Math.Max(alpha - .1f, 0);
+                alpha = Math.Max(alpha - .035f, 0);
             }
 
             if (lifeTime == 0 || alpha == 0)
@@ -131,7 +131,6 @@ namespace Platformer.Objects.Items
                     break;
             }
             SetAnimation(row * cols, (row * cols) + 3, .2f, true);
-            //SetAnimation(row * cols, (row * cols) + 3, 0, true);
             Color = new Color(Color, alpha);
         }
 

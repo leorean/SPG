@@ -305,9 +305,11 @@ namespace Platformer.Objects.Main
 
             var ouch = new StarEmitter(X, Y);
 
-            var dmgFont = new FollowFont(X, Y - Globals.TILE, $"-{hitPoints}");
-            dmgFont.Color = Color.Red;
-            dmgFont.Target = this;
+            //var dmgFont = new FollowFont(X, Y - Globals.TILE, $"-{hitPoints}");
+            //dmgFont.Color = Color.Red;
+            //dmgFont.Target = this;
+
+            new FallingFont(X, Y, $"-{hitPoints}", new Color(170, 0, 231), new Color(255, 0, 0));
 
             if (State == PlayerState.IDLE || State == PlayerState.WALK || State == PlayerState.GET_UP)
                 State = PlayerState.JUMP_UP;
@@ -718,8 +720,7 @@ namespace Platformer.Objects.Main
                                         break;
                                 }
                             }
-                        }
-
+                        }                        
                         s.Taken = true;
                     }
                 }

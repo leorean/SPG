@@ -21,7 +21,9 @@ namespace Platformer.Objects.Effects
         protected float alpha;
 
         protected Font font;
-        
+
+        private float scale = .25f;
+
         private float offX, offY;
         private GameObject target;
         public GameObject Target { get => target; set { target = value; offX = (X - target.X); offY = (Y - target.Y); } }
@@ -55,8 +57,10 @@ namespace Platformer.Objects.Effects
             alpha = Math.Max(alpha - .03f, 0);
 
             if (alpha < 1) offY -= .5f;
-
+            
             Visible = true;
+
+            scale = Math.Min(scale + .04f, 1);
 
             var c = Color;
             Color = new Color(c, alpha);
@@ -70,7 +74,7 @@ namespace Platformer.Objects.Effects
         {
             base.Draw(sb, gameTime);
             
-            font.Draw(sb, X, Y, text);
+            font.Draw(sb, X, Y, text, scale:scale);
         }        
     }
 }

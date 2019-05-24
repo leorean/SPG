@@ -61,6 +61,7 @@
     <Compile Include="Objects\Effects\Emitters\SpellEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\WaterFallEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\WaterSplashEmitter.cs" />
+    <Compile Include="Objects\Effects\FallingFont.cs" />
     <Compile Include="Objects\Effects\ToolTip.cs" />
     <Compile Include="Objects\Effects\Transition.cs" />
     <Compile Include="Objects\Effects\SingularEffect.cs" />

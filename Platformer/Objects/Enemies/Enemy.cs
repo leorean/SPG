@@ -68,6 +68,8 @@ namespace Platformer.Objects.Enemies
 
             new SingularEffect(X - 4 + (float)(RND.Next * 8), Y - 4 + (float)(RND.Next * 8), 5);
 
+            new FallingFont(X, Y, $"-{hitPoints}", new Color(255, 0, 55), new Color(255, 255, 0));
+
             var ldx = MathUtil.LengthDirX((float)angle) * .5f;
             var ldy = MathUtil.LengthDirY((float)angle) * .5f;
 
@@ -121,9 +123,9 @@ namespace Platformer.Objects.Enemies
             {
                 if (hitPointsReceived > 0)
                 {
-                    var font = new FollowFont(X, Top - 8, $"-{hitPointsReceived}");
-                    font.Target = this;
-                    font.Color = Color.Red;
+                    //var font = new FollowFont(X, Top - 8, $"-{hitPointsReceived}");
+                    //font.Target = this;
+                    //font.Color = Color.Red;
                 }
                 hitPointsReceived = 0;
             }
