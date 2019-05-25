@@ -162,7 +162,12 @@ namespace Platformer.Main
                     if (CurrentRoom != null)
                     {
                         lookLocked = 1;
-                        
+
+                        var tx = Math.Min(Math.Max(target.X + offsetX, CurrentRoom.X + .5f * ViewWidth), CurrentRoom.X + CurrentRoom.BoundingBox.Width - .5f * ViewWidth);
+                        var ty = Math.Min(Math.Max(target.Y + offsetY, CurrentRoom.Y + .5f * ViewHeight), CurrentRoom.Y + CurrentRoom.BoundingBox.Height - .5f * ViewHeight);
+
+                        Position = new Vector2(tx, ty);
+
                         lastRoom = CurrentRoom;
                         lastBG = CurrentBG;
                         if (CurrentRoom.Background != -1)
@@ -233,7 +238,7 @@ namespace Platformer.Main
                 
                 if (lookLocked> 0)
                 {
-                    minX = Math.Max(lastRoom.X, CurrentRoom.X) + +.5f * ViewWidth;
+                    minX = Math.Max(lastRoom.X, CurrentRoom.X) +.5f * ViewWidth;
                     maxX = Math.Min(lastRoom.X + Math.Min(lastRoom.BoundingBox.Width, CurrentRoom.BoundingBox.Width), CurrentRoom.X + Math.Min(lastRoom.BoundingBox.Width, CurrentRoom.BoundingBox.Width)) - .5f * ViewWidth;
 
                     minY = Math.Max(lastRoom.Y, CurrentRoom.Y) + .5f * ViewHeight;
