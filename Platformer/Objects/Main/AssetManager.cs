@@ -98,7 +98,7 @@ namespace Platformer.Objects.Main
 
             EnemyGrassy = content.LoadTextureSet("enemyGrassy");
 
-            Orbs = content.LoadTextureSet("orb", 32, 32);
+            Orbs = content.LoadTextureSet("orb", 16, 16);
 
             MessageBox = content.Load<Texture2D>("messageBox");
             HUD = content.Load<Texture2D>("hud");

@@ -196,6 +196,15 @@ namespace Platformer
                 dialog.YesText = "Oh cool.";
                 dialog.NoText = "No way.";
 
+                dialog.YesAction = () =>
+                {
+                    Coin.Spawn(GameManager.Current.Player.X, GameManager.Current.Player.Y, RoomCamera.Current.CurrentRoom, 100);
+                };
+                dialog.NoAction = () =>
+                {
+                    GameManager.Current.Player.HP = 0;
+                };
+
 
             }
 

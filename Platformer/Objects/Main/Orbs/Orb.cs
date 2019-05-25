@@ -63,10 +63,10 @@ namespace Platformer.Objects.Main.Orbs
 
         public Orb(Player player) : base(player.X, player.Y)
         {
-            Scale = new Vector2(.5f);
+            Scale = new Vector2(1);
 
             BoundingBox = new RectF(-4, -4, 8, 8);
-            DrawOffset = new Vector2(16, 16);
+            DrawOffset = new Vector2(8, 8);
             Depth = player.Depth + .0001f;
 
             Parent = player;
@@ -126,7 +126,6 @@ namespace Platformer.Objects.Main.Orbs
                 if (alphaTimeout == 0)
                 {
                     Position -= new Vector2(7 * Math.Sign((int)lastChangeDir), 0);
-                    //new SingularEffect(X, Y, 6);                    
                 }
             } else
                 alpha = Math.Min(alpha + .1f, 1);
@@ -252,7 +251,7 @@ namespace Platformer.Objects.Main.Orbs
             if (alphaTimeout == 0)
             {
                 var eff = new SingularEffect(X, Y, 4);
-                eff.Scale = new Vector2(.5f);
+                //eff.Scale = new Vector2(.5f);
             }
             lastChangeDir = direction;
             //Position -= new Vector2(7 * Math.Sign((int)direction), 0);

@@ -36,7 +36,7 @@ namespace Platformer.Objects.Items
             {
                 case StatType.HP:
                     potionEmitter = new PotionEmitter(X, Y - 8, PotionType.HP);
-                    Texture = AssetManager.Items[3];
+                    Texture = AssetManager.Items[1];
 
                     hiColor = Potion.HpColors.First();
 
@@ -51,7 +51,7 @@ namespace Platformer.Objects.Items
                     break;
                 case StatType.MP:
                     potionEmitter = new PotionEmitter(X, Y - 8, PotionType.MP);
-                    Texture = AssetManager.Items[4];
+                    Texture = AssetManager.Items[2];
 
                     hiColor = Potion.MpColors.First();
 
@@ -66,7 +66,7 @@ namespace Platformer.Objects.Items
                     break;
                 case StatType.Regen:
                     potionEmitter = new PotionEmitter(X, Y - 8, PotionType.Regen);
-                    Texture = AssetManager.Items[5];
+                    Texture = AssetManager.Items[3];
 
                     hiColor = Potion.RegenColors.First();
 
