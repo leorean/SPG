@@ -72,6 +72,9 @@ namespace SPG.Draw
         /// <returns></returns>
         public static Texture2D ReplaceColor(this Texture2D tex, Color c1, Color c2)
         {
+            if (tex == null)
+                return null;
+
             Color[] data = tex.GetPixels();
             Color[] replaced = new Color[data.Length];
             var newTexture = new Texture2D(tex.GraphicsDevice, tex.Width, tex.Height);

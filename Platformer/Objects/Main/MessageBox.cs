@@ -15,23 +15,25 @@ namespace Platformer.Objects.Main
 {
     public class MessageBox : GameObject
     {
-        List<string> texts;
-        Font font;
-        int maxWidth;
-
-        int offY = 6 * Globals.TILE;
-        int page = 0;
-        string curText = "";
-        float sin = 0;
-
-        Input input;
-
-        int timeOut;
-
-        Color? hiColor;
-
         public Action OnCompleted;
 
+        protected List<string> texts;
+        protected Font font;
+        protected int maxWidth;
+
+        protected int offY = 6 * Globals.TILE;
+        protected int page = 0;
+        protected string curText = "";
+        protected float sin = 0;
+
+        protected Input input;
+        private int timeOut;
+        private Color? hiColor;
+        protected Font.HorizontalAlignment halign;
+        protected Font.VerticalAlignment valign;
+
+        protected bool kLeftPressed, kRightPressed, kPrevPressed, kNextPressed;
+        
         /// <summary>
         /// Creates a new message box.
         /// 
@@ -88,8 +90,8 @@ namespace Platformer.Objects.Main
             this.hiColor = hiColor;
 
             font = AssetManager.DefaultFont.Copy();
-            font.Halign = centerText ? Font.HorizontalAlignment.Center : Font.HorizontalAlignment.Left;
-            font.Valign = Font.VerticalAlignment.Top;
+            halign = centerText ? Font.HorizontalAlignment.Center : Font.HorizontalAlignment.Left;
+            valign = Font.VerticalAlignment.Top;
             
             maxWidth = RoomCamera.Current.ViewWidth - Globals.TILE - 4;
         }
@@ -108,30 +110,37 @@ namespace Platformer.Objects.Main
             if (hiColor != null)
                 font.HighlightColor = (Color)hiColor;
 
-            var kUpPressed = input.IsKeyPressed(Keys.Up, Input.State.Pressed) || input.IsKeyPressed(Keys.S, Input.State.Pressed);
-            var kDownPressed = input.IsKeyPressed(Keys.Down, Input.State.Pressed) || input.IsKeyPressed(Keys.A, Input.State.Pressed);
+            //kPrevPressed = input.IsKeyPressed(Keys.Up, Input.State.Pressed) || input.IsKeyPressed(Keys.S, Input.State.Pressed);
+            //kNextPressed = input.IsKeyPressed(Keys.Down, Input.State.Pressed) || input.IsKeyPressed(Keys.A, Input.State.Pressed);
+            kPrevPressed = input.IsKeyPressed(Keys.S, Input.State.Pressed);
+            kNextPressed = input.IsKeyPressed(Keys.A, Input.State.Pressed);
+
+            kLeftPressed = input.IsKeyPressed(Keys.Left, Input.State.Pressed) || input.DirectionPressedFromStick(Input.Direction.LEFT, Input.Stick.LeftStick, Input.State.Pressed);
+            kRightPressed = input.IsKeyPressed(Keys.Right, Input.State.Pressed) || input.DirectionPressedFromStick(Input.Direction.RIGHT, Input.Stick.LeftStick, Input.State.Pressed);
 
             var kAny = input.IsAnyKeyPressed();
 
             if (input.GamePadEnabled)
             {
-                kUpPressed = input.DirectionPressedFromStick(Input.Direction.UP, Input.Stick.LeftStick, Input.State.Pressed)
-                    || input.IsButtonPressed(Buttons.B);
-                kDownPressed = input.DirectionPressedFromStick(Input.Direction.DOWN, Input.Stick.LeftStick, Input.State.Pressed)
-                    || input.IsButtonPressed(Buttons.A);
+                //kPrevPressed = input.DirectionPressedFromStick(Input.Direction.UP, Input.Stick.LeftStick, Input.State.Pressed)
+                //    || input.IsButtonPressed(Buttons.B);
+                //kNextPressed = input.DirectionPressedFromStick(Input.Direction.DOWN, Input.Stick.LeftStick, Input.State.Pressed)
+                //    || input.IsButtonPressed(Buttons.A);
+                kPrevPressed = input.IsButtonPressed(Buttons.B);
+                kNextPressed = input.IsButtonPressed(Buttons.A);
                 kAny = input.IsAnyButtonPressed();
             }
 
             Position = new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY + offY);
             
-            if (kUpPressed)
+            if (kPrevPressed)
             {
                 if (page != 0)
                     curText = "";
 
                 page = Math.Max(page - 1, 0);
             }
-            else if (kDownPressed)
+            else if (kNextPressed)
             {
                 if (page == texts.Count - 1)
                 {
@@ -174,15 +183,11 @@ namespace Platformer.Objects.Main
             sin = (float)((sin + .1) % (2 * Math.PI));
         }
 
-        public override void Draw(SpriteBatch sb, GameTime gameTime)
+        public virtual void DrawActionIcons(SpriteBatch sb)
         {
-            //base.Draw(sb, gameTime);
-
             var T = Globals.TILE;
             var z = (float)Math.Sin(sin);
 
-            sb.Draw(Texture, Position, new Rectangle(0,0, RoomCamera.Current.ViewWidth, 3 * Globals.TILE), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth);
-            
             if (page == 0 && texts.Count > 1)
             {
                 sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 2 * T + z), new Rectangle(1 * T, 3 * T, T, T), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
@@ -191,12 +196,26 @@ namespace Platformer.Objects.Main
             {
                 sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 0 * T - z), new Rectangle(0 * T, 3 * T, T, T), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
                 sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 2 * T + z), new Rectangle(1 * T, 3 * T, T, T), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
-            } else
+            }
+            else
             {
                 sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 2 * T + z), new Rectangle(2 * T, 3 * T, T, T), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
             }
+        }
+
+        public override void Draw(SpriteBatch sb, GameTime gameTime)
+        {
+            //base.Draw(sb, gameTime);
+
+            
+            sb.Draw(Texture, Position, new Rectangle(0,0, RoomCamera.Current.ViewWidth, 3 * Globals.TILE), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth);
+
+            DrawActionIcons(sb);
 
             float offX = 0 + Convert.ToInt32(font.Halign == Font.HorizontalAlignment.Center) * (RoomCamera.Current.ViewWidth * .5f - 10);
+
+            font.Halign = halign;
+            font.Valign = valign;
 
             if (!string.IsNullOrEmpty(curText))
                 font.Draw(sb, X + 8 + 2 + offX, Y + 8 + 2, curText, maxWidth);

@@ -190,6 +190,15 @@ namespace Platformer
                 Debug.WriteLine("Deleted save game.");
             }
 
+            if (input.IsKeyPressed(Keys.M, Input.State.Pressed))
+            {
+                var dialog = new MessageDialog("Do you like message dialogs?");
+                dialog.YesText = "Oh cool.";
+                dialog.NoText = "No way.";
+
+
+            }
+
             if (mouse.RightButton == ButtonState.Pressed)
             {
                 var sep = RoomCamera.Current.ToVirtual(mouse.Position.ToVector2());

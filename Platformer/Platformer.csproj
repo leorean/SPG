@@ -91,6 +91,7 @@
     <Compile Include="Objects\Main\GameManager.cs" />
     <Compile Include="Objects\Main\HUD.cs" />
     <Compile Include="Objects\Main\MessageBox.cs" />
+    <Compile Include="Objects\Main\MessageDialog.cs" />
     <Compile Include="Objects\Main\Orbs\Orb.cs" />
     <Compile Include="Objects\Main\Orbs\SpellFont.cs" />
     <Compile Include="Objects\Projectiles\PlayerProjectile.cs" />
