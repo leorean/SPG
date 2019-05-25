@@ -52,7 +52,7 @@ namespace Platformer.Objects.Main.Orbs
             if (spellChange == SpellChange.LVDOWN) color = (time % 6 < 3) ? colorDown : Color.Red;
 
             font.Color = color;
-            font.Draw(sb, X, Y, text, scale: .5f);
+            font.Draw(sb, X, Y, text, scale: 1);
         }
     }
 }

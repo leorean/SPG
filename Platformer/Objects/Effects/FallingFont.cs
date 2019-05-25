@@ -18,8 +18,7 @@ namespace Platformer.Objects.Effects
         Font font;
 
         float alpha = 2;
-        float scale = .5f;
-
+        
         public string Text { get; set; }
 
         public Color currentColor = Color.White;
@@ -45,8 +44,10 @@ namespace Platformer.Objects.Effects
             r = currentColor.R;
             g = currentColor.G;
             b = currentColor.B;
-            
-            Depth = Globals.LAYER_FONT;
+
+            Scale = new Vector2(.5f);
+
+            Depth = Globals.LAYER_FONT;            
         }
 
         public override void Update(GameTime gameTime)
@@ -62,8 +63,8 @@ namespace Platformer.Objects.Effects
             alpha = Math.Max(alpha - .04f, 0);
             Color = new Color(currentColor, alpha);
             font.Color = Color;
-
-            scale = Math.Min(scale + .02f, 1);
+            
+            Scale = new Vector2(Math.Min(Scale.X + .02f, 1));
 
             XVel *= .95f;
             YVel += Gravity;
@@ -78,7 +79,7 @@ namespace Platformer.Objects.Effects
         {
             base.Draw(sb, gameTime);
 
-            font.Draw(sb, X, Y, Text, depth: Depth, scale:this.scale);
+            font.Draw(sb, X, Y, Text, depth: Depth, scale:Scale.X);
         }
     }
 }

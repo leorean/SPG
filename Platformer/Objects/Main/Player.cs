@@ -266,8 +266,7 @@ namespace Platformer.Objects.Main
 
                 var expAfterHit = Math.Max(Stats.SpellEXP[currentSpellType] - expHit, 0);
                 Stats.SpellEXP[currentSpellType] = expAfterHit;
-
-                Debug.WriteLine($"Hit with {expHit} points. Remaining: {expAfterHit}");
+                
                 if (expAfterHit == 0)
                 {
                     switch (currentSpellLevel)
@@ -275,12 +274,12 @@ namespace Platformer.Objects.Main
                         case SpellLevel.ONE:
                             break;
                         case SpellLevel.TWO:
-                            new SpellFont(Orb, 0, -8, SpellFont.SpellChange.LVDOWN);                            
+                            CreateSpellDownEffect();
                             Stats.Spells[currentSpellType] = SpellLevel.ONE;
                             Stats.SpellEXP[currentSpellType] = Orb.MaxEXP[currentSpellType][SpellLevel.ONE];
                             break;
                         case SpellLevel.THREE:
-                            new SpellFont(Orb, 0, -8, SpellFont.SpellChange.LVDOWN);
+                            CreateSpellDownEffect();
                             Stats.Spells[currentSpellType] = SpellLevel.TWO;
                             Stats.SpellEXP[currentSpellType] = Orb.MaxEXP[currentSpellType][SpellLevel.TWO];
                             break;
@@ -702,7 +701,7 @@ namespace Platformer.Objects.Main
                             Stats.SpellEXP[currentSpellType] = Math.Min(Stats.SpellEXP[currentSpellType] + (int)s.Exp, maxSpellExpForLevel);
 
                             MP = Math.Min(MP + (int)s.Exp, Stats.MaxMP);
-
+                            
                             if (Stats.SpellEXP[currentSpellType] == maxSpellExpForLevel)
                             {
                                 switch (Stats.Spells[currentSpellType])
@@ -710,13 +709,12 @@ namespace Platformer.Objects.Main
                                     case SpellLevel.ONE:
                                         Stats.Spells[currentSpellType] = SpellLevel.TWO;
                                         Stats.SpellEXP[currentSpellType] = 0;
-
-                                        new SpellFont(Orb, 0, -8, SpellFont.SpellChange.LVUP);
+                                        CreateSpellUpEffect();
                                         break;
                                     case SpellLevel.TWO:
-                                        new SpellFont(Orb, 0, -8, SpellFont.SpellChange.LVUP);
                                         Stats.Spells[currentSpellType] = SpellLevel.THREE;
                                         Stats.SpellEXP[currentSpellType] = 0;
+                                        CreateSpellUpEffect();
                                         break;
                                 }
                             }
@@ -1732,7 +1730,25 @@ namespace Platformer.Objects.Main
 
             animationComplete = false;
         }
-        
+
+        private void CreateSpellUpEffect()
+        {
+            FallingFont spellFont = new FallingFont(X, Y - 8, "Spell Up!", Potion.MpColors[0], Color.White);
+            spellFont.XVel = 0;
+            spellFont.Gravity = .025f;
+            spellFont.Scale = new Vector2(1);
+            spellFont.YVel = -1;
+        }
+
+        private void CreateSpellDownEffect()
+        {
+            FallingFont spellFont = new FallingFont(X, Y - 8, "Spell Down!", new Color(218, 218, 218), new Color(250, 92, 117));
+            spellFont.XVel = 0;
+            spellFont.Gravity = .025f;
+            spellFont.Scale = new Vector2(1);
+            spellFont.YVel = -1;
+        }
+
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
             base.Draw(sb, gameTime);

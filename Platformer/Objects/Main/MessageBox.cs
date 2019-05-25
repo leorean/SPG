@@ -92,7 +92,9 @@ namespace Platformer.Objects.Main
             font = AssetManager.DefaultFont.Copy();
             halign = centerText ? Font.HorizontalAlignment.Center : Font.HorizontalAlignment.Left;
             valign = Font.VerticalAlignment.Top;
-            
+
+            Visible = false;
+
             maxWidth = RoomCamera.Current.ViewWidth - Globals.TILE - 4;
         }
 
@@ -181,6 +183,7 @@ namespace Platformer.Objects.Main
             }
             
             sin = (float)((sin + .1) % (2 * Math.PI));
+            Visible = true;
         }
 
         public virtual void DrawActionIcons(SpriteBatch sb)
