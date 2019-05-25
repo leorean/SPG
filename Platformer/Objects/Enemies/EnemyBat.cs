@@ -20,7 +20,7 @@ namespace Platformer.Objects.Enemies
         }
         private State state = State.FLY;
 
-        private double t;
+        private double t = .5f * Math.PI;
         private bool initialized;
 
         public EnemyBat(float x, float y, Room room) : base(x, y, room)
@@ -35,6 +35,7 @@ namespace Platformer.Objects.Enemies
             Damage = 1;
             EXP = 3;
 
+            Direction = Direction.RIGHT;
             
         }
 
@@ -56,7 +57,8 @@ namespace Platformer.Objects.Enemies
 
             var player = GameManager.Current.Player;
 
-            Direction = (Direction)(Math.Sign(player.X - X));
+            if (X != player.X)
+                Direction = (Direction)(Math.Sign(player.X - X));
 
             if (state == State.IDLE)
             {
@@ -72,9 +74,9 @@ namespace Platformer.Objects.Enemies
 
             if (state == State.FLY)
             {
-                SetAnimation(1, 4, .4f, true);
+                SetAnimation(1, 4, .2f, true);
 
-                t = (t + .1f) % (2 * Math.PI);
+                t = (t + .08f) % (2 * Math.PI);
                 YVel = (float)Math.Sin(t);
 
                 var colY = GameManager.Current.Map.CollisionTile(this, 0, YVel);
@@ -107,7 +109,7 @@ namespace Platformer.Objects.Enemies
                 XVel = MathUtil.Limit(XVel, 2);
                 YVel = MathUtil.Limit(YVel, 2);
                 
-                SetAnimation(1, 4, .4f, true);
+                SetAnimation(1, 4, .3f, true);
             }
 
             if (hit)

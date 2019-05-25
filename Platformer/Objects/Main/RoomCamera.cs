@@ -119,6 +119,12 @@ namespace Platformer.Main
             GameManager.Current.Transition.OnTransitionEnd = Transition_1;
         }
 
+        private enum LD { Horizontal, Vertical }
+
+        private LD moveDirection;
+
+        private float minX, minY, maxX, maxY;
+        
         public override void Update(GameTime gt)
         {
             base.Update(gt);
@@ -147,7 +153,7 @@ namespace Platformer.Main
             // if no room is available, always resort to this state
             if (state == State.Default)
             {
-                lookLocked = Math.Max(lookLocked - 1, 0);
+                //lookLocked = Math.Max(lookLocked - 1, 0);
 
                 // if no room is yet found, try to find first room
                 if (CurrentRoom == null)
@@ -155,7 +161,7 @@ namespace Platformer.Main
                     CurrentRoom = target.CollisionPointFirstOrDefault<Room>(target.X, target.Y);
                     if (CurrentRoom != null)
                     {
-                        lookLocked = 30;
+                        lookLocked = 1;
                         
                         lastRoom = CurrentRoom;
                         lastBG = CurrentBG;
@@ -214,22 +220,71 @@ namespace Platformer.Main
 
                 var vel = new Vector2((tarX - Position.X) / 12f, (tarY - Position.Y) / dyVel);
 
+                if (lookLocked > 0)
+                {
+                    // move faster during lock-mode
+                    vel = new Vector2((tarX - Position.X) / 8f, (tarY - Position.Y) / 8f);
+
+                    if (MathUtil.Euclidean(Position, new Vector2(tarX,tarY)) < 2)
+                        vel = new Vector2((tarX - Position.X) / 2f, (tarY - Position.Y) / 2f);
+                }
+
                 Position = new Vector2(Position.X + vel.X, Position.Y + vel.Y);
                 
                 if (lookLocked> 0)
-                    Position = new Vector2(Position.X, Math.Min(Math.Max(target.Y + offsetY, CurrentRoom.Y + .5f * ViewHeight), CurrentRoom.Y + CurrentRoom.BoundingBox.Height - .5f * ViewHeight));
+                {
+                    minX = Math.Max(lastRoom.X, CurrentRoom.X) + +.5f * ViewWidth;
+                    maxX = Math.Min(lastRoom.X + Math.Min(lastRoom.BoundingBox.Width, CurrentRoom.BoundingBox.Width), CurrentRoom.X + Math.Min(lastRoom.BoundingBox.Width, CurrentRoom.BoundingBox.Width)) - .5f * ViewWidth;
+
+                    minY = Math.Max(lastRoom.Y, CurrentRoom.Y) + .5f * ViewHeight;
+                    maxY = Math.Min(lastRoom.Y + Math.Min(lastRoom.BoundingBox.Height, CurrentRoom.BoundingBox.Height), CurrentRoom.Y + Math.Min(lastRoom.BoundingBox.Height, CurrentRoom.BoundingBox.Height)) - .5f * ViewHeight;
+
+                    if (moveDirection == LD.Horizontal)
+                    {
+                        Position = new Vector2(Position.X, Math.Min(Math.Max(target.Y, maxY), minY));
+
+                        if (Math.Abs(Position.X - tarX) < .5f)
+                        {
+                            Position = new Vector2(tarX, Position.Y);
+                            Debug.WriteLine("BEEP X");
+                            lookLocked = 0;
+                        }
+                    }
+
+                    if (moveDirection == LD.Vertical)
+                    {
+                        Position = new Vector2(Math.Min(Math.Max(target.X, maxX), minX), Position.Y);
+
+                        if (Math.Abs(Position.Y - tarY) < .5f)
+                        {
+                            Position = new Vector2(Position.X, tarY);
+                            Debug.WriteLine("BEEP Y");
+                            lookLocked = 0;
+                        }
+                    }
+
+                }
+                //    Position = new Vector2(Position.X, Math.Min(Math.Max(target.Y + offsetY, CurrentRoom.Y + .5f * ViewHeight), CurrentRoom.Y + CurrentRoom.BoundingBox.Height - .5f * ViewHeight));
 
                 // if outside view, try to find new room                
                 if ((!MathUtil.In(target.X, CurrentRoom.X, CurrentRoom.X + CurrentRoom.BoundingBox.Width)
                         || !MathUtil.In(target.Y, CurrentRoom.Y, CurrentRoom.Y + CurrentRoom.BoundingBox.Height)))
                 {
+
+                    if (!target.X.In(CurrentRoom.X, CurrentRoom.X + CurrentRoom.BoundingBox.Width))
+                        moveDirection = LD.Horizontal;
+                    if (!target.Y.In(CurrentRoom.Y, CurrentRoom.Y + CurrentRoom.BoundingBox.Height))
+                        moveDirection = LD.Vertical;
                     
                     lastRoom = CurrentRoom;
                     CurrentRoom = ObjectManager.CollisionPoints<Room>(target, target.X, target.Y).FirstOrDefault();
                     
                     if (CurrentRoom != null)
                     {
-                        lookLocked = 30;
+                        lookLocked = 1;
+
+                        //if (lockDirection == LD.Horizontal)
+                        //    Position = new Vector2(Position.X, Math.Min(Math.Max(target.Y, CurrentRoom.Y + .5f * ViewHeight), CurrentRoom.Y + CurrentRoom.BoundingBox.Height - .5f * ViewHeight));
                         
                         offsetX = 0;
                         state = State.RoomTransition;
