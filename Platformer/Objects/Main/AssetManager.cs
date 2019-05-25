@@ -56,6 +56,7 @@ namespace Platformer.Objects.Main
         // enemies
 
         public static TextureSet EnemyGrassy { get; private set; }
+        public static TextureSet EnemyBat { get; private set; }
 
         // orb
 
@@ -97,6 +98,7 @@ namespace Platformer.Objects.Main
             WaterMillPlatform = waterMillSheet.Crop(new Rectangle(128, 0, 16, 16));
 
             EnemyGrassy = content.LoadTextureSet("enemyGrassy");
+            EnemyBat = content.LoadTextureSet("enemyBat");
 
             Orbs = content.LoadTextureSet("orb", 16, 16);
 

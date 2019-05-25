@@ -66,6 +66,7 @@
     <Compile Include="Objects\Effects\Transition.cs" />
     <Compile Include="Objects\Effects\SingularEffect.cs" />
     <Compile Include="Objects\Enemies\Enemy.cs" />
+    <Compile Include="Objects\Enemies\EnemyBat.cs" />
     <Compile Include="Objects\Enemies\EnemyGrassy.cs" />
     <Compile Include="Objects\IMovable.cs" />
     <Compile Include="Objects\Items\AbilityItem.cs" />
@@ -93,7 +94,6 @@
     <Compile Include="Objects\Main\MessageBox.cs" />
     <Compile Include="Objects\Main\MessageDialog.cs" />
     <Compile Include="Objects\Main\Orbs\Orb.cs" />
-    <Compile Include="Objects\Main\Orbs\SpellFont.cs" />
     <Compile Include="Objects\Projectiles\PlayerProjectile.cs" />
     <Compile Include="Objects\Projectiles\StarProjectile.cs" />
     <Compile Include="Objects\Main\PlayerGhost.cs" />

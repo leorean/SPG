@@ -98,7 +98,7 @@ namespace Platformer.Objects.Enemies
                     var angle = vec.VectorToAngle();
                     Hit(projectile.Damage, (float)angle);
                     
-                    projectile.Kill();
+                    projectile.HandleCollision();
                 }                
             }
             else // death

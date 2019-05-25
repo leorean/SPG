@@ -25,7 +25,7 @@ namespace Platformer.Objects.Projectiles
 
             if (destBlock != null)
             {
-                HandleDestroyBlock(destBlock);
+                HandleCollisionFromDestroyBlock(destBlock);
             }
 
             if (this.IsOutsideCurrentRoom())
@@ -33,12 +33,12 @@ namespace Platformer.Objects.Projectiles
 
         }
 
-        public virtual void HandleDestroyBlock(DestroyBlock block)
+        public virtual void HandleCollisionFromDestroyBlock(DestroyBlock block)
         {
             block.Hit(Damage);
-            Kill();
+            HandleCollision();
         }
 
-        public abstract void Kill();
+        public abstract void HandleCollision();
     }
 }

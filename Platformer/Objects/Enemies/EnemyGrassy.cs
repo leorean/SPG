@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SPG.Map;
+using Platformer.Objects.Effects;
 
 namespace Platformer.Objects.Enemies
 {
@@ -58,6 +59,7 @@ namespace Platformer.Objects.Enemies
                         XVel = 0;
                         YVel = 0;
 
+                        Depth = Globals.LAYER_FG - .0001f;
                         if (MathUtil.Euclidean(Position, player.Position) < 3 * Globals.TILE || hit)
                         {
                             YVel = -3;
@@ -73,7 +75,10 @@ namespace Platformer.Objects.Enemies
                             YVel += Gravity;
                             Move(XVel, YVel);
                             if (!GameManager.Current.Map.CollisionTile(this, XVel, YVel))
+                            {
+                                Depth = player.Depth + .00001f;
                                 stuck = false;
+                            }
                         }
                         else
                         {
@@ -82,7 +87,6 @@ namespace Platformer.Objects.Enemies
                                 state = State.FOLLOW_PLAYER;
                         }
                     }
-                    Depth = Globals.LAYER_FG - .0001f;                    
                     break;
                 case State.FOLLOW_PLAYER:
 
@@ -98,7 +102,7 @@ namespace Platformer.Objects.Enemies
                     if (X < player.X)
                         XVel = Math.Min(XVel + .01f, .65f);
 
-                    Depth = player.Depth + .00001f;
+                    
                     SetAnimation(3, 6, .2, true);
                     break;                    
             }

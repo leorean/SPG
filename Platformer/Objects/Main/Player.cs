@@ -1733,20 +1733,20 @@ namespace Platformer.Objects.Main
 
         private void CreateSpellUpEffect()
         {
-            FallingFont spellFont = new FallingFont(X, Y - 8, "Spell Up!", Potion.MpColors[0], Color.White);
-            spellFont.XVel = 0;
-            spellFont.Gravity = .025f;
-            spellFont.Scale = new Vector2(1);
-            spellFont.YVel = -1;
+            //FallingFont spellFont = new FallingFont(X, Y - 8, "Spell Up!", Potion.MpColors[0], Color.White);
+            //spellFont.XVel = 0;
+            //spellFont.Gravity = .025f;
+            //spellFont.Scale = new Vector2(1);
+            //spellFont.YVel = -1;
         }
 
         private void CreateSpellDownEffect()
         {
-            FallingFont spellFont = new FallingFont(X, Y - 8, "Spell Down!", new Color(218, 218, 218), new Color(250, 92, 117));
-            spellFont.XVel = 0;
-            spellFont.Gravity = .025f;
-            spellFont.Scale = new Vector2(1);
-            spellFont.YVel = -1;
+            //FallingFont spellFont = new FallingFont(X, Y - 8, "Spell Down!", new Color(218, 218, 218), new Color(250, 92, 117));
+            //spellFont.XVel = 0;
+            //spellFont.Gravity = .025f;
+            //spellFont.Scale = new Vector2(1);
+            //spellFont.YVel = -1;
         }
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)

@@ -63,6 +63,11 @@ namespace SPG.Util
             
         }
 
+        public static float Limit(float val, uint limit)
+        {
+            return Math.Sign(val) * Math.Min(Math.Abs(val), limit);
+        }
+
         public static double LengthDirY(double degAngle)
         {
             var rad = (degAngle / 360f) * 2 * Math.PI;

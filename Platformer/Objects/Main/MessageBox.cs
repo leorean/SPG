@@ -112,6 +112,12 @@ namespace Platformer.Objects.Main
             if (hiColor != null)
                 font.HighlightColor = (Color)hiColor;
 
+            if (!Visible)
+            {
+                Visible = true;
+                return;
+            }
+
             //kPrevPressed = input.IsKeyPressed(Keys.Up, Input.State.Pressed) || input.IsKeyPressed(Keys.S, Input.State.Pressed);
             //kNextPressed = input.IsKeyPressed(Keys.Down, Input.State.Pressed) || input.IsKeyPressed(Keys.A, Input.State.Pressed);
             kPrevPressed = input.IsKeyPressed(Keys.S, Input.State.Pressed);
@@ -135,14 +141,14 @@ namespace Platformer.Objects.Main
 
             Position = new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY + offY);
             
-            if (kPrevPressed)
-            {
-                if (page != 0)
-                    curText = "";
+            //if (kPrevPressed)
+            //{
+            //    if (page != 0)
+            //        curText = "";
 
-                page = Math.Max(page - 1, 0);
-            }
-            else if (kNextPressed)
+            //    page = Math.Max(page - 1, 0);
+            //}
+            if (kNextPressed)
             {
                 if (page == texts.Count - 1)
                 {
@@ -182,8 +188,7 @@ namespace Platformer.Objects.Main
                 timeOut = 3;
             }
             
-            sin = (float)((sin + .1) % (2 * Math.PI));
-            Visible = true;
+            sin = (float)((sin + .1) % (2 * Math.PI));            
         }
 
         public virtual void DrawActionIcons(SpriteBatch sb)
@@ -197,7 +202,7 @@ namespace Platformer.Objects.Main
             }
             else if (page < texts.Count - 1)
             {
-                sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 0 * T - z), new Rectangle(0 * T, 3 * T, T, T), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
+                //sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 0 * T - z), new Rectangle(0 * T, 3 * T, T, T), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
                 sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 2 * T + z), new Rectangle(1 * T, 3 * T, T, T), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
             }
             else
@@ -210,6 +215,8 @@ namespace Platformer.Objects.Main
         {
             //base.Draw(sb, gameTime);
 
+            if (!Visible)
+                return;
             
             sb.Draw(Texture, Position, new Rectangle(0,0, RoomCamera.Current.ViewWidth, 3 * Globals.TILE), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth);
 
