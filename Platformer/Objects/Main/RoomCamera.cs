@@ -228,49 +228,42 @@ namespace Platformer.Main
                 if (lookLocked > 0)
                 {
                     // move faster during lock-mode
-                    vel = new Vector2((tarX - Position.X) / 8f, (tarY - Position.Y) / 8f);
+                    vel = new Vector2((tarX - Position.X) / 6f, (tarY - Position.Y) / 6f);
 
-                    if (MathUtil.Euclidean(Position, new Vector2(tarX,tarY)) < 2)
+                    if (MathUtil.Euclidean(Position, new Vector2(tarX, tarY)) < 2)
                         vel = new Vector2((tarX - Position.X) / 2f, (tarY - Position.Y) / 2f);
                 }
-
+                
                 Position = new Vector2(Position.X + vel.X, Position.Y + vel.Y);
                 
                 if (lookLocked> 0)
                 {
-                    minX = Math.Max(lastRoom.X, CurrentRoom.X) +.5f * ViewWidth;
-                    maxX = Math.Min(lastRoom.X + Math.Min(lastRoom.BoundingBox.Width, CurrentRoom.BoundingBox.Width), CurrentRoom.X + Math.Min(lastRoom.BoundingBox.Width, CurrentRoom.BoundingBox.Width)) - .5f * ViewWidth;
-
-                    minY = Math.Max(lastRoom.Y, CurrentRoom.Y) + .5f * ViewHeight;
-                    maxY = Math.Min(lastRoom.Y + Math.Min(lastRoom.BoundingBox.Height, CurrentRoom.BoundingBox.Height), CurrentRoom.Y + Math.Min(lastRoom.BoundingBox.Height, CurrentRoom.BoundingBox.Height)) - .5f * ViewHeight;
-
                     if (moveDirection == LD.Horizontal)
                     {
-                        Position = new Vector2(Position.X, Math.Min(Math.Max(target.Y, maxY), minY));
-
+                        var py = MathUtil.Div(Position.Y, ViewHeight) * ViewHeight + .5f * ViewHeight;
+                        Position = new Vector2(Position.X, py);
+                        
                         if (Math.Abs(Position.X - tarX) < .5f)
                         {
                             Position = new Vector2(tarX, Position.Y);
-                            Debug.WriteLine("BEEP X");
                             lookLocked = 0;
                         }
                     }
 
                     if (moveDirection == LD.Vertical)
                     {
-                        Position = new Vector2(Math.Min(Math.Max(target.X, maxX), minX), Position.Y);
+                        var px = MathUtil.Div(Position.X, ViewWidth) * ViewWidth + .5f * ViewWidth;
+                        Position = new Vector2(px, Position.Y);
 
                         if (Math.Abs(Position.Y - tarY) < .5f)
                         {
                             Position = new Vector2(Position.X, tarY);
-                            Debug.WriteLine("BEEP Y");
                             lookLocked = 0;
                         }
                     }
 
                 }
-                //    Position = new Vector2(Position.X, Math.Min(Math.Max(target.Y + offsetY, CurrentRoom.Y + .5f * ViewHeight), CurrentRoom.Y + CurrentRoom.BoundingBox.Height - .5f * ViewHeight));
-
+                
                 // if outside view, try to find new room                
                 if ((!MathUtil.In(target.X, CurrentRoom.X, CurrentRoom.X + CurrentRoom.BoundingBox.Width)
                         || !MathUtil.In(target.Y, CurrentRoom.Y, CurrentRoom.Y + CurrentRoom.BoundingBox.Height)))
