@@ -31,10 +31,10 @@ namespace Platformer.Objects.Effects.Emitters
 
                 int tx = MathUtil.Div(posX, Globals.TILE);
                 int ty = MathUtil.Div(posY, Globals.TILE);
+                
+                var inWater = GameManager.Current.Map.CollisionTile(posX, posY - 2, GameMap.WATER_INDEX);
 
-                var inWater = (GameManager.Current.Map.LayerData[2].Get(tx, ty) != null);
-
-                if (ObjectManager.CollisionPoints<Solid>(posX, posY).Count > 0)
+                if (GameManager.Current.Map.CollisionTile(posX, posY, GameMap.FG_INDEX))
                 {
                     inWater = false;
                 }
@@ -75,7 +75,7 @@ namespace Platformer.Objects.Effects.Emitters
 
             if (GameManager.Current.Map.CollisionTile(Position.X, Position.Y))
                 LifeTime = 0;
-            var inWater = GameManager.Current.Map.CollisionTile(Position.X, Position.Y, GameMap.WATER_INDEX);
+            var inWater = GameManager.Current.Map.CollisionTile(Position.X, Position.Y - 2, GameMap.WATER_INDEX);
                 
             if (!inWater)
                 LifeTime = 0;

@@ -1227,7 +1227,7 @@ namespace Platformer.Objects.Main
             {
                 YVel = -Gravity;
                 XVel = 0;
-                if (k_leftPressed || k_rightPressed)
+                if (k_leftHolding || k_rightHolding)
                     State = PlayerState.CEIL_CLIMB;
             }
             if (State == PlayerState.CEIL_CLIMB)

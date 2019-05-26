@@ -79,7 +79,7 @@ namespace Platformer.Objects.Effects.Emitters
             for (float i = 0; i < trail * Scale.Y; i+= Scale.Y)
             {
                 alpha += Alpha * (1f / trail);
-                if(!GameManager.Current.Map.CollisionTile(Position.X, Position.Y + i, GameMap.WATER_INDEX))
+                if(!GameManager.Current.Map.CollisionTile(Position.X, Position.Y + i - 2, GameMap.WATER_INDEX))
                     sb.Draw(Texture, Position + new Vector2(0, i), null, new Color(Color, alpha), Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
             }
         }

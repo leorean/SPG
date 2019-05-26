@@ -21,7 +21,7 @@ namespace Platformer.Objects.Enemies
         private State state = State.FLY;
 
         private double t = .5f * Math.PI;
-        private bool initialized;
+        private int initDelay = 3;
 
         public EnemyBat(float x, float y, Room room) : base(x, y, room)
         {
@@ -39,22 +39,32 @@ namespace Platformer.Objects.Enemies
             
         }
 
+        public override void EndUpdate(GameTime gameTime)
+        {
+            base.EndUpdate(gameTime);
+
+            if (initDelay > 0)
+            {
+                initDelay = Math.Max(initDelay - 1, 0);
+                if (initDelay == 0)
+                {
+
+                    if (GameManager.Current.Map.CollisionTile(X, Y - Globals.TILE))
+                    {
+                        state = State.IDLE;
+                        Move(0, -2);
+                    }
+                }
+            }
+        }
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            if (!initialized)
-            {
-                if (GameManager.Current.Map.CollisionTile(X, Y - Globals.TILE))
-                {
-                    state = State.IDLE;
-                    Move(0, -2);
-                }
-
-                initialized = true;
+            if (initDelay > 0)
                 return;
-            }
-
+            
             var player = GameManager.Current.Player;
 
             if (X != player.X)

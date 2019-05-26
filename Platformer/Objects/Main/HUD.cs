@@ -108,11 +108,11 @@ namespace Platformer.Objects.Main
                 font.Draw(sb, mpx + 21, mpy + 5f, $"{mp}", scale: s, depth: Globals.LAYER_UI + .00004f);
 
                 // EXP
-                sb.Draw(AssetManager.HUD, new Vector2(mpx, mpy + 5), new Rectangle(0, 64, 80, 16), Color.White, 0, Vector2.Zero, new Vector2(s), SpriteEffects.None, Globals.LAYER_UI + .00002f);
-                sb.Draw(AssetManager.HUD, new Vector2(mpx, mpy + 5), new Rectangle(0, 80, (int)(80 * expRatio), 16), Color.White, 0, Vector2.Zero, new Vector2(s), SpriteEffects.None, Globals.LAYER_UI + .00003f);
+                sb.Draw(AssetManager.HUD, new Vector2(mpx, mpy + 6), new Rectangle(0, 64, 80, 16), Color.White, 0, Vector2.Zero, new Vector2(s), SpriteEffects.None, Globals.LAYER_UI + .00002f);
+                sb.Draw(AssetManager.HUD, new Vector2(mpx, mpy + 6), new Rectangle(0, 80, (int)(80 * expRatio), 16), Color.White, 0, Vector2.Zero, new Vector2(s), SpriteEffects.None, Globals.LAYER_UI + .00003f);
 
                 // LV
-                sb.Draw(AssetManager.HUD, new Vector2(mpx, mpy + 2), new Rectangle(16 * spellLevel, 96, 16, 16), Color.White, 0, Vector2.Zero, new Vector2(s), SpriteEffects.None, Globals.LAYER_UI + .00002f);
+                sb.Draw(AssetManager.HUD, new Vector2(mpx + 1, mpy + 3), new Rectangle(16 * spellLevel, 96, 16, 16), Color.White, 0, Vector2.Zero, new Vector2(s), SpriteEffects.None, Globals.LAYER_UI + .00002f);
             }
         }
 
