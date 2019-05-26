@@ -80,7 +80,7 @@ namespace Platformer.Objects.Main
             GET_UP, HIT_AIR, HIT_GROUND, CEIL_IDLE,
             CEIL_CLIMB, SWIM, DEAD, LEVITATE,
             PUSH, LIE, SWIM_DIVE_IN, SWIM_TURN_AROUND,
-            DOOR,
+            BACKFACING,
             CARRYOBJECT_TAKE, CARRYOBJECT_IDLE, CARRYOBJECT_WALK, CARRYOBJECT_THROW
         }
 
@@ -408,6 +408,12 @@ namespace Platformer.Objects.Main
                 Stats.Abilities |= PlayerAbility.LEVITATE;
                 Stats.Abilities |= PlayerAbility.CLIMB_CEIL;
                 Stats.Abilities |= PlayerAbility.CLIMB_WALL;
+
+                GameManager.Current.AddSpell(SpellType.STAR);
+
+                GameManager.Current.Player.Stats.MaxHP = 50;
+                GameManager.Current.Player.Stats.MaxMP = 100;
+                GameManager.Current.Player.Stats.MPRegen = 2;
             }
 
             if (input.IsKeyPressed(Keys.O, Input.State.Pressed))
@@ -632,7 +638,8 @@ namespace Platformer.Objects.Main
                 || State == PlayerState.TURN_AROUND
                 || State == PlayerState.JUMP_UP
                 || State == PlayerState.JUMP_DOWN
-                || State == PlayerState.GET_UP))
+                || State == PlayerState.GET_UP
+                || State == PlayerState.LEVITATE))
                 {
                     Orb.State = OrbState.ATTACK;
                     if (Stats.Spells.ElementAt(Stats.SpellIndex).Key != SpellType.NONE)
@@ -1426,7 +1433,7 @@ namespace Platformer.Objects.Main
                 XVel *= .9f;
             }
             // entering doors
-            if (State == PlayerState.DOOR)
+            if (State == PlayerState.BACKFACING)
             {
                 // nothing to do here for now
             }
@@ -1516,7 +1523,7 @@ namespace Platformer.Objects.Main
                           && State != PlayerState.WALL_IDLE
                           && State != PlayerState.CEIL_CLIMB
                           && State != PlayerState.CEIL_IDLE
-                          && State != PlayerState.DOOR
+                          && State != PlayerState.BACKFACING
                           && State != PlayerState.HIT_AIR);
             
             var g = this.MoveAdvanced(moveWithPlatforms);
@@ -1696,7 +1703,7 @@ namespace Platformer.Objects.Main
                     fAmount = 1;
                     fSpd = 0;                    
                     break;
-                case PlayerState.DOOR:
+                case PlayerState.BACKFACING:
                     row = 17;
                     fSpd = 0.05f;
                     fAmount = 4;

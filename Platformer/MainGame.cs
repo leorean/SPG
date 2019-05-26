@@ -193,8 +193,8 @@ namespace Platformer
             if (input.IsKeyPressed(Keys.M, Input.State.Pressed))
             {
                 var dialog = new MessageDialog("Do you like message dialogs?");
-                dialog.YesText = "Oh cool.";
-                dialog.NoText = "No way.";
+                //dialog.YesText = "Oh cool.";
+                //dialog.NoText = "No way.";
 
                 dialog.YesAction = () =>
                 {

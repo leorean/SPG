@@ -112,7 +112,7 @@ namespace Platformer.Main
 
         public void ChangeRoomsFromPosition(Vector2 position)
         {
-            player.State = Player.PlayerState.DOOR;
+            player.State = Player.PlayerState.BACKFACING;
             GameManager.Current.Transition = new Transition();
             GameManager.Current.Transition.FadeIn();
             newPosition = position;
@@ -187,7 +187,7 @@ namespace Platformer.Main
                         
                         case Player.PlayerState.OBTAIN:
                         case Player.PlayerState.DEAD:
-                        case Player.PlayerState.DOOR:
+                        case Player.PlayerState.BACKFACING:
                             offsetX *= .9f;
                             break;
                         default:

@@ -15,6 +15,9 @@ namespace Platformer.Objects.Level
     public class NPC : RoomObject
     {
         private string text;
+        private string yesText;
+        private string noText;
+
         private int type;
 
         private Direction direction;
@@ -23,12 +26,17 @@ namespace Platformer.Objects.Level
 
         private bool centerText;
         private bool lookAtPlayer;
+
+        protected bool decision;
         
-        public NPC(float x, float y, Room room, int type, string text, bool centerText = false, Direction dir = Direction.NONE, string name = null) : base(x, y, room, name)
+        public NPC(float x, float y, Room room, int type, string text, bool centerText = false, Direction dir = Direction.NONE, string name = null, string yesText = null, string noText = null) : base(x, y, room, name)
         {
             this.text = text;
             this.type = type;
-            
+
+            this.yesText = yesText;
+            this.noText = noText;
+
             AnimationTexture = AssetManager.NPCS;
             
             DrawOffset = new Vector2(8, 24);            
@@ -105,14 +113,35 @@ namespace Platformer.Objects.Level
         {
             this.player = player;
 
-            this.player.State = Player.PlayerState.DOOR;
+            this.player.State = Player.PlayerState.BACKFACING;
 
-            var msgBox = new MessageBox(text, centerText, "");
-            msgBox.OnCompleted = () =>
+            if (yesText == null || noText == null)
             {
-                this.player.State = Player.PlayerState.IDLE;                
-                this.player = null;
-            };            
+                var msgBox = new MessageBox(text, centerText, "");
+                msgBox.OnCompleted = EndOfConversation;
+            } else
+            {
+                var dialog = new MessageDialog(text, centerText, "");
+
+                dialog.YesAction = () =>
+                {
+                    decision = true;
+                    var msgBox = new MessageBox(yesText, centerText, "");                    
+                    msgBox.OnCompleted = EndOfConversation;
+                };
+                dialog.NoAction = () =>
+                {
+                    decision = false;
+                    var msgBox = new MessageBox(noText, centerText, "");
+                    msgBox.OnCompleted = EndOfConversation;
+                };                
+            }
+        }
+
+        public virtual void EndOfConversation()
+        {
+            this.player.State = Player.PlayerState.IDLE;
+            this.player = null;
         }
 
         internal void ShowToolTip(Player player)

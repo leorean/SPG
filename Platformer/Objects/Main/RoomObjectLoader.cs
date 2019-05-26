@@ -266,10 +266,13 @@ namespace Platformer.Objects.Main
                     if (type == "npc")
                     {
                         var npcText = data.ContainsKey("text") ? data["text"].ToString() : "-unknown-";
+                        var npcYesText = data.ContainsKey("yesText") ? data["yesText"].ToString() : null;
+                        var npcNoText = data.ContainsKey("noText") ? data["noText"].ToString() : null;
                         var npcType = data.ContainsKey("npcType") ? (int)data["npcType"] : -1;
                         var npcDirection = data.ContainsKey("direction") ? (Direction)(int)data["direction"] : Direction.NONE;
                         var npcCenterText = data.ContainsKey("centerText") ? (bool)data["centerText"] : false;
-                        var npc = new NPC(x + 8, y + 8, room, npcType, npcText, npcCenterText, npcDirection);
+
+                        var npc = new NPC(x + 8, y + 8, room, npcType, npcText, npcCenterText, npcDirection, yesText:npcYesText, noText:npcNoText);                        
                     }
                     if (type == "chest")
                     {

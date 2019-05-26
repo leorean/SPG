@@ -7,6 +7,7 @@ using SPG.Draw;
 using SPG.Objects;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,7 +34,12 @@ namespace Platformer.Objects.Main
         protected Font.VerticalAlignment valign;
 
         protected bool kLeftPressed, kRightPressed, kPrevPressed, kNextPressed;
-        
+
+        protected float alpha;
+
+        public enum MessageState { FADE_IN, SHOW, FADE_OUT }
+        protected MessageState state;
+
         /// <summary>
         /// Creates a new message box.
         /// 
@@ -86,16 +92,18 @@ namespace Platformer.Objects.Main
             Depth = Globals.LAYER_FONT - .001f;
 
             Texture = AssetManager.MessageBox;
-
+            
             this.hiColor = hiColor;
 
             font = AssetManager.DefaultFont.Copy();
             halign = centerText ? Font.HorizontalAlignment.Center : Font.HorizontalAlignment.Left;
             valign = Font.VerticalAlignment.Top;
 
-            Visible = false;
+            Visible = true;
 
             maxWidth = RoomCamera.Current.ViewWidth - Globals.TILE - 4;
+
+            state = MessageState.FADE_IN;
         }
 
         ~MessageBox()
@@ -111,13 +119,7 @@ namespace Platformer.Objects.Main
 
             if (hiColor != null)
                 font.HighlightColor = (Color)hiColor;
-
-            if (!Visible)
-            {
-                Visible = true;
-                return;
-            }
-
+            
             //kPrevPressed = input.IsKeyPressed(Keys.Up, Input.State.Pressed) || input.IsKeyPressed(Keys.S, Input.State.Pressed);
             //kNextPressed = input.IsKeyPressed(Keys.Down, Input.State.Pressed) || input.IsKeyPressed(Keys.A, Input.State.Pressed);
             kPrevPressed = input.IsKeyPressed(Keys.S, Input.State.Pressed);
@@ -154,9 +156,8 @@ namespace Platformer.Objects.Main
                 {
                     if (curText.Length == texts[page].Length)
                     {
-                        OnCompleted?.Invoke();
-                        OnCompleted = null;
-                        Destroy();
+                        state = MessageState.FADE_OUT;
+                        return;
                     }
                 }
                 if (curText.Length == texts[page].Length)
@@ -198,27 +199,45 @@ namespace Platformer.Objects.Main
 
             if (page == 0 && texts.Count > 1)
             {
-                sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 2 * T + z), new Rectangle(1 * T, 3 * T, T, T), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
+                sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 2 * T + z), new Rectangle(1 * T, 3 * T, T, T), Color, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
             }
             else if (page < texts.Count - 1)
             {
                 //sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 0 * T - z), new Rectangle(0 * T, 3 * T, T, T), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
-                sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 2 * T + z), new Rectangle(1 * T, 3 * T, T, T), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
+                sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 2 * T + z), new Rectangle(1 * T, 3 * T, T, T), Color, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
             }
             else
             {
-                sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 2 * T + z), new Rectangle(2 * T, 3 * T, T, T), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
+                sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 2 * T + z), new Rectangle(2 * T, 3 * T, T, T), Color, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
             }
         }
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
             //base.Draw(sb, gameTime);
-
-            if (!Visible)
-                return;
             
-            sb.Draw(Texture, Position, new Rectangle(0,0, RoomCamera.Current.ViewWidth, 3 * Globals.TILE), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth);
+            if (state == MessageState.FADE_IN)
+            {
+                alpha = Math.Min(alpha + .1f, 1);
+
+                if (alpha == 1)
+                    state = MessageState.SHOW;                
+            }
+
+            if (state == MessageState.FADE_OUT)
+            {
+                alpha = Math.Max(alpha - .1f, 0);
+                if (alpha == 0)
+                {
+                    OnCompleted?.Invoke();
+                    OnCompleted = null;
+                    Destroy();
+                }
+            }
+
+            Color = new Color(Color, alpha);
+
+            sb.Draw(Texture, Position, new Rectangle(0,0, RoomCamera.Current.ViewWidth, 3 * Globals.TILE), Color, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth);
 
             DrawActionIcons(sb);
 
@@ -226,6 +245,7 @@ namespace Platformer.Objects.Main
 
             font.Halign = halign;
             font.Valign = valign;
+            font.Color = Color;
 
             if (!string.IsNullOrEmpty(curText))
                 font.Draw(sb, X + 8 + 2 + offX, Y + 8 + 2, curText, maxWidth);
