@@ -301,7 +301,11 @@ namespace SPG.Map
 
                             var partRect = new Rectangle(tix, tiy, Globals.TILE, Globals.TILE);
 
-                            sb.Draw(TileSet.OriginalTexture, new Vector2(i * Globals.TILE, j * Globals.TILE), partRect, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, LayerDepth.ElementAt(l).Value);
+                            float depth = LayerDepth.ElementAt(l).Value;
+                            if (tile.TileOptions.Depth != -1)
+                                depth = tile.TileOptions.Depth;
+
+                            sb.Draw(TileSet.OriginalTexture, new Vector2(i * Globals.TILE, j * Globals.TILE), partRect, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, depth);
                         }
                     }
                 }

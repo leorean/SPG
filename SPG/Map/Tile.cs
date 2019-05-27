@@ -12,6 +12,7 @@ namespace SPG.Map
         //public int AnimationDuration;
         public bool Visible { get; set; } = true;
         public bool Solid { get; set; } = true;
+        public float Depth { get; set; } = -1;
     }
     
     /// <summary>

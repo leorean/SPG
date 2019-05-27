@@ -55,6 +55,7 @@ namespace Platformer.Objects.Main
                     {
                         case 0: // platforms
                         case 12:
+                        case 34:
                         case 535:
                         case 646:
                             var platform = new Platform(i * Globals.TILE, j * Globals.TILE, room);
@@ -67,7 +68,7 @@ namespace Platformer.Objects.Main
                                 Texture = GameManager.Current.Map.TileSet[t.ID]
                             };
                             t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            t.TileOptions.Solid = false;                            
                             break;
                         case 576: // save-statues
                             var saveSatue = new SaveStatue(i * Globals.TILE, j * Globals.TILE, room);
@@ -191,7 +192,7 @@ namespace Platformer.Objects.Main
                             new EnemyGrassy(i * Globals.TILE + 8, j * Globals.TILE + 8, room);
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
-                            break;                        
+                            break;
                         default:                            
                             var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room);
                             if (t.ID == 645) t.TileOptions.Visible = false;  // <- invisible blocks
