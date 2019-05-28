@@ -77,7 +77,7 @@ namespace Platformer.Objects.Main.Orbs
             spellEmitter.Parent = this;
             spellEmitter.Active = false;
             
-            // add MP costs here!
+            // ++++ add MP costs here! ++++
 
             MpCost.Add(SpellType.NONE, new Dictionary<SpellLevel, int>
             {
@@ -93,7 +93,7 @@ namespace Platformer.Objects.Main.Orbs
                 {SpellLevel.THREE, 1 },
             });
 
-            // add max EXP here!
+            // ++++ add max EXP here! ++++
 
             MaxEXP.Add(SpellType.NONE, new Dictionary<SpellLevel, int>
             {
@@ -104,7 +104,7 @@ namespace Platformer.Objects.Main.Orbs
 
             MaxEXP.Add(SpellType.STAR, new Dictionary<SpellLevel, int>
             {
-                {SpellLevel.ONE, 20 },
+                {SpellLevel.ONE, 12 },
                 {SpellLevel.TWO, 40 },
                 {SpellLevel.THREE, 120 },
             });

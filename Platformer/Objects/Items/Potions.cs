@@ -48,7 +48,7 @@ namespace Platformer.Objects.Items
         public Potion(float x, float y, Room room, PotionType potionType) : base(x, y, room)
         {
             Type = potionType;
-
+            Depth = Globals.LAYER_FG + .0001f;
             DrawOffset = new Vector2(8);
             
             potionEmitter = new PotionEmitter(x, y - 6, potionType);

@@ -35,7 +35,7 @@ namespace Platformer.Objects.Enemies
             Direction = Direction.RIGHT;
 
             HP = 10;
-            EXP = 12;
+            EXP = 18;
             Damage = 2;
 
             Gravity = .1f;
