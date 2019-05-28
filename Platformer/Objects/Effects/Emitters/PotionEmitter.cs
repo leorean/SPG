@@ -13,7 +13,7 @@ namespace Platformer.Objects.Effects.Emitters
         public PotionEmitter(float x, float y, PotionType potionType) : base(x, y)
         {
             switch (potionType)
-            {
+            {                
                 case PotionType.HP:
                     particleColors = Potion.HpColors;
                     break;

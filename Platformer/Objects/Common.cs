@@ -28,6 +28,9 @@ namespace Platformer.Objects
 
             //return o.X < cam.ViewX || o.Y < cam.ViewY || o.X > cam.ViewX + cam.ViewWidth || o.Y > cam.ViewY + cam.ViewHeight;
 
+            if (cam.CurrentRoom == null)
+                return false;
+
             return o.X < cam.CurrentRoom.X || o.Y < cam.CurrentRoom.Y || o.X > cam.CurrentRoom.X + cam.CurrentRoom.BoundingBox.Width || o.Y > cam.CurrentRoom.Y + cam.CurrentRoom.BoundingBox.Height;
         }
     }

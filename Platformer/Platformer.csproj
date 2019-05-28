@@ -50,6 +50,7 @@
     <Compile Include="Objects\Effects\Emitters\GlobalWaterBubbleEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\ObtainParticleEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\ObtainShineEmitter.cs" />
+    <Compile Include="Objects\Effects\Emitters\OrbBlockEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\StarEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\PlayerLevitationEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\KeyBurstEmitter.cs" />
