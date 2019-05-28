@@ -9,6 +9,7 @@ using Platformer.Objects.Effects;
 using Platformer.Objects.Effects.Emitters;
 using Platformer.Objects.Enemies;
 using Platformer.Objects.Main;
+using Platformer.Objects.Main.Orbs;
 using SPG.Objects;
 using SPG.Util;
 
@@ -37,9 +38,11 @@ namespace Platformer.Objects.Level
             
             if (GameManager.Current.Player.Orb != null)
             {
-                if (MathUtil.Euclidean(Center, GameManager.Current.Player.Orb.Center) < 2 * Globals.TILE)
+                //if (MathUtil.Euclidean(Center, GameManager.Current.Player.Orb.Center) < 2 * Globals.TILE)
+                if(this.CollisionBounds(GameManager.Current.Player.Orb, X, Y))
                 {
-                    if (GameManager.Current.Player.Orb.State == Main.Orbs.OrbState.ATTACK)
+                    if (GameManager.Current.Player.Orb.State != Main.Orbs.OrbState.FOLLOW)
+                        //&& GameManager.Current.Player.Stats.Spells.ElementAt(GameManager.Current.Player.Stats.SpellIndex).Key == SpellType.NONE)
                     {
                         active = true;
                         emitter.Active = true;

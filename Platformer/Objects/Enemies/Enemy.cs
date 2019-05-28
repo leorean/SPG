@@ -90,7 +90,8 @@ namespace Platformer.Objects.Enemies
             }
             else // death
             {
-                SpellEXP.Spawn(X, Y, EXP);
+                if (GameManager.Current.Player.Stats.Abilities.HasFlag(PlayerAbility.ORB))
+                    SpellEXP.Spawn(X, Y, EXP);
 
                 new SingularEffect(X, Y);
 
