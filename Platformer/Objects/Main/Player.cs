@@ -760,8 +760,8 @@ namespace Platformer.Objects.Main
                     {
                         XVel = 0;
                         YVel = -Gravity;
-
-                        var pos = Position + new Vector2(door.Tx * Globals.TILE, door.Ty * Globals.TILE);
+                        
+                        var pos = new Vector2(door.Center.X + door.Tx * Globals.TILE, door.Center.Y + door.Ty * Globals.TILE);
                         RoomCamera.Current.ChangeRoomsFromPosition(pos);
 
                     }
