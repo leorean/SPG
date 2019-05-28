@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Platformer.Objects.Enemies;
 using Platformer.Objects.Main;
 using SPG.Objects;
 using SPG.Util;
@@ -100,7 +101,13 @@ namespace Platformer.Objects.Level
 
                 YVel = Math.Min(YVel + Gravity, 3);
 
-                var colY = this.CollisionRectangles<Collider>(X + 8, Y + 8, X + 8, Y + 16).FirstOrDefault();
+                var enemy = this.CollisionBoundsFirstOrDefault<Enemy>(X, Y);
+                if (enemy != null)
+                {
+                    enemy.Hit(999, 90);
+                }
+
+                var colY = this.CollisionRectangleFirstOrDefault<Collider>(X + 8, Y + 8, X + 8, Y + 16);
                 if (colY != null)
                 {
                     YVel = 0;

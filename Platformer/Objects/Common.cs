@@ -22,11 +22,13 @@ namespace Platformer.Objects
         public static bool IsOutsideCurrentRoom(this GameObject o)
         {
             var cam = RoomCamera.Current;
-
+            
             if (cam == null)
                 return true;
 
-            return o.X < cam.ViewX || o.Y < cam.ViewY || o.X > cam.ViewX + cam.ViewWidth || o.Y > cam.ViewY + cam.ViewHeight;
+            //return o.X < cam.ViewX || o.Y < cam.ViewY || o.X > cam.ViewX + cam.ViewWidth || o.Y > cam.ViewY + cam.ViewHeight;
+
+            return o.X < cam.CurrentRoom.X || o.Y < cam.CurrentRoom.Y || o.X > cam.CurrentRoom.X + cam.CurrentRoom.BoundingBox.Width || o.Y > cam.CurrentRoom.Y + cam.CurrentRoom.BoundingBox.Height;
         }
     }
 }

@@ -1116,6 +1116,9 @@ namespace Platformer.Objects.Main
                 XVel = 0;
                 YVel = -Gravity;
 
+                if (!onWall)
+                    State = PlayerState.JUMP_DOWN;
+
                 var wallJumpVel = -2.2f;
 
                 if (Direction == Direction.LEFT)

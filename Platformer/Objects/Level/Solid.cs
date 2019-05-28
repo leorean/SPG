@@ -29,7 +29,7 @@ namespace Platformer.Objects.Level
     public class Solid : Collider
     {
         public Solid(float x, float y, Room room) : base(x, y, room)
-        {            
+        {
             BoundingBox = new SPG.Util.RectF(0, 0, Globals.TILE, Globals.TILE);
             Visible = false;
         }

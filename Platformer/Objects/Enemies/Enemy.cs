@@ -28,22 +28,6 @@ namespace Platformer.Objects.Enemies
 
         // hit variables
         protected bool hit = false;
-
-        //private float hitCounter;
-        //public float HitCounter
-        //{
-        //    get => hitCounter;
-        //    set
-        //    {
-        //        hitCounter = value;
-        //        hitTimeout = maxHitTimeout;
-        //    }
-        //}
-
-        private int hitPointsReceived;
-
-        int hitTimeout;
-        int maxHitTimeout = 30;
         
         Font hitFont;
 
@@ -58,7 +42,7 @@ namespace Platformer.Objects.Enemies
             hitFont.Color = new Color(255, 0, 0);
         }
 
-        public void Hit(int hitPoints, float angle)
+        public void Hit(int hitPoints, float degAngle)
         {
             MovingPlatform = null;
 
@@ -70,21 +54,24 @@ namespace Platformer.Objects.Enemies
 
             new FallingFont(X, Y, $"-{hitPoints}", new Color(255, 0, 55), new Color(255, 255, 0));
 
-            var ldx = MathUtil.LengthDirX((float)angle) * .5f;
-            var ldy = MathUtil.LengthDirY((float)angle) * .5f;
+            var ldx = MathUtil.LengthDirX((float)degAngle) * .5f;
+            var ldy = MathUtil.LengthDirY((float)degAngle) * .5f;
 
             XVel += (float)ldx;
             YVel += (float)ldy;
 
-            hit = true;
-
-            hitPointsReceived += hitPoints;
-            hitTimeout = maxHitTimeout;
+            hit = true;            
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            if (GameManager.Current.NonRespawnableIDs.Contains(ID))
+            {
+                Destroy();
+                return;
+            }
 
             // ++++ getting hit ++++
             
@@ -103,9 +90,6 @@ namespace Platformer.Objects.Enemies
             }
             else // death
             {
-                hitTimeout = 0;
-                hitPointsReceived = 0;
-
                 SpellEXP.Spawn(X, Y, EXP);
 
                 new SingularEffect(X, Y);
@@ -113,22 +97,10 @@ namespace Platformer.Objects.Enemies
                 if (RND.Next * 100 < 20)
                     new Potion(X, Y, Room, PotionType.HP);
 
-                Destroy();
-            }
-            
-            // ++++ hit counter ++++
+                GameManager.Current.NonRespawnableIDs.Add(ID);
 
-            hitTimeout = Math.Max(hitTimeout - 1, 0);
-            if (hitTimeout == 0)
-            {
-                if (hitPointsReceived > 0)
-                {
-                    //var font = new FollowFont(X, Top - 8, $"-{hitPointsReceived}");
-                    //font.Target = this;
-                    //font.Color = Color.Red;
-                }
-                hitPointsReceived = 0;
-            }
+                Destroy();
+            }            
         }
 
         public override void EndUpdate(GameTime gameTime)
@@ -140,14 +112,7 @@ namespace Platformer.Objects.Enemies
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
-            base.Draw(sb, gameTime);
-
-            //if (HitCounter > 0)
-            //{
-            //    float hitAlpha = hitTimeout / (.5f * maxHitTimeout);
-            //    hitFont.Color = new Color(hitFont.Color, hitAlpha);
-            //    hitFont.Draw(sb, X, Y - Globals.TILE, $"-{HitCounter}");
-            //}
+            base.Draw(sb, gameTime);            
         }
     }
 }

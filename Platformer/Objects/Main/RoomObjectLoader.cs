@@ -183,6 +183,16 @@ namespace Platformer.Objects.Main
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
                             break;
+                        case 716: // enemy block
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            new EnemyBlock(i * Globals.TILE, j * Globals.TILE, room);
+                            break;
+                        case 717: // orb block
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            new OrbBlock(i * Globals.TILE, j * Globals.TILE, room);
+                            break;
                         case 768: // enemy Bat
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;

@@ -119,12 +119,10 @@ namespace Platformer.Main
             GameManager.Current.Transition.OnTransitionEnd = Transition_1;
         }
 
-        private enum LD { Horizontal, Vertical }
+        private enum TransitionDirection { Horizontal, Vertical }
 
-        private LD moveDirection;
-
-        private float minX, minY, maxX, maxY;
-        
+        private TransitionDirection moveDirection;
+                
         public override void Update(GameTime gt)
         {
             base.Update(gt);
@@ -238,7 +236,7 @@ namespace Platformer.Main
                 
                 if (lookLocked> 0)
                 {
-                    if (moveDirection == LD.Horizontal)
+                    if (moveDirection == TransitionDirection.Horizontal)
                     {
                         var py = MathUtil.Div(Position.Y, ViewHeight) * ViewHeight + .5f * ViewHeight;
                         Position = new Vector2(Position.X, py);
@@ -250,7 +248,7 @@ namespace Platformer.Main
                         }
                     }
 
-                    if (moveDirection == LD.Vertical)
+                    if (moveDirection == TransitionDirection.Vertical)
                     {
                         var px = MathUtil.Div(Position.X, ViewWidth) * ViewWidth + .5f * ViewWidth;
                         Position = new Vector2(px, Position.Y);
@@ -270,9 +268,9 @@ namespace Platformer.Main
                 {
 
                     if (!target.X.In(CurrentRoom.X, CurrentRoom.X + CurrentRoom.BoundingBox.Width))
-                        moveDirection = LD.Horizontal;
+                        moveDirection = TransitionDirection.Horizontal;
                     if (!target.Y.In(CurrentRoom.Y, CurrentRoom.Y + CurrentRoom.BoundingBox.Height))
-                        moveDirection = LD.Vertical;
+                        moveDirection = TransitionDirection.Vertical;
                     
                     lastRoom = CurrentRoom;
                     CurrentRoom = ObjectManager.CollisionPoints<Room>(target, target.X, target.Y).FirstOrDefault();
