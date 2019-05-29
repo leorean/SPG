@@ -88,8 +88,8 @@ namespace Platformer.Objects.Main.Orbs
 
             MpCost.Add(SpellType.STAR, new Dictionary<SpellLevel, int>
             {
-                {SpellLevel.ONE, 2 },
-                {SpellLevel.TWO, 3 },
+                {SpellLevel.ONE, 1 },
+                {SpellLevel.TWO, 2 },
                 {SpellLevel.THREE, 1 },
             });
 
