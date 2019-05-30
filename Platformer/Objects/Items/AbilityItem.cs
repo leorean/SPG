@@ -18,9 +18,8 @@ namespace Platformer.Objects.Items
         }
         
         public string Text { get; set; }
-
-        public delegate void OnAbility();
-        public OnAbility OnObtain;
+        
+        public Action OnObtain;
 
         protected Color? hiColor = null;
 
@@ -91,6 +90,7 @@ namespace Platformer.Objects.Items
 
                 if (yDist == -maxYDist)
                 {
+                    //ObjectManager.DestroyAll<MessageBox>();
                     var msgBox = new MessageBox(Text, name:Name, hiColor:hiColor);
                     msgBox.OnCompleted = () => {                        
                         state = State.TAKEN;

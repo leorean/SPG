@@ -54,19 +54,20 @@ namespace Platformer.Objects.Items
             if (!Sold)
                 showInfo = this.CollisionBounds(GameManager.Current.Player, X, Y);
             
-            t = (t + .03f) % (2 * Math.PI);
+            t = (t + .05f) % (2 * Math.PI);
             z = 2 * Math.Sin(t);
         }
 
         public void Buy()
         {
-            var dialog = new MessageDialog(text + '\n' + "Do you want to buy this?");
+            var dialog = new MessageDialog(text + '|' + "Do you want to buy this?");
             dialog.YesAction = YesAction;
         }
 
         void YesAction()
         {
-            new MessageBox("Thank you.");
+            Sold = true;
+            //new MessageBox("Thank you.");
             if (GameManager.Current.Player.Stats.Coins >= price || true)
             {
                 GameManager.Current.Player.Stats.Coins -= price;
@@ -74,8 +75,27 @@ namespace Platformer.Objects.Items
 
                 if (!respawn)
                 {
-                    GameManager.Current.Player.Stats.Items.Add(ID, Name);
-                    //Sold = true;
+                    // add this only for items that are not already adding the ID when taken
+                    //GameManager.Current.Player.Stats.Items.Add(ID, Name);
+
+                    switch (type)
+                    {
+                        case 0: // feather
+                            var abilityItem = new AbilityItem(X, Y - 1.5f * Globals.TILE, Room, Name);
+                            abilityItem.Texture = AssetManager.Items[5];
+                            abilityItem.OnObtain = () =>
+                            {
+                                GameManager.Current.Player.Stats.Abilities |= PlayerAbility.NO_FALL_DAMAGE;
+                            };
+                            abilityItem.Text = $"You got the ~{Name}~! Prevents fall damage.";
+                            abilityItem.ID = ID;
+                            break;
+                        case 1: // spell: 
+                            break;
+                        case 2:
+                            break;
+                    }
+
                 }
             }
             

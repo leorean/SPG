@@ -269,9 +269,10 @@ namespace Platformer.Objects.Main
                             case 2: // spell: shoot star
                                 item = new AbilityItem(x + 8, y + 8, room, itemName);
                                 item.Texture = AssetManager.Items[4];
-                                item.OnObtain = () => {
+                                item.OnObtain = () =>
+                                {
                                     GameManager.Current.AddSpell(Orbs.SpellType.STAR);
-                                };  
+                                };
                                 item.Text = itemText;
                                 break;                            
                                 // TODO: add other item types, collectables etc.

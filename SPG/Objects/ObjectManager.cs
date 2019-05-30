@@ -86,10 +86,8 @@ namespace SPG.Objects
 
                 if (!(o is T))
                     continue;
-                if (specificID != -1 || o.ID != specificID)
-                    continue;
-
-                o.Destroy();
+                if (specificID == -1 || o.ID == specificID)
+                    o.Destroy();
             }
         }
 

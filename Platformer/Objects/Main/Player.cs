@@ -61,7 +61,8 @@ namespace Platformer.Objects.Main
         CLIMB_CEIL = 4,
         LEVITATE = 8,
         PUSH = 16,
-        ORB = 32
+        ORB = 32,
+        NO_FALL_DAMAGE = 64
         //ideas:
         //PUSH_BIG <- inspired by zelda
         //WARP
@@ -854,7 +855,7 @@ namespace Platformer.Objects.Main
 
             if (YVel != 0) onGround = false;
 
-            if (onGround)
+            if (onGround || Stats.Abilities.HasFlag(PlayerAbility.NO_FALL_DAMAGE))
             {
                 lastGroundY = Y;                
             }
