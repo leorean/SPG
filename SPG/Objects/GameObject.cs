@@ -140,7 +140,7 @@ namespace SPG.Objects
         public GameObject(float x, float y, string name = null) : this()
         {
             Position = new Vector2(x, y);
-            Name = name == null ? name : GetType().Name;
+            Name = name ?? GetType().Name;
             this.CreateID();            
         }
         

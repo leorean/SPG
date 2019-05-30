@@ -11,7 +11,7 @@ namespace Platformer.Objects.Effects
 {
     public class ToolTip : GameObject
     {
-        private double alpha = 0;//-.5;
+        private double alpha = 0;
 
         private Player player;
         private GameObject obj;

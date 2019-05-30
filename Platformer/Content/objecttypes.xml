@@ -32,5 +32,11 @@
  <objecttype name="room" color="#ffec9c">
   <property name="bg" type="int" default="-1"/>
  </objecttype>
+ <objecttype name="shopItem" color="#fff9d2">
+  <property name="itemType" type="int" default="0"/>
+  <property name="price" type="int" default="0"/>
+  <property name="respawn" type="bool" default="false"/>
+  <property name="text" type="string"/>
+ </objecttype>
  <objecttype name="waterMill" color="#a0a0a4"/>
 </objecttypes>

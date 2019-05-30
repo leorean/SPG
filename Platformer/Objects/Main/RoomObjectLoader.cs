@@ -295,6 +295,16 @@ namespace Platformer.Objects.Main
 
                         var npc = new NPC(x + 8, y + 8, room, npcType, npcText, npcCenterText, npcDirection, yesText:npcYesText, noText:npcNoText);                        
                     }
+                    if (type == "shopItem")
+                    {
+                        var shopItemText = data.ContainsKey("text") ? data["text"].ToString() : "-unknown-";
+                        var shopItemName = data.ContainsKey("itemName") ? data["itemName"].ToString() : "-unknown-";
+                        var shopItemType = data.ContainsKey("itemType") ? (int)data["itemType"] : 0;
+                        var shopItemRespawn = data.ContainsKey("respawn") ? (bool)data["respawn"] : false;
+                        var shopItemPrice = data.ContainsKey("price") ? (int)data["price"] : 0;
+
+                        var shopItem = new ShopItem(x + 8, y + 8, room, shopItemName, shopItemType, shopItemPrice, shopItemText, shopItemRespawn);
+                    }
                     if (type == "chest")
                     {
                         var chestValue = data.ContainsKey("value") ? (float)data["value"] : 0.0f;

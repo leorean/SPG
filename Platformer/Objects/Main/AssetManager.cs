@@ -33,6 +33,7 @@ namespace Platformer.Objects.Main
         public static TextureSet Coins { get; private set; }
         public static TextureSet Chest { get; private set; }
         public static TextureSet SpellEXP { get; private set; }
+        public static Texture2D ShopItems { get; private set; }
 
         // HUD
 
@@ -110,6 +111,7 @@ namespace Platformer.Objects.Main
             Coins = content.LoadTextureSet("coins");
             Chest = content.LoadTextureSet("chest");
             SpellEXP = content.LoadTextureSet("spellexp");
+            ShopItems = content.Load<Texture2D>("shopItems");
 
             // backgrounds
 

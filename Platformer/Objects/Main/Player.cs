@@ -801,6 +801,20 @@ namespace Platformer.Objects.Main
                     }
                 }
 
+                // ++++ shop items ++++
+
+                var shopItem = this.CollisionBoundsFirstOrDefault<ShopItem>(X, Y);
+                if (shopItem != null && !shopItem.Sold)
+                {
+                    if (!ObjectManager.Exists<MessageBox>())
+                    {
+                        var toolTip = new ToolTip(shopItem, this, new Vector2(0, 8), 0);
+                    }
+                    if (k_upPressed && !k_attackHolding)
+                    {
+                        shopItem.Buy();
+                    }
+                }
             }
 
             var waterFalls = ObjectManager.FindAll<WaterFallEmitter>();
