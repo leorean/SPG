@@ -38,7 +38,7 @@ namespace Platformer.Objects.Items
                     potionEmitter = new PotionEmitter(X, Y - 8, PotionType.HP);
                     Texture = AssetManager.Items[1];
 
-                    hiColor = Potion.HpColors.First();
+                    HighlightColor = Potion.HpColors.First();
 
                     Name = "HP-Up";
                     Text = "~Max. HP~ increased by 3.";
@@ -53,7 +53,7 @@ namespace Platformer.Objects.Items
                     potionEmitter = new PotionEmitter(X, Y - 8, PotionType.MP);
                     Texture = AssetManager.Items[2];
 
-                    hiColor = Potion.MpColors.First();
+                    HighlightColor = Potion.MpColors.First();
 
                     Name = "MP-Up";
                     Text = "~Max. MP~ increased by 5.";
@@ -68,7 +68,7 @@ namespace Platformer.Objects.Items
                     potionEmitter = new PotionEmitter(X, Y - 8, PotionType.Regen);
                     Texture = AssetManager.Items[3];
 
-                    hiColor = Potion.RegenColors.First();
+                    HighlightColor = Potion.RegenColors.First();
 
                     Name = "MP-Regen-Up";
                     Text = "~MP regeneration~ rate increased.";

@@ -21,7 +21,7 @@ namespace Platformer.Objects.Items
         
         public Action OnObtain;
 
-        protected Color? hiColor = null;
+        public Color? HighlightColor { get; set; } = null;
 
         protected State state = State.IDLE;
 
@@ -91,7 +91,7 @@ namespace Platformer.Objects.Items
                 if (yDist == -maxYDist)
                 {
                     //ObjectManager.DestroyAll<MessageBox>();
-                    var msgBox = new MessageBox(Text, name:Name, hiColor:hiColor);
+                    var msgBox = new MessageBox(Text, name:Name, hiColor:HighlightColor);
                     msgBox.OnCompleted = () => {                        
                         state = State.TAKEN;
                     };

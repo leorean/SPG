@@ -57,6 +57,7 @@ namespace Platformer.Objects.Main
                         case 12:
                         case 34:
                         case 535:
+                        case 612:
                         case 646:
                             var platform = new Platform(i * Globals.TILE, j * Globals.TILE, room);
                             t.TileOptions.Solid = false;

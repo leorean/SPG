@@ -5,7 +5,10 @@
 - Star Orb:
 	- Shoots stars in linear direction
 	- Stars destroy blocks
-	
+
+- Crimson Orb:
+	-
+
 - Lightning Orb:
 	- Shoot lightning towards first enemy + 2 more as chain reaction
 

@@ -24,6 +24,7 @@ namespace Platformer.Objects.Main.Orbs
     {
         NONE = 0,
         STAR,
+        CRIMSON,
         BOOMERANG,
         ROCK,
         LIGHTNING,

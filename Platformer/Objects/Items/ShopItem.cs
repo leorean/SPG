@@ -51,11 +51,15 @@ namespace Platformer.Objects.Items
             if (GameManager.Current.Player.Stats.Items.ContainsKey(ID))
                 Sold = true;
 
+            // spell can't be bought until player has the orb
+            if (type == 2 && !GameManager.Current.Player.Stats.Abilities.HasFlag(PlayerAbility.ORB))
+                Sold = true;
+
             if (!Sold)
                 showInfo = this.CollisionBounds(GameManager.Current.Player, X, Y);
             
             t = (t + .05f) % (2 * Math.PI);
-            z = 2 * Math.Sin(t);
+            z = Math.Sin(t);
         }
 
         public void Buy()
@@ -81,18 +85,29 @@ namespace Platformer.Objects.Items
                     switch (type)
                     {
                         case 0: // feather
-                            var abilityItem = new AbilityItem(X, Y - 1.5f * Globals.TILE, Room, Name);
-                            abilityItem.Texture = AssetManager.Items[5];
-                            abilityItem.OnObtain = () =>
+                            var featherItem = new AbilityItem(X, Y - Globals.TILE, Room, Name);
+                            featherItem.Texture = AssetManager.Items[5];
+                            featherItem.OnObtain = () =>
                             {
                                 GameManager.Current.Player.Stats.Abilities |= PlayerAbility.NO_FALL_DAMAGE;
                             };
-                            abilityItem.Text = $"You got the ~{Name}~! Prevents fall damage.";
-                            abilityItem.ID = ID;
+                            featherItem.Text = $"You got the ~Feather~!\nIt prevents fall damage.";
+                            featherItem.ID = ID;
                             break;
-                        case 1: // spell: 
+                        case 1: // MP crystal
+                            var mpUp = new StatUpItem(X, Y - Globals.TILE, Room, StatUpItem.StatType.MP);
+                            mpUp.ID = ID;
                             break;
-                        case 2:
+                        case 2: // spell: crimson
+                            var crimsonItem = new AbilityItem(X, Y - Globals.TILE, Room, Name);
+                            crimsonItem.Texture = AssetManager.Items[6];
+                            crimsonItem.OnObtain = () =>
+                            {
+                                GameManager.Current.AddSpell(Main.Orbs.SpellType.CRIMSON);
+                            };
+                            crimsonItem.HighlightColor = Colors.FromHex("9f0011");
+                            crimsonItem.Text = $"Learned spell: ~Crimson~.";
+                            crimsonItem.ID = ID;
                             break;
                     }
 
@@ -111,8 +126,8 @@ namespace Platformer.Objects.Items
                 if (showInfo)
                 {
                     var infoY = -2 * Globals.TILE;
-                    if (Y < RoomCamera.Current.ViewY + 3 * Globals.TILE)
-                        infoY = 1 * Globals.TILE + 4;
+                    if (Y < RoomCamera.Current.ViewY + 4 * Globals.TILE)
+                        infoY = -1 * Globals.TILE - 8;
                     font.Draw(sb, X, Y + infoY, $"~{Name}~" + '\n' + $"{price}$");
                 }
                 else
@@ -124,7 +139,7 @@ namespace Platformer.Objects.Items
             
             if (!Sold)
             {
-                sb.Draw(AssetManager.ShopItems, new Vector2(X, Y), new Rectangle(0, 16, 16, 16), Color.White, 0, DrawOffset, Vector2.One, SpriteEffects.None, Depth);
+                sb.Draw(AssetManager.ShopItems, new Vector2(X, Y), new Rectangle(16 * type, 16, 16, 16), Color.White, 0, DrawOffset, Vector2.One, SpriteEffects.None, Depth);
             } else
             {
                 sb.Draw(AssetManager.ShopItems, new Vector2(X, Y), new Rectangle(16, 0, 16, 16), Color.White, 0, DrawOffset, Vector2.One, SpriteEffects.None, Depth);
