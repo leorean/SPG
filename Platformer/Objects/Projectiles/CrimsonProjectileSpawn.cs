@@ -10,15 +10,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SPG.Draw;
+using Platformer.Objects.Effects.Emitters;
+using SPG;
 
 namespace Platformer.Objects.Projectiles
 {
+    public class CrimsonBurstEmitter :SaveBurstEmitter
+    {
+        public CrimsonBurstEmitter(float x, float y) : base(x, y)
+        {
+            ParticleColors = new List<Color>()
+            {
+                Colors.FromHex("c80e1f"),
+                Colors.FromHex("454545"),
+                Colors.FromHex("aa21a3")
+
+            };
+        }
+    }
+
     public class CrimsonProjectileSpawn : GameObject
     {
         private Orb orb;
 
         float power = 0;
-        float maxPower = 60;
+        float maxPower = 0;
+
+        private int level;
 
         public CrimsonProjectileSpawn(Orb orb) : base(orb.X, orb.Y)
         {
@@ -33,8 +52,12 @@ namespace Platformer.Objects.Projectiles
             Position = orb.Position;
             
             Depth = orb.Depth + .0001f;
-            Texture = AssetManager.Projectiles[3 + (int)(orb.Level) - 1];
+            Texture = AssetManager.Projectiles[3];
             orb.Visible = false;
+
+            maxPower = 30 * (int)orb.Level;
+
+            level = Math.Min(MathUtil.Div(power, 30), (int)orb.Level - 1);
 
             power = Math.Min(power + 1, maxPower);
 
@@ -42,22 +65,22 @@ namespace Platformer.Objects.Projectiles
 
             if (orb.State != OrbState.ATTACK || GameManager.Current.Player.MP < orb.MpCost[SpellType.CRIMSON][orb.Level])
             {
-                if (power > 20)
+                if (power > 5)
                 {
                     var degAngle = MathUtil.VectorToAngle(new Vector2(X - orb.Parent.X, Y - orb.Parent.Y));
-
-                    switch (orb.Level)
+                    
+                    switch (level)
                     {
-                        case SpellLevel.ONE:
+                        case 0:
                             SpawnProjectile(degAngle);
                             break;
 
-                        case SpellLevel.TWO:
+                        case 1:
                             SpawnProjectile(degAngle);
                             SpawnProjectile(degAngle, 4.5f);
                             break;
 
-                        case SpellLevel.THREE:
+                        case 2:
                             SpawnProjectile(degAngle);
                             SpawnProjectile(degAngle, 4.5f);
                             SpawnProjectile(degAngle, 5f);
@@ -65,6 +88,9 @@ namespace Platformer.Objects.Projectiles
 
                     }
                 }
+
+                new CrimsonBurstEmitter(X, Y);
+
                 Destroy();
             }
 
@@ -81,7 +107,7 @@ namespace Platformer.Objects.Projectiles
         private void SpawnProjectile(double degAngle, float vel = 4)
         {
             var crimsonProj = new CrimsonProjectile(orb.Parent.X, orb.Parent.Y, orb.Level);
-            crimsonProj.Texture = Texture;
+            crimsonProj.Texture = Texture = AssetManager.Projectiles[3 + (int)(orb.Level)];
             crimsonProj.Depth = Depth;
 
             var coilX = (float)MathUtil.LengthDirX(degAngle);
@@ -96,10 +122,32 @@ namespace Platformer.Objects.Projectiles
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
-            base.Draw(sb, gameTime);
+            //base.Draw(sb, gameTime);
 
-            //sb.Draw(Texture, Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
+            if (Texture != null)
+            {
+                sb.Draw(Texture, Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
+                //var arrow = AssetManager.Projectiles[3 + (int)(orb.Level)];
 
+                var arrow = AssetManager.Projectiles[4 + level];
+                
+                var f = 8 - power / maxPower * 8;
+                var recoil = new Vector2(f * (float)MathUtil.LengthDirX(MathUtil.RadToDeg(Angle)), f * (float)MathUtil.LengthDirY(MathUtil.RadToDeg(Angle)));
+
+                // bow-string
+
+                var start = new Vector2((0 - 8) * (float)MathUtil.LengthDirX(MathUtil.RadToDeg(Angle)), (0 - 8) * (float)MathUtil.LengthDirY(MathUtil.RadToDeg(Angle)));
+                var left = new Vector2(8 * (float)MathUtil.LengthDirX(MathUtil.RadToDeg(Angle) - 90), 8 * (float)MathUtil.LengthDirY(MathUtil.RadToDeg(Angle) - 90));
+                var right = new Vector2(8 * (float)MathUtil.LengthDirX(MathUtil.RadToDeg(Angle) + 90), 8 * (float)MathUtil.LengthDirY(MathUtil.RadToDeg(Angle) + 90));
+
+                sb.DrawLine(Position.X + left.X - .5f, Position.Y + left.Y - .5f, Position.X + recoil.X + start.X - .5f, Position.Y + recoil.Y + start.Y - .5f, Color.White, Depth + .0002f);
+                sb.DrawLine(Position.X + right.X - .5f, Position.Y + right.Y - .5f, Position.X + recoil.X + start.X - .5f, Position.Y + recoil.Y + start.Y - .5f, Color.White, Depth + .0002f);
+
+                // arrow
+
+                sb.Draw(arrow, Position + recoil, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0001f);
+
+            }
             float rel = power / maxPower;
 
             var r = (int)(255);

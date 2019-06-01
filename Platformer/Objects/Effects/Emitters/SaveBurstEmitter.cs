@@ -43,13 +43,13 @@ namespace Platformer.Objects.Effects.Emitters
 
     public class SaveBurstEmitter : ParticleEmitter
     {
-        List<Color> particleColors;
+        public List<Color> ParticleColors { get; set; }
 
         public SaveBurstEmitter(float x, float y) : base(x, y)
         {
             SpawnRate = 25;
 
-            particleColors = new List<Color>
+            ParticleColors = new List<Color>
             {
                 new Color(255, 255, 255),
                 new Color(206, 255, 255),
@@ -72,8 +72,8 @@ namespace Platformer.Objects.Effects.Emitters
         {
             var particle = new SaveBurstParticle(this);
 
-            var colorIndex = RND.Int(particleColors.Count - 1);
-            particle.Color = particleColors[colorIndex];
+            var colorIndex = RND.Int(ParticleColors.Count - 1);
+            particle.Color = ParticleColors[colorIndex];
         }
     }
 }

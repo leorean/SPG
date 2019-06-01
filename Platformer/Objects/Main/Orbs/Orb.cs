@@ -60,7 +60,7 @@ namespace Platformer.Objects.Main.Orbs
         private double t;
         private Vector2 lastPosition;
 
-        private SpellEmitter spellEmitter;
+        //private SpellEmitter spellEmitter;
 
         private float offY;
 
@@ -76,9 +76,9 @@ namespace Platformer.Objects.Main.Orbs
             targetPosition = player.Position;
             lastPosition = targetPosition;
 
-            spellEmitter = new SpellEmitter(X, Y, this);
-            spellEmitter.Parent = this;
-            spellEmitter.Active = false;
+            //spellEmitter = new SpellEmitter(X, Y, this);
+            //spellEmitter.Parent = this;
+            //spellEmitter.Active = false;
             
             // ++++ add MP costs here! ++++
 
@@ -146,9 +146,7 @@ namespace Platformer.Objects.Main.Orbs
                 }
             } else
                 alpha = Math.Min(alpha + .1f, 1);
-
-            spellEmitter.Active = false;
-
+            
             switch (State)
             {
                 case OrbState.FOLLOW:
@@ -247,8 +245,13 @@ namespace Platformer.Objects.Main.Orbs
 
                                     //cooldown = 60;
 
+                                    ObjectManager.Enable<CrimsonProjectileSpawn>();
+
                                     if (!ObjectManager.Exists<CrimsonProjectileSpawn>())
+                                    {
+                                        new CrimsonBurstEmitter(X, Y);
                                         new CrimsonProjectileSpawn(this);
+                                    }
                                     
                                     break;
 
@@ -259,8 +262,6 @@ namespace Platformer.Objects.Main.Orbs
                         }
                     } else
                     {
-                        spellEmitter.Active = false;
-
                         if (cooldown == 0)
                         {
                             XVel = -2 + (float)RND.Next * 2;

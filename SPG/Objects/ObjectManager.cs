@@ -42,9 +42,9 @@ namespace SPG.Objects
 
         public static void CreateID(this GameObject o)
         {
-            string strX = MathUtil.Div(o.X, Globals.TILE).ToString();
-            string strY = MathUtil.Div(o.Y, Globals.TILE).ToString();
-
+            string strX = MathUtil.Div(o.X >= 0 ? o.X : o.X + 10000000, Globals.TILE).ToString();
+            string strY = MathUtil.Div(o.Y >= 0 ? o.Y : o.Y + 10000000, Globals.TILE).ToString();
+            
             o.ID = int.Parse(strX + strY);
         }
 
