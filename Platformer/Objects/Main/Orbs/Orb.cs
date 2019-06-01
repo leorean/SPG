@@ -245,12 +245,12 @@ namespace Platformer.Objects.Main.Orbs
 
                                     //cooldown = 60;
 
-                                    ObjectManager.Enable<CrimsonProjectileSpawn>();
+                                    ObjectManager.Enable<CrimsonBow>();
 
-                                    if (!ObjectManager.Exists<CrimsonProjectileSpawn>())
+                                    if (!ObjectManager.Exists<CrimsonBow>())
                                     {
                                         new CrimsonBurstEmitter(X, Y);
-                                        new CrimsonProjectileSpawn(this);
+                                        new CrimsonBow(this);
                                     }
                                     
                                     break;

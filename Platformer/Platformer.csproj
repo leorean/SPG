@@ -51,6 +51,7 @@
     <Compile Include="Objects\Effects\Emitters\ObtainParticleEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\ObtainShineEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\OrbBlockEmitter.cs" />
+    <Compile Include="Objects\Effects\Emitters\SingleParticleEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\StarEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\PlayerLevitationEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\KeyBurstEmitter.cs" />
@@ -100,7 +101,7 @@
     <Compile Include="Objects\Main\Orbs\Orb.cs" />
     <Compile Include="Objects\Items\ShopItem.cs" />
     <Compile Include="Objects\Projectiles\CrimsonProjectile.cs" />
-    <Compile Include="Objects\Projectiles\CrimsonProjectileSpawn.cs" />
+    <Compile Include="Objects\Projectiles\CrimsonBow.cs" />
     <Compile Include="Objects\Projectiles\PlayerProjectile.cs" />
     <Compile Include="Objects\Projectiles\StarProjectile.cs" />
     <Compile Include="Objects\Main\PlayerGhost.cs" />
