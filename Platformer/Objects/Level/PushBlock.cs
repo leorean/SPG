@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Platformer.Objects.Enemies;
 using Platformer.Objects.Main;
+using SPG.Map;
 using SPG.Objects;
 using SPG.Util;
 
@@ -56,6 +57,9 @@ namespace Platformer.Objects.Level
             var T = Globals.TILE;
 
             aboutToFall = false;
+            
+            // "hack" to clean tile solid underneath
+            new Solid(X, Y, Room).Destroy();
 
             // x
 

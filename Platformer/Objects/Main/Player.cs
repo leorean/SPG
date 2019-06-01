@@ -411,6 +411,7 @@ namespace Platformer.Objects.Main
                 Stats.Abilities |= PlayerAbility.CLIMB_WALL;
 
                 GameManager.Current.AddSpell(SpellType.STAR);
+                GameManager.Current.AddSpell(SpellType.CRIMSON);
 
                 GameManager.Current.Player.Stats.MaxHP = 50;
                 GameManager.Current.Player.Stats.MaxMP = 100;
@@ -1795,7 +1796,7 @@ namespace Platformer.Objects.Main
                 var fg = new Color(r, g, b);
                 var bg = new Color(20, 113, 126);
 
-                sb.DrawBar(Position + new Vector2(0, 12), (int) (1.5 * Globals.TILE), oxygen / (float)maxOxygen, fg, bg, height:2, border:false);                
+                sb.DrawBar(Position + new Vector2(0, 12), (int)(1.5 * Globals.TILE), oxygen / (float)maxOxygen, fg, bg, height: 2, border: false);
             }            
         }
     }

@@ -99,6 +99,8 @@
     <Compile Include="Objects\Main\MessageDialog.cs" />
     <Compile Include="Objects\Main\Orbs\Orb.cs" />
     <Compile Include="Objects\Items\ShopItem.cs" />
+    <Compile Include="Objects\Projectiles\CrimsonProjectile.cs" />
+    <Compile Include="Objects\Projectiles\CrimsonProjectileSpawn.cs" />
     <Compile Include="Objects\Projectiles\PlayerProjectile.cs" />
     <Compile Include="Objects\Projectiles\StarProjectile.cs" />
     <Compile Include="Objects\Main\PlayerGhost.cs" />

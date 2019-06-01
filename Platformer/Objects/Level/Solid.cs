@@ -43,7 +43,6 @@ namespace Platformer.Objects.Level
             var val = GameManager.Current.Map.LayerData[GameMap.FG_INDEX].Get(tx, ty);
             if (val?.TileOptions != null)
                 val.TileOptions.Solid = true;
-            //GameManager.Current.Map.LayerData[GameMap.FG_INDEX].Set(tx, ty, value( .Get(tx, ty);
         }
 
         public override void Destroy(bool callGC = false)

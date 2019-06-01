@@ -54,13 +54,15 @@ namespace Platformer.Objects.Main.Orbs
         private int alphaTimeout;
         private Direction lastChangeDir;
 
-        public Dictionary<SpellType, Dictionary<SpellLevel, int>> MpCost { get; private set; } = new Dictionary<SpellType, Dictionary<SpellLevel, int>>();
+        public Dictionary<SpellType, Dictionary<SpellLevel, float>> MpCost { get; private set; } = new Dictionary<SpellType, Dictionary<SpellLevel, float>>();
         public Dictionary<SpellType, Dictionary<SpellLevel, int>> MaxEXP { get; private set; } = new Dictionary<SpellType, Dictionary<SpellLevel, int>>();
 
         private double t;
         private Vector2 lastPosition;
 
         private SpellEmitter spellEmitter;
+
+        private float offY;
 
         public Orb(Player player) : base(player.X, player.Y)
         {
@@ -80,18 +82,25 @@ namespace Platformer.Objects.Main.Orbs
             
             // ++++ add MP costs here! ++++
 
-            MpCost.Add(SpellType.NONE, new Dictionary<SpellLevel, int>
+            MpCost.Add(SpellType.NONE, new Dictionary<SpellLevel, float>
             {
                 {SpellLevel.ONE, 0 },
                 {SpellLevel.TWO, 0 },
                 {SpellLevel.THREE, 0 },
             });
 
-            MpCost.Add(SpellType.STAR, new Dictionary<SpellLevel, int>
+            MpCost.Add(SpellType.STAR, new Dictionary<SpellLevel, float>
             {
                 {SpellLevel.ONE, 1 },
                 {SpellLevel.TWO, 2 },
                 {SpellLevel.THREE, 1 },
+            });
+
+            MpCost.Add(SpellType.CRIMSON, new Dictionary<SpellLevel, float>
+            {
+                {SpellLevel.ONE, .2f },
+                {SpellLevel.TWO, .4f },
+                {SpellLevel.THREE, .6f },
             });
 
             // ++++ add max EXP here! ++++
@@ -108,6 +117,13 @@ namespace Platformer.Objects.Main.Orbs
                 {SpellLevel.ONE, 12 },
                 {SpellLevel.TWO, 40 },
                 {SpellLevel.THREE, 120 },
+            });
+
+            MaxEXP.Add(SpellType.CRIMSON, new Dictionary<SpellLevel, int>
+            {
+                {SpellLevel.ONE, 30 },
+                {SpellLevel.TWO, 80 },
+                {SpellLevel.THREE, 220 },
             });
         }
 
@@ -157,11 +173,25 @@ namespace Platformer.Objects.Main.Orbs
                     {
                         State = OrbState.FOLLOW;
                     }
-                    
+
                     break;
                 case OrbState.ATTACK:
                     headBackTimer = 20;
-                    targetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 14, 14 * Math.Sign((int)player.LookDirection));
+
+                    // positioning
+                    switch (Type)
+                    {
+                        case SpellType.CRIMSON:
+
+                            offY += (int)player.LookDirection;
+                            offY = Math.Sign(offY) * Math.Min(Math.Abs(offY), 16);
+
+                            targetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 16, offY);
+                            break;
+                        default:
+                            targetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 14, 14 * Math.Sign((int)player.LookDirection));
+                            break;
+                    }
 
                     MoveTowards(targetPosition, 6);
                     Move(player.XVel, player.YVel);
@@ -181,7 +211,7 @@ namespace Platformer.Objects.Main.Orbs
 
                             switch (Type)
                             {
-                                case SpellType.STAR:
+                                case SpellType.STAR: // ++++ STAR ++++
 
                                     switch (Level)
                                     {
@@ -201,18 +231,27 @@ namespace Platformer.Objects.Main.Orbs
                                     // recoil + projectile speed:
 
                                     //var degAngle = MathUtil.VectorToAngle(new Vector2(targetPosition.X - player.X, targetPosition.Y - player.Y));
-                                    var degAngle = MathUtil.VectorToAngle(new Vector2(targetPosition.X - player.X, 0));
+                                    var starDegAngle = MathUtil.VectorToAngle(new Vector2(targetPosition.X - player.X, 0));
 
-                                    var coilX = (float)MathUtil.LengthDirX(degAngle);
-                                    var coilY = (float)MathUtil.LengthDirY(degAngle);
+                                    var starCoilX = (float)MathUtil.LengthDirX(starDegAngle);
+                                    var starCoilY = (float)MathUtil.LengthDirY(starDegAngle);
 
-                                    proj.XVel = coilX * 3;
-                                    proj.YVel = coilY * 3;
+                                    proj.XVel = starCoilX * 3;
+                                    proj.YVel = starCoilY * 3;
 
-                                    XVel += -2 * coilX;
-                                    YVel += -2 * coilY;
+                                    XVel += -2 * starCoilX;
+                                    YVel += -2 * starCoilY;
 
                                     break;
+                                case SpellType.CRIMSON: // ++++ CRIMSON ++++
+
+                                    //cooldown = 60;
+
+                                    if (!ObjectManager.Exists<CrimsonProjectileSpawn>())
+                                        new CrimsonProjectileSpawn(this);
+                                    
+                                    break;
+
                                 // TODO: other spells!!!
                                 default:
                                     break;

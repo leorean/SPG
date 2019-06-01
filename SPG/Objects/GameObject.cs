@@ -97,7 +97,10 @@ namespace SPG.Objects
         public int Height { get => Texture != null ? Texture.Height : 0; }
 
         private float angle;
-        public float Angle { get => angle; set => angle = value % 360.0f; }
+        /// <summary>
+        /// Gets or sets the in radiants.
+        /// </summary>
+        public float Angle { get => angle; set => angle = value % (float)(2 * Math.PI); }
 
         public Vector2 Scale { get; set; } = new Vector2(1, 1);
         public Color Color { get; set; } = Color.White;

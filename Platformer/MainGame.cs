@@ -186,16 +186,18 @@ namespace Platformer
 
             if (input.IsKeyPressed(Keys.C, Input.State.Pressed))
             {
-                GameManager.Current.SaveGame.Delete();
-                Debug.WriteLine("Deleted save game.");
+                var dialog = new MessageDialog("Delete save game?");
+                dialog.YesAction = () =>
+                {
+                    GameManager.Current.SaveGame.Delete();
+                    Debug.WriteLine("Deleted save game.");
+                };
             }
 
             if (input.IsKeyPressed(Keys.M, Input.State.Pressed))
             {
                 var dialog = new MessageDialog("Do you like message dialogs?");
-                //dialog.YesText = "Oh cool.";
-                //dialog.NoText = "No way.";
-
+                
                 dialog.YesAction = () =>
                 {
                     Coin.Spawn(GameManager.Current.Player.X, GameManager.Current.Player.Y, RoomCamera.Current.CurrentRoom, 100);

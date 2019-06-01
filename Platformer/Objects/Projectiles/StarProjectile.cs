@@ -21,7 +21,7 @@ namespace Platformer.Objects.Projectiles
         private Vector2 origin;
         private int maxDist;
         
-        public StarProjectile(float x, float y, SpellLevel level) : base(x, y)
+        public StarProjectile(float x, float y, SpellLevel level) : base(x, y, level)
         {            
             BoundingBox = new RectF(-2, -2, 4, 4);
             DrawOffset = new Vector2(8, 8);
