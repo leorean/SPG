@@ -51,8 +51,8 @@ namespace Platformer.Objects.Items
             if (GameManager.Current.Player.Stats.Items.ContainsKey(ID))
                 Sold = true;
 
-            // spell can't be bought until player has the orb
-            if (type == 2 && !GameManager.Current.Player.Stats.Abilities.HasFlag(PlayerAbility.ORB))
+            // magic can't be bought until player has the orb
+            if ((type == 1 || type == 2) && !GameManager.Current.Player.Stats.Abilities.HasFlag(PlayerAbility.ORB))
                 Sold = true;
 
             if (!Sold)

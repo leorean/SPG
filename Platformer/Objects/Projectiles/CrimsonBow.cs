@@ -138,34 +138,27 @@ namespace Platformer.Objects.Projectiles
                 var start = new Vector2((0 - 8) * (float)MathUtil.LengthDirX(MathUtil.RadToDeg(Angle)), (0 - 8) * (float)MathUtil.LengthDirY(MathUtil.RadToDeg(Angle)));
                 var left = new Vector2(9 * (float)MathUtil.LengthDirX(MathUtil.RadToDeg(Angle) - 90), 9 * (float)MathUtil.LengthDirY(MathUtil.RadToDeg(Angle) - 90));
                 var right = new Vector2(9 * (float)MathUtil.LengthDirX(MathUtil.RadToDeg(Angle) + 90), 9 * (float)MathUtil.LengthDirY(MathUtil.RadToDeg(Angle) + 90));
+                
+                float rel = power / maxPower;                
+                var col = new Color(rel * 255, 0, 0);
 
-                //var col = Colors.FromHex("c80e1f");
-
-                float rel = power / maxPower;
-
-                var r = (int)(rel *255);
-                var g = 0;// 255 - (int)(rel * 255);
-                var b = (int)(0);
-
-                var col = new Color(r, g, b);
-
+                if (rel * RND.Next * 10 > 8)
+                {
+                    var emitter = new SingleParticleEmitter(X + recoil.X, Y + recoil.Y);
+                    var colors = CrimsonBurstEmitter.CrimsonColors;
+                    var colorIndex = RND.Int(colors.Count - 1);
+                    emitter.Color = colors[colorIndex];
+                    emitter.XVel = rel * -(float)MathUtil.LengthDirX(MathUtil.RadToDeg(Angle));
+                    emitter.YVel = rel * -(float)MathUtil.LengthDirY(MathUtil.RadToDeg(Angle));
+                }
                 sb.DrawLine(Position.X + left.X - .5f, Position.Y + left.Y - .5f, Position.X + recoil.X + start.X - .5f, Position.Y + recoil.Y + start.Y - .5f, col, Depth - .0002f);
                 sb.DrawLine(Position.X + right.X - .5f, Position.Y + right.Y - .5f, Position.X + recoil.X + start.X - .5f, Position.Y + recoil.Y + start.Y - .5f, col, Depth - .0002f);
 
                 // arrow
 
                 var arrow = AssetManager.Projectiles[4 + level];
-                sb.Draw(arrow, Position + recoil, null, Color, Angle + (float)MathUtil.DegToRad(45), DrawOffset, Scale, SpriteEffects.None, Depth + .0001f);
-
+                sb.Draw(arrow, Position + recoil, null, Color, Angle + (float)MathUtil.DegToRad(45), DrawOffset, Scale, SpriteEffects.None, Depth + .0001f);                
             }
-            //float rel = power / maxPower;
-
-            //var r = (int)(255);
-            //var g = 0 + (int)(rel * 255);
-            //var b = (int)(55 - rel * 55);
-            
-            //if (rel >= .25f)
-            //    sb.DrawBar(Position + new Vector2(0, -12), 16, rel, new Color(r, g, b), Color.Black, orb.Depth + 0.0001f, 1, false);
         }
     }
 }

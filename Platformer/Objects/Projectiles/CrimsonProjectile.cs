@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Platformer.Objects.Effects;
 using Platformer.Objects.Effects.Emitters;
 using Platformer.Objects.Level;
@@ -77,7 +78,13 @@ namespace Platformer.Objects.Projectiles
             if (this.IsOutsideCurrentRoom())
                 Destroy();
         }
-        
+
+        public override void Draw(SpriteBatch sb, GameTime gameTime)
+        {
+            base.Draw(sb, gameTime);
+            //sb.Draw(AssetManager.Projectiles[6 + (int)level], Position, null, Color, Angle - (float)MathUtil.DegToRad(45), DrawOffset, Scale, SpriteEffects.None, Depth - .0001f);
+        }
+
         public override void HandleCollision()
         {
             //throw new NotImplementedException();

@@ -34,7 +34,7 @@ namespace Platformer.Objects.Level
             else if (!activateOnce)
                 Active = false;
 
-            var frame = 1 * Convert.ToInt32(Active) + 2 * Convert.ToInt32(activateOnce);
+            var frame = 1 * Convert.ToInt32(Active || Room.SwitchState) + 2 * Convert.ToInt32(activateOnce);
 
             Texture = AssetManager.GroundSwitch[frame];
             

@@ -771,12 +771,12 @@ namespace Platformer.Objects.Main
 
                 // ++++ keys ++++
                 
-                var key = this.CollisionBoundsFirstOrDefault<Key>(X, Y + Globals.TILE);
+                var key = this.CollisionBoundsFirstOrDefault<Key>(X, Y + 1);
                 if (key != null)
                 {
                     var toolTip = new ToolTip(key, this, new Vector2(0, 8), 1);
 
-                    if (State == PlayerState.IDLE && k_downPressed)
+                    if ((State == PlayerState.IDLE || State == PlayerState.WALK) && k_downPressed)
                     {
                         KeyObject = key;
                         key.Take(this);
@@ -856,7 +856,7 @@ namespace Platformer.Objects.Main
 
             if (YVel != 0) onGround = false;
 
-            if (onGround || Stats.Abilities.HasFlag(PlayerAbility.NO_FALL_DAMAGE))
+            if (onGround)
             {
                 lastGroundY = Y;                
             }
@@ -1568,7 +1568,7 @@ namespace Platformer.Objects.Main
                     || State == PlayerState.CARRYOBJECT_IDLE
                     || State == PlayerState.CARRYOBJECT_WALK)
                 {
-                    if (lastGroundY < Y - 9 * Globals.TILE)
+                    if (lastGroundY < Y - 9 * Globals.TILE && !Stats.Abilities.HasFlag(PlayerAbility.NO_FALL_DAMAGE))
                     {
                         var eff = new SingularEffect(X, Y + 8);
                         Hit(3);
@@ -1759,20 +1759,12 @@ namespace Platformer.Objects.Main
 
         private void CreateSpellUpEffect()
         {
-            //FallingFont spellFont = new FallingFont(X, Y - 8, "Spell Up!", Potion.MpColors[0], Color.White);
-            //spellFont.XVel = 0;
-            //spellFont.Gravity = .025f;
-            //spellFont.Scale = new Vector2(1);
-            //spellFont.YVel = -1;
+            new FollowFont(X, Y - 12, $"Level Up!");
         }
 
         private void CreateSpellDownEffect()
         {
-            //FallingFont spellFont = new FallingFont(X, Y - 8, "Spell Down!", new Color(218, 218, 218), new Color(250, 92, 117));
-            //spellFont.XVel = 0;
-            //spellFont.Gravity = .025f;
-            //spellFont.Scale = new Vector2(1);
-            //spellFont.YVel = -1;
+            new FollowFont(X, Y - 12, $"Level Down!");
         }
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)

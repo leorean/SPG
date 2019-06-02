@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Platformer.Objects;
 using Platformer.Objects.Level;
+using SPG.Map;
 
 namespace Platformer.Objects.Items
 {
@@ -47,12 +48,15 @@ namespace Platformer.Objects.Items
 
             angVel = -.1f + (float)RND.Next * .2f;
 
-            XVel = -.75f + (float)RND.Next * 1.5f;
-            YVel = -1 - (float)RND.Next * .5f;
+            //XVel = -.75f + (float)RND.Next * 1.5f;
+            //YVel = -1 - (float)RND.Next * .5f;
+
+            XVel = (1 + (float)RND.Next) * (float)MathUtil.LengthDirX(MathUtil.RadToDeg(Angle));
+            YVel = (1 + (float)RND.Next) * (float)MathUtil.LengthDirY(MathUtil.RadToDeg(Angle));
 
             Gravity = .1f;
 
-            lifeTime = 6 * 60;
+            lifeTime = 10 * 60;
 
             Exp = value;
 
@@ -72,19 +76,33 @@ namespace Platformer.Objects.Items
 
                 if (kinetic)
                 {
+                    Move(XVel, YVel);
 
-                    var onGround = CollisionExtensions.MoveAdvanced(this, false);
-
-                    if (onGround)
+                    XVel *= .9f;
+                    YVel *= .9f;
+                    
+                    if (GameManager.Current.Map.CollisionTile(X, Y))
                     {
-                        angVel = -.1f + (float)RND.Next * .2f;
-                        YVel = -.8f * yp;
-
-                        XVel *= .5f;
-
-                        if (Math.Abs(yp) < .2f)
+                        MoveTowards(GameManager.Current.Player, 30);
+                    }
+                    else
+                    {
+                        if (Math.Abs(XVel) < .1f && Math.Abs(YVel) < .1f)
                             kinetic = false;
                     }
+
+                    //var onGround = CollisionExtensions.MoveAdvanced(this, false);
+
+                    //if (onGround)
+                    //{
+                    //    angVel = -.1f + (float)RND.Next * .2f;
+                    //    YVel = -.8f * yp;
+
+                    //    XVel *= .5f;
+
+                    //    if (Math.Abs(yp) < .2f)
+                    //        kinetic = false;
+                    //}
                 }
                 else
                 {

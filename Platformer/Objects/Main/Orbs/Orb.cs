@@ -99,8 +99,8 @@ namespace Platformer.Objects.Main.Orbs
             MpCost.Add(SpellType.CRIMSON, new Dictionary<SpellLevel, float>
             {
                 {SpellLevel.ONE, .2f },
-                {SpellLevel.TWO, .4f },
-                {SpellLevel.THREE, .6f },
+                {SpellLevel.TWO, .2f },
+                {SpellLevel.THREE, .3f },
             });
 
             // ++++ add max EXP here! ++++

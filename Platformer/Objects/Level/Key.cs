@@ -152,7 +152,7 @@ namespace Platformer.Objects.Level
                 GameManager.Current.Player.Stats.KeysAndKeyblocks.Add((keyBlock as GameObject).ID);
 
                 new Effects.SingularEffect(keyBlock.X + 8, keyBlock.Y + 8, 2);
-                new Effects.Emitters.StarEmitter(keyBlock.X + 8, keyBlock.Y + 8);
+                new StarEmitter(keyBlock.X + 8, keyBlock.Y + 8);
             };
 
             if (player != null)

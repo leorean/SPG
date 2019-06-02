@@ -238,6 +238,7 @@ namespace Platformer.Objects.Items
                     row = 6;
                     break;                
             }
+            
             SetAnimation(cols * row, cols * row + cols - 1, fSpd, true);
         }
 

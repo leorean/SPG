@@ -53,6 +53,8 @@ namespace Platformer.Objects.Effects.Emitters
         {
             var part = new SingleParticle(this);
             part.Color = Color;
+            part.XVel = XVel;
+            part.YVel = YVel;
         }
     }
 }
