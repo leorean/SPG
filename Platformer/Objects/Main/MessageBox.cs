@@ -236,7 +236,7 @@ namespace Platformer.Objects.Main
             }
 
             Color = new Color(Color, alpha);
-
+            
             sb.Draw(Texture, Position, new Rectangle(0,0, RoomCamera.Current.ViewWidth, 3 * Globals.TILE), Color, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth);
 
             DrawActionIcons(sb);

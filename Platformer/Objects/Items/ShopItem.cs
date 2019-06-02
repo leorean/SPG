@@ -76,9 +76,7 @@ namespace Platformer.Objects.Items
                 
                 GameManager.Current.Player.Stats.Coins -= price;
                 new FollowFont(GameManager.Current.Player.X, GameManager.Current.Player.Y - 12, $"-{price}$");
-
-                new MessageBox("Thank you!|..don't forget to take that item with you!");
-
+                
                 if (!respawn)
                 {
                     // add this only for items that are not already adding the ID when taken
@@ -113,6 +111,9 @@ namespace Platformer.Objects.Items
                             break;
                     }
                 }
+
+                new MessageBox("Thank you!|..don't forget to take that item with you!");
+
             } else
             {
                 new MessageBox("I'm afraid you can't afford it..");
