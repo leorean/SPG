@@ -30,12 +30,15 @@ namespace Platformer.Objects.Main
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            
-            if (option == 1 && kRightPressed)
-                option = 0;
 
-            if (option == 0 && kLeftPressed)
-                option = 1;
+            if (curText.Length == texts[page].Length && page == texts.Count - 1)
+            {
+                if (option == 1 && kRightPressed)
+                    option = 0;
+
+                if (option == 0 && kLeftPressed)
+                    option = 1;
+            }
         }
 
         public override void DrawActionIcons(SpriteBatch sb)
@@ -79,6 +82,9 @@ namespace Platformer.Objects.Main
                 YesAction?.Invoke();
             if (option == 0)
                 NoAction?.Invoke();
+
+            YesAction = null;
+            NoAction = null;
         }
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)

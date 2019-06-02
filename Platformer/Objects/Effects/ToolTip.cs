@@ -53,7 +53,7 @@ namespace Platformer.Objects.Effects
 
             if (player.CollisionBounds(obj, player.X + collisionOffset.X, player.Y + collisionOffset.Y))
             {
-                alpha = Math.Min(alpha + .02f, 1);
+                alpha = Math.Min(alpha + .02f, .5f);
             } else
             {
                 alpha = Math.Max(alpha - .03f, 0);

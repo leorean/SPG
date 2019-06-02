@@ -24,7 +24,7 @@ namespace Platformer.Objects.Items
         private Font font;
 
         public bool Sold { get; private set; }
-
+        
         public ShopItem(int x, int y, Room room, string itemName, int shopItemType, int shopItemPrice, string shopItemText, bool shopItemRespawn) : base(x, y, room, itemName)
         {
             DebugEnabled = true;
@@ -59,7 +59,7 @@ namespace Platformer.Objects.Items
                 showInfo = this.CollisionBounds(GameManager.Current.Player, X, Y);
             
             t = (t + .05f) % (2 * Math.PI);
-            z = Math.Sin(t);
+            z = Math.Sin(t);            
         }
 
         public void Buy()
@@ -70,12 +70,14 @@ namespace Platformer.Objects.Items
 
         void YesAction()
         {
-            Sold = true;
-            //new MessageBox("Thank you.");
-            if (GameManager.Current.Player.Stats.Coins >= price || true)
+            if (GameManager.Current.Player.Stats.Coins >= price)
             {
+                Sold = true;
+                
                 GameManager.Current.Player.Stats.Coins -= price;
                 new FollowFont(GameManager.Current.Player.X, GameManager.Current.Player.Y - 12, $"-{price}$");
+
+                new MessageBox("Thank you!|..don't forget to take that item with you!");
 
                 if (!respawn)
                 {
@@ -95,7 +97,7 @@ namespace Platformer.Objects.Items
                             featherItem.ID = ID;
                             break;
                         case 1: // MP crystal
-                            var mpUp = new StatUpItem(X, Y - Globals.TILE, Room, StatUpItem.StatType.MP);
+                            var mpUp = new StatUpItem(X, Y - Globals.TILE, Room, StatUpItem.StatType.MP);                            
                             mpUp.ID = ID;
                             break;
                         case 2: // spell: crimson
@@ -103,15 +105,17 @@ namespace Platformer.Objects.Items
                             crimsonItem.Texture = AssetManager.Items[6];
                             crimsonItem.OnObtain = () =>
                             {
-                                GameManager.Current.AddSpell(Main.Orbs.SpellType.CRIMSON);
+                                GameManager.Current.AddSpell(Main.Orbs.SpellType.CRIMSON_ARC);
                             };
-                            crimsonItem.HighlightColor = Colors.FromHex("9f0011");
-                            crimsonItem.Text = $"Learned spell: ~Crimson~.";
+                            crimsonItem.HighlightColor = Colors.FromHex("c80e1f");
+                            crimsonItem.Text = $"Learned spell: ~Crimson Arc~.";
                             crimsonItem.ID = ID;
                             break;
                     }
-
                 }
+            } else
+            {
+                new MessageBox("I'm afraid you can't afford it..");
             }
             
         }
@@ -127,7 +131,7 @@ namespace Platformer.Objects.Items
                 {
                     var infoY = -2 * Globals.TILE;
                     if (Y < RoomCamera.Current.ViewY + 4 * Globals.TILE)
-                        infoY = -1 * Globals.TILE - 8;
+                        infoY = -1 * Globals.TILE;
                     font.Draw(sb, X, Y + infoY, $"~{Name}~" + '\n' + $"{price}$");
                 }
                 else

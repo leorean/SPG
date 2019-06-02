@@ -24,7 +24,7 @@ namespace Platformer.Objects.Main.Orbs
     {
         NONE = 0,
         STAR,
-        CRIMSON,
+        CRIMSON_ARC,
         BOOMERANG,
         ROCK,
         LIGHTNING,
@@ -96,7 +96,7 @@ namespace Platformer.Objects.Main.Orbs
                 {SpellLevel.THREE, 1 },
             });
 
-            MpCost.Add(SpellType.CRIMSON, new Dictionary<SpellLevel, float>
+            MpCost.Add(SpellType.CRIMSON_ARC, new Dictionary<SpellLevel, float>
             {
                 {SpellLevel.ONE, .2f },
                 {SpellLevel.TWO, .2f },
@@ -119,7 +119,7 @@ namespace Platformer.Objects.Main.Orbs
                 {SpellLevel.THREE, 120 },
             });
 
-            MaxEXP.Add(SpellType.CRIMSON, new Dictionary<SpellLevel, int>
+            MaxEXP.Add(SpellType.CRIMSON_ARC, new Dictionary<SpellLevel, int>
             {
                 {SpellLevel.ONE, 30 },
                 {SpellLevel.TWO, 80 },
@@ -179,7 +179,7 @@ namespace Platformer.Objects.Main.Orbs
                     // positioning
                     switch (Type)
                     {
-                        case SpellType.CRIMSON:
+                        case SpellType.CRIMSON_ARC:
 
                             offY += (int)player.LookDirection;
                             offY = Math.Sign(offY) * Math.Min(Math.Abs(offY), 16);
@@ -241,7 +241,7 @@ namespace Platformer.Objects.Main.Orbs
                                     YVel += -2 * starCoilY;
 
                                     break;
-                                case SpellType.CRIMSON: // ++++ CRIMSON ++++
+                                case SpellType.CRIMSON_ARC: // ++++ CRIMSON ++++
 
                                     //cooldown = 60;
 

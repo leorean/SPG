@@ -64,7 +64,7 @@ namespace Platformer.Objects.Projectiles
 
             Angle = (float)MathUtil.VectorToAngle(new Vector2(X - orb.Parent.X, Y - orb.Parent.Y), true);
 
-            if (orb.State != OrbState.ATTACK || GameManager.Current.Player.MP < orb.MpCost[SpellType.CRIMSON][orb.Level])
+            if (orb.State != OrbState.ATTACK || GameManager.Current.Player.MP < orb.MpCost[SpellType.CRIMSON_ARC][orb.Level])
             {
                 if (power > 5)
                 {

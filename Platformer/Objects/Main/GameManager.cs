@@ -41,6 +41,8 @@ namespace Platformer.Objects.Main
         public float CoinsAfterDeath { get; set; }
         private Vector2 originalSpawnPosition;
 
+        private bool manualStateEnabled;
+
         public GameManager()
         {
             instance = this;
@@ -245,6 +247,11 @@ namespace Platformer.Objects.Main
             NonRespawnableIDs.Clear();
         }
 
+        public void OverwriteSwitchStateTo(bool enabled)
+        {
+            manualStateEnabled = enabled;
+        }
+
         public void Update(GameTime gameTime)
         {
 
@@ -268,12 +275,12 @@ namespace Platformer.Objects.Main
                     if (s.Active)
                     {
                         found = true;
-                        RoomCamera.Current.CurrentRoom.SwitchState = true;
+                        RoomCamera.Current.CurrentRoom.SwitchState = true || manualStateEnabled;
                         break;
                     }
                 }
                 if (!found)
-                    RoomCamera.Current.CurrentRoom.SwitchState = false;
+                    RoomCamera.Current.CurrentRoom.SwitchState = false || manualStateEnabled;
 
             }
 

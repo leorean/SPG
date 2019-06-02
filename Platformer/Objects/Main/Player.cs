@@ -411,7 +411,7 @@ namespace Platformer.Objects.Main
                 Stats.Abilities |= PlayerAbility.CLIMB_WALL;
 
                 GameManager.Current.AddSpell(SpellType.STAR);
-                GameManager.Current.AddSpell(SpellType.CRIMSON);
+                GameManager.Current.AddSpell(SpellType.CRIMSON_ARC);
 
                 GameManager.Current.Player.Stats.MaxHP = 50;
                 GameManager.Current.Player.Stats.MaxMP = 100;
