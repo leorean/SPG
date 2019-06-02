@@ -69,25 +69,28 @@ namespace Platformer.Objects.Projectiles
                 if (power > 5)
                 {
                     var degAngle = MathUtil.VectorToAngle(new Vector2(X - orb.Parent.X, Y - orb.Parent.Y));
-                    SpawnProjectile(degAngle);
 
-                    //switch (level)
-                    //{
-                    //    case 0:
-                    //        SpawnProjectile(degAngle);
-                    //        break;
+                    //SpawnProjectile(degAngle);
 
-                    //    case 1:
-                    //        SpawnProjectile(degAngle);
-                    //        SpawnProjectile(degAngle, 4.5f);
-                    //        break;
+                    var x = orb.Parent.X;
+                    var y = orb.Parent.Y;
 
-                    //    case 2:
-                    //        SpawnProjectile(degAngle);
-                    //        SpawnProjectile(degAngle, 4.5f);
-                    //        SpawnProjectile(degAngle, 5f);
-                    //        break;
-                    //}
+                    switch (level)
+                    {
+                        case 0:
+                            SpawnProjectile(x, y, degAngle);
+                            break;
+
+                        case 1:
+                            SpawnProjectile(x + 2 * (float)MathUtil.LengthDirX(degAngle), y + 2 * (float)MathUtil.LengthDirY(degAngle), degAngle - 5);
+                            SpawnProjectile(x - 2 * (float)MathUtil.LengthDirX(degAngle), y - 2 * (float)MathUtil.LengthDirY(degAngle), degAngle + 5);                            
+                            break;
+                        case 2:
+                            SpawnProjectile(x + 2 * (float)MathUtil.LengthDirX(degAngle), y + 2 * (float)MathUtil.LengthDirY(degAngle), degAngle - 5);
+                            SpawnProjectile(x + 0 * (float)MathUtil.LengthDirX(degAngle), y + 0 * (float)MathUtil.LengthDirY(degAngle), degAngle);
+                            SpawnProjectile(x - 2 * (float)MathUtil.LengthDirX(degAngle), y - 2 * (float)MathUtil.LengthDirY(degAngle), degAngle + 5);                            
+                            break;
+                    }
                 }
 
                 new CrimsonBurstEmitter(X, Y);
@@ -105,10 +108,12 @@ namespace Platformer.Objects.Projectiles
             base.Destroy(callGC);            
         }
 
-        private void SpawnProjectile(double degAngle, float vel = 4)
+        private void SpawnProjectile(float x, float y, double degAngle, float vel = 4)
         {
-            var crimsonProj = new CrimsonProjectile(orb.Parent.X, orb.Parent.Y, (SpellLevel)(level + 1));
-            crimsonProj.Texture = Texture = AssetManager.Projectiles[4 + level];
+            //var crimsonProj = new CrimsonProjectile(orb.Parent.X, orb.Parent.Y, (SpellLevel)(level + 1));
+            var crimsonProj = new CrimsonProjectile(x, y, SpellLevel.ONE);
+            crimsonProj.Texture = Texture = AssetManager.Projectiles[4];
+            //crimsonProj.Texture = Texture = AssetManager.Projectiles[4 + level];
             crimsonProj.Depth = Depth;
 
             var coilX = (float)MathUtil.LengthDirX(degAngle);

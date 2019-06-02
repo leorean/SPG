@@ -291,6 +291,7 @@ namespace Platformer.Objects.Main
             ObjectManager.Enable<GlobalWaterBubbleEmitter>();
             ObjectManager.Enable<PlayerGhost>();
             ObjectManager.Enable<Orb>();
+            ObjectManager.Enable<Player>();
 
             // todo: solve more smoothly?
             foreach (var o in ObjectManager.Objects.Where(o => o is Enemy && (o as RoomObject).Room == room)) {

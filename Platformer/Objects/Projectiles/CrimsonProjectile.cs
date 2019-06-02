@@ -51,10 +51,10 @@ namespace Platformer.Objects.Projectiles
             emitter.Color = colors[colorIndex];
             
 
-            var solid = GameManager.Current.Map.CollisionTile(X, Y) || GameManager.Current.Map.CollisionTile(X, Y, GameMap.WATER_INDEX);
+            var solid = GameManager.Current.Map.CollisionTile(X - XVel, Y - YVel) || GameManager.Current.Map.CollisionTile(X - XVel, Y - YVel, GameMap.WATER_INDEX);
             if (!solid)
             {
-                solid = ObjectManager.CollisionPointFirstOrDefault<Solid>(X, Y) != null;
+                solid = ObjectManager.CollisionPointFirstOrDefault<Solid>(X - XVel, Y - YVel) != null;
             }
 
             if (solid)

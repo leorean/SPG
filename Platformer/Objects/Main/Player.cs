@@ -62,11 +62,7 @@ namespace Platformer.Objects.Main
         LEVITATE = 8,
         PUSH = 16,
         ORB = 32,
-        NO_FALL_DAMAGE = 64
-        //ideas:
-        //PUSH_BIG <- inspired by zelda
-        //WARP
-        //STOMP
+        NO_FALL_DAMAGE = 64        
     }
     
     public class Player : GameObject, IMovable

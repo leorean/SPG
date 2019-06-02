@@ -181,10 +181,12 @@ namespace Platformer.Objects.Main.Orbs
                     {
                         case SpellType.CRIMSON_ARC:
 
-                            offY += (int)player.LookDirection;
-                            offY = Math.Sign(offY) * Math.Min(Math.Abs(offY), 16);
+                            var arcDst = 10;
 
-                            targetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 16, offY);
+                            offY += .25f * (int)player.LookDirection;
+                            offY = Math.Sign(offY) * Math.Min(Math.Abs(offY), arcDst);
+
+                            targetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * (arcDst - .5f * Math.Abs(offY) / arcDst), offY);
                             break;
                         default:
                             targetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 14, 14 * Math.Sign((int)player.LookDirection));
@@ -225,10 +227,6 @@ namespace Platformer.Objects.Main.Orbs
                                     }
 
                                     var proj = new StarProjectile(X, Y, Level);
-
-                                    // recoil + projectile speed:
-
-                                    //var degAngle = MathUtil.VectorToAngle(new Vector2(targetPosition.X - player.X, targetPosition.Y - player.Y));
                                     var starDegAngle = MathUtil.VectorToAngle(new Vector2(targetPosition.X - player.X, 0));
 
                                     var starCoilX = (float)MathUtil.LengthDirX(starDegAngle);

@@ -59,6 +59,11 @@ namespace Platformer.Objects.Main
         /// #y ... Y button
         /// #A ... A key
         /// #S ... S key
+        /// #lu ... left-up
+        /// #ld ... left-down
+        /// #ru ... right-up
+        /// #rd ... right-down
+        /// 
         /// 
         /// </summary>
         /// <param name="x"></param>
@@ -70,6 +75,11 @@ namespace Platformer.Objects.Main
             input = new Input();
 
             texts = new List<string>();
+
+            text = text.Replace("#lu", ((char)138).ToString());
+            text = text.Replace("#ru", ((char)139).ToString());
+            text = text.Replace("#ld", ((char)140).ToString());
+            text = text.Replace("#rd", ((char)141).ToString());
 
             text = text.Replace("#l", ((char)128).ToString());
             text = text.Replace("#r", ((char)129).ToString());
