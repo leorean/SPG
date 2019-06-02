@@ -45,7 +45,7 @@
   <ItemGroup>
     <Compile Include="MainGame.cs" />
     <Compile Include="Objects\Common.cs" />
-    <Compile Include="Objects\Effects\Emitters\DestroyBlockEmitter.cs" />
+    <Compile Include="Objects\Effects\Emitters\DestroyEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\FlashEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\GlobalWaterBubbleEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\ObtainParticleEmitter.cs" />
@@ -90,6 +90,8 @@
     <Compile Include="Objects\Level\LinearMovingPlatform.cs" />
     <Compile Include="Objects\Level\Mushroom.cs" />
     <Compile Include="Objects\Level\NPC.cs" />
+    <Compile Include="Objects\Level\Bush.cs" />
+    <Compile Include="Objects\Level\Pot.cs" />
     <Compile Include="Objects\Level\SwitchBlock.cs" />
     <Compile Include="Objects\Level\WaterMill.cs" />
     <Compile Include="Objects\Level\WaterMillMovingPlatform.cs" />

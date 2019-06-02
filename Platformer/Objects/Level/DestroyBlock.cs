@@ -33,7 +33,7 @@ namespace Platformer.Objects.Level
             if (HP > damage)
                 new SingularEffect(Center.X - 4 + (float)(RND.Next * 8), Center.Y - 4 + (float)(RND.Next * 8), 5);
             else
-                new DestroyBlockEmitter(X + 8, Y + 8);
+                new DestroyEmitter(X + 8, Y + 8);
             
             HP = Math.Max(HP - damage, 0);
         }

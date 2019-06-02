@@ -80,7 +80,6 @@ namespace Platformer.Objects.Projectiles
 
         public override void HandleCollision()
         {
-            //new Effects.SingularEffect(X, Y, 3);
             new StarEmitter(X, Y, 2, 0);
             Destroy();
         }

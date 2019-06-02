@@ -33,7 +33,7 @@ namespace Platformer.Objects.Effects
         {
             base.Update(gameTime);
             
-            cols = 8; // how many columns there are in the sheet
+            cols = 10; // how many columns there are in the sheet
             fSpd = .3f; // frame speed
             fAmount = 7; // how many frames
             
@@ -49,7 +49,11 @@ namespace Platformer.Objects.Effects
                 case 4:
                     fAmount = 8;
                     fSpd = .4f;
-                    break;                
+                    break;
+                case 8:
+                    fAmount = 9;
+                    fSpd = .4f;
+                    break;
             }
 
             SetAnimation(cols * Type, cols * Type + fAmount, fSpd, Loop);

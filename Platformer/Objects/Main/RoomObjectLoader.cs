@@ -214,6 +214,18 @@ namespace Platformer.Objects.Main
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
                             break;
+                        case 721: // pots
+                            var pot = new Pot(i * Globals.TILE, j * Globals.TILE, room);
+                            pot.Texture = GameManager.Current.Map.TileSet[t.ID];
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            break;
+                        case 722: // bushes
+                            var bush = new Bush(i * Globals.TILE, j * Globals.TILE, room);
+                            bush.Texture = GameManager.Current.Map.TileSet[t.ID];
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            break;
                         default:
                             var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room);
                             if (t.ID == 645) t.TileOptions.Visible = false;  // <- invisible blocks
