@@ -491,7 +491,7 @@ namespace Platformer.Objects.Main
 
             InvincibleTimer = Math.Max(InvincibleTimer - 1, 0);
             
-            if (InvincibleTimer == 0 && HP > 0)
+            if (InvincibleTimer == 0 && HP > 0 && State != PlayerState.OBTAIN)
             {
                 var obstacle = ObjectManager.CollisionBoundsFirstOrDefault<Obstacle>(this, X, Y);
 

@@ -95,8 +95,8 @@ namespace Platformer.Objects.Enemies
 
                 new SingularEffect(X, Y);
 
-                if (RND.Next * 100 < 20)
-                    new Potion(X, Y, Room, PotionType.HP);
+                //if (RND.Next * 100 < 20)
+                //    new Potion(X, Y, Room, PotionType.HP);
 
                 GameManager.Current.NonRespawnableIDs.Add(ID);
 
