@@ -500,7 +500,7 @@ namespace Platformer.Objects.Main
                     var vec = Position - (obstacle.Center + new Vector2(0, 0));
                     var angle = vec.VectorToAngle();                    
                     Hit(obstacle.Damage, (float)angle);
-                }                
+                }
             }
 
             if (HP == 0)
