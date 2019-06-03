@@ -82,9 +82,9 @@ namespace Platformer.Main
         public void SetTarget(GameObject target)
         {
             this.target = target;
-            Position = target != null ? target.Position : Vector2.Zero;
+            Position = target != null ? target.Position : Vector2.Zero;            
         }
-        
+
         private void Transition_1()
         {
             player.State = Player.PlayerState.IDLE;
@@ -159,7 +159,7 @@ namespace Platformer.Main
                     CurrentRoom = target.CollisionPointFirstOrDefault<Room>(target.X, target.Y);
                     if (CurrentRoom != null)
                     {
-                        lookLocked = 1;
+                        //lookLocked = 1;
 
                         var tx = Math.Min(Math.Max(target.X + offsetX, CurrentRoom.X + .5f * ViewWidth), CurrentRoom.X + CurrentRoom.BoundingBox.Width - .5f * ViewWidth);
                         var ty = Math.Min(Math.Max(target.Y + offsetY, CurrentRoom.Y + .5f * ViewHeight), CurrentRoom.Y + CurrentRoom.BoundingBox.Height - .5f * ViewHeight);

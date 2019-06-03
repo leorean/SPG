@@ -140,7 +140,7 @@ namespace Platformer
 
             var resolutionRenderer = new ResolutionRenderer(graphics.GraphicsDevice, viewSize.Width, viewSize.Height, screenSize.Width, screenSize.Height);
 
-            var cam = new RoomCamera(resolutionRenderer) { MaxZoom = 2f, MinZoom = .5f, Zoom = 1f };
+            new RoomCamera(resolutionRenderer) { MaxZoom = 2f, MinZoom = .5f, Zoom = 1f };
 
             // first, restrict the bounds to the whole map - will be overridden from the room camera afterwards
             //cam.EnableBounds(new Rectangle(0, 0, gm.Map.Width * Globals.TILE, gm.Map.Height * Globals.TILE));

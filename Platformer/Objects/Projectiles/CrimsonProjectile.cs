@@ -30,10 +30,10 @@ namespace Platformer.Objects.Projectiles
                     Damage = 1;
                     break;
                 case SpellLevel.TWO:
-                    Damage = 2;
+                    Damage = 1;
                     break;
                 case SpellLevel.THREE:
-                    Damage = 3;
+                    Damage = 2;
                     break;
             }
 
