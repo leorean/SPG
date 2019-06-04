@@ -58,6 +58,7 @@ namespace Platformer.Objects.Main
 
         public static TextureSet EnemyGrassy { get; private set; }
         public static TextureSet EnemyBat { get; private set; }
+        public static TextureSet EnemyVoidling { get; private set; }
 
         // orb
 
@@ -100,6 +101,7 @@ namespace Platformer.Objects.Main
 
             EnemyGrassy = content.LoadTextureSet("enemyGrassy");
             EnemyBat = content.LoadTextureSet("enemyBat");
+            EnemyVoidling = content.LoadTextureSet("enemyVoidling");
 
             Orbs = content.LoadTextureSet("orb", 16, 16);
 

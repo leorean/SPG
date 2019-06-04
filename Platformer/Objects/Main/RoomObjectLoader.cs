@@ -204,6 +204,11 @@ namespace Platformer.Objects.Main
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
                             break;
+                        case 770: // enemy Voidling
+                            new EnemyVoidling(i * Globals.TILE + 8, j * Globals.TILE + 8, room);
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            break;
                         case 719: // switch block (default: on)
                             new SwitchBlock(i * Globals.TILE, j * Globals.TILE, room, 1);
                             t.TileOptions.Visible = false;
