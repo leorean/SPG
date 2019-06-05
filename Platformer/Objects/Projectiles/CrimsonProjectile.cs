@@ -85,8 +85,13 @@ namespace Platformer.Objects.Projectiles
             //sb.Draw(AssetManager.Projectiles[6 + (int)level], Position, null, Color, Angle - (float)MathUtil.DegToRad(45), DrawOffset, Scale, SpriteEffects.None, Depth - .0001f);
         }
 
-        public override void HandleCollision()
+        public override void HandleCollision(GameObject obj)
         {
+            if (obj is Enemies.EnemyVoidling.Shield)
+            {
+                new SingularEffect(X, Y, 3);
+                Destroy();
+            }
             //throw new NotImplementedException();
         }
     }

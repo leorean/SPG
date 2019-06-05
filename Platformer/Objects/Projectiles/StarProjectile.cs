@@ -67,7 +67,7 @@ namespace Platformer.Objects.Projectiles
             
             if (solid || tooFar)
             {
-                HandleCollision();
+                HandleCollision(null);
             }
         }
         public override void Draw(SpriteBatch sb, GameTime gameTime)
@@ -78,7 +78,7 @@ namespace Platformer.Objects.Projectiles
             sb.Draw(Texture, Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
         }
 
-        public override void HandleCollision()
+        public override void HandleCollision(GameObject obj)
         {
             new StarEmitter(X, Y, 2, 0);
             Destroy();

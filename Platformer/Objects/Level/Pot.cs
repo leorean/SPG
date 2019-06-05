@@ -42,7 +42,7 @@ namespace Platformer.Objects.Level
                     //Coin.Spawn(Center.X, Center.Y, Room, value, true);
                 }
 
-                proj.HandleCollision();
+                proj.HandleCollision(this);
                 new SingularEffect(Center.X, Center.Y, 7);
                 new DestroyEmitter(Center.X, Center.Y, 1);
                 Destroy();

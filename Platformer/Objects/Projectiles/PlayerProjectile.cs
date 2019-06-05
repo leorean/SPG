@@ -42,9 +42,9 @@ namespace Platformer.Objects.Projectiles
         public virtual void HandleCollisionFromDestroyBlock(DestroyBlock block)
         {
             block.Hit(Damage);
-            HandleCollision();
+            HandleCollision(block);
         }
 
-        public abstract void HandleCollision();
+        public abstract void HandleCollision(GameObject obj);
     }
 }
