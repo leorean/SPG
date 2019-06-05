@@ -36,6 +36,8 @@ namespace Platformer.Objects.Enemies
             Damage = 1;
             HP = 20;
 
+            Depth = Globals.LAYER_ENEMY;
+
             hitFont = AssetManager.DamageFont.Copy();
             hitFont.Halign = Font.HorizontalAlignment.Center;
             hitFont.Valign = Font.VerticalAlignment.Top;

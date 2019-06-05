@@ -28,7 +28,6 @@ namespace Platformer.Objects.Enemies
             BoundingBox = new SPG.Util.RectF(-4, -4, 8, 8);
             DrawOffset = new Vector2(8);
             
-            Depth = Globals.LAYER_ENEMY;
             AnimationTexture = AssetManager.EnemyBat;
             
             HP = 5;

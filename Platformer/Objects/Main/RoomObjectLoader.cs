@@ -204,8 +204,13 @@ namespace Platformer.Objects.Main
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
                             break;
-                        case 770: // enemy Voidling
-                            new EnemyVoidling(i * Globals.TILE + 8, j * Globals.TILE + 8, room);
+                        case 770: // enemy Voidling (without shield)
+                            new EnemyVoidling(i * Globals.TILE + 8, j * Globals.TILE + 8, room, 0);
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            break;
+                        case 771: // enemy Voidling (with shield)
+                            new EnemyVoidling(i * Globals.TILE + 8, j * Globals.TILE + 8, room, 1);
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
                             break;

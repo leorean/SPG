@@ -172,6 +172,8 @@ namespace Platformer.Objects.Main
         private PlayerGhost ghost;
         private bool jumpControlDisabled;
 
+        private int attackDelay;
+
         // other objects
 
         public Key KeyObject { get; set; }
@@ -629,7 +631,10 @@ namespace Platformer.Objects.Main
                     Orb = new Orb(this);                    
                 }
 
+                attackDelay = Math.Max(attackDelay - 1, 0);
+
                 if (k_attackHolding && !inWater && HP > 0
+                && attackDelay == 0
                 && !jumpControlDisabled
                 && (State == PlayerState.IDLE
                 || State == PlayerState.WALK
@@ -648,6 +653,9 @@ namespace Platformer.Objects.Main
                     if (Orb.State == OrbState.ATTACK)
                         Orb.State = OrbState.IDLE;                    
                 }
+
+                if (k_attackReleased)
+                    attackDelay = 20;
 
                 if (k_RPressed)
                 {

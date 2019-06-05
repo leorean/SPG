@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SPG.Map;
 
 namespace Platformer.Objects.Enemies
 {
@@ -20,9 +21,9 @@ namespace Platformer.Objects.Enemies
         {
             public Shield(float x, float y, Room room) : base(x, y, room)
             {
-                BoundingBox = new RectF(-4, -6, 8, 12);
+                BoundingBox = new RectF(-3, -5, 6, 12);
                 DrawOffset = new Vector2(8);
-                Texture = AssetManager.EnemyVoidling[0];
+                Texture = AssetManager.EnemyVoidling[0];                
             }
 
             public override void Update(GameTime gameTime)
@@ -49,7 +50,6 @@ namespace Platformer.Objects.Enemies
         }
 
         private State state;
-
         private Shield shield;
 
         private Player playerSpotted;
@@ -60,8 +60,12 @@ namespace Platformer.Objects.Enemies
         private int idleTimer;
         private int walkTimer;
 
-        public EnemyVoidling(float x, float y, Room room) : base(x, y, room)
+        private int type;
+
+        public EnemyVoidling(float x, float y, Room room, int type) : base(x, y, room)
         {
+            this.type = type;
+
             HP = 20;
             Damage = 3;
             EXP = 20;
@@ -73,9 +77,12 @@ namespace Platformer.Objects.Enemies
             Direction = Direction.LEFT;
             
             Gravity = .1f;
-
-            shield = new Shield(X, Y, Room);
-            shield.Parent = this;
+            
+            if (type == 1)
+            {
+                shield = new Shield(X, Y, Room);
+                shield.Parent = this;
+            }
         }
 
 
@@ -87,43 +94,71 @@ namespace Platformer.Objects.Enemies
 
             var onWall = !hit && ObjectManager.CollisionPointFirstOrDefault<Solid>(this, X + (.5f * BoundingBox.Width + 1) * Math.Sign((int)Direction), Y) != null;
             var onGround = this.MoveAdvanced(false);
+            var player = GameManager.Current.Player;
 
-            if (onGround)
+            if (hit)
             {
-                if (hit)
+                directionAfterHit = (Direction)Math.Sign(GameManager.Current.Player.X - X);
+                if (onGround)
                 {
                     XVel = -1 * Math.Sign(GameManager.Current.Player.X - X);
                     YVel = -1;
-                    directionAfterHit = (Direction)Math.Sign(GameManager.Current.Player.X - X);
-                    walkTimer = 120;
                     state = State.JUMP;
                     onGround = false;
                 }
+                playerSpotted = player;
+                spottedTimer = 60;
             }
 
-            shield.Position = shield.Position + new Vector2(((X + 8f * Math.Sign((int)Direction)) - shield.Position.X) / 2, 0);
-            //shield.Position = Position + new Vector2(8f * Math.Sign((int)Direction), 0);
+            if (shield != null)
+            {
 
-            // state stuff
+                var shieldDist = state == State.IDLE ? 7f : 8f;
+                shield.Position = new Vector2(shield.X + ((X + shieldDist * Math.Sign((int)Direction)) - shield.Position.X) / 4 + XVel, Y + Convert.ToInt32(AnimationFrame % 2 == 1 || state == State.WALK));
+            }
+
+            // ++++ spotting the player ++++
             
-            var player = GameManager.Current.Player;
+            spottedTimer = Math.Max(spottedTimer - 1, 0);
+            if (spottedTimer == 0)
+                playerSpotted = null;
 
             if (MathUtil.In(Top, player.Top, player.Bottom) || MathUtil.In(Bottom, player.Top, player.Bottom))
             {
                 if (Direction == Direction.LEFT && X > player.X
                     || Direction == Direction.RIGHT && X < player.X)
                 {
-                    if (MathUtil.Euclidean(Center, player.Center) < 8 * Globals.TILE)
+                    var dist = 5 * Globals.TILE;
+
+                    //if (MathUtil.Euclidean(Center, player.Center) < 8 * Globals.TILE)
+                    if ((Direction == Direction.LEFT && this.CollisionRectangleFirstOrDefault<Player>(X - dist, Top, X, Bottom) != null)
+                        || (Direction == Direction.RIGHT && this.CollisionRectangleFirstOrDefault<Player>(X, Top, X + dist, Bottom) != null))
                     {
                         if (playerSpotted == null)
-                            playerSpotted = player;
-                        spottedTimer = 60;
+                        {
+                            var xFree = true;
+                            for(var i = 0; i < Math.Abs(X - player.X); i += Globals.TILE)
+                            {
+                                var tileCollision = GameManager.Current.Map.CollisionTile(X + i * Math.Sign((int)Direction), Y);
+                                if (tileCollision)
+                                {
+                                    xFree = false;
+                                    break;
+                                }
+                            }
+
+                            if (xFree)
+                            {
+                                playerSpotted = player;
+                                spottedTimer = 60;
+                            }
+                        }
+                        
                     }
                 }
             }
-            spottedTimer = Math.Max(spottedTimer - 1, 0);
-            if (spottedTimer == 0)
-                playerSpotted = null;
+
+            // ++++ state stuff ++++
 
             switch (state)
             {
@@ -132,6 +167,10 @@ namespace Platformer.Objects.Enemies
                     XVel = 0;
 
                     idleTimer = Math.Max(idleTimer - 1, 0);
+
+                    if (playerSpotted != null)
+                        idleTimer = 0;
+
                     if (idleTimer == 0)
                     {
                         if (playerSpotted == null)
@@ -161,7 +200,10 @@ namespace Platformer.Objects.Enemies
                         state = State.IDLE;
                     }                    
                     XVel = XVel + .05f * Math.Sign((int)Direction);
-                    XVel = Math.Sign(XVel) * Math.Min(Math.Abs(XVel), .5f);
+
+                    var maxVel = playerSpotted != null ? .75f : .4f;
+
+                    XVel = Math.Sign(XVel) * Math.Min(Math.Abs(XVel), maxVel);
                     break;
                 case State.JUMP:
                     XVel *= .9f;
@@ -180,17 +222,17 @@ namespace Platformer.Objects.Enemies
             
             // ++++ draw <-> state logic ++++
 
-            var cols = 4; // how many columns there are in the sheet
+            var cols = 12; // how many columns there are in the sheet
             var row = 0; // which row in the sheet
             var fSpd = 0f; // frame speed
             var fAmount = 4; // how many frames
-            var loopAnim = true; // loop animation?
+            var loopAnim = true; // loop animation?            
             
             switch (state)
             {
                 case State.IDLE:
                     row = 1;
-                    fSpd = 0.07f;
+                    fSpd = 0.045f;
                     break;
                 case State.WALK:
                     row = 2;
@@ -205,7 +247,7 @@ namespace Platformer.Objects.Enemies
                     break;
             }
 
-            SetAnimation(cols * row, cols * row + fAmount - 1, fSpd, loopAnim);            
+            SetAnimation(cols * row + type * 4, cols * row + fAmount - 1 + type * 4, fSpd, loopAnim);            
             var xScale = Math.Sign((int)Direction);
             Scale = new Vector2(xScale, 1);
         }
@@ -214,7 +256,7 @@ namespace Platformer.Objects.Enemies
         {
             base.Draw(sb, gameTime);
 
-            if (playerSpotted != null)
+            if (spottedTimer > 0)
                 sb.Draw(AnimationTexture[1], Position + new Vector2(0, -16), null, Color.White, 0, new Vector2(8), Vector2.One, SpriteEffects.None, Depth + .0001f);
         }
     }    
