@@ -95,7 +95,8 @@ namespace Platformer.Objects.Enemies
                     if (onGround && Math.Abs(X - player.X) < 1 * Globals.TILE)
                         YVel = -1.5f;
 
-                    Direction = (Direction)Math.Sign(player.X - X);
+                    if (Math.Abs(player.X - X) > 8)
+                        Direction = (Direction)Math.Sign(player.X - X);
 
                     if (X > player.X)
                         XVel = Math.Max(XVel - .01f, -.65f);

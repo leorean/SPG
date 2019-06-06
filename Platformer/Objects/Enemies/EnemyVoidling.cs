@@ -184,7 +184,9 @@ namespace Platformer.Objects.Enemies
                     break;
                 case State.WALK:
 
-                    if (onWall)
+                    var noGround = !GameManager.Current.Map.CollisionTile(X + Math.Sign((int)Direction) * 8, Bottom + 2);
+
+                    if (onWall || noGround)
                         Direction = Direction.Reverse();
 
                     if (playerSpotted != null)
