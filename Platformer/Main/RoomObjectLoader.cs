@@ -192,6 +192,12 @@ namespace Platformer.Main
                             t.TileOptions.Solid = false;
                             new OrbBlock(i * Globals.TILE, j * Globals.TILE, room);
                             break;
+                        case 723:
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            var abs = new AirBubbleSpawner(i * Globals.TILE, j * Globals.TILE, room);
+                            abs.Texture = GameManager.Current.Map.TileSet[t.ID];
+                            break;
                         case 768: // enemy Bat
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;

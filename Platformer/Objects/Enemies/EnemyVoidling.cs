@@ -52,6 +52,7 @@ namespace Platformer.Objects.Enemies
 
         private Player playerSpotted;
         private int spottedTimer;
+        private int maxSpottedTimer = 120;
 
         private Direction directionAfterHit = Direction.NONE;
 
@@ -72,7 +73,7 @@ namespace Platformer.Objects.Enemies
             DrawOffset = new Vector2(8);
             
             AnimationTexture = AssetManager.EnemyVoidling;
-            Direction = Direction.LEFT;
+            Direction = RND.Choose(Direction.LEFT, Direction.RIGHT);
             
             Gravity = .1f;
             
@@ -90,7 +91,9 @@ namespace Platformer.Objects.Enemies
 
             // flags
 
-            var onWall = !hit && ObjectManager.CollisionPointFirstOrDefault<Solid>(this, X + (.5f * BoundingBox.Width + 1) * Math.Sign((int)Direction), Y) != null;
+            var onWall = !hit
+                && ObjectManager.CollisionPointFirstOrDefault<Solid>(this, X + (.5f * BoundingBox.Width + 1) * Math.Sign((int)Direction), Y) != null;
+
             var onGround = this.MoveAdvanced(false);
             var player = GameManager.Current.Player;
 
@@ -105,7 +108,7 @@ namespace Platformer.Objects.Enemies
                     onGround = false;
                 }
                 playerSpotted = player;
-                spottedTimer = 60;
+                spottedTimer = maxSpottedTimer;
             }
 
             if (shield != null)
@@ -148,7 +151,7 @@ namespace Platformer.Objects.Enemies
                             if (xFree)
                             {
                                 playerSpotted = player;
-                                spottedTimer = 60;
+                                spottedTimer = maxSpottedTimer;
                             }
                         }
                         
@@ -192,6 +195,11 @@ namespace Platformer.Objects.Enemies
                         Direction = (Direction)Math.Sign(playerSpotted.X - X);
                         walkTimer++;
                     }
+
+                    if (X < Room.X + 8)
+                        Direction = Direction.RIGHT;
+                    if (X > Room.X + Room.BoundingBox.Width - 8)
+                        Direction = Direction.LEFT;
 
                     walkTimer = Math.Max(walkTimer - 1, 0);
                     if (walkTimer == 0)

@@ -146,8 +146,8 @@ namespace Platformer.Main
 
         // diving
 
-        int oxygen;
-        int maxOxygen;
+        public int Oxygen { get; set; }
+        public int MaxOxygen { get; private set; }
 
         // misc. timers
 
@@ -208,8 +208,8 @@ namespace Platformer.Main
             HP = Stats.MaxHP;
             MP = Stats.MaxMP;
 
-            maxOxygen = 5 * 60;
-            oxygen = maxOxygen;            
+            MaxOxygen = 5 * 60;
+            Oxygen = MaxOxygen;            
         }
 
         ~Player()
@@ -240,9 +240,9 @@ namespace Platformer.Main
 
                 var maxSpellExpForLevel = GameResources.MaxEXP[currentSpellType][currentSpellLevel];
 
-                int expHit = 0;
+                int expHit = 20;
 
-                switch (currentSpellLevel)
+                /*switch (currentSpellLevel)
                 {
                     case SpellLevel.ONE:
                         expHit = (int)Math.Ceiling(GameResources.MaxEXP[currentSpellType][currentSpellLevel] * .15f);
@@ -255,13 +255,21 @@ namespace Platformer.Main
                         break;
                     default:
                         break;
-                }
+                }*/
 
                 // don't deduct exp from "none" spell
                 if (currentSpellType == SpellType.NONE)
                     expHit = 0;
 
-                var expAfterHit = Math.Max(Stats.SpellEXP[currentSpellType] - expHit, 0);
+                //var expAfterHit = Math.Max(Stats.SpellEXP[currentSpellType] - expHit, 0);
+                var expAfterHit = Stats.SpellEXP[currentSpellType] - expHit;
+                var expAfterHitRemainder = 0;
+                if(expAfterHit < 0)
+                {
+                    expAfterHitRemainder = Math.Abs(expAfterHit);
+                    expAfterHit = 0;
+                }
+
                 Stats.SpellEXP[currentSpellType] = expAfterHit;
                 
                 if (expAfterHit == 0)
@@ -273,12 +281,12 @@ namespace Platformer.Main
                         case SpellLevel.TWO:
                             CreateSpellDownEffect();
                             Stats.Spells[currentSpellType] = SpellLevel.ONE;
-                            Stats.SpellEXP[currentSpellType] = GameResources.MaxEXP[currentSpellType][SpellLevel.ONE];
+                            Stats.SpellEXP[currentSpellType] = Math.Max(GameResources.MaxEXP[currentSpellType][SpellLevel.ONE] - expAfterHitRemainder, (int)(.5f * (float)GameResources.MaxEXP[currentSpellType][SpellLevel.ONE]));
                             break;
                         case SpellLevel.THREE:
                             CreateSpellDownEffect();
                             Stats.Spells[currentSpellType] = SpellLevel.TWO;
-                            Stats.SpellEXP[currentSpellType] = GameResources.MaxEXP[currentSpellType][SpellLevel.TWO];
+                            Stats.SpellEXP[currentSpellType] = Math.Max(GameResources.MaxEXP[currentSpellType][SpellLevel.TWO] - expAfterHitRemainder, (int)(.5f * (float)GameResources.MaxEXP[currentSpellType][SpellLevel.TWO]));
                             break;
                         default:
                             break;
@@ -521,9 +529,9 @@ namespace Platformer.Main
             {
                 if (!Stats.Abilities.HasFlag(PlayerAbility.BREATHE_UNDERWATER))
                 {
-                    oxygen = Math.Max(oxygen - 1, 0);
+                    Oxygen = Math.Max(Oxygen - 1, 0);
 
-                    if (oxygen == 0)
+                    if (Oxygen == 0)
                     {
                         if (InvincibleTimer == 0 && HP > 0)
                         {
@@ -561,7 +569,7 @@ namespace Platformer.Main
                 }
             } else
             {
-                oxygen = Math.Min(oxygen + 5, maxOxygen);
+                Oxygen = Math.Min(Oxygen + 10, MaxOxygen);
 
                 Gravity = gravAir;
 
@@ -1742,9 +1750,9 @@ namespace Platformer.Main
                 coinFont.Draw(sb, X, Y - Globals.TILE, $"+{CoinCounter}");
             }
             
-            if (oxygen < maxOxygen && HP > 0)
+            if (Oxygen < MaxOxygen && HP > 0)
             {
-                float rel = 1 - (float)oxygen / (float)maxOxygen;
+                float rel = 1 - (float)Oxygen / (float)MaxOxygen;
                 var r = 3 + (int)(76 * rel);
                 var g = 243 - (int)(240 * rel);
                 var b = 243;
@@ -1752,7 +1760,7 @@ namespace Platformer.Main
                 var fg = new Color(r, g, b);
                 var bg = new Color(20, 113, 126);
 
-                sb.DrawBar(Position + new Vector2(0, 12), (int)(1.5 * Globals.TILE), oxygen / (float)maxOxygen, fg, bg, height: 2, border: false);
+                sb.DrawBar(Position + new Vector2(0, 12), (int)(1.5 * Globals.TILE), Oxygen / (float)MaxOxygen, fg, bg, height: 2, border: false);
             }            
         }
     }

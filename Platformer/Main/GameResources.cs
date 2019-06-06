@@ -1,4 +1,5 @@
-﻿using Platformer.Main;
+﻿using Microsoft.Xna.Framework;
+using Platformer.Main;
 using System.Collections.Generic;
 
 namespace Platformer.Resources
@@ -19,9 +20,9 @@ namespace Platformer.Resources
 
         public static readonly List<EnemyStats> EnemyVoidling = new List<EnemyStats>
         {
-             new EnemyStats { HP = 8, EXP = 10, Damage = 3 },
-             new EnemyStats { HP = 12, EXP = 15, Damage = 3 },
-             new EnemyStats { HP = 20, EXP = 25, Damage = 3 }
+             new EnemyStats { HP = 16, EXP = 10, Damage = 3 },
+             new EnemyStats { HP = 20, EXP = 15, Damage = 3 },
+             new EnemyStats { HP = 30, EXP = 25, Damage = 3 }
         };
 
         // orb stats
@@ -82,6 +83,9 @@ namespace Platformer.Resources
             },
         };
 
-        
+        // colors
+
+        public static readonly Color OxygenColor1 = new Color(3, 243, 243);
+        public static readonly Color OxygenColor2 = new Color(79, 3, 243);        
     }
 }

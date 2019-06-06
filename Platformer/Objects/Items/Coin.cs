@@ -63,9 +63,7 @@ namespace Platformer.Objects.Items
         public Coin(float x, float y, Room room, CoinValue v, bool isLoose = false) : base(x, y, room)
         {
             DrawOffset = new Vector2(8);
-
-            Gravity = .1f;
-
+            
             Visible = false;
             AnimationTexture = AssetManager.Coins;
             t = RND.Next * Math.PI * 2;
@@ -156,6 +154,8 @@ namespace Platformer.Objects.Items
             }
             else
             {
+                var inWater = GameManager.Current.Map.CollisionTile(X, Y, GameMap.WATER_INDEX);
+
                 var colX = GameManager.Current.Map.CollisionTile(this, XVel, 0);
 
                 if (!colX)
@@ -196,10 +196,17 @@ namespace Platformer.Objects.Items
                             isLoose = false;
                             t = -Math.PI;
                         }
-
-                        //XVel *= .5f;
+                        
                         YVel *= -.3f;
                     }
+                }
+
+                if (inWater)
+                {
+                    YVel -= .08f;
+
+                    XVel = Math.Sign(XVel) * Math.Min(Math.Abs(XVel), .5f);
+                    YVel = Math.Sign(YVel) * Math.Min(Math.Abs(YVel), .5f);
                 }
 
                 //unstick
