@@ -1,18 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Platformer.Objects.Main;
-using Platformer.Objects.Main.Orbs;
-using Platformer.Util;
 using SPG.Objects;
 using SPG.Util;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SPG.Draw;
 using Platformer.Objects.Effects.Emitters;
 using SPG;
+using Platformer.Resources;
+using Platformer.Main;
 
 namespace Platformer.Objects.Projectiles
 {
@@ -64,7 +60,7 @@ namespace Platformer.Objects.Projectiles
 
             Angle = (float)MathUtil.VectorToAngle(new Vector2(X - orb.Parent.X, Y - orb.Parent.Y), true);
 
-            if (orb.State != OrbState.ATTACK || GameManager.Current.Player.MP < orb.MpCost[SpellType.CRIMSON_ARC][orb.Level])
+            if (orb.State != OrbState.ATTACK || GameManager.Current.Player.MP < GameResources.MPCost[SpellType.CRIMSON_ARC][orb.Level])
             {
                 if (power > 5)
                 {

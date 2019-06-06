@@ -1,16 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Platformer.Objects.Level;
-using Platformer.Objects.Main;
 using Platformer.Objects.Projectiles;
 using SPG.Objects;
 using SPG.Util;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SPG.Map;
+using Platformer.Resources;
+using Platformer.Main;
 
 namespace Platformer.Objects.Enemies
 {
@@ -66,9 +64,9 @@ namespace Platformer.Objects.Enemies
         {
             this.type = type;
 
-            HP = 20;
-            Damage = 3;
-            EXP = 20;
+            HP = GameResources.EnemyVoidling[type].HP;
+            Damage = GameResources.EnemyVoidling[type].Damage;
+            EXP = GameResources.EnemyVoidling[type].EXP;
 
             BoundingBox = new SPG.Util.RectF(-4, -4, 8, 12);
             DrawOffset = new Vector2(8);

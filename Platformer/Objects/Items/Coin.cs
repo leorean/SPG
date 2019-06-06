@@ -1,17 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
-using Platformer.Objects.Effects;
 using Platformer.Objects.Level;
-using Platformer.Objects.Main;
 using SPG.Util;
 using SPG.Map;
 using SPG.Objects;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using Microsoft.Xna.Framework.Graphics;
+using Platformer.Main;
 
 namespace Platformer.Objects.Items
 {

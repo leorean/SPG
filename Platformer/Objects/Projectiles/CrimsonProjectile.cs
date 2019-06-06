@@ -1,19 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Platformer.Main;
 using Platformer.Objects.Effects;
 using Platformer.Objects.Effects.Emitters;
 using Platformer.Objects.Level;
-using Platformer.Objects.Main;
-using Platformer.Objects.Main.Orbs;
-using SPG;
 using SPG.Map;
 using SPG.Objects;
 using SPG.Util;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Platformer.Objects.Projectiles
 {

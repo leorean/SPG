@@ -1,12 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
-using Platformer.Objects.Main;
 using SPG.Util;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SPG.Map;
+using Platformer.Resources;
+using Platformer.Main;
 
 namespace Platformer.Objects.Enemies
 {
@@ -29,10 +26,10 @@ namespace Platformer.Objects.Enemies
             DrawOffset = new Vector2(8);
             
             AnimationTexture = AssetManager.EnemyBat;
-            
-            HP = 5;
-            Damage = 1;
-            EXP = 3;
+
+            HP = GameResources.EnemyBat.HP;
+            Damage = GameResources.EnemyBat.Damage;
+            EXP = GameResources.EnemyBat.EXP;
 
             Direction = Direction.RIGHT;
             

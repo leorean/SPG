@@ -1,10 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
-using Platformer.Objects;
-using Platformer.Objects.Main;
+using Platformer.Main;
 using SPG.Map;
-using SPG.Objects;
 using SPG.Util;
-using System;
 
 namespace Platformer.Objects.Level
 {

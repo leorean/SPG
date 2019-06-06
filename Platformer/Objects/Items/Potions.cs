@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Platformer.Main;
 using Platformer.Objects.Effects;
 using Platformer.Objects.Effects.Emitters;
-using Platformer.Objects.Main;
 
 namespace Platformer.Objects.Items
 {

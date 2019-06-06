@@ -1,19 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
-using Platformer.Objects.Main;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SPG.Objects;
-using Microsoft.Xna.Framework.Graphics;
-using Platformer.Objects.Effects;
 using Platformer.Objects.Effects.Emitters;
-using Platformer.Util;
 using SPG.Map;
+using Platformer.Main;
 
 namespace Platformer.Objects.Level
-{    
+{
     public class Key : Platform, IMovable
     {
         public bool Persistent { get; set; }

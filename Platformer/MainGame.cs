@@ -6,23 +6,13 @@ using SPG.Map;
 using SPG.Objects;
 using SPG.Util;
 using System.Xml;
-using System.Collections.Generic;
-using System.Linq;
-using System;
 using SPG.View;
 using System.Diagnostics;
 using Platformer.Main;
-using Platformer.Objects;
-using SPG.Draw;
 using SPG.Save;
-using Platformer.Objects.Enemies;
-using System.Threading.Tasks;
-using System.Threading;
-using Platformer.Objects.Effects;
-using Platformer.Objects.Main;
-using Platformer.Objects.Level;
-using Platformer.Objects.Effects.Emitters;
 using Platformer.Objects.Items;
+using Platformer.Objects.Level;
+using SPG.Objects;
 
 namespace Platformer
 {
@@ -194,6 +184,44 @@ namespace Platformer
                 };
             }
 
+            // debug keys
+            
+            if (input.IsKeyPressed(Keys.H, Input.State.Pressed))
+                GameManager.Current.Player.Hit(1);
+
+            if (input.IsKeyPressed(Keys.D9, Input.State.Pressed))
+            {
+                //stats.Abilities = PlayerAbility.NONE;
+
+                // add: flags |= flag
+                // remove: flags &= ~flag
+                // toggle: flags ^= flag
+
+                GameManager.Current.Player.Stats.Abilities |= PlayerAbility.ORB;
+                GameManager.Current.Player.Stats.Abilities |= PlayerAbility.PUSH;
+                //GameManager.Current.Player.Stats.Abilities |= PlayerAbility.LEVITATE;
+                //GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_CEIL;
+                //GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_WALL;
+
+                GameManager.Current.AddSpell(SpellType.STAR);
+                GameManager.Current.AddSpell(SpellType.CRIMSON_ARC);
+
+                //GameManager.Current.Player.Stats.MaxHP = 50;
+                //GameManager.Current.Player.Stats.MaxMP = 100;
+                //GameManager.Current.Player.Stats.MPRegen = 2;
+            }
+
+            if (input.IsKeyPressed(Keys.O, Input.State.Pressed))
+            {
+                Coin.Spawn(GameManager.Current.Player.X, GameManager.Current.Player.Y, RoomCamera.Current.CurrentRoom, 2000);
+                Debug.WriteLine($"{ObjectManager.Count<Coin>()} coins exist. (Blocks: {ObjectManager.Count<Solid>()}, active: {ObjectManager.ActiveObjects.Count}, overall: {ObjectManager.Count<GameObject>()})");
+
+                GameManager.Current.Player.Stats.KeysAndKeyblocks.Clear();
+                GameManager.Current.Player.Stats.Items.Clear();
+
+                Debug.WriteLine("cleared keys and items!");
+            }
+
             if (input.IsKeyPressed(Keys.M, Input.State.Pressed))
             {
                 var dialog = new MessageDialog("Do you like message dialogs?");
@@ -205,9 +233,7 @@ namespace Platformer
                 dialog.NoAction = () =>
                 {
                     GameManager.Current.Player.HP = 0;
-                };
-
-
+                };                
             }
 
             if (mouse.RightButton == ButtonState.Pressed)

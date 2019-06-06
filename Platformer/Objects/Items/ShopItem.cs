@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Platformer.Objects.Main;
 using System;
 using SPG.Objects;
 using SPG.Draw;
@@ -103,7 +102,7 @@ namespace Platformer.Objects.Items
                             crimsonItem.Texture = AssetManager.Items[6];
                             crimsonItem.OnObtain = () =>
                             {
-                                GameManager.Current.AddSpell(Main.Orbs.SpellType.CRIMSON_ARC);
+                                GameManager.Current.AddSpell(SpellType.CRIMSON_ARC);
                             };
                             crimsonItem.HighlightColor = Colors.FromHex("c80e1f");
                             crimsonItem.Text = $"Learned spell: ~Crimson Arc~.";

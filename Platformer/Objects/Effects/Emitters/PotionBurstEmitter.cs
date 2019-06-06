@@ -1,13 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
+using Platformer.Main;
 using Platformer.Objects.Items;
-using Platformer.Objects.Main;
 using SPG.Objects;
 using SPG.Util;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Platformer.Objects.Effects.Emitters
 {

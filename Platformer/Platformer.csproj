@@ -44,6 +44,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="MainGame.cs" />
+    <Compile Include="Main\AssetManager.cs" />
+    <Compile Include="Main\GameManager.cs" />
+    <Compile Include="Main\HUD.cs" />
+    <Compile Include="Main\MessageBox.cs" />
+    <Compile Include="Main\MessageDialog.cs" />
+    <Compile Include="Main\Player.cs" />
+    <Compile Include="Main\PlayerGhost.cs" />
+    <Compile Include="Main\RoomCamera.cs" />
+    <Compile Include="Main\RoomObjectLoader.cs" />
+    <Compile Include="Main\SaveGame.cs" />
     <Compile Include="Objects\Common.cs" />
     <Compile Include="Objects\Effects\Emitters\DestroyEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\FlashEmitter.cs" />
@@ -96,25 +106,16 @@
     <Compile Include="Objects\Level\SwitchBlock.cs" />
     <Compile Include="Objects\Level\WaterMill.cs" />
     <Compile Include="Objects\Level\WaterMillMovingPlatform.cs" />
-    <Compile Include="Objects\Main\AssetManager.cs" />
-    <Compile Include="Objects\Main\GameManager.cs" />
-    <Compile Include="Objects\Main\HUD.cs" />
-    <Compile Include="Objects\Main\MessageBox.cs" />
-    <Compile Include="Objects\Main\MessageDialog.cs" />
-    <Compile Include="Objects\Main\Orbs\Orb.cs" />
+    <Compile Include="Main\Orb.cs" />
     <Compile Include="Objects\Items\ShopItem.cs" />
     <Compile Include="Objects\Projectiles\CrimsonProjectile.cs" />
     <Compile Include="Objects\Projectiles\CrimsonBow.cs" />
     <Compile Include="Objects\Projectiles\PlayerProjectile.cs" />
     <Compile Include="Objects\Projectiles\StarProjectile.cs" />
-    <Compile Include="Objects\Main\PlayerGhost.cs" />
-    <Compile Include="Objects\Main\RoomCamera.cs" />
-    <Compile Include="Objects\Main\RoomObjectLoader.cs" />
-    <Compile Include="Objects\Main\SaveGame.cs" />
     <Compile Include="Objects\Effects\FollowFont.cs" />
     <Compile Include="Objects\Enemies\Obstacles.cs" />
-    <Compile Include="Objects\Main\Player.cs" />
     <Compile Include="Objects\Level\PushBlock.cs" />
+    <Compile Include="Main\GameResources.cs" />
     <Compile Include="Objects\Room.cs" />
     <Compile Include="Objects\RoomObject.cs" />
     <Compile Include="Objects\RoomExtensions.cs" />

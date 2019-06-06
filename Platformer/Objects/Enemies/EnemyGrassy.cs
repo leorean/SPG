@@ -1,13 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
-using Platformer.Objects.Main;
 using SPG.Util;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SPG.Map;
-using Platformer.Objects.Effects;
+using Platformer.Resources;
+using Platformer.Main;
 
 namespace Platformer.Objects.Enemies
 {
@@ -34,10 +30,10 @@ namespace Platformer.Objects.Enemies
             AnimationTexture = AssetManager.EnemyGrassy;
             Direction = Direction.RIGHT;
 
-            HP = 10;
-            EXP = 18;
-            Damage = 2;
-
+            HP = GameResources.EnemyGrassy.HP;
+            Damage = GameResources.EnemyGrassy.Damage;
+            EXP = GameResources.EnemyGrassy.EXP;
+            
             Gravity = .1f;
 
             Move(0, 5);

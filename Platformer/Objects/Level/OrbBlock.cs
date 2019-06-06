@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Platformer.Objects.Effects;
+using Platformer.Main;
 using Platformer.Objects.Effects.Emitters;
-using Platformer.Objects.Enemies;
-using Platformer.Objects.Main;
-using Platformer.Objects.Main.Orbs;
 using SPG.Objects;
-using SPG.Util;
 
 namespace Platformer.Objects.Level
 {
@@ -41,7 +33,7 @@ namespace Platformer.Objects.Level
                 //if (MathUtil.Euclidean(Center, GameManager.Current.Player.Orb.Center) < 2 * Globals.TILE)
                 if(this.CollisionBounds(GameManager.Current.Player.Orb, X, Y))
                 {
-                    if (GameManager.Current.Player.Orb.State != Main.Orbs.OrbState.FOLLOW)
+                    if (GameManager.Current.Player.Orb.State != OrbState.FOLLOW)
                         //&& GameManager.Current.Player.Stats.Spells.ElementAt(GameManager.Current.Player.Stats.SpellIndex).Key == SpellType.NONE)
                     {
                         active = true;
