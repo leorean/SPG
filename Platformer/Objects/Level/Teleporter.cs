@@ -90,7 +90,7 @@ namespace Platformer.Objects.Level
                     GameManager.Current.Player.Stats.Teleporters.Add(ID, Position.ToPoint());
             }
 
-            angle = angle % 360;            
+            angle = angle % 360;
         }
 
         public void Reset()

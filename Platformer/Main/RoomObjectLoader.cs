@@ -241,7 +241,7 @@ namespace Platformer.Main
                             t.TileOptions.Solid = false;
                             break;
                         case 832:
-                            new Teleporter(i * Globals.TILE + 16, j * Globals.TILE + 16, room);
+                            new Teleporter(i * Globals.TILE + 8, j * Globals.TILE + 8, room);
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
                             break;

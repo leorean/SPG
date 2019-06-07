@@ -81,6 +81,12 @@ namespace Platformer.Main
         {
             // reset possible teleporter stuff
             player.Teleporter?.Reset();
+
+            if (player.Teleporter != null && player.Stats.Teleporters.Count == 1)
+            {
+                new MessageBox("...");
+            }
+
             player.Teleporter = null;
             if (player.Orb != null) player.Orb.Visible = true;
 
