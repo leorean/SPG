@@ -1,10 +1,34 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Platformer.Objects;
 using SPG.Save;
 
 namespace Platformer.Main
 {
+    [Serializable]
+    public class GameStats
+    {
+        public int MaxHP { get; set; } = 5;
+        public int MaxMP { get; set; } = 30;
+        public float MPRegen { get; set; } = .1f;
+
+        public PlayerAbility Abilities { get; set; } = PlayerAbility.NONE;
+
+        public float Coins { get; set; } = 0;
+
+        public Dictionary<SpellType, SpellLevel> Spells { get; set; } = new Dictionary<SpellType, SpellLevel> { { SpellType.NONE, SpellLevel.ONE } };
+        public Dictionary<SpellType, int> SpellEXP { get; set; } = new Dictionary<SpellType, int> { { SpellType.NONE, 0 } };
+        public int SpellIndex;
+
+        // ID, Typename
+        public Dictionary<int, string> Items { get; set; } = new Dictionary<int, string>();
+        public List<int> KeysAndKeyblocks { get; set; } = new List<int>();
+
+        // ID, x, y
+        public Dictionary<int, Point> Teleporters { get; set; } = new Dictionary<int, Point>();        
+    }
+
     [Serializable]
     public class SaveGame : ISaveGame
     {

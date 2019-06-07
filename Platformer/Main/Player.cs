@@ -28,29 +28,7 @@ namespace Platformer.Main
             return (Direction)(-(int)dir);
         }
     }
-
-    [Serializable]
-    public class GameStats
-    {
-        public int MaxHP { get; set; } = 5;
-        public int MaxMP { get; set; } = 30;
-        public float MPRegen { get; set; } = .1f;
-
-        public PlayerAbility Abilities { get; set; } = PlayerAbility.NONE;
-
-        public float Coins { get; set; } = 0;
-
-        public Dictionary<SpellType, SpellLevel> Spells { get; set; } = new Dictionary<SpellType, SpellLevel> { { SpellType.NONE, SpellLevel.ONE } };
-        public Dictionary<SpellType, int> SpellEXP { get; set; } = new Dictionary<SpellType, int> { { SpellType.NONE, 0 } };
-        public int SpellIndex;
-        
-        // ID, Typename
-        public Dictionary<int, string> Items { get; set; } = new Dictionary<int, string>();        
-        public List<int> KeysAndKeyblocks { get; set; } = new List<int>();
-
-        public List<int> Teleporters { get; set; } = new List<int>();
-    }
-
+    
     [Flags]
     public enum PlayerAbility
     {
@@ -726,9 +704,6 @@ namespace Platformer.Main
 
                     if (k_upPressed && onGround)
                     {
-                        //var pos = Position + new Vector2(0, -64);
-                        //RoomCamera.Current.ChangeRoomsToPosition(pos, 1);
-
                         XVel = 0;
                         YVel = 0;
 
@@ -736,11 +711,18 @@ namespace Platformer.Main
                         Teleporter.Active = true;
                         Teleporter.OnFinishedAnimation = () => {
 
-                            RoomCamera.Current.ChangeRoomsToPosition(Position + new Vector2( - 6 * Globals.TILE, 2 * Globals.TILE), 1);
+                            var index = Stats.Teleporters.ToList().IndexOf(Stats.Teleporters.Where(o => o.Key == Teleporter.ID).FirstOrDefault());
 
+                            if (index == Stats.Teleporters.Count - 1)
+                                index = 0;
+                            else
+                                index++;
+
+                            var newPosition = Stats.Teleporters.ElementAt(index).Value.ToVector2();
+
+                            RoomCamera.Current.ChangeRoomsToPosition(newPosition, 1);
                             Teleporter.OnFinishedAnimation = null;
-                            //teleporter.Active = false;
-                            //teleporter = null;
+
                         };
                         ObjectManager.DestroyAll<ToolTip>();
                     }
@@ -748,7 +730,7 @@ namespace Platformer.Main
 
                 if (Teleporter != null)
                 {
-                    if (Orb != null) Orb.Visible = false;
+                    //if (Orb != null) Orb.Visible = false;
                     Gravity = 0;
                     State = PlayerState.JUMP_UP;
                     MoveTowards(Teleporter, 60);

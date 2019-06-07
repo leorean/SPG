@@ -19,8 +19,9 @@ namespace Platformer.Objects.Level
         private ObtainParticleEmitter particleEmitter;
         
         private List<Texture2D> segment;
+        private int segIndex;
         private float dist;
-        private float angSpd = -.5f;
+        private float angSpd;
         private float angle;
         private bool wasOpen;
         private float backAlpha = 0;
@@ -38,7 +39,9 @@ namespace Platformer.Objects.Level
             
             particleEmitter = new ObtainParticleEmitter(X, Y, 0);
             particleEmitter.Parent = this;
-            particleEmitter.Active = false;            
+            particleEmitter.Active = false;
+
+            Reset();
         }
 
         public override void Update(GameTime gameTime)
@@ -49,14 +52,16 @@ namespace Platformer.Objects.Level
 
             if (Active)
             {
+                segIndex = 1;
+
                 if (!wasOpen)
                 {
                     particleEmitter.Active = true;
 
+                    Depth = GameManager.Current.Player.Depth - .0005f;
+
                     dist = Math.Min(dist + .1f, 16);
                     angSpd = Math.Min(angSpd + .04f, 10);
-
-                    Depth = GameManager.Current.Player.Depth - .0005f;
                     
                     if (dist == 16)
                     {
@@ -65,6 +70,7 @@ namespace Platformer.Objects.Level
                 }
                 else
                 {
+                    if (GameManager.Current.Player.Orb != null) GameManager.Current.Player.Orb.Visible = false;
                     particleEmitter.Active = false;
 
                     Depth = GameManager.Current.Player.Depth + .0005f;
@@ -80,11 +86,22 @@ namespace Platformer.Objects.Level
 
                 backAlpha = Math.Min(backAlpha + .004f, 1);
 
-                if (!GameManager.Current.Player.Stats.Teleporters.Contains(ID))
-                    GameManager.Current.Player.Stats.Teleporters.Add(ID);
+                if (!GameManager.Current.Player.Stats.Teleporters.ContainsKey(ID))
+                    GameManager.Current.Player.Stats.Teleporters.Add(ID, Position.ToPoint());
             }
 
             angle = angle % 360;            
+        }
+
+        public void Reset()
+        {
+            segIndex = 0;
+            angSpd = -.5f;
+            wasOpen = false;
+            if (GameManager.Current.Player != null)
+                Depth = GameManager.Current.Player.Depth - .0005f;
+            angle = 0;
+            backAlpha = 0;
         }
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)
@@ -98,23 +115,24 @@ namespace Platformer.Objects.Level
             var d1 = new Vector2((float)MathUtil.LengthDirX(angle + 000 - 90) * dist, (float)MathUtil.LengthDirY(angle - 000 - 90) * dist);
             var d2 = new Vector2((float)MathUtil.LengthDirX(angle + 120 - 90) * dist, (float)MathUtil.LengthDirY(angle + 120 - 90) * dist);
             var d3 = new Vector2((float)MathUtil.LengthDirX(angle + 240 - 90) * dist, (float)MathUtil.LengthDirY(angle + 240 - 90) * dist);
-
-            var i = Convert.ToInt32(Active);
-
-            sb.Draw(segment[i], Position + d1, null, Color, ang1, new Vector2(16), Scale, SpriteEffects.None, Depth + .00001f);
-            sb.Draw(segment[i], Position + d2, null, Color, ang2, new Vector2(16), Scale, SpriteEffects.None, Depth + .00002f);
-            sb.Draw(segment[i], Position + d3, null, Color, ang3, new Vector2(16), Scale, SpriteEffects.None, Depth + .00003f);
+            
+            sb.Draw(segment[segIndex], Position + d1, null, Color, ang1, new Vector2(16), Scale, SpriteEffects.None, Depth + .00001f);
+            sb.Draw(segment[segIndex], Position + d2, null, Color, ang2, new Vector2(16), Scale, SpriteEffects.None, Depth + .00002f);
+            sb.Draw(segment[segIndex], Position + d3, null, Color, ang3, new Vector2(16), Scale, SpriteEffects.None, Depth + .00003f);
 
             var bgdepth = Globals.LAYER_FG + .0001f;
             sb.Draw(AssetManager.Transition[0], new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY), null, new Color(Color.White, backAlpha), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, bgdepth);
 
-            var c1 = dist / 16f;
-            var c2 = dist / 20f;
-            var c3 = dist / 24f;
+            if (backAlpha > 0)
+            {
+                var c1 = dist / 16f;
+                var c2 = dist / 20f;
+                var c3 = dist / 32f;
 
-            sb.Draw(AssetManager.WhiteCircle, Position, null, new Color(Color.Black, backAlpha), 0, new Vector2(32), Math.Min(c1, .9f), SpriteEffects.None, bgdepth + .0001f);
-            sb.Draw(AssetManager.WhiteCircle, Position, null, new Color(Color.Black, backAlpha), 0, new Vector2(32), c2, SpriteEffects.None, bgdepth + .0002f);
-            sb.Draw(AssetManager.WhiteCircle, Position, null, new Color(Color.Black, backAlpha + .3f), 0, new Vector2(32), c3, SpriteEffects.None, bgdepth + .0003f);
+                sb.Draw(AssetManager.WhiteCircle, Position, null, new Color(Color.Black, backAlpha), 0, new Vector2(32), Math.Min(c1, .9f), SpriteEffects.None, bgdepth + .0001f);
+                sb.Draw(AssetManager.WhiteCircle, Position, null, new Color(Color.Black, backAlpha), 0, new Vector2(32), c2, SpriteEffects.None, bgdepth + .0002f);
+                sb.Draw(AssetManager.WhiteCircle, Position, null, new Color(Color.Black, backAlpha + .3f), 0, new Vector2(32), c3, SpriteEffects.None, bgdepth + .0003f);
+            }
         }
     }
 }

@@ -79,8 +79,10 @@ namespace Platformer.Main
 
         private void Transition_1()
         {
+            // reset possible teleporter stuff
+            player.Teleporter?.Reset();
             player.Teleporter = null;
-            if (player.Orb != null) player.Orb.Visible = false;
+            if (player.Orb != null) player.Orb.Visible = true;
 
             player.State = Player.PlayerState.IDLE;
             player.Position = newPosition;

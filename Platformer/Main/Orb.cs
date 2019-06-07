@@ -51,15 +51,10 @@ namespace Platformer.Main
         private float alpha = 1;
         private int alphaTimeout;
         private Direction lastChangeDir;
-
-        //public Dictionary<SpellType, Dictionary<SpellLevel, float>> MpCost { get; private set; } = new Dictionary<SpellType, Dictionary<SpellLevel, float>>();
-        //public Dictionary<SpellType, Dictionary<SpellLevel, int>> MaxEXP { get; private set; } = new Dictionary<SpellType, Dictionary<SpellLevel, int>>();
-
+        
         private double t;
         private Vector2 lastPosition;
-
-        //private SpellEmitter spellEmitter;
-
+        
         private float offY;
 
         public Orb(Player player) : base(player.X, player.Y)
@@ -237,11 +232,9 @@ namespace Platformer.Main
         {
             if (alphaTimeout == 0)
             {
-                var eff = new SingularEffect(X, Y, 4);
-                //eff.Scale = new Vector2(.5f);
+                var eff = new SingularEffect(X, Y, 4);                
             }
-            lastChangeDir = direction;
-            //Position -= new Vector2(7 * Math.Sign((int)direction), 0);
+            lastChangeDir = direction;            
             State = OrbState.IDLE;
 
             alphaTimeout = 20;
