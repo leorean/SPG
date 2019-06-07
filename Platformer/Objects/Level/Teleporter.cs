@@ -16,8 +16,8 @@ namespace Platformer.Objects.Level
     {
         public bool Active { get; set; }
 
-        private ObtainParticleEmitter emitter;
-
+        private ObtainParticleEmitter particleEmitter;
+        
         private Texture2D segment;
         private float dist;
         private float angSpd = -.5f;
@@ -29,18 +29,16 @@ namespace Platformer.Objects.Level
 
         public Teleporter(float x, float y, Room room) : base(x, y, room)
         {
-            //AnimationTexture = AssetManager.Teleporter;
-
             segment = AssetManager.Teleporter.Crop(new Rectangle(0, 0, 32, 32));
 
             Depth = Globals.LAYER_FG - 0.0001f;
 
             DrawOffset = new Vector2(32);
             BoundingBox = new SPG.Util.RectF(-32, -32, 64, 64);
-
-            emitter = new ObtainParticleEmitter(X, Y, 0);
-            emitter.Parent = this;
-            emitter.Active = false;
+            
+            particleEmitter = new ObtainParticleEmitter(X, Y, 0);
+            particleEmitter.Parent = this;
+            particleEmitter.Active = false;            
         }
 
         public override void Update(GameTime gameTime)
@@ -53,7 +51,7 @@ namespace Platformer.Objects.Level
             {
                 if (!wasOpen)
                 {
-                    emitter.Active = true;
+                    particleEmitter.Active = true;
 
                     dist = Math.Min(dist + .1f, 16);
                     angSpd = Math.Min(angSpd + .04f, 10);
@@ -67,7 +65,7 @@ namespace Platformer.Objects.Level
                 }
                 else
                 {
-                    emitter.Active = false;
+                    particleEmitter.Active = false;
 
                     Depth = GameManager.Current.Player.Depth + .0005f;
                     dist = Math.Max(dist - 1f, 0);
@@ -85,13 +83,8 @@ namespace Platformer.Objects.Level
                 if (!GameManager.Current.Player.Stats.Teleporters.Contains(ID))
                     GameManager.Current.Player.Stats.Teleporters.Add(ID);
             }
-            else
-            {
-            }
 
-            angle = angle % 360;
-
-            //Angle = (Angle + .01f) % (float)(2 * Math.PI);
+            angle = angle % 360;            
         }
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)
@@ -106,18 +99,20 @@ namespace Platformer.Objects.Level
             var d2 = new Vector2((float)MathUtil.LengthDirX(angle + 120 - 90) * dist, (float)MathUtil.LengthDirY(angle + 120 - 90) * dist);
             var d3 = new Vector2((float)MathUtil.LengthDirX(angle + 240 - 90) * dist, (float)MathUtil.LengthDirY(angle + 240 - 90) * dist);
 
-            sb.Draw(segment, Position + d1, null, Color, ang1, new Vector2(16), Scale, SpriteEffects.None, Depth);
-            sb.Draw(segment, Position + d2, null, Color, ang2, new Vector2(16), Scale, SpriteEffects.None, Depth);
-            sb.Draw(segment, Position + d3, null, Color, ang3, new Vector2(16), Scale, SpriteEffects.None, Depth);
+            sb.Draw(segment, Position + d1, null, Color, ang1, new Vector2(16), Scale, SpriteEffects.None, Depth + .00001f);
+            sb.Draw(segment, Position + d2, null, Color, ang2, new Vector2(16), Scale, SpriteEffects.None, Depth + .00002f);
+            sb.Draw(segment, Position + d3, null, Color, ang3, new Vector2(16), Scale, SpriteEffects.None, Depth + .00003f);
 
-            var bgdepth = Globals.LAYER_FG + .0001f;// : GameManager.Current.Player.Depth + .0001f;
-
+            var bgdepth = Globals.LAYER_FG + .0001f;
             sb.Draw(AssetManager.Transition[0], new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY), null, new Color(Color.White, backAlpha), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, bgdepth);
 
-            //sb.Draw(segment, Position + new Vector2((float)MathUtil.LengthDirX(angle + 000) * dist, (float)MathUtil.LengthDirY(angle + 000) * dist), null, Color, ang1, new Vector2(16), Scale, SpriteEffects.None, Depth);
-            //sb.Draw(segment, Position + new Vector2((float)MathUtil.LengthDirX(angle + 120) * dist, (float)MathUtil.LengthDirY(angle + 120) * dist), null, Color, ang2, new Vector2(16), Scale, SpriteEffects.None, Depth);
-            //sb.Draw(segment, Position + new Vector2((float)MathUtil.LengthDirX(angle + 240) * dist, (float)MathUtil.LengthDirY(angle + 240) * dist), null, Color, ang3, new Vector2(16), Scale, SpriteEffects.None, Depth);
+            var c1 = dist / 16f;
+            var c2 = dist / 20f;
+            var c3 = dist / 24f;
 
+            sb.Draw(AssetManager.WhiteCircle, Position, null, new Color(Color.Black, backAlpha), 0, new Vector2(32), Math.Min(c1, .9f), SpriteEffects.None, bgdepth + .0001f);
+            sb.Draw(AssetManager.WhiteCircle, Position, null, new Color(Color.Black, backAlpha), 0, new Vector2(32), c2, SpriteEffects.None, bgdepth + .0002f);
+            sb.Draw(AssetManager.WhiteCircle, Position, null, new Color(Color.Black, backAlpha + .3f), 0, new Vector2(32), c3, SpriteEffects.None, bgdepth + .0003f);
         }
     }
 }

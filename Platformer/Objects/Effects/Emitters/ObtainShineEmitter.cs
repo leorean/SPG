@@ -56,6 +56,8 @@ namespace Platformer.Objects.Effects.Emitters
             var particle = new ObtainShineParticle(this);
             particle.lightScale = GlowScale;
             particle.Alpha = GlowAlpha;
+            particle.Color = Color;
+            particle.Depth = Depth;
         }
     }
 }

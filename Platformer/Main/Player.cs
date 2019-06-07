@@ -751,7 +751,7 @@ namespace Platformer.Main
                     if (Orb != null) Orb.Visible = false;
                     Gravity = 0;
                     State = PlayerState.JUMP_UP;
-                    MoveTowards(Teleporter, 30);
+                    MoveTowards(Teleporter, 60);
 
                     if (MathUtil.Euclidean(Center, Teleporter.Center) < 2)
                     {
