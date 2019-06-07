@@ -18,7 +18,7 @@ namespace Platformer.Objects.Level
 
         private ObtainParticleEmitter particleEmitter;
         
-        private Texture2D segment;
+        private List<Texture2D> segment;
         private float dist;
         private float angSpd = -.5f;
         private float angle;
@@ -29,7 +29,7 @@ namespace Platformer.Objects.Level
 
         public Teleporter(float x, float y, Room room) : base(x, y, room)
         {
-            segment = AssetManager.Teleporter.Crop(new Rectangle(0, 0, 32, 32));
+            segment = new List<Texture2D> { AssetManager.Teleporter.Crop(new Rectangle(0, 0, 32, 32)), AssetManager.Teleporter.Crop(new Rectangle(32, 0, 32, 32)) };
 
             Depth = Globals.LAYER_FG - 0.0001f;
 
@@ -99,9 +99,11 @@ namespace Platformer.Objects.Level
             var d2 = new Vector2((float)MathUtil.LengthDirX(angle + 120 - 90) * dist, (float)MathUtil.LengthDirY(angle + 120 - 90) * dist);
             var d3 = new Vector2((float)MathUtil.LengthDirX(angle + 240 - 90) * dist, (float)MathUtil.LengthDirY(angle + 240 - 90) * dist);
 
-            sb.Draw(segment, Position + d1, null, Color, ang1, new Vector2(16), Scale, SpriteEffects.None, Depth + .00001f);
-            sb.Draw(segment, Position + d2, null, Color, ang2, new Vector2(16), Scale, SpriteEffects.None, Depth + .00002f);
-            sb.Draw(segment, Position + d3, null, Color, ang3, new Vector2(16), Scale, SpriteEffects.None, Depth + .00003f);
+            var i = Convert.ToInt32(Active);
+
+            sb.Draw(segment[i], Position + d1, null, Color, ang1, new Vector2(16), Scale, SpriteEffects.None, Depth + .00001f);
+            sb.Draw(segment[i], Position + d2, null, Color, ang2, new Vector2(16), Scale, SpriteEffects.None, Depth + .00002f);
+            sb.Draw(segment[i], Position + d3, null, Color, ang3, new Vector2(16), Scale, SpriteEffects.None, Depth + .00003f);
 
             var bgdepth = Globals.LAYER_FG + .0001f;
             sb.Draw(AssetManager.Transition[0], new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY), null, new Color(Color.White, backAlpha), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, bgdepth);
