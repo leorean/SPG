@@ -15,15 +15,17 @@ namespace Platformer.Objects.Effects
         public delegate void TransitionEnd();
         public TransitionEnd OnTransitionEnd;
 
-        private Texture2D dark = AssetManager.Darkness;
+        //private Texture2D dark = AssetManager.Transition[0];
         private double alpha = 0f;
         private Fade fade;
         private Color color = new Color(Color.White, 0);
         private double vel = .03;
 
-        public Transition()
-        {
+        private int type;
 
+        public Transition(int type = 0)
+        {
+            this.type = type;
         }
 
         public void FadeIn()
@@ -63,7 +65,7 @@ namespace Platformer.Objects.Effects
 
         public void Draw(SpriteBatch sb, GameTime gameTime)
         {
-            sb.Draw(dark, new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY), null, color, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, Globals.LAYER_UI + .001f);
+            sb.Draw(AssetManager.Transition[type], new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY), null, color, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, Globals.LAYER_UI + .001f);
         }
     }    
 }

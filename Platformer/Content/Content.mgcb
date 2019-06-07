@@ -61,18 +61,6 @@
 /processorParam:TextureFormat=Color
 /build:damageFont.png
 
-#begin darkness.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:darkness.png
-
 #begin door.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -361,6 +349,18 @@
 /processorParam:TextureFormat=Color
 /build:spellexp.png
 
+#begin teleporter.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:teleporter.png
+
 #begin tiles.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -384,6 +384,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:toolTip.png
+
+#begin transition.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:transition.png
 
 #begin watermill.png
 /importer:TextureImporter

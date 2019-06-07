@@ -105,6 +105,7 @@
     <Compile Include="Objects\Level\Bush.cs" />
     <Compile Include="Objects\Level\Pot.cs" />
     <Compile Include="Objects\Level\SwitchBlock.cs" />
+    <Compile Include="Objects\Level\Teleporter.cs" />
     <Compile Include="Objects\Level\WaterMill.cs" />
     <Compile Include="Objects\Level\WaterMillMovingPlatform.cs" />
     <Compile Include="Main\Orb.cs" />

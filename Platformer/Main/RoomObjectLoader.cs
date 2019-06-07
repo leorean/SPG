@@ -240,6 +240,11 @@ namespace Platformer.Main
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
                             break;
+                        case 832:
+                            new Teleporter(i * Globals.TILE + 16, j * Globals.TILE + 16, room);
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            break;
                         default:
                             var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room);
                             if (t.ID == 645) t.TileOptions.Visible = false;  // <- invisible blocks

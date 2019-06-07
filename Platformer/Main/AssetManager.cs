@@ -19,6 +19,7 @@ namespace Platformer.Main
         public static TextureSet Projectiles { get; private set; }
         public static TextureSet NPCS { get; private set; }
         public static TextureSet SaveStatue { get; private set; }
+        public static TextureSet Teleporter { get; private set; }
 
         // items etc.
 
@@ -40,7 +41,7 @@ namespace Platformer.Main
         public static TextureSet Particles { get; private set; }
         public static Texture2D WhiteCircle { get; private set; }
         public static Texture2D Flash { get; private set; }
-        public static Texture2D Darkness { get; private set; }
+        public static TextureSet Transition { get; private set; }
         public static Texture2D PlayerGhost { get; private set; }
         public static TextureSet MovingPlatform { get; private set; }
         public static TextureSet GroundSwitch { get; private set; }
@@ -78,12 +79,13 @@ namespace Platformer.Main
             Projectiles = content.LoadTextureSet("projectiles", 16, 16);
             NPCS = content.LoadTextureSet("npc", 16, 32);
             SaveStatue = content.LoadTextureSet("save");
+            Teleporter = content.LoadTextureSet("teleporter", 64, 64);
 
             Door = content.Load<Texture2D>("door");
             Particles = content.LoadTextureSet("particles", 16, 16);
             WhiteCircle = content.Load<Texture2D>("whiteCircle");
             Flash = content.Load<Texture2D>("flash");
-            Darkness = content.Load<Texture2D>("darkness");
+            Transition = content.LoadTextureSet("transition", 256, 144);
             PlayerGhost = content.Load<Texture2D>("playerGhost");
             MovingPlatform = content.LoadTextureSet("movingPlatform", 32, 32);
             GroundSwitch = content.LoadTextureSet("groundSwitch");

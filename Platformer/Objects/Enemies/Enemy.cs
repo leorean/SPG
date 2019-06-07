@@ -24,7 +24,8 @@ namespace Platformer.Objects.Enemies
 
         // hit variables
         protected bool hit = false;
-        
+        protected float knockback = .5f;
+
         Font hitFont;
 
         public Enemy(float x, float y, Room room) : base(x, y, room)
@@ -40,7 +41,7 @@ namespace Platformer.Objects.Enemies
             hitFont.Color = new Color(255, 0, 0);
         }
 
-        public void Hit(int hitPoints, float degAngle)
+        public virtual void Hit(int hitPoints, float degAngle)
         {
             MovingPlatform = null;
 
@@ -52,8 +53,8 @@ namespace Platformer.Objects.Enemies
 
             new FallingFont(X, Y, $"-{hitPoints}", new Color(255, 0, 55), new Color(255, 255, 0));
 
-            var ldx = MathUtil.LengthDirX((float)degAngle) * .5f;
-            var ldy = MathUtil.LengthDirY((float)degAngle) * .5f;
+            var ldx = MathUtil.LengthDirX((float)degAngle) * knockback;
+            var ldy = MathUtil.LengthDirY((float)degAngle) * knockback;
 
             XVel += (float)ldx;
             YVel += (float)ldy;

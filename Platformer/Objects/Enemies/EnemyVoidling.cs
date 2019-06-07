@@ -58,6 +58,7 @@ namespace Platformer.Objects.Enemies
 
         private int idleTimer;
         private int walkTimer;
+        private int knockbackTimer;
 
         private int type;
 
@@ -74,7 +75,9 @@ namespace Platformer.Objects.Enemies
             
             AnimationTexture = AssetManager.EnemyVoidling;
             Direction = RND.Choose(Direction.LEFT, Direction.RIGHT);
-            
+
+            knockback = 0;
+
             Gravity = .1f;
             
             if (type == 1)
@@ -83,7 +86,6 @@ namespace Platformer.Objects.Enemies
                 shield.Parent = this;
             }
         }
-
 
         public override void Update(GameTime gameTime)
         {
@@ -97,11 +99,14 @@ namespace Platformer.Objects.Enemies
             var onGround = this.MoveAdvanced(false);
             var player = GameManager.Current.Player;
 
+            knockbackTimer = Math.Max(knockbackTimer - 1, 0);
+
             if (hit)
             {
                 directionAfterHit = (Direction)Math.Sign(GameManager.Current.Player.X - X);
-                if (onGround)
+                if (onGround && knockbackTimer == 0)
                 {
+                    knockbackTimer = 60;
                     XVel = -1 * Math.Sign(GameManager.Current.Player.X - X);
                     YVel = -1;
                     state = State.JUMP;

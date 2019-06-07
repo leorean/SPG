@@ -102,10 +102,10 @@ namespace Platformer.Main
             GameManager.Current.Transition = null;
         }
 
-        public void ChangeRoomsFromPosition(Vector2 position)
+        public void ChangeRoomsToPosition(Vector2 position, int type)
         {
-            player.State = Player.PlayerState.BACKFACING;
-            GameManager.Current.Transition = new Transition();
+            //player.State = Player.PlayerState.BACKFACING;
+            GameManager.Current.Transition = new Transition(type);
             GameManager.Current.Transition.FadeIn();
             newPosition = position;
             GameManager.Current.Transition.OnTransitionEnd = Transition_1;

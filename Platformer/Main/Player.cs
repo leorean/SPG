@@ -45,9 +45,10 @@ namespace Platformer.Main
         public int SpellIndex;
         
         // ID, Typename
-        public Dictionary<int, string> Items { get; set; } = new Dictionary<int, string>();
-        
+        public Dictionary<int, string> Items { get; set; } = new Dictionary<int, string>();        
         public List<int> KeysAndKeyblocks { get; set; } = new List<int>();
+
+        public List<int> Teleporters { get; set; } = new List<int>();
     }
 
     [Flags]
@@ -177,7 +178,9 @@ namespace Platformer.Main
         public Key KeyObject { get; set; }
         public Collider MovingPlatform { get; set; }
         public Orb Orb { get; set; }
-        
+
+        private Teleporter teleporter;
+
         // constructor
 
         public Player(float x, float y) : base(x, y)
@@ -349,7 +352,8 @@ namespace Platformer.Main
             // ++++ input ++++
 
             if (ObjectManager.Exists<MessageBox>() 
-                || GameManager.Current.Transition != null)
+                || GameManager.Current.Transition != null
+                || teleporter != null)
             {
                 input.Enabled = false;
             }
@@ -461,7 +465,9 @@ namespace Platformer.Main
 
             InvincibleTimer = Math.Max(InvincibleTimer - 1, 0);
             
-            if (InvincibleTimer == 0 && HP > 0 && State != PlayerState.OBTAIN)
+            if (InvincibleTimer == 0 && HP > 0 
+                && State != PlayerState.OBTAIN
+                && State != PlayerState.BACKFACING)
             {
                 var obstacle = ObjectManager.CollisionBoundsFirstOrDefault<Obstacle>(this, X, Y);
 
@@ -708,20 +714,42 @@ namespace Platformer.Main
 
                 var items = this.CollisionBounds<Item>(X, Y);
                 foreach (var item in items)
-                {
-                    /*if (item is Chest && !item.Taken)
-                    {
-                        var toolTip = new ToolTip(item, this, new Vector2(0, 8), 0);
-                        if (k_upPressed)
-                        {                            
-                            ObjectManager.DestroyAll<ToolTip>();
-                            item.Take(this);
-                        }
-                    }
-                    else
-                        item.Take(this);
-                    */
                     item.Take(this);
+
+                // ++++ teleporters ++++
+
+                var tel = this.CollisionBoundsFirstOrDefault<Teleporter>(X, Y);
+
+                if (tel != null && teleporter == null)
+                {
+                    var toolTip = new ToolTip(tel, this, new Vector2(0, 8), 0);
+
+                    if (k_upPressed && onGround)
+                    {
+                        //var pos = Position + new Vector2(0, -64);
+                        //RoomCamera.Current.ChangeRoomsToPosition(pos, 1);
+
+                        XVel = 0;
+                        YVel = 0;
+
+                        teleporter = tel;
+                        teleporter.Active = true;
+                        ObjectManager.DestroyAll<ToolTip>();
+                    }
+                }
+
+                if (teleporter != null)
+                {
+                    Gravity = 0;
+                    State = PlayerState.JUMP_UP;
+                    MoveTowards(teleporter, 30);
+
+                    if (MathUtil.Euclidean(Center, teleporter.Center) < 2)
+                    {
+                        teleporter.Active = false;
+                        teleporter = null;                        
+                    }
+
                 }
 
                 // ++++ doors ++++
@@ -736,7 +764,8 @@ namespace Platformer.Main
                         YVel = -Gravity;
                         
                         var pos = new Vector2(door.Center.X + door.Tx * Globals.TILE, door.Center.Y + door.Ty * Globals.TILE);
-                        RoomCamera.Current.ChangeRoomsFromPosition(pos);
+                        State = PlayerState.BACKFACING;
+                        RoomCamera.Current.ChangeRoomsToPosition(pos, 0);
 
                     }
                 }

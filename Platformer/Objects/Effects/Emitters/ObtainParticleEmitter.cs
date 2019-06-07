@@ -61,12 +61,12 @@ namespace Platformer.Objects.Effects.Emitters
 
     public class ObtainParticleEmitter : ParticleEmitter
     {
-        float curTimeout = 30;
+        float curTimeout;
 
-        public ObtainParticleEmitter(float x, float y) : base(x, y)
+        public ObtainParticleEmitter(float x, float y, float timeout = 30) : base(x, y)
         {
             SpawnTimeout = (int)curTimeout;
-
+            curTimeout = timeout;
         }
 
         public override void Update(GameTime gameTime)

@@ -86,6 +86,10 @@ namespace Platformer.Resources
         // colors
 
         public static readonly Color OxygenColor1 = new Color(3, 243, 243);
-        public static readonly Color OxygenColor2 = new Color(79, 3, 243);        
+        public static readonly Color OxygenColor2 = new Color(79, 3, 243);
+        
+        // items
+
+
     }
 }
