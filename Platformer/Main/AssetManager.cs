@@ -19,7 +19,7 @@ namespace Platformer.Main
         public static TextureSet Projectiles { get; private set; }
         public static TextureSet NPCS { get; private set; }
         public static TextureSet SaveStatue { get; private set; }
-        public static TextureSet Teleporter { get; private set; }
+        public static Texture2D Teleporter { get; private set; }
 
         // items etc.
 
@@ -79,7 +79,7 @@ namespace Platformer.Main
             Projectiles = content.LoadTextureSet("projectiles", 16, 16);
             NPCS = content.LoadTextureSet("npc", 16, 32);
             SaveStatue = content.LoadTextureSet("save");
-            Teleporter = content.LoadTextureSet("teleporter", 64, 64);
+            Teleporter = content.Load<Texture2D>("teleporter");
 
             Door = content.Load<Texture2D>("door");
             Particles = content.LoadTextureSet("particles", 16, 16);

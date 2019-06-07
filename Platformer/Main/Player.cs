@@ -179,7 +179,7 @@ namespace Platformer.Main
         public Collider MovingPlatform { get; set; }
         public Orb Orb { get; set; }
 
-        private Teleporter teleporter;
+        public Teleporter Teleporter { get; set; }
 
         // constructor
 
@@ -353,7 +353,7 @@ namespace Platformer.Main
 
             if (ObjectManager.Exists<MessageBox>() 
                 || GameManager.Current.Transition != null
-                || teleporter != null)
+                || Teleporter != null)
             {
                 input.Enabled = false;
             }
@@ -720,7 +720,7 @@ namespace Platformer.Main
 
                 var tel = this.CollisionBoundsFirstOrDefault<Teleporter>(X, Y);
 
-                if (tel != null && teleporter == null)
+                if (tel != null && Teleporter == null)
                 {
                     var toolTip = new ToolTip(tel, this, new Vector2(0, 8), 0);
 
@@ -732,22 +732,31 @@ namespace Platformer.Main
                         XVel = 0;
                         YVel = 0;
 
-                        teleporter = tel;
-                        teleporter.Active = true;
+                        Teleporter = tel;
+                        Teleporter.Active = true;
+                        Teleporter.OnFinishedAnimation = () => {
+
+                            RoomCamera.Current.ChangeRoomsToPosition(Position + new Vector2( - 6 * Globals.TILE, 2 * Globals.TILE), 1);
+
+                            Teleporter.OnFinishedAnimation = null;
+                            //teleporter.Active = false;
+                            //teleporter = null;
+                        };
                         ObjectManager.DestroyAll<ToolTip>();
                     }
                 }
 
-                if (teleporter != null)
+                if (Teleporter != null)
                 {
+                    if (Orb != null) Orb.Visible = false;
                     Gravity = 0;
                     State = PlayerState.JUMP_UP;
-                    MoveTowards(teleporter, 30);
+                    MoveTowards(Teleporter, 30);
 
-                    if (MathUtil.Euclidean(Center, teleporter.Center) < 2)
+                    if (MathUtil.Euclidean(Center, Teleporter.Center) < 2)
                     {
-                        teleporter.Active = false;
-                        teleporter = null;                        
+                        //teleporter.Active = false;
+                        //teleporter = null;
                     }
 
                 }
