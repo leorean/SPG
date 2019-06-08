@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objecttypes>
+ <objecttype name="chest" color="#ff5500">
+  <property name="value" type="float" default="0"/>
+ </objecttype>
+ <objecttype name="door" color="#b9ff35">
+  <property name="tx" type="int" default="0"/>
+  <property name="ty" type="int" default="0"/>
+ </objecttype>
+ <objecttype name="item" color="#61ffdd">
+  <property name="itemName" type="string"/>
+  <property name="itemType" type="int" default="-1"/>
+  <property name="text" type="string"/>
+ </objecttype>
+ <objecttype name="movingPlatform" color="#aaaaff">
+  <property name="activatable" type="bool" default="false"/>
+  <property name="timeOut" type="int" default="-1"/>
+  <property name="xRange" type="int" default="0"/>
+  <property name="xVel" type="float" default="0"/>
+  <property name="yRange" type="int" default="0"/>
+  <property name="yVel" type="float" default="0"/>
+ </objecttype>
+ <objecttype name="npc" color="#55557f">
+  <property name="centerText" type="bool" default="false"/>
+  <property name="direction" type="int" default="0"/>
+  <property name="noText" type="string"/>
+  <property name="npcType" type="int" default="-1"/>
+  <property name="text" type="string"/>
+  <property name="yesText" type="string"/>
+ </objecttype>
+ <objecttype name="player" color="#ffffff"/>
+ <objecttype name="room" color="#ffec9c">
+  <property name="bg" type="int" default="-1"/>
+ </objecttype>
+ <objecttype name="shopItem" color="#fff9d2">
+  <property name="itemType" type="int" default="0"/>
+  <property name="price" type="int" default="0"/>
+  <property name="respawn" type="bool" default="false"/>
+  <property name="text" type="string"/>
+ </objecttype>
+ <objecttype name="waterMill" color="#a0a0a4"/>
+</objecttypes>
