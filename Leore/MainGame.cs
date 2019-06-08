@@ -218,8 +218,9 @@ namespace Leore
 
                 GameManager.Current.Player.Stats.KeysAndKeyblocks.Clear();
                 GameManager.Current.Player.Stats.Items.Clear();
+                GameManager.Current.Player.Stats.Teleporters.Clear();
 
-                Debug.WriteLine("cleared keys and items!");
+                Debug.WriteLine("cleared saved lists!");
             }
 
             if (input.IsKeyPressed(Keys.M, Input.State.Pressed))

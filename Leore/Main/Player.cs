@@ -705,7 +705,7 @@ namespace Leore.Main
                     if (!Stats.Teleporters.ContainsKey(tel.ID))
                         Stats.Teleporters.Add(tel.ID, tel.Position.ToPoint());
 
-                    if (k_upPressed && onGround)
+                    if (k_upPressed && !k_attackHolding && onGround)
                     {
                         XVel = 0;
                         YVel = 0;
