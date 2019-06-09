@@ -12,6 +12,8 @@ using Microsoft.Xna.Framework.Graphics;
 using SPG.Objects;
 using static Leore.Main.MessageBox;
 using SPG.Draw;
+using Leore.Util;
+using SPG.Util;
 
 namespace Leore.Objects.Enemies
 {
@@ -25,7 +27,9 @@ namespace Leore.Objects.Enemies
         private float bgAlpha;
         private float xoff;
         private int invincible;
-        
+
+        private bool hasOrb = true;
+
         public BossMirrorSelf(float x, float y, Room room) : base(x, y, room)
         {
             wallEmitter = new MirrorSelfWallEmitter(x, y, room);
@@ -82,6 +86,7 @@ namespace Leore.Objects.Enemies
             {
                 HP = 0;
             }
+            
         }
 
         public override void OnDeath()
@@ -109,8 +114,33 @@ namespace Leore.Objects.Enemies
             base.Draw(sb, gameTime);
 
             // orb
-            var orbPos = player.Position - player.Orb.Position;
-            sb.Draw(AssetManager.Orbs[0], Position + new Vector2(orbPos.X, -orbPos.Y), null, Color, 0, player.Orb.DrawOffset, Vector2.One, SpriteEffects.None, Depth + .00015f);
+            if (hasOrb)
+            {
+                var dp = player.Position - player.Orb.Position;
+                var orbPos = Position + new Vector2(dp.X, -dp.Y);
+                sb.Draw(AssetManager.Orbs[0], orbPos, null, Color, 0, player.Orb.DrawOffset, Vector2.One, SpriteEffects.None, Depth + .00015f);
+
+                if (player.Stats.SpellIndex == 0 && player.Orb.State == OrbState.ATTACK)
+                {
+                    //sb.DrawLightning(orbPos, player.Orb.Position, Color.White, Depth + .0001f);
+                    if(MathUtil.Euclidean(orbPos, player.Orb.Position) < 12f)
+                    {
+                        var ang1 = (float)RND.Next * 2 * Math.PI;
+                        var ang2 = (float)RND.Next * 2 * Math.PI;
+                        var pos1 = orbPos + new Vector2(32 * (float)MathUtil.LengthDirX(MathUtil.RadToDeg(ang1)), 32 * (float)MathUtil.LengthDirY(MathUtil.RadToDeg(ang1)));
+                        var pos2 = orbPos + new Vector2(32 * (float)MathUtil.LengthDirX(MathUtil.RadToDeg(ang2)), 32 * (float)MathUtil.LengthDirY(MathUtil.RadToDeg(ang2)));
+
+                        //new StarEmitter(orbPos.X, orbPos.Y, 1);
+
+                        sb.DrawLightning(player.Orb.Position, pos1, Color.White, Depth + .0001f);
+                        sb.DrawLightning(orbPos, pos2, Color.Black, Depth + .0001f);
+
+                        player.Orb.Position = new Vector2(player.Orb.X - 2 + (float)(RND.Next * 4), player.Orb.Y - 2 + (float)(RND.Next * 4));                        
+                    }
+                }
+
+                player.Orb.Position = new Vector2(Math.Min(player.Orb.X, Room.X + .5f * Room.BoundingBox.Width), player.Orb.Y);
+            }
 
             // bg
             sb.Draw(AssetManager.MirrorBossBG, new Vector2(Room.X + xoff, Room.Y), null, new Color(Color.White, bgAlpha), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Globals.LAYER_FG + .0002f);            

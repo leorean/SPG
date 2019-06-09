@@ -1787,7 +1787,12 @@ namespace Leore.Main
                 var bg = new Color(20, 113, 126);
 
                 sb.DrawBar(Position + new Vector2(0, 12), (int)(1.5 * Globals.TILE), Oxygen / (float)MaxOxygen, fg, bg, height: 2, border: false);
-            }            
+            }
+
+            /*if (Orb != null)
+            {
+                sb.DrawLightning(Position, new Vector2(X - 0, Y - 64), Color.White, Depth + .0001f);
+            }*/
         }
     }
 }
