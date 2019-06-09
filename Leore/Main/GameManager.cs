@@ -199,7 +199,8 @@ namespace Leore.Main
             globalWaterEmitter = new GlobalWaterBubbleEmitter(spawnX, spawnY, Player);
 
             RoomCamera.Current.SetTarget(Player);
-            MainGame.Current.HUD.SetTarget(Player);
+            MainGame.Current.HUD.SetPlayer(Player);
+            MainGame.Current.HUD.SetBoss(null);
 
             NonRespawnableIDs = new List<int>();
 

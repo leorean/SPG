@@ -56,9 +56,10 @@
     <Compile Include="Main\SaveGame.cs" />
     <Compile Include="Objects\Common.cs" />
     <Compile Include="Objects\Effects\Emitters\DestroyEmitter.cs" />
+    <Compile Include="Objects\Effects\Emitters\EvilEyeEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\FlashEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\GlobalWaterBubbleEmitter.cs" />
-    <Compile Include="Objects\Effects\Emitters\MirrorSelfEmitter.cs" />
+    <Compile Include="Objects\Effects\Emitters\MirrorSelfWallEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\ObtainParticleEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\ObtainShineEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\OrbBlockEmitter.cs" />
@@ -82,7 +83,7 @@
     <Compile Include="Objects\Enemies\Enemy.cs" />
     <Compile Include="Objects\Enemies\EnemyBat.cs" />
     <Compile Include="Objects\Enemies\EnemyGrassy.cs" />
-    <Compile Include="Objects\Enemies\EnemyMirrorSelf.cs" />
+    <Compile Include="Objects\Enemies\BossMirrorSelf.cs" />
     <Compile Include="Objects\Enemies\EnemyVoidling.cs" />
     <Compile Include="Objects\IMovable.cs" />
     <Compile Include="Objects\Items\AbilityItem.cs" />

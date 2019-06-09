@@ -39,7 +39,7 @@ namespace Leore.Objects.Level
                     case 0:
                         if (player.Orb != null)
                         {
-                            boss = new EnemyMirrorSelf(Room.X + Room.BoundingBox.Width - (player.X - Room.X), player.Y, Room);
+                            boss = new BossMirrorSelf(Room.X + Room.BoundingBox.Width - (player.X - Room.X), player.Y, Room);
                             boss.ID = ID;
                         }
                         break;
