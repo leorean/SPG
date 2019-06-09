@@ -4,6 +4,7 @@ using Leore.Objects.Items;
 using SPG.Objects;
 using SPG.Util;
 using System;
+using Leore.Resources;
 
 namespace Leore.Objects.Effects.Emitters
 {
@@ -26,16 +27,16 @@ namespace Leore.Objects.Effects.Emitters
             switch((Emitter as PotionBurstEmitter).PotionType)
             {
                 case PotionType.HP:
-                    colorIndex = RND.Int(Potion.HpColors.Count - 1);
-                    Color = Potion.HpColors[colorIndex];
+                    colorIndex = RND.Int(GameResources.HpColors.Count - 1);
+                    Color = GameResources.HpColors[colorIndex];
                     break;
                 case PotionType.MP:
-                    colorIndex = RND.Int(Potion.MpColors.Count - 1);
-                    Color = Potion.MpColors[colorIndex];
+                    colorIndex = RND.Int(GameResources.MpColors.Count - 1);
+                    Color = GameResources.MpColors[colorIndex];
                     break;
                 case PotionType.Regen:
-                    colorIndex = RND.Int(Potion.RegenColors.Count - 1);
-                    Color = Potion.RegenColors[colorIndex];
+                    colorIndex = RND.Int(GameResources.RegenColors.Count - 1);
+                    Color = GameResources.RegenColors[colorIndex];
                     break;
             }
         }

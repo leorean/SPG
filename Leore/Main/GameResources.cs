@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Leore.Main;
 using System.Collections.Generic;
+using SPG;
 
 namespace Leore.Resources
 {
@@ -20,10 +21,12 @@ namespace Leore.Resources
 
         public static readonly List<EnemyStats> EnemyVoidling = new List<EnemyStats>
         {
-             new EnemyStats { HP = 16, EXP = 10, Damage = 3 },
-             new EnemyStats { HP = 20, EXP = 15, Damage = 3 },
-             new EnemyStats { HP = 30, EXP = 25, Damage = 3 }
+             new EnemyStats { HP = 16, EXP = 20, Damage = 3 },
+             new EnemyStats { HP = 20, EXP = 25, Damage = 3 },
+             new EnemyStats { HP = 30, EXP = 30, Damage = 3 }
         };
+
+        public static readonly EnemyStats BossMirrorSelf = new EnemyStats { HP = 1, EXP = 0, Damage = 0 }; // kind of an exception
 
         // orb stats
 
@@ -85,9 +88,33 @@ namespace Leore.Resources
 
         // colors
 
+        public static readonly Color VoidColor = Colors.FromHex("#973bba");
+
         public static readonly Color OxygenColor1 = new Color(3, 243, 243);
         public static readonly Color OxygenColor2 = new Color(79, 3, 243);
-        
+
+        public static readonly List<Color> HpColors = new List<Color>
+        {
+            new Color(248, 40, 40),
+            new Color(218, 36, 0),
+            new Color(231, 99, 73),
+            new Color(255, 90, 0)
+        };
+
+        public static readonly List<Color> MpColors = new List<Color>
+        {
+            new Color(3, 243, 243),
+            new Color(143, 255, 249),
+            new Color(95, 205, 208)
+        };
+
+        public static readonly List<Color> RegenColors = new List<Color>
+        {
+            new Color(170, 233, 60),
+            new Color(242, 255, 156),
+            new Color(104, 197, 100)
+        };
+
         // items
 
 

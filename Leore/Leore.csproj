@@ -58,6 +58,7 @@
     <Compile Include="Objects\Effects\Emitters\DestroyEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\FlashEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\GlobalWaterBubbleEmitter.cs" />
+    <Compile Include="Objects\Effects\Emitters\MirrorSelfEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\ObtainParticleEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\ObtainShineEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\OrbBlockEmitter.cs" />
@@ -77,9 +78,11 @@
     <Compile Include="Objects\Effects\ToolTip.cs" />
     <Compile Include="Objects\Effects\Transition.cs" />
     <Compile Include="Objects\Effects\SingularEffect.cs" />
+    <Compile Include="Objects\Enemies\Boss.cs" />
     <Compile Include="Objects\Enemies\Enemy.cs" />
     <Compile Include="Objects\Enemies\EnemyBat.cs" />
     <Compile Include="Objects\Enemies\EnemyGrassy.cs" />
+    <Compile Include="Objects\Enemies\EnemyMirrorSelf.cs" />
     <Compile Include="Objects\Enemies\EnemyVoidling.cs" />
     <Compile Include="Objects\IMovable.cs" />
     <Compile Include="Objects\Items\AbilityItem.cs" />
@@ -90,6 +93,7 @@
     <Compile Include="Objects\Items\SpellEXP.cs" />
     <Compile Include="Objects\Items\StatUpItem.cs" />
     <Compile Include="Objects\Level\AirBubble.cs" />
+    <Compile Include="Objects\Level\BossSpawn.cs" />
     <Compile Include="Objects\Level\DestroyBlock.cs" />
     <Compile Include="Objects\Level\OrbBlock.cs" />
     <Compile Include="Objects\Level\EnemyBlock.cs" />

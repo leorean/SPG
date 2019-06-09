@@ -12,7 +12,6 @@ using Leore.Main;
 using SPG.Save;
 using Leore.Objects.Items;
 using Leore.Objects.Level;
-using SPG.Objects;
 
 namespace Leore
 {

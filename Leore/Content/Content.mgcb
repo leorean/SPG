@@ -217,6 +217,18 @@
 /processorParam:TextureFormat=Color
 /build:messageBox.png
 
+#begin mirrorBossBg.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=False
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:mirrorBossBg.png
+
 #begin movingPlatform.png
 /importer:TextureImporter
 /processor:TextureProcessor

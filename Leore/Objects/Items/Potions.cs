@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Leore.Main;
 using Leore.Objects.Effects;
 using Leore.Objects.Effects.Emitters;
+using Leore.Resources;
 
 namespace Leore.Objects.Items
 {
@@ -15,28 +16,6 @@ namespace Leore.Objects.Items
 
     public class Potion : Item
     {
-        public static List<Color> HpColors = new List<Color>
-        {
-            new Color(248, 40, 40),
-            new Color(218, 36, 0),
-            new Color(231, 99, 73),
-            new Color(255, 90, 0)
-        };
-
-        public static List<Color> MpColors = new List<Color>
-        {
-            new Color(3, 243, 243),
-            new Color(143, 255, 249),
-            new Color(95, 205, 208)
-        };
-
-        public static List<Color> RegenColors = new List<Color>
-        {
-            new Color(170, 233, 60),
-            new Color(242, 255, 156),
-            new Color(104, 197, 100)
-        };
-
         public PotionType Type { get; private set; }
 
         private int amount;
@@ -91,7 +70,7 @@ namespace Leore.Objects.Items
                     var fntHp = new FollowFont(player.X, player.Y - Globals.TILE, $"+{amount} HP");
                     fntHp.Target = player;
 
-                    fntHp.Color = HpColors.First();
+                    fntHp.Color = GameResources.HpColors.First();
 
                     break;
                 case PotionType.MP:
@@ -100,7 +79,7 @@ namespace Leore.Objects.Items
                     var fntMp = new FollowFont(player.X, player.Y - Globals.TILE, $"+{amount} MP");
                     fntMp.Target = player;
 
-                    fntMp.Color = MpColors.First();
+                    fntMp.Color = GameResources.MpColors.First();
 
                     //player.MP = GameManager.Current.SaveGame.gameStats.MaxMP;
                     break;

@@ -12,6 +12,14 @@ namespace Leore.Main
 {
     public class MessageBox : GameObject
     {
+        public enum TextSpeed
+        {
+            NORMAL = 3,
+            SLOW = 10
+        }
+
+        private TextSpeed textSpeed;
+
         public Action OnCompleted;
 
         protected List<string> texts;
@@ -66,7 +74,7 @@ namespace Leore.Main
         /// <param name="y"></param>
         /// <param name="text"></param>
         /// <param name="name"></param>
-        public MessageBox(string text, bool centerText = false, string name = null, Color? hiColor = null) : base(0, 0, name)
+        public MessageBox(string text, bool centerText = false, string name = null, Color? hiColor = null, TextSpeed textSpeed = TextSpeed.NORMAL) : base(0, 0, name)
         {
             input = new Input();
 
@@ -100,6 +108,8 @@ namespace Leore.Main
             Texture = AssetManager.MessageBox;
             
             this.hiColor = hiColor;
+
+            this.textSpeed = textSpeed;
 
             font = AssetManager.DefaultFont.Copy();
             halign = centerText ? Font.HorizontalAlignment.Center : Font.HorizontalAlignment.Left;
@@ -181,7 +191,13 @@ namespace Leore.Main
                 }
             } else if (kAny)
             {
-                timeOut = 0;
+                if (textSpeed == TextSpeed.NORMAL)
+                    timeOut = 0;
+                else
+                {
+                    if (timeOut > 0)
+                        timeOut --;
+                }                
             }
 
             timeOut = Math.Max(timeOut - 1, 0);
@@ -192,7 +208,7 @@ namespace Leore.Main
                     curText = curText + texts[page].ElementAt(curText.Length);
                 }
 
-                timeOut = 3;
+                timeOut = (int)textSpeed;
             }
             
             sin = (float)((sin + .1) % (2 * Math.PI));            

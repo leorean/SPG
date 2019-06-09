@@ -1,4 +1,7 @@
 ﻿using Leore.Objects.Items;
+using Leore.Resources;
+using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace Leore.Objects.Effects.Emitters
 {
@@ -9,16 +12,21 @@ namespace Leore.Objects.Effects.Emitters
             switch (potionType)
             {                
                 case PotionType.HP:
-                    particleColors = Potion.HpColors;
+                    particleColors = GameResources.HpColors;
                     break;
                 case PotionType.MP:
-                    particleColors = Potion.MpColors;
+                    particleColors = GameResources.MpColors;
                     break;
                 case PotionType.Regen:
-                    particleColors = Potion.RegenColors;
+                    particleColors = GameResources.RegenColors;
                     break;
 
             }
+        }
+
+        public PotionEmitter(float x, float y, List<Color> colors) : base(x, y)
+        {
+            particleColors = colors;
         }
     }
 }

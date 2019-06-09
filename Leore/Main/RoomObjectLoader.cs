@@ -267,7 +267,9 @@ namespace Leore.Main
                 {
                     var x = (int)data["x"];
                     var y = (int)data["y"];
-
+                    var width = (int)data["width"];
+                    var height = (int)data["height"];
+                    
                     if (!((float)x).In(room.X, room.X + room.BoundingBox.Width) || !((float)y).In(room.Y, room.Y + room.BoundingBox.Height))
                     {
                         continue;
@@ -359,6 +361,12 @@ namespace Leore.Main
                     if (type == "waterMill")
                     {
                         new WaterMill(x + 8, y + 8, room);
+                    }
+                    if (type == "boss")
+                    {
+                        var bossType = data.ContainsKey("bossType") ? (int)data["bossType"] : 0;
+                        var bossSpawn = new BossSpawn(x, y, room, bossType);
+                        bossSpawn.BoundingBox = new RectF(0, 0, width, height);
                     }
                 }
             }

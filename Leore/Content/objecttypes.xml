@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objecttypes>
+ <objecttype name="boss" color="#55007f">
+  <property name="bossType" type="int" default="0"/>
+ </objecttype>
  <objecttype name="chest" color="#ff5500">
   <property name="value" type="float" default="0"/>
  </objecttype>
@@ -33,6 +36,7 @@
   <property name="bg" type="int" default="-1"/>
  </objecttype>
  <objecttype name="shopItem" color="#fff9d2">
+  <property name="itemName" type="string"/>
   <property name="itemType" type="int" default="0"/>
   <property name="price" type="int" default="0"/>
   <property name="respawn" type="bool" default="false"/>

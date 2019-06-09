@@ -15,7 +15,18 @@ namespace Leore.Objects.Enemies
 {
     public abstract class Enemy : Obstacle , IMovable
     {
-        public int HP { get; protected set; }
+        public int MaxHP { get; private set; }
+        private int hp;
+        public int HP {
+            get
+            {
+                return hp;
+            }protected set
+            {
+                MaxHP = Math.Max(value, MaxHP);
+                hp = value;
+            }
+        }
         public int EXP { get; protected set; } = 3;
 
         public Direction Direction { get; set; }
@@ -30,8 +41,7 @@ namespace Leore.Objects.Enemies
 
         public Enemy(float x, float y, Room room) : base(x, y, room)
         {
-            Damage = 1;
-            HP = 20;
+            HP = 1;
 
             Depth = Globals.LAYER_ENEMY;
 
@@ -89,18 +99,19 @@ namespace Leore.Objects.Enemies
             }
             else // death
             {
-                if (GameManager.Current.Player.Stats.Abilities.HasFlag(PlayerAbility.ORB))
-                    SpellEXP.Spawn(X, Y, EXP);
-
-                new SingularEffect(X, Y);
-
-                //if (RND.Next * 100 < 20)
-                //    new Potion(X, Y, Room, PotionType.HP);
-
-                GameManager.Current.NonRespawnableIDs.Add(ID);
-
+                OnDeath();
                 Destroy();
-            }            
+            }
+        }
+
+        public virtual void OnDeath()
+        {
+            if (GameManager.Current.Player.Stats.Abilities.HasFlag(PlayerAbility.ORB))
+                SpellEXP.Spawn(X, Y, EXP);
+
+            new SingularEffect(X, Y);
+
+            GameManager.Current.NonRespawnableIDs.Add(ID);
         }
 
         public override void EndUpdate(GameTime gameTime)
@@ -112,7 +123,7 @@ namespace Leore.Objects.Enemies
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
-            base.Draw(sb, gameTime);            
+            base.Draw(sb, gameTime);
         }
     }
 }

@@ -2,6 +2,7 @@
 using Leore.Main;
 using Leore.Objects.Effects.Emitters;
 using System.Linq;
+using Leore.Resources;
 
 namespace Leore.Objects.Items
 {
@@ -33,7 +34,7 @@ namespace Leore.Objects.Items
                     potionEmitter = new PotionEmitter(X, Y - 8, PotionType.HP);
                     Texture = AssetManager.Items[1];
 
-                    HighlightColor = Potion.HpColors.First();
+                    HighlightColor = GameResources.HpColors.First();
 
                     Name = "HP-Up";
                     Text = "~Max. HP~ increased by 3.";
@@ -48,7 +49,7 @@ namespace Leore.Objects.Items
                     potionEmitter = new PotionEmitter(X, Y - 8, PotionType.MP);
                     Texture = AssetManager.Items[2];
 
-                    HighlightColor = Potion.MpColors.First();
+                    HighlightColor = GameResources.MpColors.First();
 
                     Name = "MP-Up";
                     Text = "~Max. MP~ increased by 5.";
@@ -63,7 +64,7 @@ namespace Leore.Objects.Items
                     potionEmitter = new PotionEmitter(X, Y - 8, PotionType.Regen);
                     Texture = AssetManager.Items[3];
 
-                    HighlightColor = Potion.RegenColors.First();
+                    HighlightColor = GameResources.RegenColors.First();
 
                     Name = "MP-Regen-Up";
                     Text = "~MP regeneration~ rate increased.";

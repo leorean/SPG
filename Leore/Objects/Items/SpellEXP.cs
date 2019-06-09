@@ -28,6 +28,7 @@ namespace Leore.Objects.Items
 
         float t = (float)Math.PI;
 
+        public bool CanTake { get; set; }
         public bool Taken { get; set; }
         private float alpha = .75f;
 
@@ -64,6 +65,8 @@ namespace Leore.Objects.Items
 
             if (this.IsOutsideCurrentRoom())
                 Destroy();
+
+            CanTake = !kinetic;
 
             if (!Taken)
             {

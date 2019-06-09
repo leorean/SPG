@@ -208,7 +208,10 @@ namespace Leore.Main
         public void Hit(int hitPoints, float? angle = null)
         {
             MovingPlatform = null;
-            
+
+            if (hitPoints == 0)
+                return;
+
             var hpPrev = HP;
             
             HP = Math.Max(HP - hitPoints, 0);
@@ -651,7 +654,7 @@ namespace Leore.Main
                 {
                     foreach (var s in spellExp)
                     {
-                        if (s.Taken)
+                        if (s.Taken || !s.CanTake)
                             continue;
 
                         var currentSpellType = Stats.Spells.ElementAt(Stats.SpellIndex).Key;

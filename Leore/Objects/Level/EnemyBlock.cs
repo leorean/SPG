@@ -44,6 +44,8 @@ namespace Leore.Objects.Level
                 //if (MathUtil.Euclidean(Center, GameManager.Current.Player.Center) > 1f * Globals.TILE)
                 if (!ObjectManager.CollisionRectangle(GameManager.Current.Player, Left - 2, Top - 8, Right + 2, Bottom + 8))
                     activeTimer = Math.Max(activeTimer - 1, 0);
+                if (ObjectManager.Exists<Boss>())
+                    activeTimer = 0;
             }
 
             if (Active && block == null)

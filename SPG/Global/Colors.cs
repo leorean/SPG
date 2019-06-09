@@ -13,6 +13,8 @@ namespace SPG
     {
         public static Color FromHex(string hexCode)
         {
+            hexCode = hexCode.Replace("#", "");
+
             try
             {
                 if (hexCode.Length == 6)

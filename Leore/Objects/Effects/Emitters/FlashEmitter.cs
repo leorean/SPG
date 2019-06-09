@@ -32,14 +32,23 @@ namespace Leore.Objects.Effects.Emitters
 
     public class FlashEmitter : ParticleEmitter
     {
-        public FlashEmitter(float x, float y) : base(x, y)
+        private int delay;
+
+        public FlashEmitter(float x, float y, int delay = 0) : base(x, y)
         {
             SpawnRate = 1;
             Texture = AssetManager.Flash;
+            this.delay = delay;
         }
 
         public override void Update(GameTime gameTime)
         {
+            if(delay > 0)
+            {
+                delay = Math.Max(delay - 1, 0);
+                return;
+            }
+
             base.Update(gameTime);
 
             SpawnRate = 0;
@@ -52,5 +61,5 @@ namespace Leore.Objects.Effects.Emitters
         {
             var flash = new FlashParticle(this);
         }
-    }    
+    }
 }
