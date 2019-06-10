@@ -28,7 +28,7 @@ namespace Leore.Objects.Projectiles
                 HandleCollisionFromDestroyBlock(destBlock);
             }
 
-            if (this.IsOutsideCurrentRoom())
+            if (this.IsOutsideCurrentRoom(2 * Globals.TILE))
                 Destroy();
 
         }

@@ -53,8 +53,11 @@ namespace Leore.Objects.Enemies
 
         public virtual void Hit(int hitPoints, float degAngle)
         {
-            MovingPlatform = null;
+            if (hitPoints == 0)
+                return;
 
+            MovingPlatform = null;
+                        
             var hpPrev = HP;
 
             HP = Math.Max(HP - hitPoints, 0);

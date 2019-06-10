@@ -199,14 +199,9 @@ namespace Leore.Main
 
                                 case SpellType.VOID:                                    
                                     {
-                                        //if (!ObjectManager.Exists<VoidProjectile>())
-                                        {
-                                            cooldown = 60;
-
-                                            VoidProjectile.Create(X, Y, this);
-
-                                            //new VoidProjectile(X, Y, this);
-                                        }
+                                        cooldown = 60;
+                                        Visible = false;
+                                        VoidProjectile.Create(X, Y, this);
                                     }
 
                                     break;

@@ -40,7 +40,7 @@ namespace Leore.Main
         public static Texture2D Door { get; private set; }
         public static TextureSet Particles { get; private set; }
         public static Texture2D WhiteCircle { get; private set; }
-        public static Texture2D VoidCircle { get; private set; }
+        public static TextureSet VoidCircle { get; private set; }
         public static Texture2D Flash { get; private set; }
         public static TextureSet Transition { get; private set; }
         public static Texture2D PlayerGhost { get; private set; }
@@ -86,7 +86,7 @@ namespace Leore.Main
             Door = content.Load<Texture2D>("door");
             Particles = content.LoadTextureSet("particles", 16, 16);
             WhiteCircle = content.Load<Texture2D>("whiteCircle");
-            VoidCircle = content.Load<Texture2D>("voidCircle");
+            VoidCircle = content.LoadTextureSet("voidCircle", 64, 64);
             Flash = content.Load<Texture2D>("flash");
             Transition = content.LoadTextureSet("transition", 256, 144);
             PlayerGhost = content.Load<Texture2D>("playerGhost");

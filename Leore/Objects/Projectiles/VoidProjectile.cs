@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Leore.Main;
 using Leore.Objects.Effects.Emitters;
+using Leore.Objects.Enemies;
 using Leore.Objects.Level;
+using Leore.Resources;
 using Leore.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -27,7 +29,10 @@ namespace Leore.Objects.Projectiles
 
         float angle1, angle2, angle3;
 
-        //ObtainParticleEmitter emitter;
+        int hitTimer;
+        int delay;
+
+        ObtainParticleEmitter emitter;
 
         public static VoidProjectile Create(float x, float y, Orb parent)
         {
@@ -35,29 +40,41 @@ namespace Leore.Objects.Projectiles
                 return Current;
 
             Current = new VoidProjectile(x, y, parent);
+
+            new CrimsonBurstEmitter(x, y) { ParticleColors = new List<Color>() { Color.Black } };
+
             return Current;
         }
 
         private VoidProjectile(float x, float y, Orb parent) : base(x, y, parent.Level)
         {
             Parent = parent;
+            level = parent.Level;
 
-            //Texture = AssetManager.WhiteCircle;
             DrawOffset = new Vector2(32);
             Scale = Vector2.Zero;
-            //Color = Color.Black;
+            Depth = parent.Depth - .0001f;
 
             Angle = RND.Int(360);
-            
-            //emitter = new ObtainParticleEmitter(X, Y, timeout: 10, radius: 9);
-            //emitter.Color = Color.Black;
-            //emitter.Active = false;
-            //emitter.Parent = this;
-            
-            switch (parent.Level)
+
+            emitter = new ObtainParticleEmitter(X, Y, timeout: 10, radius: 32, initialSpeed: -1);
+            emitter.Color = Color.Black;
+            emitter.Active = true;
+            emitter.Parent = this;
+
+            switch (level)
             {
                 case SpellLevel.ONE:
                     maxScale = .5f;
+                    delay = 10;
+                    break;
+                case SpellLevel.TWO:
+                    maxScale = .5f;
+                    delay = 8;
+                    break;
+                case SpellLevel.THREE:
+                    maxScale = 75f;
+                    delay = 5;
                     break;
             }            
         }
@@ -65,6 +82,21 @@ namespace Leore.Objects.Projectiles
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            hitTimer = Math.Max(hitTimer - 1, 0);
+
+            if (hitTimer > 0)
+                Damage = 0;
+            else
+                Damage = 1;
+
+            free = Current != this;
+
+            alpha = Math.Min(Math.Max(1 - Scale.X / maxScale, .5f), .8f);
+            var radius = Math.Max((32 - 6) * Scale.X, 0);
+            var bx = -radius;
+            var bw = 2 * radius;
+            BoundingBox = new SPG.Util.RectF(bx, bx, bw, bw);
 
             if (!free)
             {
@@ -79,16 +111,38 @@ namespace Leore.Objects.Projectiles
                     XVel = 4 * lx;
                     YVel = 4 * ly;
 
-                    //XVel = 4 * Math.Sign((int)orb.Direction);
+                    orb.Visible = true;
 
+                    new CrimsonBurstEmitter(X, Y) { ParticleColors = new List<Color>() { Color.Black } };
 
-                    free = true;
                     Current = null;
                     Parent = null;
                 }
+            } else
+            {
+                //emitter.Active = true;
+
+                var t = 4 * Globals.TILE;
+                var enemies = this.CollisionRectangles<Enemy>(Left - t, Top - t, Right + t, Bottom + t);
+                foreach (var enemy in enemies)
+                {
+                    var angle = MathUtil.VectorToAngle(enemy.Center - Center);
+
+                    var lx = (float)MathUtil.LengthDirX(angle);
+                    var ly = (float)MathUtil.LengthDirY(angle);
+
+                    var sign = -1;
+
+                    var ex = enemy.XVel + lx * sign * .4f;
+                    var ey = enemy.YVel + ly * sign * .4f;
+
+                    enemy.XVel = MathUtil.Limit(ex, 2);
+                    enemy.YVel = MathUtil.Limit(ey, 2);
+                }
             }
 
-            if (!isStatic) {                
+            if (!isStatic)
+            {                
                 if (!free)
                 {
                     Scale = new Vector2(Math.Min(Scale.X + .04f, maxScale * .5f));
@@ -101,35 +155,34 @@ namespace Leore.Objects.Projectiles
                         isStatic = true;
 
                     Scale = new Vector2(Math.Min(Scale.X + .04f, maxScale));
-                }
-                //emitter.Active = false;
+                }                
             }
             else
             {
-                //emitter.Active = true;
-                Scale = new Vector2(Math.Max(Scale.X - .004f, 0));
+                Scale = new Vector2(Math.Max(Scale.X - .008f, 0));
             }
 
             if (free)
                 Move(XVel, YVel);
 
-            //emitter.Position = Position;
-
-            alpha = Math.Min(Math.Max(1 - Scale.X / maxScale, .5f), .8f);
-            //Color = new Color(Color, alpha);
+            emitter.Position = Position;
             
-            var radius = Math.Max((32 - 6) * Scale.X, 0);
-            var bx = -radius;
-            var bw = 2 * radius;             
-            BoundingBox = new SPG.Util.RectF(bx, bx, bw, bw);
-
             //if (Scale.X == maxScale)
             if(isStatic && Scale.X == 0)
             {
-                //emitter.Active = false;
-                //emitter.Parent = null;                
                 Destroy();
             }
+        }
+
+        public override void Destroy(bool callGC = false)
+        {
+            if (Current == this)
+                Current = null;
+
+            emitter.Active = false;
+            emitter.Parent = null;
+
+            base.Destroy(callGC);
         }
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)
@@ -148,27 +201,31 @@ namespace Leore.Objects.Projectiles
             //}
 
             angle1 += .1f;
-            angle2 -= .2f;
-            angle3 += .05f;
+            angle2 += .2f;
+            angle3 += .3f;
 
             //base.Draw(sb, gameTime);
-            sb.Draw(AssetManager.VoidCircle, Position, null, new Color(Color, alpha), angle1, DrawOffset, Scale, SpriteEffects.None, Depth);
-            sb.Draw(AssetManager.VoidCircle, Position, null, new Color(Color, alpha * .8f), angle2, DrawOffset, Scale * .75f, SpriteEffects.None, Depth + .00001f);
-            sb.Draw(AssetManager.VoidCircle, Position, null, new Color(Color, alpha * .5f), angle3, DrawOffset, Scale * .5f, SpriteEffects.None, Depth + .00002f);
+            sb.Draw(AssetManager.VoidCircle[0], Position, null, new Color(Color, alpha * .5f), angle1, DrawOffset, Scale, SpriteEffects.None, Depth);
+            sb.Draw(AssetManager.VoidCircle[1], Position, null, new Color(Color, alpha * .8f), angle2, DrawOffset, Scale * 1f, SpriteEffects.None, Depth + .00001f);
+            sb.Draw(AssetManager.VoidCircle[2], Position, null, new Color(Color, alpha * 1f), angle3, DrawOffset, Scale * 1f, SpriteEffects.None, Depth + .00002f);
         }
 
         public override void HandleCollision(GameObject obj)
         {
             //throw new NotImplementedException();
 
+            if (hitTimer == 0)
+                hitTimer = delay;
+
             var angle = MathUtil.VectorToAngle(obj.Center - Center);
 
             var lx = (float)MathUtil.LengthDirX(angle);
             var ly = (float)MathUtil.LengthDirY(angle);
 
-            //obj.Move(lx, ly);
-            obj.XVel += lx;
-            obj.YVel += ly;
+            var sign = isStatic ? -1 : 1;
+            
+            obj.XVel += lx * sign * Math.Max(Math.Abs(XVel),Math.Abs(YVel));
+            obj.YVel += ly * sign * Math.Max(Math.Abs(XVel), Math.Abs(YVel));
         }
 
         public override void HandleCollisionFromDestroyBlock(DestroyBlock block)

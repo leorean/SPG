@@ -10,6 +10,7 @@ using SPG.Save;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Leore.Objects.Projectiles;
 
 namespace Leore.Main
 {
@@ -286,6 +287,7 @@ namespace Leore.Main
             ObjectManager.Enable<PlayerGhost>();
             ObjectManager.Enable<Orb>();
             ObjectManager.Enable<Player>();
+            ObjectManager.Enable<PlayerProjectile>();
 
             // todo: solve more smoothly?
             foreach (var o in ObjectManager.Objects.Where(o => o is Enemy && (o as RoomObject).Room == room)) {

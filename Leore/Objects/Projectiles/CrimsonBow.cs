@@ -54,7 +54,8 @@ namespace Leore.Objects.Projectiles
 
             maxPower = 30 * (int)orb.Level;
 
-            level = Math.Min(MathUtil.Div(power, 30), (int)orb.Level - 1);
+            //level = Math.Min(MathUtil.Div(power, 30), (int)orb.Level - 1);
+            level = (int)orb.Level - 1;
 
             power = Math.Min(power + 1, maxPower);
 

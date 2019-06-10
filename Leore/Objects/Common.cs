@@ -15,7 +15,7 @@ namespace Leore
 
     public static class ObjectExtensions
     {
-        public static bool IsOutsideCurrentRoom(this GameObject o)
+        public static bool IsOutsideCurrentRoom(this GameObject o, float threshold = 0)
         {
             var cam = RoomCamera.Current;
             
@@ -27,7 +27,7 @@ namespace Leore
             if (cam.CurrentRoom == null)
                 return false;
 
-            return o.X < cam.CurrentRoom.X || o.Y < cam.CurrentRoom.Y || o.X > cam.CurrentRoom.X + cam.CurrentRoom.BoundingBox.Width || o.Y > cam.CurrentRoom.Y + cam.CurrentRoom.BoundingBox.Height;
+            return o.X < cam.CurrentRoom.X - threshold || o.Y < cam.CurrentRoom.Y - threshold || o.X > cam.CurrentRoom.X + cam.CurrentRoom.BoundingBox.Width + threshold || o.Y > cam.CurrentRoom.Y + cam.CurrentRoom.BoundingBox.Height + threshold;
         }
 
         public static int IndexOf<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key)

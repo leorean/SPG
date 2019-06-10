@@ -8,7 +8,7 @@ namespace Leore.Objects.Effects.Emitters
 {
     public class ObtainParticle : Particle
     {
-        public ObtainParticle(ParticleEmitter emitter, float radius) : base(emitter)
+        public ObtainParticle(ParticleEmitter emitter, float radius, float initialSpeed) : base(emitter)
         {
             LifeTime = 120;
 
@@ -22,8 +22,8 @@ namespace Leore.Objects.Effects.Emitters
             Scale = new Vector2(0);
             Alpha = 0;
 
-            XVel = lx;
-            YVel = ly;
+            XVel = lx * initialSpeed;
+            YVel = ly * initialSpeed;
         }
 
         public override void Update(GameTime gameTime)
@@ -69,12 +69,14 @@ namespace Leore.Objects.Effects.Emitters
     {
         float curTimeout;
         float radius;
+        float initialSpeed;
 
-        public ObtainParticleEmitter(float x, float y, float timeout = 30, float radius = 5 * 16) : base(x, y)
+        public ObtainParticleEmitter(float x, float y, float timeout = 30, float radius = 5 * 16, float initialSpeed = 1) : base(x, y)
         {
             SpawnTimeout = (int)curTimeout;
             curTimeout = timeout;
             this.radius = radius;
+            this.initialSpeed = initialSpeed;
         }
 
         public override void Update(GameTime gameTime)
@@ -92,7 +94,7 @@ namespace Leore.Objects.Effects.Emitters
 
         public override void CreateParticle()
         {
-            var particle = new ObtainParticle(this, radius);
+            var particle = new ObtainParticle(this, radius, initialSpeed);
             particle.Color = Color;
         }
     }
