@@ -14,6 +14,7 @@ using static Leore.Main.MessageBox;
 using SPG.Draw;
 using Leore.Util;
 using SPG.Util;
+using Leore.Objects.Items;
 
 namespace Leore.Objects.Enemies
 {
@@ -30,6 +31,8 @@ namespace Leore.Objects.Enemies
 
         private bool hasOrb = true;
 
+        private int orbGauge = 1 * 60;
+
         public BossMirrorSelf(float x, float y, Room room) : base(x, y, room)
         {
             wallEmitter = new MirrorSelfWallEmitter(x, y, room);
@@ -44,7 +47,7 @@ namespace Leore.Objects.Enemies
             new FlashEmitter(X, Y);
 
             player.XVel = 0;
-            new MessageBox("Foolish boy! You cannot stop the ~Void~!\nI won't let you!", hiColor: GameResources.VoidColor);
+            //new MessageBox("Foolish boy! You cannot stop the ~Void~!\nI won't let you!", hiColor: GameResources.VoidColor);
         }
 
         public override void BeginUpdate(GameTime gameTime)
@@ -72,12 +75,63 @@ namespace Leore.Objects.Enemies
 
             invincible = Math.Max(invincible - 1, 0);
 
-            player.Position = new Vector2(Math.Max(player.X, Room.X + player.BoundingBox.Width), player.Y);
             Direction = player.Direction.Reverse();
+
+            // limit player
+            player.Position = new Vector2(Math.Max(player.X, Room.X + player.BoundingBox.Width), player.Y);
+            if (player.Direction == Direction.RIGHT && player.X > Room.X + .5f * Room.BoundingBox.Width - 3 * Globals.TILE)
+            {
+                //player.Position = new Vector2(player.Position.X - XVel, player.Y);
+                player.XVel = Math.Min(player.XVel, .5f);
+                if (player.X > Room.X + .5f * Room.BoundingBox.Width - 2 * Globals.TILE)
+                    player.XVel = Math.Min(player.XVel, 0f);
+                if (player.X > Room.X + .5f * Room.BoundingBox.Width - 1 * Globals.TILE)
+                    player.XVel = Math.Min(player.XVel, -.1f);
+
+                if (hasOrb)
+                {
+
+                    if (player.X >= Room.X + .5f * Room.BoundingBox.Width - 12
+                        && player.Stats.SpellIndex == 0 && player.Orb.State == OrbState.ATTACK)
+                    {
+                        player.Position = new Vector2(Room.X + .5f * Room.BoundingBox.Width - 12, player.Y);
+
+                        orbGauge = Math.Max(orbGauge - 1, 0);
+                        if (orbGauge == 0)
+                        {
+                            new FlashEmitter(X, Y);
+                            hasOrb = false;
+
+                            player.Move(-2 * Globals.TILE, 0);
+
+                            player.XVel = -3;
+                            player.YVel = -2;
+                            player.State = Player.PlayerState.HIT_AIR;
+
+                            player.Stats.Abilities &= ~PlayerAbility.ORB;
+                            player.Orb.Parent = null;
+                            player.Orb.Destroy();
+                            player.Orb = null;
+
+                            GameManager.Current.RemoveSpell(SpellType.NONE);
+
+                            var item = new AbilityItem(Room.X + .5f * Room.BoundingBox.Width - 1.5f * Globals.TILE, Room.Y + Room.BoundingBox.Height - 3 * Globals.TILE, Room, "Void Orb");
+                            item.Texture = AssetManager.Orbs[3];
+                            item.DrawOffset = new Vector2(8);
+                            item.OnObtain = () =>
+                            {
+                                player.Stats.Abilities |= PlayerAbility.ORB;
+                                GameManager.Current.AddSpell(SpellType.VOID);
+                            };
+                            item.Text = ".....";
+                        }
+                    }
+                }
+            }
             
             var px = (player.X - Room.X);
             Position = new Vector2(Room.X + Room.BoundingBox.Width - px, player.Y);
-
+            
             if (!this.CollisionBounds(player, X, Y))
             {
                 HP = Math.Max(player.HP, 1);
@@ -135,11 +189,11 @@ namespace Leore.Objects.Enemies
                         sb.DrawLightning(player.Orb.Position, pos1, Color.White, Depth + .0001f);
                         sb.DrawLightning(orbPos, pos2, Color.Black, Depth + .0001f);
 
-                        player.Orb.Position = new Vector2(player.Orb.X - 2 + (float)(RND.Next * 4), player.Orb.Y - 2 + (float)(RND.Next * 4));                        
+                        player.Orb.Position = new Vector2(player.Orb.X - 1 + (float)(RND.Next * 2), player.Orb.Y - 1 + (float)(RND.Next * 2));
                     }
-                }
 
-                player.Orb.Position = new Vector2(Math.Min(player.Orb.X, Room.X + .5f * Room.BoundingBox.Width), player.Orb.Y);
+                    player.Orb.Position = new Vector2(Math.Min(player.Orb.X, Room.X + .5f * Room.BoundingBox.Width), player.Orb.Y);                    
+                }
             }
 
             // bg

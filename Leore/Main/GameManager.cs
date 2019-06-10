@@ -309,10 +309,19 @@ namespace Leore.Main
             if (!Player.Stats.Spells.ContainsKey(spellType))
             {
                 Player.Stats.Spells.Add(spellType, SpellLevel.ONE);
-                Player.Stats.SpellEXP.Add(spellType, 0);
+                Player.Stats.SpellEXP.Add(spellType, 0);                
+                Player.Stats.SpellIndex = Player.Stats.Spells.IndexOf(spellType);
+            }
+        }
 
-                Player.Stats.SpellIndex = Player.Stats.Spells.Count - 1;
-            }            
+        public void RemoveSpell(SpellType spellType)
+        {
+            if (Player.Stats.Spells.ContainsKey(spellType))
+            {
+                Player.Stats.Spells.Remove(spellType);
+                Player.Stats.SpellEXP.Remove(spellType);
+                Player.Stats.SpellIndex = 0;
+            }
         }
     }
 }

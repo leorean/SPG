@@ -23,10 +23,11 @@ namespace Leore.Main
         NONE = 0,
         STAR,
         CRIMSON_ARC,
-        BOOMERANG,
-        ROCK,
-        LIGHTNING,
-        FIRE
+        VOID
+        //BOOMERANG,
+        //ROCK,
+        //LIGHTNING,
+        //FIRE
     }
 
     public enum SpellLevel
@@ -155,32 +156,32 @@ namespace Leore.Main
                             switch (Type)
                             {
                                 case SpellType.STAR: // ++++ STAR ++++
+                                    { // <- because reusing names
+                                        switch (Level)
+                                        {
+                                            case SpellLevel.ONE:
+                                                cooldown = 20;
+                                                break;
+                                            case SpellLevel.TWO:
+                                                cooldown = 15;
+                                                break;
+                                            case SpellLevel.THREE:
+                                                cooldown = 8;
+                                                break;
+                                        }
 
-                                    switch (Level)
-                                    {
-                                        case SpellLevel.ONE:
-                                            cooldown = 20;
-                                            break;
-                                        case SpellLevel.TWO:
-                                            cooldown = 15;
-                                            break;
-                                        case SpellLevel.THREE:
-                                            cooldown = 8;
-                                            break;
+                                        var proj = new StarProjectile(X, Y, Level);
+                                        var starDegAngle = MathUtil.VectorToAngle(new Vector2(targetPosition.X - player.X, 0));
+
+                                        var starCoilX = (float)MathUtil.LengthDirX(starDegAngle);
+                                        var starCoilY = (float)MathUtil.LengthDirY(starDegAngle);
+
+                                        proj.XVel = starCoilX * 3;
+                                        proj.YVel = starCoilY * 3;
+
+                                        XVel += -2 * starCoilX;
+                                        YVel += -2 * starCoilY;
                                     }
-
-                                    var proj = new StarProjectile(X, Y, Level);
-                                    var starDegAngle = MathUtil.VectorToAngle(new Vector2(targetPosition.X - player.X, 0));
-
-                                    var starCoilX = (float)MathUtil.LengthDirX(starDegAngle);
-                                    var starCoilY = (float)MathUtil.LengthDirY(starDegAngle);
-
-                                    proj.XVel = starCoilX * 3;
-                                    proj.YVel = starCoilY * 3;
-
-                                    XVel += -2 * starCoilX;
-                                    YVel += -2 * starCoilY;
-
                                     break;
                                 case SpellType.CRIMSON_ARC: // ++++ CRIMSON ++++
 
@@ -194,6 +195,14 @@ namespace Leore.Main
                                         new CrimsonBow(this);
                                     }
                                     
+                                    break;
+
+                                case SpellType.VOID:
+                                    cooldown = 60;
+                                    {
+                                        var proj = new VoidProjectile(X, Y, this);
+                                    }
+
                                     break;
 
                                 // TODO: other spells!!!

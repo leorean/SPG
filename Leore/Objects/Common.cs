@@ -1,7 +1,8 @@
 ﻿using Leore.Main;
 using SPG.Objects;
+using System.Collections.Generic;
 
-namespace Leore.Objects
+namespace Leore
 {
     public enum Direction
     {
@@ -28,5 +29,19 @@ namespace Leore.Objects
 
             return o.X < cam.CurrentRoom.X || o.Y < cam.CurrentRoom.Y || o.X > cam.CurrentRoom.X + cam.CurrentRoom.BoundingBox.Width || o.Y > cam.CurrentRoom.Y + cam.CurrentRoom.BoundingBox.Height;
         }
-    }
+
+        public static int IndexOf<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key)
+        {
+            int i = 0;
+            foreach (var pair in dictionary)
+            {
+                if (pair.Key.Equals(key))
+                {
+                    return i;
+                }
+                i++;
+            }
+            return -1;
+        }
+    }    
 }

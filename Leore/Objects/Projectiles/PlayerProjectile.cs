@@ -21,9 +21,9 @@ namespace Leore.Objects.Projectiles
         {
             base.Update(gameTime);
 
-            var destBlock = this.CollisionPointFirstOrDefault<DestroyBlock>(X + XVel, Y + YVel);
+            var destBlocks = this.CollisionBounds<DestroyBlock>(X + XVel, Y + YVel);
 
-            if (destBlock != null)
+            foreach(var destBlock in destBlocks)
             {
                 HandleCollisionFromDestroyBlock(destBlock);
             }

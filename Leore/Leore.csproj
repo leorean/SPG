@@ -123,6 +123,7 @@
     <Compile Include="Objects\Enemies\Obstacles.cs" />
     <Compile Include="Objects\Level\PushBlock.cs" />
     <Compile Include="Main\GameResources.cs" />
+    <Compile Include="Objects\Projectiles\VoidProjectile.cs" />
     <Compile Include="Objects\Room.cs" />
     <Compile Include="Objects\RoomObject.cs" />
     <Compile Include="Objects\RoomExtensions.cs" />
