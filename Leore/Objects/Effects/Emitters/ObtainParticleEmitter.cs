@@ -8,22 +8,22 @@ namespace Leore.Objects.Effects.Emitters
 {
     public class ObtainParticle : Particle
     {
-        public ObtainParticle(ParticleEmitter emitter) : base(emitter)
+        public ObtainParticle(ParticleEmitter emitter, float radius) : base(emitter)
         {
-            LifeTime = 90;
+            LifeTime = 120;
 
-            Angle = (float)RND.Next * 360;
+            Angle = RND.Int(360);
 
-            var lx = (float)MathUtil.LengthDirX(Angle) * 5 * Globals.TILE;
-            var ly = (float)MathUtil.LengthDirY(Angle) * 5 * Globals.TILE;
+            var lx = (float)MathUtil.LengthDirX(Angle);
+            var ly = (float)MathUtil.LengthDirY(Angle);
 
-            Position = new Vector2(Emitter.Position.X + lx, Emitter.Position.Y + ly);
+            Position = new Vector2(Emitter.X + lx * radius, Emitter.Y + ly * radius);
 
-            Scale = new Vector2(3);
+            Scale = new Vector2(0);
             Alpha = 0;
 
-            XVel = ((float)MathUtil.LengthDirX(Angle)) * 1f;
-            YVel = ((float)MathUtil.LengthDirY(Angle)) * 1f;
+            XVel = lx;
+            YVel = ly;
         }
 
         public override void Update(GameTime gameTime)
@@ -33,16 +33,22 @@ namespace Leore.Objects.Effects.Emitters
             var tx = Emitter.X;
             var ty = Emitter.Y;
 
+            //var ang = (float)new Vector2(Position.X - Emitter.Position.X, Position.Y - Emitter.Position.Y).VectorToAngle();            
+            //var lx = (float)MathUtil.LengthDirX(ang);
+            //var ly = (float)MathUtil.LengthDirY(ang);
+            //XVel -= lx * .06f;
+            //YVel -= ly * .06f;
+
             XVel += (tx - Position.X) / 800f;
             YVel += (ty - Position.Y) / 800f;
 
-            XVel = Math.Sign(XVel) * Math.Min(Math.Abs(XVel), 3);
-            YVel = Math.Sign(YVel) * Math.Min(Math.Abs(YVel), 3);
+            //XVel = Math.Sign(XVel) * Math.Min(Math.Abs(XVel), 3);
+            //YVel = Math.Sign(YVel) * Math.Min(Math.Abs(YVel), 3);
 
-            var s = Math.Min(Math.Max(Math.Abs(tx - Position.X) / (1 * Globals.TILE), 0), 3);            
-            Scale = new Vector2(s);
+            var s = (float)Math.Min(Math.Max(MathUtil.Euclidean(Position, Emitter.Position) / (1f * Globals.TILE), 0), 3);            
+            Scale = new Vector2(Math.Min(Scale.X + .1f, s));
             
-            if (Math.Abs(Position.X - Emitter.X) < 8)
+            if (MathUtil.Euclidean(Position, Emitter.Position) < 8)
             {
                 var shineEmitter = (Emitter.Parent as AbilityItem)?.ObtainShineEmitter;
 
@@ -62,11 +68,13 @@ namespace Leore.Objects.Effects.Emitters
     public class ObtainParticleEmitter : ParticleEmitter
     {
         float curTimeout;
+        float radius;
 
-        public ObtainParticleEmitter(float x, float y, float timeout = 30) : base(x, y)
+        public ObtainParticleEmitter(float x, float y, float timeout = 30, float radius = 5 * 16) : base(x, y)
         {
             SpawnTimeout = (int)curTimeout;
             curTimeout = timeout;
+            this.radius = radius;
         }
 
         public override void Update(GameTime gameTime)
@@ -75,11 +83,17 @@ namespace Leore.Objects.Effects.Emitters
             
             curTimeout = Math.Max(curTimeout - .1f, 2);
             SpawnTimeout = (int)curTimeout;
+
+            if (!Active && Particles.Count == 0)
+            {
+                Destroy();
+            }
         }
 
         public override void CreateParticle()
         {
-            var particle = new ObtainParticle(this);            
+            var particle = new ObtainParticle(this, radius);
+            particle.Color = Color;
         }
     }
 }

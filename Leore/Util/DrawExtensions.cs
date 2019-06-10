@@ -56,11 +56,12 @@ namespace Leore.Util
             p[steps] = b.X;
             q[steps] = b.Y;
 
+            var ca = color.A / 255f;
             float alpha = 0;
 
             for(var i = 1; i < steps; i++)
             {
-                alpha = (float)Math.Sin((i / (float)steps) * Math.PI);
+                alpha = (float)Math.Sin((i / (float)steps) * Math.PI) * ca;
 
                 p[i] = p[0] + (i / (float)steps) * (p[steps] - p[0]) - 2 + (float)RND.Next * 4;
                 q[i] = q[0] + (i / (float)steps) * (q[steps] - q[0]) - 2 + (float)RND.Next * 4;

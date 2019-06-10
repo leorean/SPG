@@ -39,7 +39,7 @@ namespace Leore.Main
 
     public class Orb : GameObject
     {
-        public Direction Direction { get; set; }
+        public Direction Direction => player.Direction;
         public OrbState State { get; set; }
         public SpellType Type { get; set; } = SpellType.NONE;
         public SpellLevel Level { get; set; } = SpellLevel.ONE;
@@ -197,10 +197,16 @@ namespace Leore.Main
                                     
                                     break;
 
-                                case SpellType.VOID:
-                                    cooldown = 60;
+                                case SpellType.VOID:                                    
                                     {
-                                        var proj = new VoidProjectile(X, Y, this);
+                                        //if (!ObjectManager.Exists<VoidProjectile>())
+                                        {
+                                            cooldown = 60;
+
+                                            VoidProjectile.Create(X, Y, this);
+
+                                            //new VoidProjectile(X, Y, this);
+                                        }
                                     }
 
                                     break;
