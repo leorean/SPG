@@ -68,8 +68,8 @@ namespace Leore.Objects.Enemies
 
             if (state == State.IDLE)
             {
-                XVel = 0;
-                YVel = 0;
+                //XVel = 0;
+                //YVel = 0;
                 SetAnimation(0, 0, 0, false);
 
                 if (MathUtil.Euclidean(Position, player.Position) < 3 * Globals.TILE || hit)
@@ -86,9 +86,7 @@ namespace Leore.Objects.Enemies
                 YVel = (float)Math.Sin(t);
 
                 var colY = GameManager.Current.Map.CollisionTile(this, 0, YVel);
-                if (!colY)
-                    Move(0, YVel);
-                else
+                if (colY)
                     YVel = 0;
 
                 if (hit)
@@ -101,15 +99,11 @@ namespace Leore.Objects.Enemies
                 YVel += Math.Sign(player.Y - Y) * .005f;
 
                 var colX = GameManager.Current.Map.CollisionTile(this, XVel, 0);
-                if (!colX)
-                    Move(XVel, 0);
-                else
+                if (colX)
                     XVel = -Math.Sign(XVel) * .1f;
 
                 var colY = GameManager.Current.Map.CollisionTile(this, 0, YVel);
-                if (!colY)
-                    Move(0, YVel);
-                else
+                if (colY)
                     YVel = -Math.Sign(YVel) * .1f;
 
                 XVel = MathUtil.Limit(XVel, 2);
@@ -123,6 +117,8 @@ namespace Leore.Objects.Enemies
                 XVel *= .6f;
                 YVel *= .6f;
             }
+
+            Move(XVel, YVel);
 
             Scale = new Vector2(Math.Sign((int)Direction), 1);
         }

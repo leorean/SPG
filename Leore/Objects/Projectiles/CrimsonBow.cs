@@ -107,10 +107,8 @@ namespace Leore.Objects.Projectiles
 
         private void SpawnProjectile(float x, float y, double degAngle, float vel = 4)
         {
-            //var crimsonProj = new CrimsonProjectile(orb.Parent.X, orb.Parent.Y, (SpellLevel)(level + 1));
             var crimsonProj = new CrimsonProjectile(x, y, orb.Level);
             crimsonProj.Texture = Texture = AssetManager.Projectiles[4];
-            //crimsonProj.Texture = Texture = AssetManager.Projectiles[4 + level];
             crimsonProj.Depth = Depth;
 
             var coilX = (float)MathUtil.LengthDirX(degAngle);

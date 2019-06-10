@@ -192,7 +192,7 @@ namespace Leore.Objects.Enemies
 
                     var noGround = !GameManager.Current.Map.CollisionTile(X + Math.Sign((int)Direction) * 8, Bottom + 2);
 
-                    if (onWall || noGround)
+                    if (onWall || noGround && YVel > 0)
                         Direction = Direction.Reverse();
 
                     if (playerSpotted != null)

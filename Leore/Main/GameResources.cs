@@ -95,9 +95,9 @@ namespace Leore.Resources
             {
                 SpellType.VOID,
                 new Dictionary<SpellLevel, float> {
-                    {SpellLevel.ONE, 0 },
-                    {SpellLevel.TWO, 0 },
-                    {SpellLevel.THREE, 0 }
+                    {SpellLevel.ONE, .5f },
+                    {SpellLevel.TWO, .75f },
+                    {SpellLevel.THREE, 1f }
                 }
             }
         };

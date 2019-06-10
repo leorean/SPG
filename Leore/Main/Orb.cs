@@ -45,7 +45,7 @@ namespace Leore.Main
         public SpellLevel Level { get; set; } = SpellLevel.ONE;
 
         private Player player { get => Parent as Player; }
-        private Vector2 targetPosition;        
+        public Vector2 TargetPosition { get; private set; }
         private int headBackTimer;        
         private int cooldown;
 
@@ -67,15 +67,15 @@ namespace Leore.Main
             Depth = player.Depth + .0001f;
 
             Parent = player;
-            targetPosition = player.Position;
-            lastPosition = targetPosition;            
+            TargetPosition = player.Position;
+            lastPosition = TargetPosition;            
         }
 
         public override void BeginUpdate(GameTime gameTime)
         {
             base.BeginUpdate(gameTime);
 
-            targetPosition += new Vector2(player.XVel, player.YVel);
+            TargetPosition += new Vector2(player.XVel, player.YVel);
 
             cooldown = Math.Max(cooldown - 1, 0);
 
@@ -95,20 +95,20 @@ namespace Leore.Main
             {
                 case OrbState.FOLLOW:
                     headBackTimer = 60;
-                    targetPosition = player.Position + new Vector2(-Math.Sign((int)player.Direction) * 10, -6);
+                    TargetPosition = player.Position + new Vector2(-Math.Sign((int)player.Direction) * 10, -6);
 
                     t = (t + .05f) % (2 * Math.PI);
 
                     XVel = (float)Math.Sin(t) * .01f * Math.Sign((int)player.Direction);
                     YVel = (float)Math.Cos(t) * .1f;
 
-                    MoveTowards(targetPosition, 12);
+                    MoveTowards(TargetPosition, 12);
                     Move(XVel, YVel);
 
                     break;
                 case OrbState.IDLE:
 
-                    MoveTowards(targetPosition, 6);
+                    MoveTowards(TargetPosition, 6);
 
                     headBackTimer = Math.Max(headBackTimer - 1, 0);
                     if (headBackTimer == 0)
@@ -130,14 +130,14 @@ namespace Leore.Main
                             offY += .25f * (int)player.LookDirection;
                             offY = Math.Sign(offY) * Math.Min(Math.Abs(offY), arcDst);
 
-                            targetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * (arcDst - .5f * Math.Abs(offY) / arcDst), offY);
+                            TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * (arcDst - .5f * Math.Abs(offY) / arcDst), offY);
                             break;
                         default:
-                            targetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 14, 14 * Math.Sign((int)player.LookDirection));
+                            TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 14, 14 * Math.Sign((int)player.LookDirection));
                             break;
                     }
 
-                    MoveTowards(targetPosition, 6);
+                    MoveTowards(TargetPosition, 6);
                     Move(player.XVel, player.YVel);
 
                     XVel *= .8f;
@@ -171,7 +171,7 @@ namespace Leore.Main
                                         }
 
                                         var proj = new StarProjectile(X, Y, Level);
-                                        var starDegAngle = MathUtil.VectorToAngle(new Vector2(targetPosition.X - player.X, 0));
+                                        var starDegAngle = MathUtil.VectorToAngle(new Vector2(TargetPosition.X - player.X, 0));
 
                                         var starCoilX = (float)MathUtil.LengthDirX(starDegAngle);
                                         var starCoilY = (float)MathUtil.LengthDirY(starDegAngle);
@@ -199,7 +199,6 @@ namespace Leore.Main
 
                                 case SpellType.VOID:                                    
                                     {
-                                        cooldown = 60;
                                         Visible = false;
                                         VoidProjectile.Create(X, Y, this);
                                     }

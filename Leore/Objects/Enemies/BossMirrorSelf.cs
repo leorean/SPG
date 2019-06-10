@@ -91,8 +91,8 @@ namespace Leore.Objects.Enemies
                 if (hasOrb)
                 {
 
-                    if (player.X >= Room.X + .5f * Room.BoundingBox.Width - 12
-                        && player.Stats.SpellIndex == 0 && player.Orb.State == OrbState.ATTACK)
+                    if (player.X >= Room.X + .5f * Room.BoundingBox.Width - 16
+                        && player.Stats.Spells.IndexOf(SpellType.NONE) == player.Stats.SpellIndex && player.Orb.State == OrbState.ATTACK)
                     {
                         player.Position = new Vector2(Room.X + .5f * Room.BoundingBox.Width - 12, player.Y);
 

@@ -55,15 +55,7 @@ namespace Leore.Objects.Projectiles
                 new SingularEffect(X, Y, 3);
                 Destroy();
             }
-
-            /*switch (level)
-            {
-                case SpellLevel.ONE:
-                    if (solid)
-                        Destroy();
-                    break;
-            }*/
-
+            
             Angle = (float)MathUtil.VectorToAngle(new Vector2(XVel, YVel), true) + (float)MathUtil.DegToRad(45);
 
             Move(XVel, YVel);
@@ -71,12 +63,7 @@ namespace Leore.Objects.Projectiles
             if (this.IsOutsideCurrentRoom())
                 Destroy();
         }
-
-        public override void Draw(SpriteBatch sb, GameTime gameTime)
-        {
-            base.Draw(sb, gameTime);
-            //sb.Draw(AssetManager.Projectiles[6 + (int)level], Position, null, Color, Angle - (float)MathUtil.DegToRad(45), DrawOffset, Scale, SpriteEffects.None, Depth - .0001f);
-        }
+        
 
         public override void HandleCollision(GameObject obj)
         {
@@ -84,8 +71,7 @@ namespace Leore.Objects.Projectiles
             {
                 new SingularEffect(X, Y, 3);
                 Destroy();
-            }
-            //throw new NotImplementedException();
+            }            
         }
     }
 }

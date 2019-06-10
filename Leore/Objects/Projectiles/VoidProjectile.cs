@@ -31,6 +31,7 @@ namespace Leore.Objects.Projectiles
 
         int hitTimer;
         int delay;
+        float succ;
 
         ObtainParticleEmitter emitter;
 
@@ -57,7 +58,7 @@ namespace Leore.Objects.Projectiles
 
             Angle = RND.Int(360);
 
-            emitter = new ObtainParticleEmitter(X, Y, timeout: 10, radius: 32, initialSpeed: -1);
+            emitter = new ObtainParticleEmitter(X, Y, timeout: 2, radius: 38, initialSpeed: -1);
             emitter.Color = Color.Black;
             emitter.Active = true;
             emitter.Parent = this;
@@ -65,16 +66,19 @@ namespace Leore.Objects.Projectiles
             switch (level)
             {
                 case SpellLevel.ONE:
-                    maxScale = .5f;
-                    delay = 10;
+                    maxScale = .35f;
+                    delay = 15;
+                    succ = .2f;
                     break;
                 case SpellLevel.TWO:
                     maxScale = .5f;
-                    delay = 8;
+                    delay = 10;
+                    succ = .4f;
                     break;
                 case SpellLevel.THREE:
-                    maxScale = 75f;
+                    maxScale = .75f;
                     delay = 5;
+                    succ = .6f;
                     break;
             }            
         }
@@ -100,12 +104,11 @@ namespace Leore.Objects.Projectiles
 
             if (!free)
             {
-                if (orb.State == OrbState.ATTACK)
+                if (orb.State == OrbState.ATTACK && GameManager.Current.Player.MP >= GameResources.MPCost[SpellType.VOID][orb.Level])
                     Position = orb.Position;
                 else
                 {
-
-                    var ang = (float)new Vector2(orb.X - orb.Parent.X, orb.Y - orb.Parent.Y).VectorToAngle();            
+                    var ang = (float)new Vector2(orb.TargetPosition.X - orb.Parent.X, orb.TargetPosition.Y - orb.Parent.Y).VectorToAngle();            
                     var lx = (float)MathUtil.LengthDirX(ang);
                     var ly = (float)MathUtil.LengthDirY(ang);
                     XVel = 4 * lx;
@@ -122,7 +125,7 @@ namespace Leore.Objects.Projectiles
             {
                 //emitter.Active = true;
 
-                var t = 4 * Globals.TILE;
+                var t = 1 * Globals.TILE;
                 var enemies = this.CollisionRectangles<Enemy>(Left - t, Top - t, Right + t, Bottom + t);
                 foreach (var enemy in enemies)
                 {
@@ -132,9 +135,9 @@ namespace Leore.Objects.Projectiles
                     var ly = (float)MathUtil.LengthDirY(angle);
 
                     var sign = -1;
-
-                    var ex = enemy.XVel + lx * sign * .4f;
-                    var ey = enemy.YVel + ly * sign * .4f;
+                    
+                    var ex = enemy.XVel + lx * sign * succ;
+                    var ey = enemy.YVel + ly * sign * succ;
 
                     enemy.XVel = MathUtil.Limit(ex, 2);
                     enemy.YVel = MathUtil.Limit(ey, 2);
@@ -205,9 +208,11 @@ namespace Leore.Objects.Projectiles
             angle3 += .3f;
 
             //base.Draw(sb, gameTime);
-            sb.Draw(AssetManager.VoidCircle[0], Position, null, new Color(Color, alpha * .5f), angle1, DrawOffset, Scale, SpriteEffects.None, Depth);
-            sb.Draw(AssetManager.VoidCircle[1], Position, null, new Color(Color, alpha * .8f), angle2, DrawOffset, Scale * 1f, SpriteEffects.None, Depth + .00001f);
-            sb.Draw(AssetManager.VoidCircle[2], Position, null, new Color(Color, alpha * 1f), angle3, DrawOffset, Scale * 1f, SpriteEffects.None, Depth + .00002f);
+            sb.Draw(AssetManager.VoidCircle[0], Position, null, new Color(Color, alpha * .3f), angle1, DrawOffset, Scale, SpriteEffects.None, Depth + .00001f);
+            sb.Draw(AssetManager.VoidCircle[1], Position, null, new Color(Color, alpha * .5f), angle2, DrawOffset, Scale, SpriteEffects.None, Depth + .00002f);
+            sb.Draw(AssetManager.VoidCircle[2], Position, null, new Color(Color, alpha * .8f), angle3, DrawOffset, Scale, SpriteEffects.None, Depth + .00003f);
+            sb.Draw(AssetManager.VoidCircle[3], Position, null, new Color(Color, alpha * 1f), 0, DrawOffset, Scale, SpriteEffects.None, Depth);
+            
         }
 
         public override void HandleCollision(GameObject obj)

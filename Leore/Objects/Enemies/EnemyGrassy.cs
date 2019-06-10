@@ -4,6 +4,8 @@ using System;
 using SPG.Map;
 using Leore.Resources;
 using Leore.Main;
+using SPG.Objects;
+using Leore.Objects.Level;
 
 namespace Leore.Objects.Enemies
 {
@@ -87,6 +89,10 @@ namespace Leore.Objects.Enemies
                 case State.FOLLOW_PLAYER:
 
                     onGround = this.MoveAdvanced(false);
+
+                    // correction
+                    if (this.CollisionRectangleFirstOrDefault<Solid>(Left, Bottom - 1, Right, Bottom - 1) != null)
+                        Move(0, -1);
 
                     if (onGround && Math.Abs(X - player.X) < 1 * Globals.TILE)
                         YVel = -1.5f;
