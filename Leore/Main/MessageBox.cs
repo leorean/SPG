@@ -152,8 +152,8 @@ namespace Leore.Main
                 //    || input.IsButtonPressed(Buttons.B);
                 //kNextPressed = input.DirectionPressedFromStick(Input.Direction.DOWN, Input.Stick.LeftStick, Input.State.Pressed)
                 //    || input.IsButtonPressed(Buttons.A);
-                kPrevPressed = input.IsButtonPressed(Buttons.B);
-                kNextPressed = input.IsButtonPressed(Buttons.A);
+                kPrevPressed = input.IsButtonPressed(Buttons.A);
+                kNextPressed = input.IsButtonPressed(Buttons.B);
                 kAny = input.IsAnyButtonPressed();
             }
 

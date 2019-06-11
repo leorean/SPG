@@ -95,7 +95,10 @@ namespace Leore.Objects.Enemies
                         Move(0, -1);
 
                     if (onGround && Math.Abs(X - player.X) < 1 * Globals.TILE)
-                        YVel = -1.5f;
+                    {
+                        XVel = Math.Sign(X - player.X);
+                        YVel = -2.5f;
+                    }
 
                     if (Math.Abs(player.X - X) > 8)
                         Direction = (Direction)Math.Sign(player.X - X);

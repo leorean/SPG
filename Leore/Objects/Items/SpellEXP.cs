@@ -88,7 +88,7 @@ namespace Leore.Objects.Items
                         if (Math.Abs(XVel) < .1f && Math.Abs(YVel) < .1f)
                             kinetic = false;
                     }
-
+                    
                     //var onGround = CollisionExtensions.MoveAdvanced(this, false);
 
                     //if (onGround)
@@ -108,8 +108,22 @@ namespace Leore.Objects.Items
                     angVel *= .9f;
 
                     t = (t + .1f) % (float)(2 * Math.PI);
-                    YVel = .05f * (float)Math.Sin(t);
-                    Move(0, YVel);
+                    var yv = .05f * (float)Math.Sin(t);
+                    Move(0, yv);
+
+
+                    if (MathUtil.Euclidean(Center, GameManager.Current.Player.Center) > 2 * Globals.TILE)
+                    {
+                        kinetic = false;
+                        XVel = (GameManager.Current.Player.Center.X - Center.X) / 300;
+                        YVel = (GameManager.Current.Player.Center.Y - Center.Y) / 300;
+                    } else
+                    {
+                        XVel *= .95f;
+                        YVel *= .95f;
+                    }
+
+                    Move(XVel, YVel);
                 }
 
                 Angle = (Angle + angVel) % (float)(2 * Math.PI);
