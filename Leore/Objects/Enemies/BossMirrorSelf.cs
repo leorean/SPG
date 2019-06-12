@@ -33,7 +33,7 @@ namespace Leore.Objects.Enemies
 
         private int orbGauge = 1 * 60;
 
-        public BossMirrorSelf(float x, float y, Room room) : base(x, y, room)
+        public BossMirrorSelf(float x, float y, Room room, string setCondition) : base(x, y, room, setCondition)
         {
             wallEmitter = new MirrorSelfWallEmitter(x, y, room);
             wallEmitter.Parent = this;
@@ -47,7 +47,7 @@ namespace Leore.Objects.Enemies
             new FlashEmitter(X, Y);
 
             player.XVel = 0;
-            //new MessageBox("Foolish boy! You cannot stop the ~Void~!\nI won't let you!", hiColor: GameResources.VoidColor);
+            new MessageBox("Foolish boy! You cannot stop the ~Void~!\nI won't let you!", hiColor: GameResources.VoidColor);
         }
 
         public override void BeginUpdate(GameTime gameTime)

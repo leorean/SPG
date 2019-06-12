@@ -45,7 +45,7 @@ namespace Leore.Main
 
             SaveGame = new SaveGame("save.dat");
         }
-
+        
         /// <summary>
         /// The main Save method.
         /// </summary>
@@ -217,6 +217,23 @@ namespace Leore.Main
                 Player.Stats.Coins = CoinsAfterDeath;
                 CoinsAfterDeath = 0;
             }
+        }
+
+        internal bool HasStoryFlag(string storyFlag)
+        {
+            return !string.IsNullOrEmpty(storyFlag) && Player.Stats.StoryFlags.Contains(storyFlag);
+        }
+
+        public void AddStoryFlag(string storyFlag)
+        {
+            if (!string.IsNullOrEmpty(storyFlag) && !Player.Stats.StoryFlags.Contains(storyFlag))
+                Player.Stats.StoryFlags.Add(storyFlag);
+        }
+
+        public void RemoveStoryFlag(string storyFlag)
+        {
+            if (!string.IsNullOrEmpty(storyFlag) && Player.Stats.StoryFlags.Contains(storyFlag))
+                Player.Stats.StoryFlags.Remove(storyFlag);
         }
 
         /// <summary>

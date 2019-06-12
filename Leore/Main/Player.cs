@@ -224,7 +224,7 @@ namespace Leore.Main
 
                 var maxSpellExpForLevel = GameResources.MaxEXP[currentSpellType][currentSpellLevel];
 
-                int expHit = 20;
+                int expHit = 20 + (int)(Math.Ceiling(GameResources.MaxEXP[currentSpellType][currentSpellLevel] * .1f));
 
                 /*switch (currentSpellLevel)
                 {
@@ -790,7 +790,7 @@ namespace Leore.Main
 
                 var t = Globals.TILE;
                 var npc = this.CollisionBoundsFirstOrDefault<NPC>(X, Y);
-                if (npc != null)
+                if (npc != null && npc.Active)
                 {
                     if (!ObjectManager.Exists<MessageBox>())
                         npc.ShowToolTip(this);

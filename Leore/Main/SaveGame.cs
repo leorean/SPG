@@ -29,6 +29,8 @@ namespace Leore.Main
         public Dictionary<int, Point> Teleporters { get; set; } = new Dictionary<int, Point>();
 
         public List<int> Bosses { get; set; } = new List<int>();
+
+        public List<string> StoryFlags { get; set; } = new List<string>();
     }
 
     [Serializable]

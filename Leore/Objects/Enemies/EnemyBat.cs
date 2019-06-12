@@ -4,10 +4,11 @@ using System;
 using SPG.Map;
 using Leore.Resources;
 using Leore.Main;
+using Leore.Objects;
 
 namespace Leore.Objects.Enemies
 {
-    public class EnemyBat : Enemy
+    public class EnemyBat : Enemy, IMovable
     {
         public enum State
         {
@@ -82,6 +83,8 @@ namespace Leore.Objects.Enemies
             {
                 SetAnimation(1, 4, .2f, true);
 
+                XVel *= .9f;
+
                 t = (t + .08f) % (2 * Math.PI);
                 YVel = (float)Math.Sin(t);
 
@@ -118,7 +121,9 @@ namespace Leore.Objects.Enemies
                 YVel *= .6f;
             }
 
-            Move(XVel, YVel);
+            this.MoveAdvanced(false);
+
+            //Move(XVel, YVel);
 
             Scale = new Vector2(Math.Sign((int)Direction), 1);
         }

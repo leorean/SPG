@@ -13,6 +13,10 @@ namespace Leore.Objects.Level
         private string yesText;
         private string noText;
 
+        private string appearCondition;
+        private string setCondition;
+        private string disappearCondition;
+
         private int type;
 
         private Direction direction;
@@ -23,14 +27,20 @@ namespace Leore.Objects.Level
         private bool lookAtPlayer;
 
         protected bool decision;
+
+        public bool Active { get; set; }
         
-        public NPC(float x, float y, Room room, int type, string text, bool centerText = false, Direction dir = Direction.NONE, string name = null, string yesText = null, string noText = null) : base(x, y, room, name)
+        public NPC(float x, float y, Room room, int type, string text, string appearCondition, string setCondition, string disappearCondition, bool centerText = false, Direction dir = Direction.NONE, string name = null, string yesText = null, string noText = null) : base(x, y, room, name)
         {
             this.text = text;
             this.type = type;
 
             this.yesText = yesText;
             this.noText = noText;
+
+            this.appearCondition = appearCondition;
+            this.setCondition = setCondition;
+            this.disappearCondition = disappearCondition;
 
             AnimationTexture = AssetManager.NPCS;
             
@@ -47,13 +57,32 @@ namespace Leore.Objects.Level
                 direction = dir;
             }
 
-            this.centerText = centerText;            
+            this.centerText = centerText;
+
+            Visible = false;
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
+            if (!string.IsNullOrEmpty(appearCondition) && !GameManager.Current.Player.Stats.StoryFlags.Contains(appearCondition)
+                || !string.IsNullOrEmpty(disappearCondition) && GameManager.Current.Player.Stats.StoryFlags.Contains(disappearCondition))
+            {
+                if (Active)
+                {
+                    new SingularEffect(Center.X, Center.Y, 0);
+                }
+
+                Active = false;
+                Visible = false;
+                return;
+            } else
+            {
+                Active = true;
+                Visible = true;
+            }
+            
             //
 
             var lookDir = GameManager.Current.Player.X < X ? Direction.LEFT : Direction.RIGHT;
@@ -106,6 +135,9 @@ namespace Leore.Objects.Level
 
         public virtual void Interact(Player player)
         {
+            if (!Active)
+                return;
+
             this.player = player;
 
             this.player.State = Player.PlayerState.BACKFACING;
@@ -135,8 +167,9 @@ namespace Leore.Objects.Level
 
         public virtual void EndOfConversation()
         {
-            this.player.State = Player.PlayerState.IDLE;
-            this.player = null;
+            GameManager.Current.AddStoryFlag(setCondition);
+            player.State = Player.PlayerState.IDLE;
+            player = null;
         }
 
         internal void ShowToolTip(Player player)

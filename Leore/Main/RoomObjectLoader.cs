@@ -282,6 +282,7 @@ namespace Leore.Main
                         var itemType = data.ContainsKey("itemType") ? (int)data["itemType"] : -1;
                         var itemName = data.ContainsKey("itemName") ? data["itemName"].ToString() : "-unknown-";
                         var itemText = data.ContainsKey("text") ? data["text"].ToString() : "-unknown-";
+                        var itemSetCondition = data.ContainsKey("setCondition") ? data["setCondition"].ToString() : null;
 
                         AbilityItem item = null;
 
@@ -294,7 +295,7 @@ namespace Leore.Main
                                 item.OnObtain = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.PUSH; };
                                 break;
                             case 1: // ability item: orb
-                                item = new AbilityItem(x + 8, y + 8, room, itemName);
+                                item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: "hasOrb");
                                 item.Texture = AssetManager.Orbs[0];
                                 item.DrawOffset = new Vector2(8);
                                 item.OnObtain = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.ORB; };
@@ -328,7 +329,11 @@ namespace Leore.Main
                         var npcDirection = data.ContainsKey("direction") ? (Direction)(int)data["direction"] : Direction.NONE;
                         var npcCenterText = data.ContainsKey("centerText") ? (bool)data["centerText"] : false;
 
-                        var npc = new NPC(x + 8, y + 8, room, npcType, npcText, npcCenterText, npcDirection, yesText:npcYesText, noText:npcNoText);                        
+                        var npcAppearCondition = data.ContainsKey("appearCondition") ? data["appearCondition"].ToString() : null;
+                        var npcSetCondition = data.ContainsKey("setCondition") ? data["setCondition"].ToString() : null;
+                        var npcDisappearCondition = data.ContainsKey("disappearCondition") ? data["disappearCondition"].ToString() : null;
+
+                        var npc = new NPC(x + 8, y + 8, room, npcType, npcText, npcAppearCondition, npcSetCondition, npcDisappearCondition, npcCenterText, npcDirection, yesText:npcYesText, noText:npcNoText);                        
                     }
                     if (type == "shopItem")
                     {
@@ -364,8 +369,11 @@ namespace Leore.Main
                     }
                     if (type == "boss")
                     {
+                        var bossAppearCondition = data.ContainsKey("appearCondition") ? data["appearCondition"].ToString() : null;
+                        var bossSetCondition = data.ContainsKey("setCondition") ? data["setCondition"].ToString() : null;
+
                         var bossType = data.ContainsKey("bossType") ? (int)data["bossType"] : 0;
-                        var bossSpawn = new BossSpawn(x, y, room, bossType);
+                        var bossSpawn = new BossSpawn(x, y, room, bossType, bossAppearCondition, bossSetCondition);
                         bossSpawn.BoundingBox = new RectF(0, 0, width, height);
                     }
                 }

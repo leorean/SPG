@@ -14,8 +14,11 @@ namespace Leore.Objects.Enemies
 {
     public class Boss : Enemy
     {
-        public Boss(float x, float y, Room room) : base(x, y, room)
+        private string setCondition;
+
+        public Boss(float x, float y, Room room, string setCondition) : base(x, y, room)
         {
+            this.setCondition = setCondition;
             MainGame.Current.HUD.SetBoss(this);
         }
 
@@ -28,6 +31,9 @@ namespace Leore.Objects.Enemies
         public override void OnDeath()
         {
             //base.OnDeath();
+
+            GameManager.Current.AddStoryFlag(setCondition);
+
             GameManager.Current.Player.Stats.Bosses.Add(ID);
             MainGame.Current.HUD.SetBoss(null);
         }

@@ -197,14 +197,18 @@ namespace Leore
                 // toggle: flags ^= flag
 
                 GameManager.Current.Player.Stats.Abilities |= PlayerAbility.ORB;
+                GameManager.Current.AddStoryFlag("hasOrb");
+
                 GameManager.Current.Player.Stats.Abilities |= PlayerAbility.PUSH;
+                GameManager.Current.Player.Stats.Abilities |= PlayerAbility.NO_FALL_DAMAGE;
+
                 //GameManager.Current.Player.Stats.Abilities |= PlayerAbility.LEVITATE;
                 //GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_CEIL;
                 //GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_WALL;
 
                 GameManager.Current.AddSpell(SpellType.STAR);
                 GameManager.Current.AddSpell(SpellType.CRIMSON_ARC);
-
+                
                 //GameManager.Current.Player.Stats.MaxHP = 50;
                 //GameManager.Current.Player.Stats.MaxMP = 100;
                 //GameManager.Current.Player.Stats.MPRegen = 2;
@@ -218,6 +222,7 @@ namespace Leore
                 GameManager.Current.Player.Stats.KeysAndKeyblocks.Clear();
                 GameManager.Current.Player.Stats.Items.Clear();
                 GameManager.Current.Player.Stats.Teleporters.Clear();
+                GameManager.Current.Player.Stats.StoryFlags.Clear();
 
                 Debug.WriteLine("cleared saved lists!");
             }

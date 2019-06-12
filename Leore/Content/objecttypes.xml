@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objecttypes>
  <objecttype name="boss" color="#55007f">
+  <property name="appearCondition" type="string"/>
   <property name="bossType" type="int" default="0"/>
+  <property name="setCondition" type="string"/>
  </objecttype>
  <objecttype name="chest" color="#ff5500">
   <property name="value" type="float" default="0"/>
@@ -13,6 +15,7 @@
  <objecttype name="item" color="#61ffdd">
   <property name="itemName" type="string"/>
   <property name="itemType" type="int" default="-1"/>
+  <property name="setCondition" type="string"/>
   <property name="text" type="string"/>
  </objecttype>
  <objecttype name="movingPlatform" color="#aaaaff">
@@ -24,10 +27,13 @@
   <property name="yVel" type="float" default="0"/>
  </objecttype>
  <objecttype name="npc" color="#55557f">
+  <property name="appearCondition" type="string"/>
   <property name="centerText" type="bool" default="false"/>
   <property name="direction" type="int" default="0"/>
+  <property name="disappearCondition" type="string"/>
   <property name="noText" type="string"/>
   <property name="npcType" type="int" default="-1"/>
+  <property name="setCondition" type="string"/>
   <property name="text" type="string"/>
   <property name="yesText" type="string"/>
  </objecttype>
