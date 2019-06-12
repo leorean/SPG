@@ -190,9 +190,9 @@ namespace Leore.Objects.Enemies
                     break;
                 case State.WALK:
 
-                    var noGround = !GameManager.Current.Map.CollisionTile(X + Math.Sign((int)Direction) * 8, Bottom + 2);
+                    var noGround = !GameManager.Current.Map.CollisionTile(X + Math.Sign((int)Direction) * 8, Bottom + 4);
 
-                    if (onWall || noGround && YVel > 0)
+                    if (onWall || noGround && YVel >= 0 && playerSpotted == null)
                         Direction = Direction.Reverse();
 
                     if (playerSpotted != null)

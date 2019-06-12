@@ -122,6 +122,7 @@ namespace Leore.Objects.Enemies
                             {
                                 player.Stats.Abilities |= PlayerAbility.ORB;
                                 GameManager.Current.AddSpell(SpellType.VOID);
+                                GameManager.Current.AddStoryFlag("hasVoidOrb"); // maybe important for later...
                             };
                             item.Text = ".....";
                         }

@@ -184,9 +184,12 @@ namespace Leore
             }
 
             // debug keys
-            
+
             if (input.IsKeyPressed(Keys.H, Input.State.Pressed))
+            {
                 GameManager.Current.Player.Hit(1);
+                GameManager.Current.Player.HP++;
+            }
 
             if (input.IsKeyPressed(Keys.D9, Input.State.Pressed))
             {

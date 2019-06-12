@@ -172,7 +172,8 @@ namespace Leore.Objects.Level
 
         public virtual void EndOfConversation()
         {
-            GameManager.Current.AddStoryFlag(setCondition);
+            if (decision == true)
+                GameManager.Current.AddStoryFlag(setCondition);
             player.State = Player.PlayerState.IDLE;
             player = null;
         }
