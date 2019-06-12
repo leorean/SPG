@@ -20,7 +20,7 @@ namespace Leore.Objects.Enemies
         private State state;
 
         private bool seenPlayer;
-        private bool stuck = true;
+        private bool stuck = false;
 
         public EnemyGrassy(float x, float y, Room room) : base(x, y, room)
         {
@@ -38,7 +38,7 @@ namespace Leore.Objects.Enemies
             
             Gravity = .1f;
 
-            Move(0, 5);
+            //Move(0, 5);
         }
 
         public override void Update(GameTime gameTime)
@@ -94,10 +94,10 @@ namespace Leore.Objects.Enemies
                     if (this.CollisionRectangleFirstOrDefault<Solid>(Left, Bottom - 1, Right, Bottom - 1) != null)
                         Move(0, -1);
 
-                    if (onGround && Math.Abs(X - player.X) < 1 * Globals.TILE)
+                    if (onGround && MathUtil.Euclidean(Center, player.Center) < 1.5f * Globals.TILE)
                     {
-                        XVel = Math.Sign(X - player.X);
-                        YVel = -2.5f;
+                        XVel *= .9f;//-.25f* Math.Sign((int)Direction);
+                        //YVel = -2.2f;
                     }
 
                     if (Math.Abs(player.X - X) > 8)

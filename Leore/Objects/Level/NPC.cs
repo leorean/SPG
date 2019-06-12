@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Leore.Objects.Effects;
 using Leore.Main;
 using SPG.Util;
+using SPG.Objects;
+using Leore.Objects.Effects.Emitters;
 
 namespace Leore.Objects.Level
 {
@@ -71,7 +73,10 @@ namespace Leore.Objects.Level
             {
                 if (Active)
                 {
-                    new SingularEffect(Center.X, Center.Y, 0);
+                    //new SingularEffect(Center.X, Center.Y, 0);
+                    //new StarEmitter(Center.X, Center.Y);
+                    new FlashEmitter(X, Y);
+                    ObjectManager.DestroyAll<ToolTip>();
                 }
 
                 Active = false;

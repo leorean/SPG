@@ -112,7 +112,7 @@ namespace Leore.Objects.Items
                     Move(0, yv);
 
 
-                    if (MathUtil.Euclidean(Center, GameManager.Current.Player.Center) > 2 * Globals.TILE)
+                    if (MathUtil.Euclidean(Center, GameManager.Current.Player.Center) > 8)
                     {
                         kinetic = false;
                         XVel = (GameManager.Current.Player.Center.X - Center.X) / 300;

@@ -281,7 +281,7 @@ namespace Leore.Main
             // death penalty
             if (hpPrev > 0 && HP == 0)
             {
-                var temp = (float)Math.Floor(Stats.Coins * .5f);
+                var temp = Math.Min((float)Math.Floor(Stats.Coins * .5f), 500);
                 var amountToDrop = Stats.Coins - temp;
                 
                 var stats = GameManager.Current.SaveGame.gameStats;
