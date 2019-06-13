@@ -33,13 +33,13 @@ namespace Leore.Main
     public enum PlayerAbility
     {
         NONE = 0,
-        BREATHE_UNDERWATER = 1,
-        CLIMB_WALL = 2,
-        CLIMB_CEIL = 4,
+        BREATHE_UNDERWATER = 1, // <- ocean
+        CLIMB_WALL = 2, // <- ruins of leon (west)
+        CLIMB_CEIL = 4, // <- ruins of leon (east)
         LEVITATE = 8,
-        PUSH = 16,
-        ORB = 32,
-        NO_FALL_DAMAGE = 64,
+        PUSH = 16, // <- sanctuary
+        ORB = 32, // <- forest temple
+        NO_FALL_DAMAGE = 64, // <- lybianna shop (optional)
         DOUBLE_JUMP = 128
     }
     

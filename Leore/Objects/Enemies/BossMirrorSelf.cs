@@ -175,7 +175,7 @@ namespace Leore.Objects.Enemies
                 var orbPos = Position + new Vector2(dp.X, -dp.Y);
                 sb.Draw(AssetManager.Orbs[0], orbPos, null, Color, 0, player.Orb.DrawOffset, Vector2.One, SpriteEffects.None, Depth + .00015f);
 
-                if (player.Stats.SpellIndex == 0 && player.Orb.State == OrbState.ATTACK)
+                if (player.Stats.Spells.IndexOf(SpellType.NONE) == player.Stats.SpellIndex && player.Orb.State == OrbState.ATTACK)
                 {
                     //sb.DrawLightning(orbPos, player.Orb.Position, Color.White, Depth + .0001f);
                     if(MathUtil.Euclidean(orbPos, player.Orb.Position) < 12f)
