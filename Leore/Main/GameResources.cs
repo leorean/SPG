@@ -87,9 +87,9 @@ namespace Leore.Resources
             {
                 SpellType.CRIMSON_ARC,
                 new Dictionary<SpellLevel, float> {
-                    {SpellLevel.ONE, .1f },
-                    {SpellLevel.TWO, .1f },
-                    {SpellLevel.THREE, .05f }
+                    {SpellLevel.ONE, 3 },
+                    {SpellLevel.TWO, 5 },
+                    {SpellLevel.THREE, 7 }
                 }
             },
             {

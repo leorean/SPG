@@ -115,8 +115,8 @@ namespace Leore.Objects.Items
                     if (MathUtil.Euclidean(Center, GameManager.Current.Player.Center) > 8)
                     {
                         kinetic = false;
-                        XVel = (GameManager.Current.Player.Center.X - Center.X) / 300;
-                        YVel = (GameManager.Current.Player.Center.Y - Center.Y) / 300;
+                        XVel = (GameManager.Current.Player.Center.X - Center.X) / 120;
+                        YVel = (GameManager.Current.Player.Center.Y - Center.Y) / 120;
                     } else
                     {
                         XVel *= .95f;

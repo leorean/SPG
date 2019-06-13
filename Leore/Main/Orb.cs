@@ -188,11 +188,14 @@ namespace Leore.Main
                                     //cooldown = 60;
 
                                     ObjectManager.Enable<CrimsonBow>();
-
-                                    if (!ObjectManager.Exists<CrimsonBow>())
+                                    
+                                    if (!ObjectManager.Exists<CrimsonBow>())// && GameManager.Current.Player.MP >= GameResources.MPCost[SpellType.CRIMSON_ARC][Level])
                                     {
                                         new CrimsonBurstEmitter(X, Y);
                                         new CrimsonBow(this);
+                                    } else
+                                    {
+                                        player.MP += GameResources.MPCost[Type][Level];
                                     }
                                     
                                     break;
@@ -212,12 +215,22 @@ namespace Leore.Main
                         }
                     } else
                     {
-                        if (cooldown == 0)
+                        var shake = true;
+
+                        if (ObjectManager.Exists<CrimsonBow>())
+                            shake = false;
+
+                        //if (if (GameManager.Current.Player.MP >= GameResources.MPCost[SpellType.CRIMSON_ARC][Level]))
+
+                        if (shake)
                         {
-                            XVel = -2 + (float)RND.Next * 2;
-                            YVel = -2 + (float)RND.Next * 2;
-                            new StarEmitter(X, Y);
-                            cooldown = 25;
+                            if (cooldown == 0)
+                            {
+                                XVel = -2 + (float)RND.Next * 2;
+                                YVel = -2 + (float)RND.Next * 2;
+                                new StarEmitter(X, Y);
+                                cooldown = 25;
+                            }
                         }
                         
                     }

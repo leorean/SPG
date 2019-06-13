@@ -126,40 +126,43 @@ namespace Leore.Objects.Projectiles
             {
                 //emitter.Active = true;
 
-                var t = 1 * Globals.TILE;
-                var enemies = this.CollisionRectangles<Enemy>(Left - t, Top - t, Right + t, Bottom + t);
-                foreach (var enemy in enemies)
+                if (level > SpellLevel.ONE)
                 {
-                    var angle = MathUtil.VectorToAngle(enemy.Center - Center);
+                    var t = 1 * Globals.TILE;
+                    var enemies = this.CollisionRectangles<Enemy>(Left - t, Top - t, Right + t, Bottom + t);
+                    foreach (var enemy in enemies)
+                    {
+                        var angle = MathUtil.VectorToAngle(enemy.Center - Center);
 
-                    var lx = (float)MathUtil.LengthDirX(angle);
-                    var ly = (float)MathUtil.LengthDirY(angle);
+                        var lx = (float)MathUtil.LengthDirX(angle);
+                        var ly = (float)MathUtil.LengthDirY(angle);
 
-                    var sign = -1;
-                    
-                    var ex = enemy.XVel + lx * sign * succ;
-                    var ey = enemy.YVel + ly * sign * succ;
+                        var sign = -1;
 
-                    enemy.XVel = MathUtil.Limit(ex, 2);
-                    enemy.YVel = MathUtil.Limit(ey, 2);
-                }
+                        var ex = enemy.XVel + lx * sign * succ;
+                        var ey = enemy.YVel + ly * sign * succ;
 
-                var coins = this.CollisionRectangles<Coin>(Left - t, Top - t, Right + t, Bottom + t);
-                foreach (var coin in coins)
-                {
-                    coin.SetLoose();
-                    var angle = MathUtil.VectorToAngle(coin.Center - Center);
+                        enemy.XVel = MathUtil.Limit(ex, 2);
+                        enemy.YVel = MathUtil.Limit(ey, 2);
+                    }
 
-                    var lx = (float)MathUtil.LengthDirX(angle);
-                    var ly = (float)MathUtil.LengthDirY(angle);
+                    var coins = this.CollisionRectangles<Coin>(Left - t, Top - t, Right + t, Bottom + t);
+                    foreach (var coin in coins)
+                    {
+                        coin.SetLoose();
+                        var angle = MathUtil.VectorToAngle(coin.Center - Center);
 
-                    var sign = -1;
+                        var lx = (float)MathUtil.LengthDirX(angle);
+                        var ly = (float)MathUtil.LengthDirY(angle);
 
-                    var ex = coin.XVel + lx * sign * succ;
-                    var ey = coin.YVel + ly * sign * succ;
+                        var sign = -1;
 
-                    coin.XVel = MathUtil.Limit(ex, 2);
-                    coin.YVel = MathUtil.Limit(ey, 2);
+                        var ex = coin.XVel + lx * sign * succ;
+                        var ey = coin.YVel + ly * sign * succ;
+
+                        coin.XVel = MathUtil.Limit(ex, 2);
+                        coin.YVel = MathUtil.Limit(ey, 2);
+                    }
                 }
             }
 

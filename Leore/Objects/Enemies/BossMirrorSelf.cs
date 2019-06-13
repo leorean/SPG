@@ -84,9 +84,9 @@ namespace Leore.Objects.Enemies
                 //player.Position = new Vector2(player.Position.X - XVel, player.Y);
                 player.XVel = Math.Min(player.XVel, .5f);
                 if (player.X > Room.X + .5f * Room.BoundingBox.Width - 2 * Globals.TILE)
-                    player.XVel = Math.Min(player.XVel, 0f);
+                    player.XVel *= .5f;// Math.Min(player.XVel, 0f);
                 if (player.X > Room.X + .5f * Room.BoundingBox.Width - 1 * Globals.TILE)
-                    player.XVel = Math.Min(player.XVel, -.1f);
+                    player.XVel *= .2f;// Math.Min(player.XVel, -.1f);
 
                 if (hasOrb)
                 {

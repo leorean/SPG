@@ -199,6 +199,9 @@ namespace Leore
                 // remove: flags &= ~flag
                 // toggle: flags ^= flag
 
+                //GameManager.Current.Player.Stats.Abilities |= PlayerAbility.DOUBLE_JUMP;
+                //GameManager.Current.Player.Stats.Abilities |= PlayerAbility.LEVITATE;
+
                 GameManager.Current.Player.Stats.Abilities |= PlayerAbility.ORB;
                 GameManager.Current.AddStoryFlag("hasOrb");
 

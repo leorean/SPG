@@ -61,9 +61,9 @@ namespace Leore.Objects.Projectiles
 
             Angle = (float)MathUtil.VectorToAngle(new Vector2(X - orb.Parent.X, Y - orb.Parent.Y), true);
 
-            if (orb.State != OrbState.ATTACK || GameManager.Current.Player.MP < GameResources.MPCost[SpellType.CRIMSON_ARC][orb.Level])
+            if (orb.State != OrbState.ATTACK)
             {
-                if (power > 5)
+                //if (power > 5)
                 {
                     var degAngle = MathUtil.VectorToAngle(new Vector2(X - orb.Parent.X, Y - orb.Parent.Y));
 

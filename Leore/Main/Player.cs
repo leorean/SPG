@@ -39,7 +39,8 @@ namespace Leore.Main
         LEVITATE = 8,
         PUSH = 16,
         ORB = 32,
-        NO_FALL_DAMAGE = 64        
+        NO_FALL_DAMAGE = 64,
+        DOUBLE_JUMP = 128
     }
     
     public class Player : GameObject, IMovable
@@ -158,6 +159,9 @@ namespace Leore.Main
         public Orb Orb { get; set; }
 
         public Teleporter Teleporter { get; set; }
+
+        private int jumps;
+        private int maxJumps;
 
         // constructor
 
@@ -924,28 +928,43 @@ namespace Leore.Main
                     }
                 }                
             }
+
+            if (Stats.Abilities.HasFlag(PlayerAbility.DOUBLE_JUMP))
+                maxJumps = 2;
+            else
+                maxJumps = 1;
+
             // walk/idle -> jump
             if (State == PlayerState.IDLE 
                 || State ==  PlayerState.WALK
                 || State == PlayerState.GET_UP 
                 || State == PlayerState.TURN_AROUND 
-                || State == PlayerState.PUSH)
+                || State == PlayerState.PUSH
+                || State == PlayerState.JUMP_DOWN
+                || State == PlayerState.JUMP_UP)
             {
                 if (YVel > 0 && !onGround)
                     State = PlayerState.JUMP_DOWN;
 
-                if (k_jumpPressed)
+                if (jumps < maxJumps)
                 {
-                    if (MovingPlatform != null)
+                    if (k_jumpPressed)
                     {
-                        YVel = Math.Min(-2, MovingPlatform.YVel - .1f); ;
-                    }
-                    else
-                        YVel = -2;
+                        if (jumps > 0)
+                            new SingularEffect(X, Y, 11);
+                        jumps++;
 
-                    MovingPlatform = null;
-                    State = PlayerState.JUMP_UP;                    
-                    k_jumpPressed = false;
+                        if (MovingPlatform != null)
+                        {
+                            YVel = Math.Min(-2, MovingPlatform.YVel - .1f); ;
+                        }
+                        else
+                            YVel = -2;
+
+                        MovingPlatform = null;
+                        State = PlayerState.JUMP_UP;
+                        k_jumpPressed = false;
+                    }
                 }
             }
             // pushing
@@ -993,7 +1012,7 @@ namespace Leore.Main
             if (State == PlayerState.LEVITATE)
             {
                 mpRegenTimeout = Math.Min(mpRegenTimeout + 2, maxMpRegenTimeout);
-                MP = Math.Max(MP - 1, 0);
+                MP = Math.Max(MP - .2f, 0);
 
                 lastGroundY = Y;
 
@@ -1096,7 +1115,7 @@ namespace Leore.Main
                 if (Stats.Abilities.HasFlag(PlayerAbility.LEVITATE))
                 {
                     if (MP > 0) {
-                        if (k_jumpPressed)
+                        if (k_jumpPressed)// && jumps == maxJumps)
                             State = PlayerState.LEVITATE;
                     }
                 }                
@@ -1556,6 +1575,8 @@ namespace Leore.Main
                 //        Move(0, Math.Abs(groundBlock.Top - Bottom - Gravity));
                 //}
 
+                jumps = 0;
+
                 onGround = true;
 
                 // transition from falling to getting up again
@@ -1773,7 +1794,7 @@ namespace Leore.Main
             {
                 float coinAlpha = coinTimeout / (.5f * maxCoinTimeout);
                 coinFont.Color = new Color(coinFont.Color, coinAlpha);
-                coinFont.Draw(sb, X, Y - Globals.TILE, $"+{CoinCounter}");
+                coinFont.Draw(sb, X, Y - Globals.TILE, $"+{CoinCounter}", depth: Globals.LAYER_UI - .0001f);
             }
             
             if (Oxygen < MaxOxygen && HP > 0)

@@ -98,7 +98,7 @@ namespace Leore.Objects
                 {
                     var plt = m.CollisionBoundsFirstOrDefault<Platform>(m.X, m.Y + movYvel + m.YVel);
                     
-                    if (plt != m.MovingPlatform)
+                    if (plt != m.MovingPlatform && plt.Center.Y > m.Center.Y)
                         storedPlatform = plt ?? null;
                     if (storedPlatform != null)
                     {
