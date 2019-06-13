@@ -57,7 +57,8 @@ namespace Leore.Objects.Items
         private Vector2 pos;
         
         private bool isLoose;
-        
+        private int takeDelay;
+
         public Collider MovingPlatform { get; set; }
 
         public Coin(float x, float y, Room room, CoinValue v, bool isLoose = false) : base(x, y, room)
@@ -79,10 +80,18 @@ namespace Leore.Objects.Items
             {
                 XVel = -.5f + (float)(RND.Next * 1f);
                 YVel = -1.8f - (float)(RND.Next * .5f);
+                takeDelay = 30;
                 Respawn = true;
             }
         }
         
+        public void SetLoose()
+        {
+            if (Taken)
+                return;
+            isLoose = true;
+        }
+
         public static void Spawn(float x, float y, Room room, float value, bool precise = false)
         {
             if (value < CoinValue.V1)
@@ -128,7 +137,9 @@ namespace Leore.Objects.Items
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            
+
+            takeDelay = Math.Max(takeDelay - 1, 0);
+
             if (!isLoose)
             {
 
@@ -196,7 +207,8 @@ namespace Leore.Objects.Items
                             isLoose = false;
                             t = -Math.PI;
                         }
-                        
+
+                        XVel *= .9f;
                         YVel *= -.3f;
                     }
                 }
@@ -254,11 +266,18 @@ namespace Leore.Objects.Items
             if (!initialized)
                 return;
 
-            if (isLoose)
+            //if (isLoose)
+            //    return;
+
+            if (takeDelay > 0)
                 return;
 
             if (!Taken)
             {
+                XVel = 0;
+                YVel = 0;
+                isLoose = false;
+
                 player.Stats.Coins += Value.Value;
                 player.CoinCounter += Value.Value;
                 Taken = true;                

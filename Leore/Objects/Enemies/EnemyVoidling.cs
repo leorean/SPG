@@ -59,6 +59,7 @@ namespace Leore.Objects.Enemies
         private int idleTimer;
         private int walkTimer;
         private int knockbackTimer;
+        private int turnAroundTimer;
 
         private int type;
 
@@ -190,12 +191,19 @@ namespace Leore.Objects.Enemies
                     break;
                 case State.WALK:
 
-                    var noGround = !GameManager.Current.Map.CollisionTile(X + Math.Sign((int)Direction) * 8, Bottom + 4);
+                    turnAroundTimer = Math.Max(turnAroundTimer - 1, 0);
 
-                    if (onWall || noGround && YVel >= 0 && playerSpotted == null)
+                    //var noGroundAhead = !GameManager.Current.Map.CollisionTile(X + Math.Sign((int)Direction) * 8, Bottom + 4);
+
+                    var noGroundAhead = this.CollisionBoundsFirstOrDefault<Collider>(X + Math.Sign((int)Direction) * 8, Bottom + 4) == null;
+
+                    if (onWall || noGroundAhead && YVel >= 0 && turnAroundTimer == 0)
+                    {
                         Direction = Direction.Reverse();
-
-                    if (playerSpotted != null)
+                        turnAroundTimer = 20;
+                    }
+                    
+                    if (playerSpotted != null && !noGroundAhead && turnAroundTimer == 0)
                     {
                         Direction = (Direction)Math.Sign(playerSpotted.X - X);
                         walkTimer++;

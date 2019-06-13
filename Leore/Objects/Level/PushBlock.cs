@@ -21,7 +21,7 @@ namespace Leore.Objects.Level
         public float PushVel { get; private set; } = .5f;
 
         private bool aboutToFall;
-
+        
         public PushBlock(float x, float y, Room room) : base(x, y, room)
         {
             BoundingBox = new RectF(0, 0, Globals.TILE, Globals.TILE);
@@ -53,10 +53,10 @@ namespace Leore.Objects.Level
             var T = Globals.TILE;
 
             aboutToFall = false;
-            
+
             // "hack" to clean tile solid underneath
             new Solid(X, Y, Room).Destroy();
-
+            
             // x
 
             if (!IsPushing)
@@ -64,7 +64,7 @@ namespace Leore.Objects.Level
                 lastX = X;
             }
             else
-            {                
+            {
                 XVel = PushVel * Math.Sign((int)dir);
                 if (Math.Abs(lastX - X) >= Globals.TILE)
                 {
@@ -74,9 +74,9 @@ namespace Leore.Objects.Level
                 }
             }
             Move(XVel, 0);
-            
+
             // y
-            
+
             if (!IsFalling)
             {
                 lastY = Y;
@@ -89,7 +89,7 @@ namespace Leore.Objects.Level
 
                     if (player != null)
                         aboutToFall = true;
-                    
+
                     if (player == null && !IsPushing)
                         IsFalling = true;
                 }
@@ -101,6 +101,19 @@ namespace Leore.Objects.Level
 
                 YVel = Math.Min(YVel + Gravity, 3);
 
+                var playerCollision = this.CollisionBounds(GameManager.Current.Player, X, Y + YVel);
+                if (playerCollision)
+                {
+                    Move(0, -1);
+                    
+                    Position = new Vector2(X, MathUtil.Div(Y, T) * T);
+                    IsFalling = false;
+                    lastY = Y;
+                    
+                    XVel = 0;
+                    YVel = 0;                    
+                }
+                
                 var enemy = this.CollisionBoundsFirstOrDefault<Enemy>(X, Y);
                 if (enemy != null)
                 {

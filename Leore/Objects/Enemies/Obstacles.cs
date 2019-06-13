@@ -41,7 +41,7 @@ namespace Leore.Objects.Enemies
         public BigSpike(float x, float y, Room room) : base(x, y, room)
         {
             BoundingBox = new RectF(0, 16, 32, 16);            
-            Damage = 9999;
+            Damage = 999;
         }
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)

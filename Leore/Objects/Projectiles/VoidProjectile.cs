@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Leore.Main;
 using Leore.Objects.Effects.Emitters;
 using Leore.Objects.Enemies;
+using Leore.Objects.Items;
 using Leore.Objects.Level;
 using Leore.Resources;
 using Leore.Util;
@@ -141,6 +142,24 @@ namespace Leore.Objects.Projectiles
 
                     enemy.XVel = MathUtil.Limit(ex, 2);
                     enemy.YVel = MathUtil.Limit(ey, 2);
+                }
+
+                var coins = this.CollisionRectangles<Coin>(Left - t, Top - t, Right + t, Bottom + t);
+                foreach (var coin in coins)
+                {
+                    coin.SetLoose();
+                    var angle = MathUtil.VectorToAngle(coin.Center - Center);
+
+                    var lx = (float)MathUtil.LengthDirX(angle);
+                    var ly = (float)MathUtil.LengthDirY(angle);
+
+                    var sign = -1;
+
+                    var ex = coin.XVel + lx * sign * succ;
+                    var ey = coin.YVel + ly * sign * succ;
+
+                    coin.XVel = MathUtil.Limit(ex, 2);
+                    coin.YVel = MathUtil.Limit(ey, 2);
                 }
             }
 
