@@ -92,7 +92,12 @@ namespace Leore.Main
                 }
             } else
                 alpha = Math.Min(alpha + .1f, 1);
-            
+
+            Scale = new Vector2(1, 1);
+
+            if (Type == SpellType.KEYCHAIN)
+                Scale = new Vector2((int)player.Direction, 1);
+
             switch (State)
             {
                 case OrbState.FOLLOW:
@@ -134,8 +139,8 @@ namespace Leore.Main
 
                             TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * (arcDst - .5f * Math.Abs(offY) / arcDst), offY);
                             break;
-                        case SpellType.KEYCHAIN:
-                            if (!ObjectManager.Exists<KeyChain>() && Visible) {
+                        case SpellType.KEYCHAIN:                            
+                            if (!ObjectManager.Exists<KeyChain>() && cooldown == 0) {
                                 new CrimsonBurstEmitter(X, Y)
                                 {
                                     ParticleColors = new List<Color> { Color.White },
@@ -213,15 +218,13 @@ namespace Leore.Main
                                     
                                     break;
 
-                                case SpellType.VOID:                                    
-                                    {
-                                        Visible = false;
-                                        VoidProjectile.Create(X, Y, this);
-                                    }
-
+                                case SpellType.VOID:
+                                    Visible = false;
+                                    VoidProjectile.Create(X, Y, this);                                    
                                     break;
 
-                                case SpellType.KEYCHAIN:                                    
+                                case SpellType.KEYCHAIN:
+                                    cooldown = 60;
                                     KeyChain.Create(X, Y);
                                     break;
 

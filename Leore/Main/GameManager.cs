@@ -305,6 +305,7 @@ namespace Leore.Main
             ObjectManager.Enable<Orb>();
             ObjectManager.Enable<Player>();
             ObjectManager.Enable<PlayerProjectile>();
+            ObjectManager.Enable<KeyChain>();
 
             // todo: solve more smoothly?
             foreach (var o in ObjectManager.Objects.Where(o => o is Enemy && (o as RoomObject).Room == room)) {

@@ -30,7 +30,7 @@ namespace Leore.Objects.Projectiles
         private KeyChain(float x, float y) : base(x, y)
         {
             orb.Visible = false;
-            Depth = orb.Depth + .0001f;
+            Depth = orb.Depth - .0002f;
             BoundingBox = new RectF(-4, -4, 8, 8);
             DrawOffset = new Vector2(8);
             direction = player.Direction;
@@ -64,8 +64,8 @@ namespace Leore.Objects.Projectiles
                 if (dist == 0)
                 {
                     direction = player.Direction;
-                    if (orb.State != OrbState.ATTACK)
-                        Destroy();
+                    //if (orb.State != OrbState.ATTACK)
+                    Destroy();
                 }
             }
 
@@ -91,12 +91,19 @@ namespace Leore.Objects.Projectiles
         {
             base.Draw(sb, gameTime);
 
+            sb.Draw(AssetManager.Projectiles[7], orb.Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, orb.Depth);
+
             for (var i = 0; i < dist; i+= 4)
             {
-                sb.Draw(AssetManager.Projectiles[7], orb.Position + new Vector2((int)direction * i, 0), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
+                sb.Draw(AssetManager.Projectiles[8], orb.Position + new Vector2((int)direction * i, 0), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
             }
             
-            sb.Draw(AssetManager.Projectiles[8], Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
+            sb.Draw(AssetManager.Projectiles[9], Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
+
+            if (key != null)
+            {
+                sb.Draw(key.Texture, Position + new Vector2((int)direction * 8, 0), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0001f);
+            }
         }
         
         public static void Create(float x, float y)
