@@ -284,35 +284,49 @@ namespace Leore.Main
                         var itemName = data.ContainsKey("itemName") ? data["itemName"].ToString() : "-unknown-";
                         var itemText = data.ContainsKey("text") ? data["text"].ToString() : "-unknown-";
                         var itemSetCondition = data.ContainsKey("setCondition") ? data["setCondition"].ToString() : null;
+                        var itemAppearCondition = data.ContainsKey("appearCondition") ? data["appearCondition"].ToString() : null;
 
                         AbilityItem item = null;
 
                         switch (itemType)
                         {
                             case 0: // ability item: push
-                                item = new AbilityItem(x + 8, y + 8, room, itemName);
+                                item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
                                 item.Texture = AssetManager.Items[0];
                                 item.Text = itemText;
                                 item.OnObtain = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.PUSH; };
                                 break;
                             case 1: // ability item: orb
-                                item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: "hasOrb");
+                                item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
                                 item.Texture = AssetManager.Orbs[0];
                                 item.DrawOffset = new Vector2(8);
                                 item.OnObtain = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.ORB; };
                                 item.Text = itemText;
                                 break;
                             case 2: // spell: shoot star
-                                item = new AbilityItem(x + 8, y + 8, room, itemName);
+                                item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
                                 item.Texture = AssetManager.Items[4];
                                 item.OnObtain = () =>
                                 {
                                     GameManager.Current.AddSpell(SpellType.STAR);
                                 };
                                 item.Text = itemText;
-                                break;                            
-                                // TODO: add other item types, collectables etc.
-                        }                        
+                                break;
+                            case 3: // mystic keychain
+                                item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
+                                item.Texture = AssetManager.Items[7];
+                                item.OnObtain = () =>
+                                {
+                                    //GameManager.Current.AddSpell(SpellType.STAR);
+                                };
+                                item.Text = itemText;
+                                break;
+                            // TODO: add other item types, collectables etc.
+                            default:
+                                throw new NotImplementedException("Item type not implemented!");
+                        }
+                        
+
                     }
                     if (type == "door")
                     {

@@ -221,7 +221,7 @@ namespace Leore.Main
 
         internal bool HasStoryFlag(string storyFlag)
         {
-            return !string.IsNullOrEmpty(storyFlag) && Player.Stats.StoryFlags.Contains(storyFlag);
+            return (!string.IsNullOrEmpty(storyFlag) && Player.Stats.StoryFlags.Contains(storyFlag)) || string.IsNullOrEmpty(storyFlag);
         }
 
         public void AddStoryFlag(string storyFlag)

@@ -32,8 +32,10 @@ namespace Leore.Objects.Items
         protected ObtainParticleEmitter obtainParticleEmitter;
 
         private string setCondition;
+        private string appearCondition;
+        private bool appeared;
 
-        public AbilityItem(float x, float y, Room room, string name = null, string setCondition = null) : base(x, y, room, name)
+        public AbilityItem(float x, float y, Room room, string name = null, string setCondition = null, string appearCondition = null) : base(x, y, room, name)
         {
             Visible = false;
 
@@ -48,8 +50,10 @@ namespace Leore.Objects.Items
 
             Respawn = false;
             Save = true;
+            Visible = false;
 
             this.setCondition = setCondition;
+            this.appearCondition = appearCondition;
         }
 
         public override void Update(GameTime gameTime)
@@ -60,6 +64,22 @@ namespace Leore.Objects.Items
 
             if (Taken)
                 Destroy();
+
+            if (!GameManager.Current.HasStoryFlag(appearCondition) && !appeared)
+            {
+                Visible = false;
+                ObtainShineEmitter.Active = false;                
+                return;
+            }
+            else
+            {
+                if (!appeared)
+                {
+                    Visible = true;
+                    ObtainShineEmitter.Active = true;
+                    appeared = true;
+                }
+            }
 
             if (state == State.IDLE)
             {
@@ -139,7 +159,10 @@ namespace Leore.Objects.Items
         {
             if (Taken)
                 return;
-            
+
+            if (!GameManager.Current.HasStoryFlag(appearCondition))
+                return;
+
             if (state == State.IDLE)
             {
                 state = State.TAKING;
