@@ -117,6 +117,7 @@
     <Compile Include="Objects\Items\ShopItem.cs" />
     <Compile Include="Objects\Projectiles\CrimsonProjectile.cs" />
     <Compile Include="Objects\Projectiles\CrimsonBow.cs" />
+    <Compile Include="Objects\Projectiles\KeyChain.cs" />
     <Compile Include="Objects\Projectiles\PlayerProjectile.cs" />
     <Compile Include="Objects\Projectiles\StarProjectile.cs" />
     <Compile Include="Objects\Effects\FollowFont.cs" />

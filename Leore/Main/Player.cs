@@ -245,11 +245,10 @@ namespace Leore.Main
                         break;
                 }*/
 
-                // don't deduct exp from "none" spell
-                if (currentSpellType == SpellType.NONE)
+                // don't deduct exp from "none" spell or special spells
+                if (GameResources.MaxEXP[currentSpellType][currentSpellLevel] == 0)
                     expHit = 0;
-
-                //var expAfterHit = Math.Max(Stats.SpellEXP[currentSpellType] - expHit, 0);
+                
                 var expAfterHit = Stats.SpellEXP[currentSpellType] - expHit;
                 var expAfterHitRemainder = 0;
                 if(expAfterHit < 0)
@@ -666,8 +665,8 @@ namespace Leore.Main
 
                         var maxSpellExpForLevel = GameResources.MaxEXP[currentSpellType][currentSpellLevel];
 
-                        // only add EXP to spells other than "none"
-                        if (currentSpellType != SpellType.NONE)
+                        // only add EXP to spells other than "none" or special spells
+                        if (maxSpellExpForLevel > 0)
                         {
 
                             Stats.SpellEXP[currentSpellType] = Math.Min(Stats.SpellEXP[currentSpellType] + (int)s.Exp, maxSpellExpForLevel);
@@ -1576,6 +1575,10 @@ namespace Leore.Main
                 //}
 
                 jumps = 0;
+                if (!onGround && !inWater)
+                {
+                    new SingularEffect(X + XVel, Y, 12);
+                }
 
                 onGround = true;
 

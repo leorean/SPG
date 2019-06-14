@@ -8,6 +8,7 @@ using Leore.Resources;
 using SPG.Objects;
 using SPG.Util;
 using System;
+using System.Collections.Generic;
 
 namespace Leore.Main
 {
@@ -23,7 +24,8 @@ namespace Leore.Main
         NONE = 0,
         STAR,
         CRIMSON_ARC,
-        VOID
+        VOID,
+        KEYCHAIN
         //BOOMERANG,
         //ROCK,
         //LIGHTNING,
@@ -132,6 +134,17 @@ namespace Leore.Main
 
                             TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * (arcDst - .5f * Math.Abs(offY) / arcDst), offY);
                             break;
+                        case SpellType.KEYCHAIN:
+                            if (!ObjectManager.Exists<KeyChain>() && Visible) {
+                                new CrimsonBurstEmitter(X, Y)
+                                {
+                                    ParticleColors = new List<Color> { Color.White },
+                                    SpawnRate = 5
+                                };
+                            }
+                            TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 6, 0);
+                            Position = TargetPosition;
+                            break;
                         default:
                             TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 14, 14 * Math.Sign((int)player.LookDirection));
                             break;
@@ -206,6 +219,10 @@ namespace Leore.Main
                                         VoidProjectile.Create(X, Y, this);
                                     }
 
+                                    break;
+
+                                case SpellType.KEYCHAIN:                                    
+                                    KeyChain.Create(X, Y);
                                     break;
 
                                 // TODO: other spells!!!

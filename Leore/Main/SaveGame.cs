@@ -31,6 +31,7 @@ namespace Leore.Main
         public List<int> Bosses { get; set; } = new List<int>();
 
         public List<string> StoryFlags { get; set; } = new List<string>();
+        public int HeldKeys { get; set; }
     }
 
     [Serializable]

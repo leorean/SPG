@@ -64,6 +64,14 @@ namespace Leore.Resources
                     {SpellLevel.THREE, 400 }
                 }
             },
+            {
+                SpellType.KEYCHAIN,
+                new Dictionary<SpellLevel, int> {
+                    {SpellLevel.ONE, 0 },
+                    {SpellLevel.TWO, 0 },
+                    {SpellLevel.THREE, 0 }
+                }
+            },
         };
                 
         public static readonly Dictionary<SpellType, Dictionary<SpellLevel, float>> MPCost = new Dictionary<SpellType, Dictionary<SpellLevel, float>>
@@ -98,6 +106,14 @@ namespace Leore.Resources
                     {SpellLevel.ONE, .25f },
                     {SpellLevel.TWO, .5f },
                     {SpellLevel.THREE, .75f }
+                }
+            },
+            {
+                SpellType.KEYCHAIN,
+                new Dictionary<SpellLevel, float> {
+                    {SpellLevel.ONE, 0 },
+                    {SpellLevel.TWO, 0 },
+                    {SpellLevel.THREE, 0 }
                 }
             }
         };

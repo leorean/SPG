@@ -312,12 +312,12 @@ namespace Leore.Main
                                 };
                                 item.Text = itemText;
                                 break;
-                            case 3: // mystic keychain
+                            case 3: // spell :mystic keychain
                                 item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
                                 item.Texture = AssetManager.Items[7];
                                 item.OnObtain = () =>
                                 {
-                                    //GameManager.Current.AddSpell(SpellType.STAR);
+                                    GameManager.Current.AddSpell(SpellType.KEYCHAIN);
                                 };
                                 item.Text = itemText;
                                 break;

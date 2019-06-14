@@ -92,6 +92,15 @@ namespace Leore.Main
             font.Halign = Font.HorizontalAlignment.Right;
             font.Draw(sb, hpx + 48, hpy + 21, $"{coins}", depth: Globals.LAYER_UI + .00003f);
 
+            // KEYS (held)
+
+            if (player.Stats.HeldKeys > 0)
+            {
+                sb.Draw(AssetManager.HUD, new Vector2(hpx + 48, hpy + 34), new Rectangle(64, 96, 16, 16), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Globals.LAYER_UI + .00001f);                
+                font.Draw(sb, hpx + 54, hpy + 36, $"{player.Stats.HeldKeys}x", depth: Globals.LAYER_UI + .00003f);
+
+            }
+
             if (player.Orb != null)
             {
 

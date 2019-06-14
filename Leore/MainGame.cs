@@ -229,6 +229,7 @@ namespace Leore
                 GameManager.Current.Player.Stats.Items.Clear();
                 GameManager.Current.Player.Stats.Teleporters.Clear();
                 GameManager.Current.Player.Stats.StoryFlags.Clear();
+                GameManager.Current.Player.Stats.HeldKeys = 0;
 
                 Debug.WriteLine("cleared saved lists!");
             }
