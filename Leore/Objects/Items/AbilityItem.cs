@@ -148,6 +148,7 @@ namespace Leore.Objects.Items
                     OnObtain?.Invoke();
 
                     Taken = true;
+                    GameManager.Current.AddStoryFlag(setCondition);
                 }
             }
 
@@ -166,9 +167,7 @@ namespace Leore.Objects.Items
             if (state == State.IDLE)
             {
                 state = State.TAKING;
-                this.player = player;
-
-                GameManager.Current.AddStoryFlag(setCondition);                
+                this.player = player;                
             }
         }        
     }

@@ -766,25 +766,7 @@ namespace Leore.Main
                     }
 
                 }
-
-                // ++++ doors ++++
-
-                var door = this.CollisionBoundsFirstOrDefault<Door>(X, Y);
-
-                if (door != null)
-                {
-                    if (k_upPressed && onGround)
-                    {
-                        XVel = 0;
-                        YVel = -Gravity;
-                        
-                        var pos = new Vector2(door.Center.X + door.Tx * Globals.TILE, door.Center.Y + door.Ty * Globals.TILE);
-                        State = PlayerState.BACKFACING;
-                        RoomCamera.Current.ChangeRoomsToPosition(pos, 0);
-
-                    }
-                }
-
+                
                 // ++++ keys ++++
                 
                 var key = this.CollisionBoundsFirstOrDefault<Key>(X, Y + 1);
@@ -816,6 +798,24 @@ namespace Leore.Main
                     if (k_upPressed && !k_attackHolding)
                     {
                         npc.Interact(this);
+                    }
+                }
+
+                // ++++ doors ++++
+
+                var door = this.CollisionBoundsFirstOrDefault<Door>(X, Y);
+
+                if (npc != null && door != null)
+                {
+                    if (k_upPressed && onGround)
+                    {
+                        XVel = 0;
+                        YVel = -Gravity;
+
+                        var pos = new Vector2(door.Center.X + door.Tx * Globals.TILE, door.Center.Y + door.Ty * Globals.TILE);
+                        State = PlayerState.BACKFACING;
+                        RoomCamera.Current.ChangeRoomsToPosition(pos, 0);
+
                     }
                 }
 
