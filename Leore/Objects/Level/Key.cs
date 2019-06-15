@@ -8,6 +8,13 @@ using Leore.Main;
 
 namespace Leore.Objects.Level
 {
+    public class KeyDummy : GameObject
+    {
+        public KeyDummy(float x, float y, string name = null) : base(x, y, name)
+        {
+        }
+    }
+
     public class Key : Platform, IMovable
     {
         public bool Persistent { get; set; }
@@ -19,7 +26,7 @@ namespace Leore.Objects.Level
         private int timer = 0;
         private int maxTimer = 15 * 60;
 
-        private Vector2 originalPosition;
+        private GameObject originalPositionObject;
 
         public Collider MovingPlatform { get; set; }
         
@@ -37,7 +44,7 @@ namespace Leore.Objects.Level
 
             Gravity = .1f;
 
-            originalPosition = Position;
+            originalPositionObject = new KeyDummy(X, Y) { Parent = this };
             timer = maxTimer;
         }
 
@@ -93,7 +100,8 @@ namespace Leore.Objects.Level
             var keyBlock = this.CollisionRectangles<KeyBlock>(Left - t, Top - t, Right + t, Bottom + t).FirstOrDefault();
             if (keyBlock != null)
             {
-                Unlock(keyBlock);
+                if (!keyBlock.Unlocked)
+                    Unlock(keyBlock);
             }                
         }
 
@@ -108,7 +116,7 @@ namespace Leore.Objects.Level
 
             // timer stuff
 
-            if (player == null && (Math.Abs(X - originalPosition.X) > 2 || Math.Abs(Y - originalPosition.Y) > 2))
+            if (player == null && (Math.Abs(X - originalPositionObject.X) > 2 || Math.Abs(Y - originalPositionObject.Y) > 2))
             {
                 timer = Math.Max(timer - 1, 0);
 
@@ -121,11 +129,11 @@ namespace Leore.Objects.Level
 
                 if (timer == 0)
                 {                    
-                    new KeyBurstEmitter(Center.X, Center.Y, originalPosition);
+                    new KeyBurstEmitter(Center.X, Center.Y, originalPositionObject);
 
                     Color = new Color(Color, 0);
 
-                    Position = originalPosition;
+                    Position = originalPositionObject.Position;
                 }
             }
             else
@@ -140,14 +148,7 @@ namespace Leore.Objects.Level
         {
             GameManager.Current.Player.Stats.KeysAndKeyblocks.Add(ID);
 
-            var emitter = new Effects.Emitters.KeyBurstEmitter(X, Y, keyBlock.Center);
-            emitter.OnFinishedAction = () =>
-            {
-                GameManager.Current.Player.Stats.KeysAndKeyblocks.Add((keyBlock as GameObject).ID);
-
-                new Effects.SingularEffect(keyBlock.X + 8, keyBlock.Y + 8, 2);
-                new StarEmitter(keyBlock.X + 8, keyBlock.Y + 8);
-            };
+            keyBlock.Unlock(X, Y);
 
             if (player != null)
             {

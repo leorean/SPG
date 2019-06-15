@@ -8,11 +8,11 @@ namespace Leore.Objects.Effects.Emitters
 {
     public class KeyBurstParticle : Particle
     {
-        private Vector2 target;
+        private GameObject target;
 
         private int maxLifeTime;
-
-        public KeyBurstParticle(ParticleEmitter emitter, Vector2 target) : base(emitter)
+        
+        public KeyBurstParticle(ParticleEmitter emitter, GameObject target) : base(emitter)
         {
 
             this.target = target;
@@ -37,6 +37,12 @@ namespace Leore.Objects.Effects.Emitters
         {
             base.Update(gameTime);
 
+            if (!ObjectManager.Exists(target))
+            {
+                LifeTime = 0;
+                return;
+            }
+
             maxLifeTime = Math.Max(LifeTime, maxLifeTime);
 
             if (LifeTime > .25f * maxLifeTime)
@@ -49,7 +55,7 @@ namespace Leore.Objects.Effects.Emitters
                 YVel = (target.Y - Position.Y) / 4f;
                 Alpha = Math.Max(Alpha - .1f, 0);
                 
-                if (Math.Abs((target - Position).X) < 4) {
+                if (MathUtil.Euclidean(Position, target.Position) < 4) {
                     LifeTime = 0;
                 }
             }
@@ -63,21 +69,20 @@ namespace Leore.Objects.Effects.Emitters
     {
         public List<Color> Colors { get; private set; } = new List<Color>();
 
-        private Vector2 target;
+        private GameObject target;
 
         public Action OnFinishedAction;
 
-        public KeyBurstEmitter(float x, float y, Vector2 target) : base(x, y)
+        public KeyBurstEmitter(float x, float y, GameObject target) : base(x, y)
         {
             Colors.Add(new Color(255, 243, 130));
             Colors.Add(new Color(251, 223, 116));
             Colors.Add(new Color(237, 160, 72));
 
             this.target = target;
-
             SpawnRate = 25;
         }
-
+        
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);

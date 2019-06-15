@@ -65,7 +65,7 @@ namespace Leore.Resources
                 }
             },
             {
-                SpellType.KEYCHAIN,
+                SpellType.SNATCH_KEYS,
                 new Dictionary<SpellLevel, int> {
                     {SpellLevel.ONE, 0 },
                     {SpellLevel.TWO, 0 },
@@ -109,7 +109,7 @@ namespace Leore.Resources
                 }
             },
             {
-                SpellType.KEYCHAIN,
+                SpellType.SNATCH_KEYS,
                 new Dictionary<SpellLevel, float> {
                     {SpellLevel.ONE, 0 },
                     {SpellLevel.TWO, 0 },

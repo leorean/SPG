@@ -317,7 +317,7 @@ namespace Leore.Main
                                 item.Texture = AssetManager.Items[7];
                                 item.OnObtain = () =>
                                 {
-                                    GameManager.Current.AddSpell(SpellType.KEYCHAIN);
+                                    GameManager.Current.AddSpell(SpellType.SNATCH_KEYS);
                                 };
                                 item.Text = itemText;
                                 break;

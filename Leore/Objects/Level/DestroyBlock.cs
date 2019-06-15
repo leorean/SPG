@@ -24,6 +24,9 @@ namespace Leore.Objects.Level
 
         internal void Hit(int damage)
         {
+            if (damage == 0)
+                return;
+
             if (HP > damage)
                 new SingularEffect(Center.X - 4 + (float)(RND.Next * 8), Center.Y - 4 + (float)(RND.Next * 8), 5);
             else

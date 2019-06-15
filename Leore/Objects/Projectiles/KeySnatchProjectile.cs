@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Leore.Main;
 using Leore.Objects.Effects;
+using Leore.Objects.Effects.Emitters;
+using Leore.Objects.Items;
 using Leore.Objects.Level;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,9 +15,9 @@ using SPG.Util;
 
 namespace Leore.Objects.Projectiles
 {
-    public class KeyChain : GameObject
+    public class KeySnatchProjectile : PlayerProjectile
     {
-        private static KeyChain instance;
+        private static KeySnatchProjectile instance;
 
         private Orb orb => GameManager.Current.Player.Orb;
         private Player player => GameManager.Current.Player;
@@ -26,8 +28,9 @@ namespace Leore.Objects.Projectiles
 
         private bool headBack;
         private Key key;
+        private int cooldown;
 
-        private KeyChain(float x, float y) : base(x, y)
+        private KeySnatchProjectile(float x, float y) : base(x, y, SpellLevel.ONE)
         {
             orb.Visible = false;
             Depth = orb.Depth - .0002f;
@@ -40,31 +43,52 @@ namespace Leore.Objects.Projectiles
         {
             base.Update(gameTime);
 
+            cooldown = Math.Max(cooldown - 1, 0);
+            if (cooldown > 0)
+                Damage = 0;
+            else
+                Damage = 1;
+
             Scale = new Vector2((int)direction, 1);
 
             if (!headBack)
             {
+
+                var coins = this.CollisionBounds<Coin>(X, Y);
+                foreach(var coin in coins)
+                {
+                    coin.Take(player);
+                }
+
                 if (key == null)
                     key = this.CollisionBoundsFirstOrDefault<Key>(X, Y);
 
                 if (key != null)
                 {
-                    player.Stats.KeysAndKeyblocks.Add(key.ID);
-                    player.Stats.HeldKeys++;
+                    key.Destroy();
                     headBack = true;
                 }
 
-                dist = Math.Min(dist + 2f, maxDist);
+                dist = Math.Min(dist + 4f, maxDist);
                 if (dist == maxDist)
                     headBack = true;
+
+                if (headBack)
+                    new SingularEffect(X, Y, 6);
             }
             else
             {
                 dist = Math.Max(dist - 4f, 0);
                 if (dist == 0)
                 {
-                    direction = player.Direction;
-                    //if (orb.State != OrbState.ATTACK)
+                    if (key != null)
+                    {
+                        player.Stats.KeysAndKeyblocks.Add(key.ID);
+                        player.Stats.HeldKeys++;
+
+                        new KeyBurstEmitter(X, Y, orb);
+                    }
+                    //direction = player.Direction;                    
                     Destroy();
                 }
             }
@@ -102,7 +126,7 @@ namespace Leore.Objects.Projectiles
 
             if (key != null)
             {
-                sb.Draw(key.Texture, Position + new Vector2((int)direction * 8, 0), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0001f);
+                sb.Draw(key.Texture, Position + new Vector2((int)direction * 8, 0), null, Color, Angle, DrawOffset, Vector2.One, SpriteEffects.None, Depth + .0001f);
             }
         }
         
@@ -110,9 +134,16 @@ namespace Leore.Objects.Projectiles
         {
             if (instance == null)
             {
-                new SingularEffect(x, y, 6);
-                instance = new KeyChain(x, y);
+                //new SingularEffect(x, y, 6);
+                instance = new KeySnatchProjectile(x, y);
             }
+        }
+
+        public override void HandleCollision(GameObject obj)
+        {
+            if (cooldown == 0)
+                cooldown = 2;
+            //throw new NotImplementedException();
         }
     }
 }

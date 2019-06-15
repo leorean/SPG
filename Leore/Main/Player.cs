@@ -650,6 +650,21 @@ namespace Leore.Main
                     saveStatue.Save();
                 }
 
+                // ++++ key blocks (when possessing keys) ++++
+
+                if (Stats.HeldKeys > 0)
+                {
+                    var keyblock = this.CollisionBoundsFirstOrDefault<KeyBlock>(X + (int)Direction * 4, Y);
+                    if (keyblock != null)
+                    {
+                        if (!keyblock.Unlocked)
+                        {
+                            keyblock.Unlock(X, Y);
+                            Stats.HeldKeys--;
+                        }
+                    }
+                }
+
                 // ++++ spell EXP ++++
 
                 var spellExp = this.CollisionBounds<SpellEXP>(X, Y);

@@ -25,7 +25,7 @@ namespace Leore.Main
         STAR,
         CRIMSON_ARC,
         VOID,
-        KEYCHAIN
+        SNATCH_KEYS
         //BOOMERANG,
         //ROCK,
         //LIGHTNING,
@@ -49,7 +49,7 @@ namespace Leore.Main
         private Player player { get => Parent as Player; }
         public Vector2 TargetPosition { get; private set; }
         private int headBackTimer;        
-        private int cooldown;
+        public int Cooldown { get; set; }
 
         private float alpha = 1;
         private int alphaTimeout;
@@ -79,7 +79,7 @@ namespace Leore.Main
 
             TargetPosition += new Vector2(player.XVel, player.YVel);
 
-            cooldown = Math.Max(cooldown - 1, 0);
+            Cooldown = Math.Max(Cooldown - 1, 0);
 
             if (alphaTimeout > 0)
             {
@@ -95,7 +95,7 @@ namespace Leore.Main
 
             Scale = new Vector2(1, 1);
 
-            if (Type == SpellType.KEYCHAIN)
+            if (Type == SpellType.SNATCH_KEYS)
                 Scale = new Vector2((int)player.Direction, 1);
 
             switch (State)
@@ -139,8 +139,8 @@ namespace Leore.Main
 
                             TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * (arcDst - .5f * Math.Abs(offY) / arcDst), offY);
                             break;
-                        case SpellType.KEYCHAIN:                            
-                            if (!ObjectManager.Exists<KeyChain>() && cooldown == 0) {
+                        case SpellType.SNATCH_KEYS:                            
+                            if (!ObjectManager.Exists<KeySnatchProjectile>() && Cooldown == 0) {
                                 new CrimsonBurstEmitter(X, Y)
                                 {
                                     ParticleColors = new List<Color> { Color.White },
@@ -167,7 +167,7 @@ namespace Leore.Main
 
                     if (player.MP >= GameResources.MPCost[Type][Level])
                     {
-                        if (cooldown == 0)
+                        if (Cooldown == 0)
                         {
                             player.MP -= GameResources.MPCost[Type][Level];
 
@@ -178,13 +178,13 @@ namespace Leore.Main
                                         switch (Level)
                                         {
                                             case SpellLevel.ONE:
-                                                cooldown = 20;
+                                                Cooldown = 20;
                                                 break;
                                             case SpellLevel.TWO:
-                                                cooldown = 15;
+                                                Cooldown = 15;
                                                 break;
                                             case SpellLevel.THREE:
-                                                cooldown = 8;
+                                                Cooldown = 8;
                                                 break;
                                         }
 
@@ -223,9 +223,9 @@ namespace Leore.Main
                                     VoidProjectile.Create(X, Y, this);                                    
                                     break;
 
-                                case SpellType.KEYCHAIN:
-                                    cooldown = 60;
-                                    KeyChain.Create(X, Y);
+                                case SpellType.SNATCH_KEYS:
+                                    KeySnatchProjectile.Create(X, Y);
+                                    Cooldown = 60;
                                     break;
 
                                 // TODO: other spells!!!
@@ -240,16 +240,21 @@ namespace Leore.Main
                         if (ObjectManager.Exists<CrimsonBow>())
                             shake = false;
 
+                        if (Type == SpellType.SNATCH_KEYS)
+                        {
+                            Cooldown++;
+                        }
+
                         //if (if (GameManager.Current.Player.MP >= GameResources.MPCost[SpellType.CRIMSON_ARC][Level]))
 
                         if (shake)
                         {
-                            if (cooldown == 0)
+                            if (Cooldown == 0)
                             {
                                 XVel = -2 + (float)RND.Next * 2;
                                 YVel = -2 + (float)RND.Next * 2;
                                 new StarEmitter(X, Y);
-                                cooldown = 25;
+                                Cooldown = 25;
                             }
                         }
                         
