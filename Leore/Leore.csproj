@@ -109,6 +109,7 @@
     <Compile Include="Objects\Level\NPC.cs" />
     <Compile Include="Objects\Level\Bush.cs" />
     <Compile Include="Objects\Level\Pot.cs" />
+    <Compile Include="Objects\Level\StoryTrigger.cs" />
     <Compile Include="Objects\Level\SwitchBlock.cs" />
     <Compile Include="Objects\Level\Teleporter.cs" />
     <Compile Include="Objects\Level\WaterMill.cs" />

@@ -349,7 +349,7 @@ namespace Leore.Main
                         var npcDisappearCondition = data.ContainsKey("disappearCondition") ? data["disappearCondition"].ToString() : null;
 
                         var npc = new NPC(x + 8, y + 8, room, npcType, npcText, npcAppearCondition, npcSetCondition, npcDisappearCondition, npcCenterText, npcDirection, yesText:npcYesText, noText:npcNoText);                        
-                    }
+                    }                    
                     if (type == "shopItem")
                     {
                         var shopItemText = data.ContainsKey("text") ? data["text"].ToString() : "-unknown-";
@@ -390,6 +390,12 @@ namespace Leore.Main
                         var bossType = data.ContainsKey("bossType") ? (int)data["bossType"] : 0;
                         var bossSpawn = new BossSpawn(x, y, room, bossType, bossAppearCondition, bossSetCondition);
                         bossSpawn.BoundingBox = new RectF(0, 0, width, height);
+                    }
+                    if (type == "storyTrigger")
+                    {
+                        var storyTriggerSetCondition = data.ContainsKey("setCondition") ? data["setCondition"].ToString() : null;
+                        var storyTrigger = new StoryTrigger(x, y, room, storyTriggerSetCondition);
+                        storyTrigger.BoundingBox = new RectF(0, 0, width, height);
                     }
                 }
             }

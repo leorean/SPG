@@ -1590,7 +1590,7 @@ namespace Leore.Main
                 //}
 
                 jumps = 0;
-                if (!onGround && !inWater)
+                if (!onGround && !inWater && State != PlayerState.BACKFACING)
                 {
                     new SingularEffect(X + XVel, Y, 12);
                 }

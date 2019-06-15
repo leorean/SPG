@@ -30,6 +30,8 @@ namespace Leore.Objects.Projectiles
         private Key key;
         private int cooldown;
 
+        private float yspd;
+
         private KeySnatchProjectile(float x, float y) : base(x, y, SpellLevel.ONE)
         {
             orb.Visible = false;
@@ -37,6 +39,10 @@ namespace Leore.Objects.Projectiles
             BoundingBox = new RectF(-4, -4, 8, 8);
             DrawOffset = new Vector2(8);
             direction = player.Direction;
+            yspd = Math.Sign((int)player.LookDirection);
+
+            if (yspd != 0)
+                maxDist *= .75f;
         }
 
         public override void Update(GameTime gameTime)
@@ -50,6 +56,7 @@ namespace Leore.Objects.Projectiles
                 Damage = 1;
 
             Scale = new Vector2((int)direction, 1);
+            Angle = (float)MathUtil.VectorToAngle(new Vector2(1, yspd * Scale.X), true);
 
             if (!headBack)
             {
@@ -73,8 +80,8 @@ namespace Leore.Objects.Projectiles
                 if (dist == maxDist)
                     headBack = true;
 
-                if (headBack)
-                    new SingularEffect(X, Y, 6);
+                //if (headBack)
+                //    new SingularEffect(X, Y, 6);
             }
             else
             {
@@ -93,7 +100,7 @@ namespace Leore.Objects.Projectiles
                 }
             }
 
-            Position = orb.Position + new Vector2((int)direction *  dist, 0);
+            Position = orb.Position + new Vector2((int)direction *  dist, yspd * dist);
 
             if (orb.State != OrbState.ATTACK || player.Direction != direction)
             {
@@ -117,9 +124,9 @@ namespace Leore.Objects.Projectiles
 
             sb.Draw(AssetManager.Projectiles[7], orb.Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, orb.Depth);
 
-            for (var i = 0; i < dist; i+= 4)
+            for (var i = 0; i < dist; i+= 2)
             {
-                sb.Draw(AssetManager.Projectiles[8], orb.Position + new Vector2((int)direction * i, 0), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
+                sb.Draw(AssetManager.Projectiles[8], orb.Position + new Vector2((int)direction * i, Math.Sign(yspd) * i), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
             }
             
             sb.Draw(AssetManager.Projectiles[9], Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);

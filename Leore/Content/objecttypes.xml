@@ -49,5 +49,8 @@
   <property name="respawn" type="bool" default="false"/>
   <property name="text" type="string"/>
  </objecttype>
+ <objecttype name="storyTrigger" color="#ffffff">
+  <property name="setCondition" type="string"/>
+ </objecttype>
  <objecttype name="waterMill" color="#a0a0a4"/>
 </objecttypes>

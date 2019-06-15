@@ -147,7 +147,7 @@ namespace Leore.Objects.Level
 
             this.player.State = Player.PlayerState.BACKFACING;
 
-            if (yesText == null || noText == null)
+            if (string.IsNullOrEmpty(yesText))
             {
                 var msgBox = new MessageBox(text, centerText, "");
                 msgBox.OnCompleted = EndOfConversation;
@@ -161,12 +161,15 @@ namespace Leore.Objects.Level
                     var msgBox = new MessageBox(yesText, centerText, "");                    
                     msgBox.OnCompleted = EndOfConversation;
                 };
-                dialog.NoAction = () =>
+                if (!string.IsNullOrEmpty(noText))
                 {
-                    decision = false;
-                    var msgBox = new MessageBox(noText, centerText, "");
-                    msgBox.OnCompleted = EndOfConversation;
-                };                
+                    dialog.NoAction = () =>
+                    {
+                        decision = false;
+                        var msgBox = new MessageBox(noText, centerText, "");
+                        msgBox.OnCompleted = EndOfConversation;
+                    };
+                }
             }
         }
 

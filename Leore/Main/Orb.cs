@@ -147,8 +147,8 @@ namespace Leore.Main
                                     SpawnRate = 5
                                 };
                             }
-                            TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 6, 0);
-                            Position = TargetPosition;
+                            TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 6, 2 * Math.Sign((int)player.LookDirection));
+                            //Position = TargetPosition;
                             break;
                         default:
                             TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 14, 14 * Math.Sign((int)player.LookDirection));
@@ -225,7 +225,7 @@ namespace Leore.Main
 
                                 case SpellType.SNATCH_KEYS:
                                     KeySnatchProjectile.Create(X, Y);
-                                    Cooldown = 60;
+                                    Cooldown = 30;
                                     break;
 
                                 // TODO: other spells!!!

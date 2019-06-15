@@ -12,7 +12,7 @@ namespace Leore.Objects.Effects.Emitters
 
         public ObtainParticle(ParticleEmitter emitter, float radius, float initialSpeed) : base(emitter)
         {
-            LifeTime = 120;
+            LifeTime = 100;
 
             Angle = RND.Int(360);
 
