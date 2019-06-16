@@ -29,7 +29,9 @@ namespace Leore.Objects.Level
         private GameObject originalPositionObject;
 
         public Collider MovingPlatform { get; set; }
-        
+
+        private int initialFallDelay = EnemyBlock.DELAY;
+
         public Key(float x, float y, Room room) : base(x, y, room)
         {
             Depth = Globals.LAYER_PLAYER + .00001f;
@@ -63,7 +65,13 @@ namespace Leore.Objects.Level
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            
+
+            if (initialFallDelay > 0)
+            {
+                initialFallDelay--;
+                return;
+            }
+
             XVel *= .99f;
 
             var inWater = GameManager.Current.Map.CollisionTile(this, 0, -1, GameMap.WATER_INDEX);

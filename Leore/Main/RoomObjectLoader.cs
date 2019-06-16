@@ -53,10 +53,11 @@ namespace Leore.Main
                     {
                         case 0: // platforms
                         case 12:
-                        case 34:
+                        case 34:                        
                         case 535:
                         case 612:
                         case 646:
+                        case 789:
                         case 794:
                             var platform = new Platform(i * Globals.TILE, j * Globals.TILE, room);
                             t.TileOptions.Solid = false;

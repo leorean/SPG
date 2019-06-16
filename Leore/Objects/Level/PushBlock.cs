@@ -21,7 +21,9 @@ namespace Leore.Objects.Level
         public float PushVel { get; private set; } = .5f;
 
         private bool aboutToFall;
-        
+
+        private int initialFallDelay = EnemyBlock.DELAY;
+
         public PushBlock(float x, float y, Room room) : base(x, y, room)
         {
             BoundingBox = new RectF(0, 0, Globals.TILE, Globals.TILE);
@@ -51,6 +53,12 @@ namespace Leore.Objects.Level
         {
             base.Update(gameTime);
             var T = Globals.TILE;
+
+            if (initialFallDelay > 0)
+            {
+                initialFallDelay--;
+                return;
+            }
 
             aboutToFall = false;
 

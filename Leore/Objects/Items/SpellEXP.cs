@@ -110,9 +110,8 @@ namespace Leore.Objects.Items
                     t = (t + .1f) % (float)(2 * Math.PI);
                     var yv = .05f * (float)Math.Sin(t);
                     Move(0, yv);
-
-
-                    if (MathUtil.Euclidean(Center, GameManager.Current.Player.Center) > 8)
+                    
+                    if (MathUtil.Euclidean(Center, GameManager.Current.Player.Center) > 8 && MathUtil.Euclidean(Center, GameManager.Current.Player.Center) < 8 * Globals.TILE)
                     {
                         kinetic = false;
                         XVel = (GameManager.Current.Player.Center.X - Center.X) / 120;

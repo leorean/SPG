@@ -78,10 +78,7 @@ namespace Leore.Objects.Projectiles
 
                 dist = Math.Min(dist + 4f, maxDist);
                 if (dist == maxDist)
-                    headBack = true;
-
-                //if (headBack)
-                //    new SingularEffect(X, Y, 6);
+                    headBack = true;                
             }
             else
             {
@@ -94,8 +91,8 @@ namespace Leore.Objects.Projectiles
                         player.Stats.HeldKeys++;
 
                         new KeyBurstEmitter(X, Y, orb);
+                        new FollowFont(X, Y, "+Key");
                     }
-                    //direction = player.Direction;                    
                     Destroy();
                 }
             }
@@ -104,15 +101,12 @@ namespace Leore.Objects.Projectiles
 
             if (orb.State != OrbState.ATTACK || player.Direction != direction)
             {
-                headBack = true;
-                //Destroy();
+                headBack = true;                
             }
         }
 
         public override void Destroy(bool callGC = false)
         {
-            //if (!orb.Visible)
-            //    new CrimsonBurstEmitter(X, Y).ParticleColors = new List<Color> { Color.White };
             orb.Visible = true;
             instance = null;
             base.Destroy(callGC);
@@ -141,7 +135,6 @@ namespace Leore.Objects.Projectiles
         {
             if (instance == null)
             {
-                //new SingularEffect(x, y, 6);
                 instance = new KeySnatchProjectile(x, y);
             }
         }
@@ -150,7 +143,6 @@ namespace Leore.Objects.Projectiles
         {
             if (cooldown == 0)
                 cooldown = 2;
-            //throw new NotImplementedException();
         }
     }
 }

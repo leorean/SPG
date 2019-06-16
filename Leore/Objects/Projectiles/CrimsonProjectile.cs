@@ -43,8 +43,13 @@ namespace Leore.Objects.Projectiles
             var colorIndex = RND.Int(colors.Count - 1);
             emitter.Color = colors[colorIndex];
             
+            if (GameManager.Current.Map.CollisionTile(X - XVel, Y - YVel, GameMap.WATER_INDEX))
+            {
+                XVel *= .9f;
+                YVel *= .9f;
+            }
 
-            var solid = GameManager.Current.Map.CollisionTile(X - XVel, Y - YVel) || GameManager.Current.Map.CollisionTile(X - XVel, Y - YVel, GameMap.WATER_INDEX);
+            var solid = GameManager.Current.Map.CollisionTile(X - XVel, Y - YVel);// || GameManager.Current.Map.CollisionTile(X - XVel, Y - YVel, GameMap.WATER_INDEX);
             if (!solid)
             {
                 solid = ObjectManager.CollisionPointFirstOrDefault<Solid>(X - XVel, Y - YVel) != null;

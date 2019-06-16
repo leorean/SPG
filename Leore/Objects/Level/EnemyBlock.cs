@@ -9,11 +9,13 @@ namespace Leore.Objects.Level
 {
     public class EnemyBlock : RoomObject
     {
+        public static readonly int DELAY = 60;
+
         private Solid block;
 
         public bool Active { get; private set; }
 
-        private int activeTimer = 30;
+        private int activeTimer = DELAY;
 
         private bool activatedOnce;
 
@@ -33,7 +35,7 @@ namespace Leore.Objects.Level
 
             if (Active && this.CollisionBounds(GameManager.Current.Player, X, Y))
             {
-                activeTimer = 60;
+                activeTimer = DELAY;
                 Active = false;
                 activatedOnce = false;
             }

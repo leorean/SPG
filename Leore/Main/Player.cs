@@ -40,7 +40,9 @@ namespace Leore.Main
         PUSH = 16, // <- sanctuary
         ORB = 32, // <- forest temple
         NO_FALL_DAMAGE = 64, // <- lybianna shop (optional)
-        DOUBLE_JUMP = 128
+        DOUBLE_JUMP = 128,
+
+        MAGNETIC = 256 // <- spell exp radius doubled, coins are now magnetic (TODO: implement)
     }
     
     public class Player : GameObject, IMovable
