@@ -805,7 +805,7 @@ namespace Leore.Main
 
                 var door = this.CollisionBoundsFirstOrDefault<Door>(X, Y);
 
-                if (npc != null && door != null)
+                if ((npc == null || !npc.Active) && door != null)
                 {
                     if (k_upPressed && onGround)
                     {

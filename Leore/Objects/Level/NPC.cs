@@ -68,8 +68,8 @@ namespace Leore.Objects.Level
         {
             base.Update(gameTime);
 
-            if (!string.IsNullOrEmpty(appearCondition) && !GameManager.Current.Player.Stats.StoryFlags.Contains(appearCondition)
-                || !string.IsNullOrEmpty(disappearCondition) && GameManager.Current.Player.Stats.StoryFlags.Contains(disappearCondition))
+            if (!GameManager.Current.HasStoryFlag(appearCondition)
+                || !string.IsNullOrEmpty(disappearCondition) && (GameManager.Current.HasStoryFlag(disappearCondition)))
             {
                 if (Active)
                 {

@@ -37,7 +37,7 @@ namespace Leore.Objects.Enemies
             EXP = GameResources.EnemyGrassy.EXP;
             
             Gravity = .1f;
-
+            Depth = Globals.LAYER_ENEMY;
             //Move(0, 5);
         }
 
@@ -56,8 +56,7 @@ namespace Leore.Objects.Enemies
                     {
                         XVel = 0;
                         YVel = 0;
-
-                        Depth = Globals.LAYER_FG - .0001f;
+                        
                         if (MathUtil.Euclidean(Position, player.Position) < 3 * Globals.TILE || hit)
                         {
                             YVel = -3;
@@ -73,8 +72,7 @@ namespace Leore.Objects.Enemies
                             YVel += Gravity;
                             Move(XVel, YVel);
                             if (!GameManager.Current.Map.CollisionTile(this, XVel, YVel))
-                            {
-                                Depth = player.Depth + .00001f;
+                            {                                
                                 stuck = false;
                             }
                         }

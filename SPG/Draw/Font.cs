@@ -59,7 +59,7 @@ namespace SPG.Draw
 
             public void ResetAliveCounter()
             {
-                aliveCounter = 30;
+                aliveCounter = 10;
             }
 
             public bool DecreaseAliveCounter()
@@ -139,111 +139,198 @@ namespace SPG.Draw
         /// <param name="maxWidth"></param>     
         public void Draw(SpriteBatch sb, float x, float y, object text, int maxWidth = 0, float scale = 1f, float? depth = null)
         {
-            Draw(sb, x, y, text.ToString(), maxWidth, scale, depth);
-        }
-        
-        internal void Draw(SpriteBatch sb, float x, float y, string text, int maxWidth = 0, float scale = 1f, float? depth = null)
-        {
-            //var sw = Stopwatch.StartNew();
+            //Draw(sb, x, y, text.ToString(), maxWidth, scale, depth);
 
             int lineHeight = (int)(glyphs.FirstOrDefault().Value.Height * scale);
-            
-            // removes all texts that are not used anymore.
-            texts.RemoveAll(t => t.DecreaseAliveCounter());
 
-            // find old resource if possible and re-use
+            var lines = text.ToString().Split('\n');
 
-            var textObject = texts.Where(o => o.Content == text).FirstOrDefault();
-
-            if (textObject == null)
+            for (var l = 0; l < lines.Length; l++)
             {
-                textObject = new Text(text);
-                texts.Add(textObject);
-                
-                var line = text.Split('\n');
-                
-                textObject.LineTextures = new List<Texture2D>();
-                
-                // prepare
-                for (var l = 0; l < line.Length; l++)
-                {
-                    bool highLight = false;
+                bool highLight = false;
 
-                    var txt = line[l];
+                var txt = lines[l];
+
+                int lineWidth = 0;
+                float totalLineWidth = 0;
+
+                // necessary pre-calc
+
+                for (var i = 0; i < txt.Length; i++)
+                {
+                    var c = txt[i];
+                    var tex = glyphs.Where(o => o.Key == c).FirstOrDefault().Value;
+
+                    if (c == '~')
+                        continue;
                     
-                    Texture2D word = null;
-                    for (var i = 0; i < txt.Length; i++)
-                    {
-                        var c = txt[i];
-                        var tex = glyphs.Where(o => o.Key == c).FirstOrDefault().Value;
-                        
-                        if (c == '~')
-                        {
-                            highLight = !highLight;
-                            continue;
-                        }
+                    // draw first texture when glyph is not found in set.
+                    if (c != '\n' && tex == null)
+                        tex = glyphs.FirstOrDefault().Value;
 
-                        if (highLight)
-                            tex = tex.ReplaceColor(Color, HighlightColor);
-
-                        // draw first texture when glyph is not found in set.
-                        if (c != '\n' && tex == null)
-                            tex = glyphs.FirstOrDefault().Value;
-
-                        if (maxWidth > 0 && word != null && word.Width * scale + tex.Width * scale > maxWidth * scale)
-                        {
-                            textObject.LineTextures.Add(word);
-                            word = tex;
-                            continue;
-                        }
-                        tex = tex.AppendSpacingRight(Spacing);
-
-                        word = (word == null) ? tex : word.AppendRight(tex);
-                    }
-                    // add line
-                    textObject.LineTextures.Add(word);
+                    totalLineWidth += tex.Width + (int)Spacing;
                 }
-            }
-            // re-use resources
-            {
-                textObject.ResetAliveCounter();
 
-                // draw text - line by line
-                for (var i = 0; i < textObject.LineTextures.Count; i++)
+                // draw
+
+                for (var i = 0; i < txt.Length; i++)
                 {
+                    var c = txt[i];
+                    var tex = glyphs.Where(o => o.Key == c).FirstOrDefault().Value;
+
+                    if (c == '~')
+                    {
+                        highLight = !highLight;
+                        continue;
+                    }
+
+                    if (highLight)
+                        tex = tex.ReplaceColor(Color, HighlightColor);
+                    
+                    // draw first texture when glyph is not found in set.
+                    if (c != '\n' && tex == null)
+                        tex = glyphs.FirstOrDefault().Value;
+                    
                     var posx = x;
                     var posy = y;
-                    switch (Halign)
-                    {
-                        case HorizontalAlignment.Left:
-                            posx = x;
-                            break;
-                        case HorizontalAlignment.Center:
-                            posx = x - .5f * (textObject.LineTextures[i] != null ? textObject.LineTextures[i].Width : 0) * scale;
-                            break;
-                        case HorizontalAlignment.Right:
-                            posx = x - (textObject.LineTextures[i] != null ? textObject.LineTextures[i].Width : 0) * scale;
-                            break;
-                    }
-
+                    
                     switch (Valign)
                     {
                         case VerticalAlignment.Top:
                             posy = y;
                             break;
                         case VerticalAlignment.Center:
-                            posy = y - .5f * lineHeight * textObject.LineTextures.Count;
+                            posy = y - .5f * lineHeight * lines.Length;
                             break;
                         case VerticalAlignment.Bottom:
-                            posy = y - lineHeight * textObject.LineTextures.Count;
+                            posy = y - lineHeight * lines.Length;
                             break;
                     }
 
-                    var pos = new Vector2(posx, posy + i * lineHeight);
-                    if (textObject.LineTextures[i] != null)
-                        sb.Draw(textObject.LineTextures[i], pos, null, Color, 0, Vector2.Zero, scale, SpriteEffects.None, (depth == null) ? Depth : (float)depth);
-                }
-            }       
+                    switch (Halign)
+                    {
+                        case HorizontalAlignment.Left:
+                            posx = x;
+                            break;
+                        case HorizontalAlignment.Center:
+                            posx = x - .5f * totalLineWidth * scale;                            
+                            break;
+                        case HorizontalAlignment.Right:                            
+                            posx = x - totalLineWidth * scale;                            
+                            break;
+                    }
+
+                    var pos = new Vector2(posx + lineWidth, posy + l * lineHeight);
+                    sb.Draw(tex, pos, null, Color, 0, Vector2.Zero, scale, SpriteEffects.None, (depth == null) ? Depth : (float)depth);
+                    lineWidth += tex.Width + (int)Spacing;
+
+                }                
+            }
         }
+
+        //[Obsolete]
+        //private void Draw(SpriteBatch sb, float x, float y, string text, int maxWidth = 0, float scale = 1f, float? depth = null)
+        //{
+        //    //var sw = Stopwatch.StartNew();
+
+        //    int lineHeight = (int)(glyphs.FirstOrDefault().Value.Height * scale);
+            
+        //    // removes all texts that are not used anymore.
+        //    texts.RemoveAll(t => t.DecreaseAliveCounter());
+
+        //    // find old resource if possible and re-use
+
+        //    var textObject = texts.Where(o => o.Content == text).FirstOrDefault();
+
+        //    if (textObject == null)
+        //    {
+        //        textObject = new Text(text);
+        //        texts.Add(textObject);
+                
+        //        var line = text.Split('\n');
+                
+        //        textObject.LineTextures = new List<Texture2D>();
+                
+        //        // prepare
+        //        for (var l = 0; l < line.Length; l++)
+        //        {
+        //            bool highLight = false;
+
+        //            var txt = line[l];
+                    
+        //            Texture2D word = null;
+        //            for (var i = 0; i < txt.Length; i++)
+        //            {
+        //                var c = txt[i];
+        //                var tex = glyphs.Where(o => o.Key == c).FirstOrDefault().Value;
+                        
+        //                if (c == '~')
+        //                {
+        //                    highLight = !highLight;
+        //                    continue;
+        //                }
+
+        //                if (highLight)
+        //                    tex = tex.ReplaceColor(Color, HighlightColor);
+
+        //                // draw first texture when glyph is not found in set.
+        //                if (c != '\n' && tex == null)
+        //                    tex = glyphs.FirstOrDefault().Value;
+
+        //                if (maxWidth > 0 && word != null && word.Width * scale + tex.Width * scale > maxWidth * scale)
+        //                {
+        //                    textObject.LineTextures.Add(word);
+        //                    word = tex;
+        //                    continue;
+        //                }
+        //                tex = tex.AppendSpacingRight(Spacing);
+
+        //                word = (word == null) ? tex : word.AppendRight(tex);
+        //            }
+        //            // add line
+        //            textObject.LineTextures.Add(word);
+        //        }
+        //    }
+        //    // re-use resources
+        //    {
+        //        textObject.ResetAliveCounter();
+
+        //        // draw text - line by line
+        //        for (var i = 0; i < textObject.LineTextures.Count; i++)
+        //        {
+        //            var posx = x;
+        //            var posy = y;
+        //            switch (Halign)
+        //            {
+        //                case HorizontalAlignment.Left:
+        //                    posx = x;
+        //                    break;
+        //                case HorizontalAlignment.Center:
+        //                    posx = x - .5f * (textObject.LineTextures[i] != null ? textObject.LineTextures[i].Width : 0) * scale;
+        //                    break;
+        //                case HorizontalAlignment.Right:
+        //                    posx = x - (textObject.LineTextures[i] != null ? textObject.LineTextures[i].Width : 0) * scale;
+        //                    break;
+        //            }
+
+        //            switch (Valign)
+        //            {
+        //                case VerticalAlignment.Top:
+        //                    posy = y;
+        //                    break;
+        //                case VerticalAlignment.Center:
+        //                    posy = y - .5f * lineHeight * textObject.LineTextures.Count;
+        //                    break;
+        //                case VerticalAlignment.Bottom:
+        //                    posy = y - lineHeight * textObject.LineTextures.Count;
+        //                    break;
+        //            }
+
+        //            var pos = new Vector2(posx, posy + i * lineHeight);
+        //            if (textObject.LineTextures[i] != null)
+        //                sb.Draw(textObject.LineTextures[i], pos, null, Color, 0, Vector2.Zero, scale, SpriteEffects.None, (depth == null) ? Depth : (float)depth);
+        //        }
+        //    }       
+        //}
     }
 }

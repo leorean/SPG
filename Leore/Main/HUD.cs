@@ -78,7 +78,7 @@ namespace Leore.Main
 
             sb.Draw(AssetManager.HUD, new Vector2(hpx - 2, hpy + 16 + 2), new Rectangle(0, 32, 64, 16), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Globals.LAYER_UI + .00001f);
             
-            font.Draw(sb, hpx + 32 - 1, hpy, $"{hp}/{maxHP}", depth: Globals.LAYER_UI + .00003f);
+            font.Draw(sb, hpx + 32 - 1, hpy + 5f, $"{hp}/{maxHP}", depth: Globals.LAYER_UI + .00003f);
 
             // ----- right -----
 

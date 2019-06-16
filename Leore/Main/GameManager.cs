@@ -219,21 +219,66 @@ namespace Leore.Main
             }
         }
 
-        internal bool HasStoryFlag(string storyFlag)
+        /// <summary>
+        /// Returns true if one or more storyflags are set (separated by ',')
+        /// </summary>
+        /// <param name="storyFlag"></param>
+        /// <returns></returns>
+        public bool HasStoryFlag(string storyFlag)
         {
-            return (!string.IsNullOrEmpty(storyFlag) && Player.Stats.StoryFlags.Contains(storyFlag)) || string.IsNullOrEmpty(storyFlag);
+            if (string.IsNullOrEmpty(storyFlag))
+                return true;
+            
+            storyFlag = storyFlag.Replace(" ", "");
+
+            string[] storyFlags = storyFlag.Split(',');
+
+            foreach(var flag in storyFlags)
+            {
+                if (Player.Stats.StoryFlags.Contains(flag))
+                    return true;                
+            }
+
+            return false;
+            //return (!string.IsNullOrEmpty(storyFlag) && Player.Stats.StoryFlags.Contains(storyFlag)) || string.IsNullOrEmpty(storyFlag);
         }
 
+        /// <summary>
+        /// Adds one or more flags (separated by ',')
+        /// </summary>
+        /// <param name="storyFlag"></param>
         public void AddStoryFlag(string storyFlag)
         {
-            if (!string.IsNullOrEmpty(storyFlag) && !Player.Stats.StoryFlags.Contains(storyFlag))
-                Player.Stats.StoryFlags.Add(storyFlag);
+            if (string.IsNullOrEmpty(storyFlag))
+                return;
+
+            storyFlag = storyFlag.Replace(" ", "");
+            string[] storyFlags = storyFlag.Split(',');
+
+            foreach (var flag in storyFlags)
+            {
+                if (!Player.Stats.StoryFlags.Contains(flag))
+                    Player.Stats.StoryFlags.Add(storyFlag);
+            }            
         }
 
+        /// <summary>
+        /// Removes one or more flags (separated by ',')
+        /// </summary>
+        /// <param name="storyFlag"></param>
         public void RemoveStoryFlag(string storyFlag)
         {
-            if (!string.IsNullOrEmpty(storyFlag) && Player.Stats.StoryFlags.Contains(storyFlag))
-                Player.Stats.StoryFlags.Remove(storyFlag);
+            if (string.IsNullOrEmpty(storyFlag))
+                return;
+
+            storyFlag = storyFlag.Replace(" ", "");
+            string[] storyFlags = storyFlag.Split(',');
+
+            foreach (var flag in storyFlags)
+            {
+                if (Player.Stats.StoryFlags.Contains(flag))
+                    Player.Stats.StoryFlags.Remove(storyFlag);
+            }
         }
 
         /// <summary>
