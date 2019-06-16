@@ -242,10 +242,44 @@ namespace Leore.Main
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
                             break;
-                        case 832:
+                        case 832: // teleporters
                             new Teleporter(i * Globals.TILE + 8, j * Globals.TILE + 8, room);
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
+                            break;
+
+                        // flow objects:
+                        case 896:
+                        case 897:
+                        case 898:
+                        case 899:
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            if (t.ID == 896)
+                                new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.UP);
+                            if (t.ID == 897)
+                                new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.DOWN);
+                            if (t.ID == 898)
+                                new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.LEFT);
+                            if (t.ID == 899)
+                                new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.RIGHT);
+                            break;
+
+                        // flow objects (activatable)
+                        case 900:
+                        case 901:
+                        case 902:
+                        case 903:
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            if (t.ID == 900)
+                                new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.UP).Activatable = true;
+                            if (t.ID == 901)
+                                new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.DOWN).Activatable = true;
+                            if (t.ID == 902)
+                                new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.LEFT).Activatable = true;
+                            if (t.ID == 903)
+                                new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.RIGHT).Activatable = true;
                             break;
                         default:
                             var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room);

@@ -835,6 +835,31 @@ namespace Leore.Main
                         shopItem.Buy();
                     }
                 }
+
+                // ++++ flow ++++
+                var flow = this.CollisionBounds<Flow>(X, Y);
+                foreach(var f in flow)
+                {
+                    if (!f.Active)
+                        continue;
+
+                    var flowPower = .3f;
+                    switch (f.Direction)
+                    {
+                        case Direction.LEFT:
+                            XVel = MathUtil.Limit(XVel - flowPower, 2);
+                            break;
+                        case Direction.RIGHT:
+                            XVel = MathUtil.Limit(XVel + flowPower, 2);
+                            break;
+                        case Direction.UP:
+                            YVel = MathUtil.Limit(YVel - flowPower, 2);
+                            break;
+                        case Direction.DOWN:
+                            YVel = MathUtil.Limit(YVel + flowPower, 2);
+                            break;                        
+                    }
+                }
             }
 
             var waterFalls = ObjectManager.FindAll<WaterFallEmitter>();
