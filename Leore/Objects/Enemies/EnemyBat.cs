@@ -87,8 +87,8 @@ namespace Leore.Objects.Enemies
 
                 t = (t + .08f) % (2 * Math.PI);
                 YVel = (float)Math.Sin(t);
-
-                var colY = GameManager.Current.Map.CollisionTile(this, 0, YVel);
+                
+                var colY = GameManager.Current.Map.CollisionTile(this, 0, YVel) || GameManager.Current.Map.CollisionTile(Position.X, Position.Y, GameMap.WATER_INDEX);
                 if (colY)
                     YVel = 0;
 
@@ -105,7 +105,7 @@ namespace Leore.Objects.Enemies
                 if (colX)
                     XVel = -Math.Sign(XVel) * .1f;
 
-                var colY = GameManager.Current.Map.CollisionTile(this, 0, YVel);
+                var colY = GameManager.Current.Map.CollisionTile(this, 0, YVel) || GameManager.Current.Map.CollisionTile(Position.X, Position.Y, GameMap.WATER_INDEX);
                 if (colY)
                     YVel = -Math.Sign(YVel) * .1f;
 

@@ -5,6 +5,7 @@ using SPG.Objects;
 using Leore.Objects.Effects.Emitters;
 using SPG.Map;
 using Leore.Main;
+using SPG.Util;
 
 namespace Leore.Objects.Level
 {
@@ -31,6 +32,7 @@ namespace Leore.Objects.Level
         public Collider MovingPlatform { get; set; }
 
         private int initialFallDelay = EnemyBlock.DELAY;
+        private bool hasBeenTakenOnce;
 
         public Key(float x, float y, Room room) : base(x, y, room)
         {
@@ -124,7 +126,7 @@ namespace Leore.Objects.Level
 
             // timer stuff
 
-            if (player == null && (Math.Abs(X - originalPositionObject.X) > 2 || Math.Abs(Y - originalPositionObject.Y) > 2))
+            if (player == null && hasBeenTakenOnce && MathUtil.Euclidean(Position, originalPositionObject.Position) > 2.5f)
             {
                 timer = Math.Max(timer - 1, 0);
 
@@ -176,6 +178,7 @@ namespace Leore.Objects.Level
         
         public void Take(Player player)
         {
+            hasBeenTakenOnce = true;
             Parent = player;
             player.KeyObjectID = ID;            
         }

@@ -49,7 +49,7 @@ namespace Leore.Objects.Projectiles
 
             Move(XVel, YVel);
 
-            var solid = GameManager.Current.Map.CollisionTile(X, Y) || GameManager.Current.Map.CollisionTile(X, Y, GameMap.WATER_INDEX);
+            var solid = GameManager.Current.Map.CollisionTile(X, Y);// || GameManager.Current.Map.CollisionTile(X, Y, GameMap.WATER_INDEX);
 
             if (!solid)
             {

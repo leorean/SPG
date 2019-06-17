@@ -110,6 +110,12 @@ namespace Leore.Objects.Effects.Emitters
             {
                 if (!die)
                 {
+                    if (GameManager.Current.Map.CollisionTile(Position.X, Position.Y, GameMap.WATER_INDEX))
+                    {
+                        XVel *= .8f;
+                        YVel *= .8f;
+                    }
+
                     var colX = GameManager.Current.Map.CollisionTile(Position.X + XVel, Position.Y);
                     if (colX)
                     {
