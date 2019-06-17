@@ -356,6 +356,12 @@ namespace Leore.Main
                                 };
                                 item.Text = itemText;
                                 break;
+                            case 4: // scroll of jumps
+                                item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
+                                item.Texture = AssetManager.Items[8];
+                                item.OnObtain = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.DOUBLE_JUMP; };
+                                item.Text = itemText;
+                                break;
                             // TODO: add other item types, collectables etc.
                             default:
                                 throw new NotImplementedException("Item type not implemented!");
