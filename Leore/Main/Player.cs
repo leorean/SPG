@@ -70,7 +70,7 @@ namespace Leore.Main
         public int HP { get; set; }
         public float MP { get; set; }
 
-        public int KeyObjectID { get; set; } = -1;
+        public long KeyObjectID { get; set; } = -1;
 
         // private
 
@@ -286,7 +286,7 @@ namespace Leore.Main
             // death penalty
             if (hpPrev > 0 && HP == 0)
             {
-                var temp = Math.Min((float)Math.Floor(Stats.Coins * .5f), 500);
+                var temp = Math.Max((float)Math.Floor(Stats.Coins * .5f), Stats.Coins - 500);
                 var amountToDrop = Stats.Coins - temp;
                 
                 var stats = GameManager.Current.SaveGame.gameStats;

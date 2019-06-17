@@ -81,6 +81,7 @@
     <Compile Include="Objects\Effects\Transition.cs" />
     <Compile Include="Objects\Effects\SingularEffect.cs" />
     <Compile Include="Objects\Enemies\Boss.cs" />
+    <Compile Include="Objects\Enemies\BossGiantBat.cs" />
     <Compile Include="Objects\Enemies\Enemy.cs" />
     <Compile Include="Objects\Enemies\EnemyBat.cs" />
     <Compile Include="Objects\Enemies\EnemyGrassy.cs" />

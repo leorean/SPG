@@ -45,7 +45,11 @@ namespace Leore.Objects.Level
                         boss = new BossMirrorSelf(Room.X + Room.BoundingBox.Width - (player.X - Room.X), player.Y, Room, setCondition);
                         boss.ID = ID;
                         break;
-                }
+                    case 1:
+                        boss = new BossGiantBat(Room.X + 5 * Globals.TILE, Room.Y + 5 * Globals.TILE, Room, setCondition);
+                        boss.ID = ID;
+                        break;
+                }                
                 Destroy();
             }
         }

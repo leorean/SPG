@@ -12,6 +12,8 @@ namespace Leore.Objects.Projectiles
 {
     public class CrimsonProjectile : PlayerProjectile
     {
+        private int pierce = 3;
+
         public CrimsonProjectile(float x, float y, SpellLevel level) : base(x, y, level)
         {
             BoundingBox = new SPG.Util.RectF(-2, -2, 4, 4);
@@ -72,7 +74,9 @@ namespace Leore.Objects.Projectiles
 
         public override void HandleCollision(GameObject obj)
         {
-            if (obj is Enemies.EnemyVoidling.Shield)
+            pierce--;
+            
+            if (pierce == 0 || obj is Enemies.EnemyVoidling.Shield)
             {
                 new SingularEffect(X, Y, 3);
                 Destroy();

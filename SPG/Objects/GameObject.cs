@@ -50,7 +50,7 @@ namespace SPG.Objects
         /// <summary>
         /// If not overridden, the ID will be created based on the coordinates of the object.
         /// </summary>
-        public int ID { get; set; }
+        public long ID { get; set; }
 
         //private bool _enabled;
         //public bool Enabled

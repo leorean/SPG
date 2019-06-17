@@ -30,7 +30,7 @@ namespace Leore.Objects.Enemies
 
         public override void OnDeath()
         {
-            //base.OnDeath();
+            //base.OnDeath(); // never un-comment this!
 
             GameManager.Current.AddStoryFlag(setCondition);
 

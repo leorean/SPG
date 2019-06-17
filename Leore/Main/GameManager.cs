@@ -26,7 +26,7 @@ namespace Leore.Main
         private static GameManager instance;
         public static GameManager Current { get => instance; }
 
-        public List<int> NonRespawnableIDs { get; private set; }
+        public List<long> NonRespawnableIDs { get; private set; }
         
         public Transition Transition { get; set; }
 
@@ -203,7 +203,7 @@ namespace Leore.Main
             MainGame.Current.HUD.SetPlayer(Player);
             MainGame.Current.HUD.SetBoss(null);
 
-            NonRespawnableIDs = new List<int>();
+            NonRespawnableIDs = new List<long>();
 
             // fade-in
 

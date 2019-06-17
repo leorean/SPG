@@ -10,13 +10,13 @@ namespace Leore.Objects.Enemies
 {
     public class EnemyBat : Enemy, IMovable
     {
-        public enum State
+        public enum EnemyState
         {
             IDLE,
             FLY,
             FLY_FOLLOW
         }
-        private State state = State.FLY;
+        public EnemyState State { get; set; } = EnemyState.FLY;
 
         private double t = .5f * Math.PI;
         private int initDelay = 3;
@@ -48,7 +48,7 @@ namespace Leore.Objects.Enemies
 
                     if (GameManager.Current.Map.CollisionTile(X, Y - Globals.TILE))
                     {
-                        state = State.IDLE;
+                        State = EnemyState.IDLE;
                         Move(0, -2);
                     }
                 }
@@ -67,7 +67,7 @@ namespace Leore.Objects.Enemies
             if (X != player.X)
                 Direction = (Direction)(Math.Sign(player.X - X));
 
-            if (state == State.IDLE)
+            if (State == EnemyState.IDLE)
             {
                 //XVel = 0;
                 //YVel = 0;
@@ -75,11 +75,11 @@ namespace Leore.Objects.Enemies
 
                 if (MathUtil.Euclidean(Position, player.Position) < 3 * Globals.TILE || hit)
                 {
-                    state = State.FLY_FOLLOW;
+                    State = EnemyState.FLY_FOLLOW;
                 }
             }
 
-            if (state == State.FLY)
+            if (State == EnemyState.FLY)
             {
                 SetAnimation(1, 4, .2f, true);
 
@@ -93,10 +93,10 @@ namespace Leore.Objects.Enemies
                     YVel = 0;
 
                 if (hit)
-                    state = State.FLY_FOLLOW;
+                    State = EnemyState.FLY_FOLLOW;
             }
 
-            if (state == State.FLY_FOLLOW)
+            if (State == EnemyState.FLY_FOLLOW)
             {
                 XVel += Math.Sign(player.X - X) * .005f;
                 YVel += Math.Sign(player.Y - Y) * .005f;

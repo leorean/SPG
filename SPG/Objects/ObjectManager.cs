@@ -25,6 +25,8 @@ namespace SPG.Objects
         public static double GameDelay { get; set; }
         public static RectF Region { get; set; }
 
+        private static long counter;
+
         public static void Add(GameObject o)
         {
             if (!Objects.Contains(o))
@@ -44,8 +46,10 @@ namespace SPG.Objects
         {
             string strX = MathUtil.Div(o.X >= 0 ? o.X : o.X + 10000000, Globals.TILE).ToString();
             string strY = MathUtil.Div(o.Y >= 0 ? o.Y : o.Y + 10000000, Globals.TILE).ToString();
-            
-            o.ID = int.Parse(strX + strY);
+
+            o.ID = long.Parse(strX + strY + $"00{counter++}");
+
+            counter = counter % long.MaxValue;
         }
 
         public static bool Exists<T>() where T:GameObject
