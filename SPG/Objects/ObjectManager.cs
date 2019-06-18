@@ -25,7 +25,8 @@ namespace SPG.Objects
         public static double GameDelay { get; set; }
         public static RectF Region { get; set; }
 
-        private static long counter;
+        //private static long counter;
+        //private static List<long> uniqueIds = new List<long>();
 
         public static void Add(GameObject o)
         {
@@ -47,9 +48,20 @@ namespace SPG.Objects
             string strX = MathUtil.Div(o.X >= 0 ? o.X : o.X + 10000000, Globals.TILE).ToString();
             string strY = MathUtil.Div(o.Y >= 0 ? o.Y : o.Y + 10000000, Globals.TILE).ToString();
 
-            o.ID = long.Parse(strX + strY + $"00{counter++}");
+            long id = long.Parse(strX + strY + $"0000");
 
-            counter = counter % long.MaxValue;
+            o.ID = id;
+
+            //if (uniqueIds.Contains(id))
+            //{
+            //    counter = (counter + 1) % long.MaxValue;
+            //    CreateID(o);
+            //}
+            //else
+            //{
+            //    uniqueIds.Add(id);
+            //    o.ID = id;
+            //}
         }
 
         public static bool Exists<T>() where T:GameObject

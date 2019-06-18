@@ -121,6 +121,9 @@ namespace Leore.Objects.Enemies
                 YVel *= .6f;
             }
 
+            XVel = MathUtil.Limit(XVel, 1);
+            YVel = MathUtil.Limit(YVel, 1);
+
             this.MoveAdvanced(false);
 
             //Move(XVel, YVel);

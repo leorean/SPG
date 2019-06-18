@@ -26,6 +26,7 @@ namespace Leore.Objects.Enemies
         private int invincible;
         private int damageTaken;
         private int spawnMinionTimer;
+        private int totalMinionsSpawned;
 
         private List<EnemyBat> Minions = new List<EnemyBat>();
 
@@ -68,13 +69,14 @@ namespace Leore.Objects.Enemies
                     break;
                 case State.SPAWN_MINIONS:
 
+                    invincible = 1;
 
                     XVel *= .9f;
                     YVel *= .9f;
 
                     damageTaken = 0;
 
-                    SetAnimation(3, 3, 0, false);
+                    SetAnimation(3, 5, .2f, true);
 
                     if (GameManager.Current.Map.CollisionTile(this, 0, 0))
                     {
@@ -87,7 +89,16 @@ namespace Leore.Objects.Enemies
                     {
                         if (spawnMinionTimer % 30 == 0)
                         {
-                            Minions.Add(new EnemyBat(X, Y, Room) { XVel = -.5f + (float)RND.Next * 1, YVel = -.5f + (float)RND.Next * 1, State = EnemyBat.EnemyState.FLY_FOLLOW, Direction = Direction });
+                            var minion = new EnemyBat(X, Y, Room)
+                            {
+                                XVel = -.5f + (float)RND.Next * 1, YVel = -.5f + (float)RND.Next * 1,
+                                State = EnemyBat.EnemyState.FLY_FOLLOW,
+                                Direction = Direction
+                                
+                            };
+                            minion.ID = minion.ID + totalMinionsSpawned + 1;
+                            Minions.Add(minion);
+                            totalMinionsSpawned++;
                         }
                     } else
                     {
