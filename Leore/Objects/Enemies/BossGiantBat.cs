@@ -8,6 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using SPG.Map;
 using Leore.Objects.Effects.Emitters;
+using Leore.Objects.Items;
+using System.Diagnostics;
+using Leore.Objects.Effects;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Leore.Objects.Enemies
 {
@@ -16,7 +20,8 @@ namespace Leore.Objects.Enemies
         private enum State
         {
             FOLLOW_PLAYER,
-            SPAWN_MINIONS
+            SPAWN_MINIONS,
+            DIE
         }
         
         private State state;
@@ -26,18 +31,25 @@ namespace Leore.Objects.Enemies
         private int invincible;
         private int damageTaken;
         private int spawnMinionTimer;
+        private int maxMinionsSpawned;
+        private int minionsSpawned;
         private int totalMinionsSpawned;
+                
+        private int deathTimer = 2 * 60;
+        private float deathAlpha = 0;
+
+        private bool preventDeath;
 
         private List<EnemyBat> Minions = new List<EnemyBat>();
 
         public BossGiantBat(float x, float y, Room room, string setCondition) : base(x, y, room, setCondition)
         {
-            HP = 200;
-
+            HP = 60;
+            
             AnimationTexture = AssetManager.BossGiantBat;
-            DrawOffset = new Vector2(32);
+            DrawOffset = new Vector2(40);
             BoundingBox = new SPG.Util.RectF(-16, -16, 32, 32);
-            DebugEnabled = true;
+            //DebugEnabled = true;
 
             Direction = Direction.RIGHT;
 
@@ -59,15 +71,21 @@ namespace Leore.Objects.Enemies
                     XVel += Math.Sign(player.X - X) * .01f;
                     YVel += Math.Sign(player.Y - Y) * .01f;
 
-                    if (damageTaken > 20)
+                    if (damageTaken > 15)
                     {
-                        spawnMinionTimer = 150;
+                        spawnMinionTimer = 0;
+
+                        maxMinionsSpawned = (int)((1 - (HP / (float)MaxHP)) * 10);
+                        Debug.WriteLine(maxMinionsSpawned);
+
                         state = State.SPAWN_MINIONS;
                     }
 
-                    SetAnimation(0, 2, .2f, true);
+                    SetAnimation(0, 3, .2f, true);
                     break;
                 case State.SPAWN_MINIONS:
+
+                    Direction = (Direction)Math.Sign(player.X - X);
 
                     invincible = 1;
 
@@ -76,43 +94,76 @@ namespace Leore.Objects.Enemies
 
                     damageTaken = 0;
 
-                    SetAnimation(3, 5, .2f, true);
+                    SetAnimation(4, 7, .15f, true);
+
+                    MoveTowards(player.Position + new Vector2((int)Direction * -3 * Globals.TILE, -2 * Globals.TILE), 100);
 
                     if (GameManager.Current.Map.CollisionTile(this, 0, 0))
                     {
-                        Move(0, -1);
-                        return;
+                        //Move(0, -1);
+                        //MoveTowards(player.Position + new Vector2((int)Direction * 3 * Globals.TILE, -2 * Globals.TILE), 100);
                     }
-
-                    spawnMinionTimer = Math.Max(spawnMinionTimer - 1, 0);
-                    if (spawnMinionTimer > 0)
+                    else
                     {
-                        if (spawnMinionTimer % 30 == 0)
+
+                        spawnMinionTimer = Math.Max(spawnMinionTimer - 1, 0);
+                        //if (spawnMinionTimer > 0)
                         {
-                            var minion = new EnemyBat(X, Y, Room)
+                            if (spawnMinionTimer % 30 == 0 && minionsSpawned < maxMinionsSpawned)
                             {
-                                XVel = -.5f + (float)RND.Next * 1, YVel = -.5f + (float)RND.Next * 1,
-                                State = EnemyBat.EnemyState.FLY_FOLLOW,
-                                Direction = Direction
-                                
-                            };
-                            minion.ID = minion.ID + totalMinionsSpawned + 1;
-                            Minions.Add(minion);
-                            totalMinionsSpawned++;
+                                spawnMinionTimer = 30;
+                                var minion = new EnemyBat(X, Y, Room)
+                                {
+                                    XVel = -.5f + (float)RND.Next * 1,
+                                    YVel = -.5f + (float)RND.Next * 1,
+                                    State = EnemyBat.EnemyState.FLY_FOLLOW,
+                                    Direction = Direction
+
+                                };
+                                SpellEXP.Spawn(X, Y, 5);
+                                minion.EXP = 18;
+                                minion.ID = minion.ID + totalMinionsSpawned + 1;
+                                minion.Depth = Depth + .0001f;
+                                Minions.Add(minion);
+                                minionsSpawned++;
+                                totalMinionsSpawned++;
+                            }
                         }
-                    } else
+                        //else
+                        {
+                            if (Minions.Count == 0)
+                            {
+                                minionsSpawned = 0;
+                                state = State.FOLLOW_PLAYER;
+                            }
+                        }
+
+                        foreach (var minion in Minions.ToList())
+                        {
+                            if (minion.HP == 0)
+                                Minions.Remove(minion);
+
+                        }
+                    }
+                    break;
+                case State.DIE:
+
+                    preventDeath = false;
+
+                    XVel = 0;
+                    YVel = 0;
+                    Damage = 0;
+                    deathTimer = Math.Max(deathTimer - 1, 0);
+                    if (deathTimer % 5 == 0)
+                        new SingularEffect(Left + RND.Int((int)BoundingBox.Width), Top + RND.Int((int)BoundingBox.Height), 8);
+
+                    if (deathTimer == 0)
                     {
-                        if (Minions.Count == 0)
-                            state = State.FOLLOW_PLAYER;
+                        new FlashEmitter(X, Y, longFlash: true);
+                        base.OnDeath();
+                        base.Destroy();
                     }
 
-                    foreach(var minion in Minions.ToList())
-                    {
-                        if (minion.HP == 0)
-                            Minions.Remove(minion);
-
-                    }
-                    
                     break;
             }
 
@@ -126,6 +177,21 @@ namespace Leore.Objects.Enemies
 
             Scale = new Vector2((int)Direction, 1);
 
+        }
+
+        public override void Draw(SpriteBatch sb, GameTime gameTime)
+        {
+            if (state != State.DIE)
+            {
+                base.Draw(sb, gameTime);
+            }
+            else
+            {
+                deathAlpha = Math.Min(deathAlpha + .01f, 1);
+
+                sb.Draw(AssetManager.BossGiantBat[8], Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
+                sb.Draw(AssetManager.BossGiantBat[9], Position, null, new Color(Color, deathAlpha), Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0001f);
+            }
         }
 
         public override void Hit(int hitPoints, float degAngle)
@@ -142,13 +208,24 @@ namespace Leore.Objects.Enemies
             YVel *= .4f;            
         }
 
+        public override void Destroy(bool callGC = false)
+        {
+            if (preventDeath)
+                return;
+            base.Destroy();
+        }
 
         public override void OnDeath()
         {
-            base.OnDeath();
+            //base.OnDeath();
 
-            new FlashEmitter(X, Y);
-            foreach(var minion in Minions.ToList())
+            preventDeath = true;
+
+            if (state == State.DIE)
+                return;
+            state = State.DIE;
+            
+            foreach (var minion in Minions.ToList())
             {
                 minion.OnDeath();                
             }

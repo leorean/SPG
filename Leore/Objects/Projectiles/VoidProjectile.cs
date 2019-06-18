@@ -130,6 +130,9 @@ namespace Leore.Objects.Projectiles
                     var enemies = this.CollisionRectangles<Enemy>(Left - t, Top - t, Right + t, Bottom + t);
                     foreach (var enemy in enemies)
                     {
+                        if (enemy is Boss)
+                            continue;
+
                         var angle = MathUtil.VectorToAngle(enemy.Center - Center);
 
                         var lx = (float)MathUtil.LengthDirX(angle);

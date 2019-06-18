@@ -146,10 +146,10 @@ namespace Leore.Objects.Enemies
 
         public override void OnDeath()
         {
-            base.OnDeath();
-
             new FlashEmitter(X, Y, 0);
             new MessageBox("We.. will.. meet.. again...", textSpeed: TextSpeed.SLOW);
+
+            base.OnDeath();            
         }
         
         public override void Hit(int hitPoints, float degAngle)

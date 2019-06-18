@@ -2,17 +2,20 @@
 using Leore.Main;
 using SPG.Objects;
 using System;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Leore.Objects.Effects.Emitters
 {
     public class FlashParticle : Particle
     {
+        public float decay = .05f;
+
         public FlashParticle(ParticleEmitter emitter) : base(emitter)
         {
             Depth = Globals.LAYER_UI + .001f;
             Alpha = 1.5f;
 
-            LifeTime = 90;
+            LifeTime = 300;
 
             Texture = emitter.Texture;
         }
@@ -21,12 +24,16 @@ namespace Leore.Objects.Effects.Emitters
         {
             base.Update(gameTime);
 
-            Alpha = Math.Max(Alpha - .05f, 0);
+            Alpha = Math.Max(Alpha - decay, 0);
 
             if (Alpha == 0)
-                LifeTime = 0;
-            
+                LifeTime = 0;            
+        }
+
+        public override void Draw(SpriteBatch sb, GameTime gameTime)
+        {
             Position = new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY);
+            base.Draw(sb, gameTime);
         }
     }
 
@@ -34,8 +41,12 @@ namespace Leore.Objects.Effects.Emitters
     {
         private int delay;
 
-        public FlashEmitter(float x, float y, int delay = 0) : base(x, y)
+        private bool isFlashLong;
+
+        public FlashEmitter(float x, float y, int delay = 0, bool longFlash = false) : base(x, y)
         {
+            this.isFlashLong = longFlash;
+
             SpawnRate = 1;
             Texture = AssetManager.Flash;
             this.delay = delay;
@@ -60,6 +71,7 @@ namespace Leore.Objects.Effects.Emitters
         public override void CreateParticle()
         {
             var flash = new FlashParticle(this);
+            flash.decay = isFlashLong ? .007f : .05f;
         }
     }
 }

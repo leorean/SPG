@@ -27,11 +27,13 @@ namespace Leore.Objects.Enemies
                 hp = value;
             }
         }
-        public int EXP { get; protected set; } = 3;
+        public int EXP { get; set; } = 3;
 
         public Direction Direction { get; set; }
 
         public Collider MovingPlatform { get; set; }
+        
+        private bool onDeathCalled;
 
         // hit variables
         protected bool hit = false;
@@ -102,8 +104,12 @@ namespace Leore.Objects.Enemies
             }
             else // death
             {
-                OnDeath();
-                Destroy();
+                if (!onDeathCalled)
+                {
+                    OnDeath();
+                    Destroy();
+                }
+                onDeathCalled = true;
             }
         }
 
@@ -114,7 +120,7 @@ namespace Leore.Objects.Enemies
 
             new SingularEffect(X, Y);
 
-            GameManager.Current.NonRespawnableIDs.Add(ID);
+            GameManager.Current.NonRespawnableIDs.Add(ID);            
         }
 
         public override void EndUpdate(GameTime gameTime)

@@ -105,7 +105,7 @@ namespace Leore.Main
             EnemyGrassy = content.LoadTextureSet("enemyGrassy");
             EnemyBat = content.LoadTextureSet("enemyBat");
             EnemyVoidling = content.LoadTextureSet("enemyVoidling");
-            BossGiantBat = content.LoadTextureSet("bossGiantBat", 64, 64);
+            BossGiantBat = content.LoadTextureSet("bossGiantBat", 80, 80);
 
             Orbs = content.LoadTextureSet("orb", 16, 16);
 

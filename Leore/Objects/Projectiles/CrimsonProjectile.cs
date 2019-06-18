@@ -12,7 +12,7 @@ namespace Leore.Objects.Projectiles
 {
     public class CrimsonProjectile : PlayerProjectile
     {
-        private int pierce = 3;
+        private int pierce = 6;
 
         public CrimsonProjectile(float x, float y, SpellLevel level) : base(x, y, level)
         {

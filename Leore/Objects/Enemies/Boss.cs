@@ -36,15 +36,6 @@ namespace Leore.Objects.Enemies
 
             GameManager.Current.Player.Stats.Bosses.Add(ID);
             MainGame.Current.HUD.SetBoss(null);
-        }
-
-        public override void Draw(SpriteBatch sb, GameTime gameTime)
-        {
-            base.Draw(sb, gameTime);
-            
-            //var pos = new Vector2(Room.X + Room.BoundingBox.Width * .5f, Room.Y + Room.BoundingBox.Height - 12);
-            //sb.DrawBar(pos, 7 * Globals.TILE, (float)HP / (float)MaxHP, GameResources.HpColors[1], Color.Black, Globals.LAYER_UI, 6, false, Color.Black);
-            //sb.DrawBar(pos + new Vector2(0, 2), 7 * Globals.TILE, (float)HP / (float)MaxHP, Colors.FromHex("a00e12"), Color.Black, Globals.LAYER_UI - .0001f, 6, false, Color.Black);
-        }
+        }        
     }
 }
