@@ -123,11 +123,22 @@ namespace Leore.Objects.Enemies
 
             XVel = MathUtil.Limit(XVel, 1);
             YVel = MathUtil.Limit(YVel, 1);
+            {
+                var colX = GameManager.Current.Map.CollisionTile(this, XVel, 0) || GameManager.Current.Map.CollisionTile(Position.X, Position.Y, GameMap.WATER_INDEX);
+                if (!colX)
+                    Move(XVel, 0);
+                else
+                    XVel = 0;
 
-            this.MoveAdvanced(false);
+                var colY = GameManager.Current.Map.CollisionTile(this, 0, YVel) || GameManager.Current.Map.CollisionTile(Position.X, Position.Y, GameMap.WATER_INDEX);
+                if (!colY)
+                    Move(0, YVel);
+                else
+                    YVel = 0;
 
-            //Move(XVel, YVel);
-
+                //this.MoveAdvanced(false);
+                //Move(XVel, YVel);
+            }
             Scale = new Vector2(Math.Sign((int)Direction), 1);
         }
     }

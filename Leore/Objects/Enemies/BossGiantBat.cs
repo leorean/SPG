@@ -44,7 +44,7 @@ namespace Leore.Objects.Enemies
 
         public BossGiantBat(float x, float y, Room room, string setCondition) : base(x, y, room, setCondition)
         {
-            HP = 60;
+            HP = 120;
             
             AnimationTexture = AssetManager.BossGiantBat;
             DrawOffset = new Vector2(40);
@@ -75,7 +75,8 @@ namespace Leore.Objects.Enemies
                     {
                         spawnMinionTimer = 0;
 
-                        maxMinionsSpawned = (int)((1 - (HP / (float)MaxHP)) * 10);
+                        maxMinionsSpawned = (int)((1 - (HP / (float)MaxHP)) * 15);
+                        maxMinionsSpawned = (int)MathUtil.Clamp(maxMinionsSpawned, 3, 15);
                         Debug.WriteLine(maxMinionsSpawned);
 
                         state = State.SPAWN_MINIONS;
