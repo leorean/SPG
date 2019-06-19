@@ -853,6 +853,8 @@ namespace Leore.Main
                             XVel = MathUtil.Limit(XVel + flowPower, 2);
                             break;
                         case Direction.UP:
+                            if (onGround)
+                                YVel -= 1;
                             YVel = MathUtil.Limit(YVel - flowPower, 2);
                             break;
                         case Direction.DOWN:

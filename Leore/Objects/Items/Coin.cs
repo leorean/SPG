@@ -92,13 +92,13 @@ namespace Leore.Objects.Items
             isLoose = true;
         }
 
-        public static void Spawn(float x, float y, Room room, float value, bool precise = false)
+        public static void Spawn(float x, float y, Room room, float value, bool preciseAmount = false)
         {
             if (value < CoinValue.V1)
                 return;
 
             float stack;
-            if (!precise)
+            if (!preciseAmount)
                 stack = value - CoinValue.V1;
             else
                 stack = value;
@@ -126,7 +126,7 @@ namespace Leore.Objects.Items
                 c.Depth = depth;
             }
 
-            if (!precise)
+            if (!preciseAmount)
             {
                 c = new Coin(x, y, room, CoinValue.C1, true);
                 depth += .00001f;

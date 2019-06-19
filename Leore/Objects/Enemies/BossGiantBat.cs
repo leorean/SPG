@@ -28,7 +28,6 @@ namespace Leore.Objects.Enemies
 
         private Player player => GameManager.Current.Player;
         
-        private int invincible;
         private int damageTaken;
         private int spawnMinionTimer;
         private int maxMinionsSpawned;
@@ -37,6 +36,8 @@ namespace Leore.Objects.Enemies
                 
         private int deathTimer = 2 * 60;
         private float deathAlpha = 0;
+
+        private float alpha = 1;
 
         private bool preventDeath;
 
@@ -49,7 +50,8 @@ namespace Leore.Objects.Enemies
             AnimationTexture = AssetManager.BossGiantBat;
             DrawOffset = new Vector2(40);
             BoundingBox = new SPG.Util.RectF(-16, -16, 32, 32);
-            //DebugEnabled = true;
+            
+            knockback = .3f;
 
             Direction = Direction.RIGHT;
 
@@ -59,12 +61,15 @@ namespace Leore.Objects.Enemies
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            invincible = Math.Max(invincible - 1, 0);
-            
+                        
             switch (state)
             {
                 case State.FOLLOW_PLAYER:
+
+                    Damage = 1;
+                    alpha = Math.Min(alpha + .05f, 1f);
+
+                    IgnoreProjectiles = false;
 
                     Direction = (Direction)Math.Sign(player.X - X);
 
@@ -75,7 +80,7 @@ namespace Leore.Objects.Enemies
                     {
                         spawnMinionTimer = 0;
 
-                        maxMinionsSpawned = (int)((1 - (HP / (float)MaxHP)) * 15);
+                        maxMinionsSpawned = (int)((.5f - (HP / (float)MaxHP)) * 15);
                         maxMinionsSpawned = (int)MathUtil.Clamp(maxMinionsSpawned, 3, 15);
                         Debug.WriteLine(maxMinionsSpawned);
 
@@ -86,9 +91,12 @@ namespace Leore.Objects.Enemies
                     break;
                 case State.SPAWN_MINIONS:
 
+                    Damage = 0;
+                    alpha = Math.Max(alpha - .03f, .5f);
+
                     Direction = (Direction)Math.Sign(player.X - X);
 
-                    invincible = 1;
+                    IgnoreProjectiles = true;
 
                     XVel *= .9f;
                     YVel *= .9f;
@@ -106,7 +114,6 @@ namespace Leore.Objects.Enemies
                     }
                     else
                     {
-
                         spawnMinionTimer = Math.Max(spawnMinionTimer - 1, 0);
                         //if (spawnMinionTimer > 0)
                         {
@@ -160,6 +167,7 @@ namespace Leore.Objects.Enemies
 
                     if (deathTimer == 0)
                     {
+                        Coin.Spawn(X, Y, Room, 1000);
                         new FlashEmitter(X, Y, longFlash: true);
                         base.OnDeath();
                         base.Destroy();
@@ -173,11 +181,12 @@ namespace Leore.Objects.Enemies
             YVel = MathUtil.Limit(YVel, 1);
 
             Move(XVel, YVel);
-            var thresh = 32;
-            Position = new Vector2(MathUtil.Clamp(X, Room.X + thresh, Room.X + Room.BoundingBox.Width - thresh), MathUtil.Clamp(Y, Room.Y + thresh, Room.Y + Room.BoundingBox.Height - thresh));
+            var tx = 48;
+            var ty = 32;
+            Position = new Vector2(MathUtil.Clamp(X, Room.X + tx, Room.X + Room.BoundingBox.Width - tx), MathUtil.Clamp(Y, Room.Y + ty, Room.Y + Room.BoundingBox.Height - ty));
 
             Scale = new Vector2((int)Direction, 1);
-
+            Color = new Color(Color, alpha);
         }
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)
@@ -197,16 +206,9 @@ namespace Leore.Objects.Enemies
 
         public override void Hit(int hitPoints, float degAngle)
         {
-            if (invincible > 0)
-                return;
-
-            invincible = 0;
             damageTaken += hitPoints;
             
-            base.Hit(hitPoints, degAngle);
-
-            XVel *= .4f;
-            YVel *= .4f;            
+            base.Hit(hitPoints, degAngle);            
         }
 
         public override void Destroy(bool callGC = false)

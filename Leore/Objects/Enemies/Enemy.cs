@@ -41,6 +41,8 @@ namespace Leore.Objects.Enemies
 
         Font hitFont;
 
+        public bool IgnoreProjectiles { get; set; }
+
         public Enemy(float x, float y, Room room) : base(x, y, room)
         {
             HP = 1;
@@ -91,16 +93,19 @@ namespace Leore.Objects.Enemies
             
             if (HP > 0)
             {
-                var projectile = ObjectManager.CollisionBoundsFirstOrDefault<PlayerProjectile>(this, X, Y);
-
-                if (projectile != null)
+                if (!IgnoreProjectiles)
                 {
-                    var vec = Position - (projectile.Position + new Vector2(0, 0));
-                    var angle = vec.VectorToAngle();
-                    Hit(projectile.Damage, (float)angle);
-                    
-                    projectile.HandleCollision(this);
-                }                
+                    var projectile = ObjectManager.CollisionBoundsFirstOrDefault<PlayerProjectile>(this, X, Y);
+
+                    if (projectile != null)
+                    {
+                        var vec = Position - (projectile.Position + new Vector2(0, 0));
+                        var angle = vec.VectorToAngle();
+                        Hit(projectile.Damage, (float)angle);
+
+                        projectile.HandleCollision(this);
+                    }
+                }
             }
             else // death
             {
