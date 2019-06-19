@@ -11,7 +11,7 @@ namespace Leore.Objects.Level
 
         private bool activateOnce;
 
-        public GroundSwitch(float x, float y, bool activateOnce, Room room, string name = null) : base(x, y, room, name)
+        public GroundSwitch(float x, float y, bool activateOnce, Room room) : base(x, y, room)
         {
             BoundingBox = new SPG.Util.RectF(2, 13, 12, 3);
 
@@ -32,7 +32,7 @@ namespace Leore.Objects.Level
 
             var frame = 1 * Convert.ToInt32(Active || Room.SwitchState) + 2 * Convert.ToInt32(activateOnce);
 
-            Texture = AssetManager.GroundSwitch[frame];
+            Texture = AssetManager.Switch[frame];
             
         }
     }

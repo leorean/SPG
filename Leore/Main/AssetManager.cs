@@ -45,7 +45,7 @@ namespace Leore.Main
         public static TextureSet Transition { get; private set; }
         public static Texture2D PlayerGhost { get; private set; }
         public static TextureSet MovingPlatform { get; private set; }
-        public static TextureSet GroundSwitch { get; private set; }
+        public static TextureSet Switch { get; private set; }        
         public static TextureSet ToolTip { get; private set; }
         public static Texture2D WaterMill { get; private set; }
         public static Texture2D WaterMillPlatform { get; private set; }
@@ -93,7 +93,7 @@ namespace Leore.Main
             Transition = content.LoadTextureSet("transition", 256, 144);
             PlayerGhost = content.Load<Texture2D>("playerGhost");
             MovingPlatform = content.LoadTextureSet("movingPlatform", 32, 32);
-            GroundSwitch = content.LoadTextureSet("groundSwitch");
+            Switch = content.LoadTextureSet("switch");
             ToolTip = content.LoadTextureSet("toolTip", 32, 32);
 
             MirrorBossBG = content.Load<Texture2D>("mirrorBossBg");

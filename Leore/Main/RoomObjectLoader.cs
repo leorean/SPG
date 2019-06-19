@@ -247,7 +247,11 @@ namespace Leore.Main
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
                             break;
-
+                        case 833:
+                            new TimeSwitch(i * Globals.TILE, j * Globals.TILE, 5 * 60, room);
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            break;
                         // flow objects:
                         case 896:
                         case 897:
