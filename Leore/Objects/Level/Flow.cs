@@ -15,6 +15,7 @@ namespace Leore.Objects.Level
 
         public bool Activatable { get; set; }
         public bool Active { get; private set; }
+        public bool ActiveByDefault { get; set; }
 
         public Flow(float x, float y, Room room, Direction direction) : base(x, y, room)
         {
@@ -29,7 +30,9 @@ namespace Leore.Objects.Level
 
             Active = true;
             if (Activatable)
-                Active = Room.SwitchState;
+            {
+                Active = ActiveByDefault ? !Room.SwitchState : Room.SwitchState;
+            }
 
             emitter.Active = Active;
         }

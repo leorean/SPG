@@ -300,6 +300,22 @@ namespace Leore.Main
                             if (t.ID == 903)
                                 new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.RIGHT).Activatable = true;
                             break;
+                        // flow objects (activatable, default: on)
+                        case 904:
+                        case 905:
+                        case 906:
+                        case 907:
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            if (t.ID == 904)
+                                new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.UP) { Activatable = true, ActiveByDefault = true };
+                            if (t.ID == 905)
+                                new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.DOWN) { Activatable = true, ActiveByDefault = true };
+                            if (t.ID == 906)
+                                new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.LEFT) { Activatable = true, ActiveByDefault = true };
+                            if (t.ID == 907)
+                                new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.RIGHT) { Activatable = true, ActiveByDefault = true };
+                            break;
                         default:
                             var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room);
                             if (t.ID == 645) t.TileOptions.Visible = false;  // <- invisible blocks
