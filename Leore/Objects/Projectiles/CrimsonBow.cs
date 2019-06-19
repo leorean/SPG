@@ -65,7 +65,7 @@ namespace Leore.Objects.Projectiles
             {
                 //if (power > 5)
                 {
-                    var degAngle = MathUtil.VectorToAngle(new Vector2(X - orb.Parent.X, Y - orb.Parent.Y));
+                    var degAngle = MathUtil.VectorToAngle(new Vector2(orb.TargetPosition.X  - orb.Parent.X, orb.TargetPosition.Y - orb.Parent.Y));
 
                     //SpawnProjectile(degAngle);
 
