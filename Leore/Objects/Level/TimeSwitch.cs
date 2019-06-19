@@ -9,19 +9,30 @@ using SPG.Objects;
 using Leore.Objects.Projectiles;
 using Microsoft.Xna.Framework.Graphics;
 using Leore.Main;
+using Leore.Objects.Effects;
+using Leore.Objects.Effects.Emitters;
 
 namespace Leore.Objects.Level
 {
     public class TimeSwitch : GroundSwitch
     {
-        private int timer;
-        private int maxTimer;
-        private float yoff = 16;
+        private float timer;
+        private float maxTimer;
+        private float dist;
+        private float maxDist = 4;
+        private float z;
+
+        private PlayerProjectile lastProj;
+
+        private bool prepared = true;
 
         public TimeSwitch(float x, float y, int timer, Room room) : base(x, y, false, room)
         {
             this.timer = timer;
             maxTimer = timer;
+
+            BoundingBox = new RectF(0, 0, 16, 16);
+            DrawOffset = Vector2.Zero;            
 
             Depth = Globals.LAYER_BG + .0001f;
         }
@@ -30,39 +41,67 @@ namespace Leore.Objects.Level
         {
             //base.Update(gameTime);
 
-            if (timer == 0) {
-
+            if (prepared)
+            {
                 var proj = this.CollisionBoundsFirstOrDefault<PlayerProjectile>(X, Y);
-                if (proj != null)
+                if (proj != null && lastProj != proj)
                 {
+                    new SingularEffect(Center.X, Center.Y + z, 10);
+
                     proj.HandleCollision(this);
+                    lastProj = proj;
                     timer = maxTimer;
+                    Active = true;
+                    prepared = false;
                 }
             }
 
             if (!Active)
             {
-                yoff = Math.Min(yoff + 1f, 16);
-                if (yoff == 16 && timer == maxTimer)
-                {
-                    Active = true;
-                }
+                dist = Math.Max(dist - 1f, 0);                
             }
             else
             {
-                timer = Math.Max(timer - 1, 0);
-                yoff = timer / 16;
-            }
+                if (!prepared)
+                {
+                    dist = Math.Min(dist + .3f, maxDist);
+                    if (dist == maxDist)
+                        prepared = true;
+                }
+                else
+                {
+                    timer = Math.Max(timer - 1, 0);
+                    dist = (timer / maxTimer) * maxDist;
 
+                    if (timer == 0)
+                    {
+                        new StarEmitter(Center.X, Center.Y, 3);
+                        Active = false;
+                    }
+                }
+            }
+            z = -dist * 1.5f;
         }
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
-            //base.Draw(sb, gameTime);
+            base.Draw(sb, gameTime);
             sb.Draw(AssetManager.Switch[4], Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
-            //sb.Draw(AssetManager.Switch[5], Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0001f);
-            var partRect = new Rectangle(0, (int)(16 - yoff), 16, (int)yoff);
-            sb.Draw(AssetManager.Switch[5], Position, partRect, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .0001f);
+            sb.Draw(AssetManager.Switch[5], Position + new Vector2(0, z), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0001f);
+
+            // lt, rt, lb, rb
+
+            sb.Draw(AssetManager.Switch[6], Position + new Vector2(-8, -8) + new Vector2(-dist, -dist) + new Vector2(0, z), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0002f);
+            sb.Draw(AssetManager.Switch[7], Position + new Vector2(+8, -8) + new Vector2(+dist, -dist) + new Vector2(0, z), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0002f);
+            sb.Draw(AssetManager.Switch[8], Position + new Vector2(-8, +8) + new Vector2(-dist, +dist) + new Vector2(0, z), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0002f);
+            sb.Draw(AssetManager.Switch[9], Position + new Vector2(+8, +8) + new Vector2(+dist, +dist) + new Vector2(0, z), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0002f);
+            
+            sb.Draw(AssetManager.Switch[10], Position + new Vector2(-8, -8) + new Vector2(-dist * .5f, -dist * .5f) + new Vector2(0, z), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0002f);
+            sb.Draw(AssetManager.Switch[11], Position + new Vector2(+8, -8) + new Vector2(+dist * .5f, -dist * .5f) + new Vector2(0, z), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0002f);
+            sb.Draw(AssetManager.Switch[12], Position + new Vector2(-8, +8) + new Vector2(-dist * .5f, +dist * .5f) + new Vector2(0, z), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0002f);
+            sb.Draw(AssetManager.Switch[13], Position + new Vector2(+8, +8) + new Vector2(+dist * .5f, +dist * .5f) + new Vector2(0, z), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0002f);
+
+            sb.Draw(AssetManager.Switch[14], Position + new Vector2(0, z), null, new Color(Color, dist/maxDist * .5f), Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0002f);
         }
     }
 }

@@ -247,8 +247,23 @@ namespace Leore.Main
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
                             break;
-                        case 833:
+                        case 833: // timed switch (1s)
+                            new TimeSwitch(i * Globals.TILE, j * Globals.TILE, 1 * 60, room);
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            break;
+                        case 834: // timed switch (3s)
+                            new TimeSwitch(i * Globals.TILE, j * Globals.TILE, 3 * 60, room);
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            break;
+                        case 835: // timed switch (5s)
                             new TimeSwitch(i * Globals.TILE, j * Globals.TILE, 5 * 60, room);
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            break;
+                        case 836: // timed switch (10s)
+                            new TimeSwitch(i * Globals.TILE, j * Globals.TILE, 10 * 60, room);
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
                             break;
