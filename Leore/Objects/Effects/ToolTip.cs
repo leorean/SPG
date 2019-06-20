@@ -33,11 +33,11 @@ namespace Leore.Objects.Effects
             if (ObjectManager.Count<ToolTip>() > 1)
                 Destroy();
         }
-
+        
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
+            
             Position = player.Position + new Vector2(0, -16);
 
             Visible = true;

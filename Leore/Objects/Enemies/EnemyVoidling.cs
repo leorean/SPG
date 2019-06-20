@@ -268,8 +268,10 @@ namespace Leore.Objects.Enemies
                     break;
             }
 
-            SetAnimation(cols * row + type * 4, cols * row + fAmount - 1 + type * 4, fSpd, loopAnim);            
-            var xScale = Math.Sign((int)Direction);
+            SetAnimation(cols * row + type * 4, cols * row + fAmount - 1 + type * 4, fSpd, loopAnim);
+
+            var xScale = XVel == 0 ? Math.Sign((int)Direction) : Math.Sign(XVel);
+            
             Scale = new Vector2(xScale, 1);
         }
 

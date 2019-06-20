@@ -168,7 +168,7 @@ namespace Leore.Main
                         var ty = Math.Min(Math.Max(target.Y + offsetY, CurrentRoom.Y + .5f * ViewHeight), CurrentRoom.Y + CurrentRoom.BoundingBox.Height - .5f * ViewHeight);
 
                         Position = new Vector2(tx, ty);
-
+                        
                         lastRoom = CurrentRoom;
                         lastBG = CurrentBG;
                         if (CurrentRoom.Background != -1)

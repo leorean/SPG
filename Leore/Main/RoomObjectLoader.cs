@@ -48,12 +48,12 @@ namespace Leore.Main
 
                     if (t == null || t.ID == -1)
                         continue;
-                    
+
                     switch (t.ID)
                     {
                         case 0: // platforms
                         case 12:
-                        case 34:                        
+                        case 34:
                         case 535:
                         case 612:
                         case 646:
@@ -69,7 +69,7 @@ namespace Leore.Main
                                 Texture = GameManager.Current.Map.TileSet[t.ID]
                             };
                             t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;                            
+                            t.TileOptions.Solid = false;
                             break;
                         case 576: // save-statues
                             var saveSatue = new SaveStatue(i * Globals.TILE, j * Globals.TILE, room);
@@ -194,32 +194,7 @@ namespace Leore.Main
                             t.TileOptions.Solid = false;
                             new OrbBlock(i * Globals.TILE, j * Globals.TILE, room);
                             break;
-                        case 723:
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
-                            var abs = new AirBubbleSpawner(i * Globals.TILE, j * Globals.TILE, room);
-                            abs.Texture = GameManager.Current.Map.TileSet[t.ID];
-                            break;
-                        case 768: // enemy Bat
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
-                            new EnemyBat(i * Globals.TILE + 8, j * Globals.TILE + 8, room);
-                            break;
-                        case 769: // enemy Grassy
-                            new EnemyGrassy(i * Globals.TILE + 8, j * Globals.TILE + 8, room);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
-                            break;
-                        case 770: // enemy Voidling (without shield)
-                            new EnemyVoidling(i * Globals.TILE + 8, j * Globals.TILE + 8, room, 0);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
-                            break;
-                        case 771: // enemy Voidling (with shield)
-                            new EnemyVoidling(i * Globals.TILE + 8, j * Globals.TILE + 8, room, 1);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
-                            break;
+
                         case 719: // switch block (default: on)
                             new SwitchBlock(i * Globals.TILE, j * Globals.TILE, room, 1);
                             t.TileOptions.Visible = false;
@@ -239,6 +214,48 @@ namespace Leore.Main
                         case 722: // bushes
                             var bush = new Bush(i * Globals.TILE, j * Globals.TILE, room);
                             bush.Texture = GameManager.Current.Map.TileSet[t.ID];
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            break;
+                        case 723:
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            new AirBubbleSpawner(i * Globals.TILE, j * Globals.TILE, room) {
+                                Texture = GameManager.Current.Map.TileSet[t.ID]
+                            };
+                            break;
+                        case 724: // door disabler (switch)
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            new DoorDisabler(i * Globals.TILE, j * Globals.TILE, room, DoorDisabler.TriggerType.Switch) { Texture = GameManager.Current.Map.TileSet[t.ID] };
+                            break;
+                        case 725: // door disabler (enemy)
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            new DoorDisabler(i * Globals.TILE, j * Globals.TILE, room, DoorDisabler.TriggerType.Enemy) { Texture = GameManager.Current.Map.TileSet[t.ID] };
+                            break;
+                        case 726: // door disabler (key)
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            new DoorDisabler(i * Globals.TILE, j * Globals.TILE, room, DoorDisabler.TriggerType.Key) { Texture = GameManager.Current.Map.TileSet[t.ID] };
+                            break;
+                        case 768: // enemy Bat
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            new EnemyBat(i * Globals.TILE + 8, j * Globals.TILE + 8, room);
+                            break;
+                        case 769: // enemy Grassy
+                            new EnemyGrassy(i * Globals.TILE + 8, j * Globals.TILE + 8, room);
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            break;
+                        case 770: // enemy Voidling (without shield)
+                            new EnemyVoidling(i * Globals.TILE + 8, j * Globals.TILE + 8, room, 0);
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            break;
+                        case 771: // enemy Voidling (with shield)
+                            new EnemyVoidling(i * Globals.TILE + 8, j * Globals.TILE + 8, room, 1);
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
                             break;

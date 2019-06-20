@@ -76,6 +76,18 @@ namespace Leore.Objects.Projectiles
                     headBack = true;
                 }
 
+                if (player.Stats.HeldKeys > 0)
+                {
+                    var keyBlock = this.CollisionBoundsFirstOrDefault<KeyBlock>(X, Y);
+                    if (keyBlock != null && !keyBlock.Unlocked)
+                    {
+                        new SingularEffect(keyBlock.Center.X, keyBlock.Center.Y, 9);
+                        keyBlock.Unlock(keyBlock.Center.X, keyBlock.Center.Y);
+                        player.Stats.HeldKeys--;
+                        headBack = true;
+                    }
+                }
+                
                 dist = Math.Min(dist + 4f, maxDist);
                 if (dist == maxDist)
                     headBack = true;                

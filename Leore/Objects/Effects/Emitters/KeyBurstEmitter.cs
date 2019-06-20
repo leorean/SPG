@@ -51,8 +51,8 @@ namespace Leore.Objects.Effects.Emitters
                 YVel *= .9f;                
             }
             else {
-                XVel = (target.X - Position.X) / 4f;
-                YVel = (target.Y - Position.Y) / 4f;
+                XVel = (target.Center.X - Position.X) / 4f;
+                YVel = (target.Center.Y - Position.Y) / 4f;
                 Alpha = Math.Max(Alpha - .1f, 0);
                 
                 if (MathUtil.Euclidean(Position, target.Position) < 4) {
@@ -67,7 +67,7 @@ namespace Leore.Objects.Effects.Emitters
 
     public class KeyBurstEmitter : ParticleEmitter
     {
-        public List<Color> Colors { get; private set; } = new List<Color>();
+        public List<Color> Colors { get; set; } = new List<Color>();
 
         private GameObject target;
 

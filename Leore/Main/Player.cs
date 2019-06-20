@@ -58,23 +58,26 @@ namespace Leore.Main
             CEIL_CLIMB, SWIM, DEAD, LEVITATE,
             PUSH, LIE, SWIM_DIVE_IN, SWIM_TURN_AROUND,
             BACKFACING,
-            CARRYOBJECT_TAKE, CARRYOBJECT_IDLE, CARRYOBJECT_WALK, CARRYOBJECT_THROW
+            CARRYOBJECT_TAKE, CARRYOBJECT_IDLE, CARRYOBJECT_WALK, CARRYOBJECT_THROW,
+            LIMBO
         }
 
         public PlayerState State { get; set; }
 
         // stats 
-
-        //private GameStats stats;
+        
         public GameStats Stats { get => GameManager.Current.SaveGame.gameStats; }
         public int HP { get; set; }
         public float MP { get; set; }
 
         public long KeyObjectID { get; set; } = -1;
 
+        public Direction Direction { get; set; } = Direction.RIGHT;
+
+        private Vector2 safePosition;
+
         // private
 
-        public Direction Direction { get; set; } = Direction.RIGHT;
         private Direction lastDirection;
 
         // for up/down regarding orbs
@@ -93,7 +96,7 @@ namespace Leore.Main
 
         private int mpRegenTimeout = 0;
         private int maxMpRegenTimeout = 60;
-
+        
         // input vars
 
         Input input = new Input();
@@ -146,13 +149,18 @@ namespace Leore.Main
         private int maxCoinTimeout = 60;
         private Font coinFont;
 
-        private int lieTimer = 0;
+        private int lieTimer;
         private int ghostTimer = 60;
 
         private PlayerGhost ghost;
         private bool jumpControlDisabled;
 
         private int attackDelay;
+
+        private int jumps;
+        private int maxJumps;
+
+        private int limboTimer;
 
         // other objects
 
@@ -161,10 +169,7 @@ namespace Leore.Main
         public Orb Orb { get; set; }
 
         public Teleporter Teleporter { get; set; }
-
-        private int jumps;
-        private int maxJumps;
-
+        
         // constructor
 
         public Player(float x, float y) : base(x, y)
@@ -196,7 +201,9 @@ namespace Leore.Main
             MP = Stats.MaxMP;
 
             MaxOxygen = 5 * 60;
-            Oxygen = MaxOxygen;            
+            Oxygen = MaxOxygen;
+
+            safePosition = Position;
         }
 
         ~Player()
@@ -211,7 +218,7 @@ namespace Leore.Main
 
         // methods
 
-        public void Hit(int hitPoints, float? angle = null)
+        public void Hit(int hitPoints, float? degAngle = null)
         {
             MovingPlatform = null;
 
@@ -297,11 +304,7 @@ namespace Leore.Main
             }
 
             var ouch = new StarEmitter(X, Y);
-
-            //var dmgFont = new FollowFont(X, Y - Globals.TILE, $"-{hitPoints}");
-            //dmgFont.Color = Color.Red;
-            //dmgFont.Target = this;
-
+            
             new FallingFont(X, Y, $"-{hitPoints}", new Color(170, 0, 231), new Color(255, 0, 0));
 
             if (State == PlayerState.IDLE || State == PlayerState.WALK || State == PlayerState.GET_UP)
@@ -309,15 +312,15 @@ namespace Leore.Main
 
             if (State != PlayerState.HIT_GROUND)
             {
-                if (angle == null)
+                if (degAngle == null)
                 {
                     XVel = -.7f * Math.Sign((int)Direction);
                     YVel = Math.Min(YVel - .5f, -1.2f);
                 }
                 else
                 {
-                    var ldx = MathUtil.LengthDirX((float)angle) * 1.5f;
-                    var ldy = MathUtil.LengthDirY((float)angle) * 1.5f;
+                    var ldx = MathUtil.LengthDirX((float)degAngle) * 1.5f;
+                    var ldy = MathUtil.LengthDirY((float)degAngle) * 1.5f;
 
                     XVel = (float)ldx;
                     YVel = (float)ldy;
@@ -325,6 +328,28 @@ namespace Leore.Main
             }
             hit = true;
             InvincibleTimer = 60;
+        }
+
+        public void HurtAndSpawnBack()
+        {
+            if (State == PlayerState.LIMBO)
+                return;
+
+            Hit(1, 270);
+
+            if (HP == 0)
+                return;
+
+            new SingularEffect(X, Y, 9);
+            //new StarEmitter(X, Y, 10);
+
+            var dummy = new Dummy(safePosition.X, safePosition.Y);
+            var burst = new KeyBurstEmitter(X, Y, dummy);
+            burst.Colors = GameResources.HpColors;
+            dummy.Parent = burst;
+            
+            State = PlayerState.LIMBO;
+            limboTimer = 1 * 60;
         }
 
         // ++++++++++++++++++++++++++
@@ -652,17 +677,47 @@ namespace Leore.Main
                     saveStatue.Save();
                 }
 
+                // ++++ pushblock evasion/respawn ++++
+                
+                var pushBlock = this.CollisionBoundsFirstOrDefault<PushBlock>(X, Y);
+                if (pushBlock != null)
+                {
+                    if (pushBlock.IsFalling)
+                        HurtAndSpawnBack();
+                }
+
                 // ++++ key blocks (when possessing keys) ++++
 
                 if (Stats.HeldKeys > 0)
                 {
-                    var keyblock = this.CollisionBoundsFirstOrDefault<KeyBlock>(X + (int)Direction * 4, Y);
+                    var keyblock = this.CollisionBoundsFirstOrDefault<KeyBlock>(X + (int)Direction * 4, Y + YVel + .1f);
                     if (keyblock != null)
                     {
                         if (!keyblock.Unlocked)
                         {
                             keyblock.Unlock(X, Y);
                             Stats.HeldKeys--;
+                        }
+                    }
+                }
+
+                // ++++ key doors (when possessing keys) ++++
+
+                if (Stats.HeldKeys > 0)
+                {
+                    var keyDoor = this.CollisionBoundsFirstOrDefault<DoorDisabler>(X + (int)Direction * 4, Y);
+                    if (keyDoor != null)                        
+                    {
+                        if (keyDoor.Type == DoorDisabler.TriggerType.Key && !keyDoor.Open && !keyDoor.Unlocked)
+                        {
+                            var toolTip = new ToolTip(keyDoor, this, new Vector2(0, 8), 0);
+                            if (k_upPressed)
+                            {
+                                keyDoor.Unlock(X, Y);
+                                ObjectManager.DestroyAll<ToolTip>();
+                            }
+                        } else {
+                            ObjectManager.DestroyAll<ToolTip>();
                         }
                     }
                 }
@@ -807,7 +862,7 @@ namespace Leore.Main
 
                 var door = this.CollisionBoundsFirstOrDefault<Door>(X, Y);
 
-                if ((npc == null || !npc.Active) && door != null)
+                if ((npc == null || !npc.Active) && door != null && door.Open)
                 {
                     if (k_upPressed && onGround)
                     {
@@ -903,7 +958,37 @@ namespace Leore.Main
 
             if (onGround)
             {
-                lastGroundY = Y;                
+                lastGroundY = Y;
+            }
+
+            // limbo
+
+            if(State == PlayerState.LIMBO)
+            {
+                XVel = 0;
+                YVel = -Gravity;
+
+                Visible = false;
+                if (Orb != null) Orb.Visible = false;
+
+                limboTimer = Math.Max(limboTimer - 1, 0);
+
+                if (!ObjectManager.Exists<KeyBurstEmitter>())
+                    limboTimer = 0;
+
+                if (limboTimer == 0)
+                {
+                    Visible = true;
+                    if (Orb != null) Orb.Visible = true;
+                    Position = safePosition;
+
+                    //new SaveBurstEmitter(X, Y);
+
+                    State = PlayerState.LIE;
+                    lieTimer = 60;
+                }
+
+                return;
             }
 
             // idle
@@ -1016,6 +1101,9 @@ namespace Leore.Main
                 if (pushBlock == null)
                 {
                     pushBlock = this.CollisionBoundsFirstOrDefault<PushBlock>(X + Math.Sign((int)Direction), Y);
+
+                    if (pushBlock != null && this.CollisionBounds(pushBlock, X - Math.Sign((int)Direction), Y))
+                        pushBlock = null;
 
                     if (pushBlock != null && !pushBlock.IsPushing && !pushBlock.IsFalling)
                     {
@@ -1480,7 +1568,7 @@ namespace Leore.Main
             if (State == PlayerState.LIE)
             {
                 XVel = 0;
-                YVel = 0;
+                YVel = -Gravity;
 
                 lieTimer = Math.Max(lieTimer - 1, 0);
 
@@ -1666,6 +1754,16 @@ namespace Leore.Main
 
             Position = new Vector2(boundX, boundY);
             levitationEmitter.Position = Position;
+
+            // ++++ safe position ++++
+
+            if (!hit && onGround && !inWater && this.CollisionRectangleFirstOrDefault<Solid>(Left - Globals.TILE, Top - Globals.TILE, Right + Globals.TILE, Bottom) == null)
+            {
+                var tmp = new Vector2(MathUtil.Div(X, Globals.TILE) * Globals.TILE + 8, MathUtil.Div(Y, Globals.TILE) * Globals.TILE + 8);
+
+                if (this.CollisionPointFirstOrDefault<Collider>(tmp.X, tmp.Y + 8) != null)
+                    safePosition = new Vector2(MathUtil.Div(X, Globals.TILE) * Globals.TILE + 8, MathUtil.Div(Y, Globals.TILE) * Globals.TILE + 8);
+            }
 
             // ++++ previous vars ++++
 
@@ -1857,10 +1955,8 @@ namespace Leore.Main
                 sb.DrawBar(Position + new Vector2(0, 12), (int)(1.5 * Globals.TILE), Oxygen / (float)MaxOxygen, fg, bg, height: 2, border: false);
             }
 
-            /*if (Orb != null)
-            {
-                sb.DrawLightning(Position, new Vector2(X - 0, Y - 64), Color.White, Depth + .0001f);
-            }*/
+            // draws safe-rect for debug
+            //sb.DrawRectangle(new RectF(safePosition.X - 8, safePosition.Y - 8, 16, 16), Color.Red, false, 1);
         }
     }
 }

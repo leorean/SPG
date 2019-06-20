@@ -6,6 +6,7 @@ using Leore.Main;
 using Leore.Objects.Enemies;
 using SPG.Objects;
 using SPG.Util;
+using Leore.Objects.Effects;
 
 namespace Leore.Objects.Level
 {
@@ -21,8 +22,10 @@ namespace Leore.Objects.Level
         public float PushVel { get; private set; } = .5f;
 
         private bool aboutToFall;
+        private double t;
 
         private int initialFallDelay = EnemyBlock.DELAY;
+        private int fallDelay;
 
         public PushBlock(float x, float y, Room room) : base(x, y, room)
         {
@@ -79,6 +82,7 @@ namespace Leore.Objects.Level
                     XVel = 0;
                     Position = new Vector2(MathUtil.Div(X, Globals.TILE) * Globals.TILE, Y);
                     IsPushing = false;
+                    fallDelay = 1;
                 }
             }
             Move(XVel, 0);
@@ -91,16 +95,21 @@ namespace Leore.Objects.Level
 
                 var colY = this.CollisionRectangles<Collider>(X + 8, Y + 8, X + 8, Y + 16).FirstOrDefault();
 
+                if (fallDelay == 0)
+                    fallDelay = 60;
+                else
+                    fallDelay = Math.Max(fallDelay - 1, 0);
+
                 if (colY == null)
                 {
-                    var player = this.CollisionRectangles<Player>(Left, Top + T, Right, Bottom + T).FirstOrDefault();
+                    //var colPlayer = ObjectManager.CollisionRectangle(GameManager.Current.Player, Left, Top + T, Right, Bottom + 2 * T);
 
-                    if (player != null)
+                    if (fallDelay > 0)
                         aboutToFall = true;
 
-                    if (player == null && !IsPushing)
+                    if (fallDelay == 0 && !IsPushing)
                         IsFalling = true;
-                }
+                }                
             }
             else
             {
@@ -109,18 +118,18 @@ namespace Leore.Objects.Level
 
                 YVel = Math.Min(YVel + Gravity, 3);
 
-                var playerCollision = this.CollisionBounds(GameManager.Current.Player, X, Y + YVel);
-                if (playerCollision)
-                {
-                    Move(0, -1);
+                //var playerCollision = this.CollisionBounds(GameManager.Current.Player, X, Y + YVel);
+                //if (playerCollision)
+                //{
+                //    Move(0, -1);
                     
-                    Position = new Vector2(X, MathUtil.Div(Y, T) * T);
-                    IsFalling = false;
-                    lastY = Y;
+                //    Position = new Vector2(X, MathUtil.Div(Y, T) * T);
+                //    IsFalling = false;
+                //    lastY = Y;
                     
-                    XVel = 0;
-                    YVel = 0;                    
-                }
+                //    XVel = 0;
+                //    YVel = 0;
+                //}
                 
                 var enemy = this.CollisionBoundsFirstOrDefault<Enemy>(X, Y);
                 if (enemy != null)
@@ -134,19 +143,27 @@ namespace Leore.Objects.Level
                     YVel = 0;
                     Position = new Vector2(X, MathUtil.Div(Y, Globals.TILE) * Globals.TILE);
                     IsFalling = false;
+                    new SingularEffect(Center.X, Center.Y, 12);
                 }
             }
-            Move(0, YVel);            
+            Move(0, YVel);
+
+            t = (t + 1) % (2 * Math.PI);
+
+            if (aboutToFall)
+                DrawOffset = new Vector2((float)Math.Sin(t) * .5f, 0);
+            else
+                DrawOffset = Vector2.Zero;
         }
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
             base.Draw(sb, gameTime);
 
-            if (aboutToFall)
+            /*if (aboutToFall)
             {
                 sb.Draw(Texture, Position + new Vector2(0, 16), null, new Color(Color.White, .5f), Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
-            }
+            }*/
         }
     }
 }

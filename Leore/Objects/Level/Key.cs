@@ -6,12 +6,16 @@ using Leore.Objects.Effects.Emitters;
 using SPG.Map;
 using Leore.Main;
 using SPG.Util;
+using Leore.Objects.Effects;
 
 namespace Leore.Objects.Level
 {
-    public class KeyDummy : GameObject
+
+    // todo : move 
+
+    public class Dummy : GameObject
     {
-        public KeyDummy(float x, float y, string name = null) : base(x, y, name)
+        public Dummy(float x, float y, string name = null) : base(x, y, name)
         {
         }
     }
@@ -48,7 +52,7 @@ namespace Leore.Objects.Level
 
             Gravity = .1f;
 
-            originalPositionObject = new KeyDummy(X, Y) { Parent = this };
+            originalPositionObject = new Dummy(X, Y) { Parent = this };
             timer = maxTimer;
         }
 
@@ -107,12 +111,19 @@ namespace Leore.Objects.Level
             }
 
             var t = 3;
-            var keyBlock = this.CollisionRectangles<KeyBlock>(Left - t, Top - t, Right + t, Bottom + t).FirstOrDefault();
+            var keyBlock = this.CollisionRectangleFirstOrDefault<KeyBlock>(Left - t, Top - t, Right + t, Bottom + t);
             if (keyBlock != null)
             {
                 if (!keyBlock.Unlocked)
                     Unlock(keyBlock);
-            }                
+            }
+
+            var keyDoor = this.CollisionRectangleFirstOrDefault<DoorDisabler>(Left - t, Top - t, Right + t, Bottom + t);
+            if (keyDoor != null && keyDoor.Type == DoorDisabler.TriggerType.Key && !keyDoor.Open)
+            {
+                TakeKeyAwayFromPlayer();
+                keyDoor.Unlock(X, Y);
+            }
         }
 
         public override void EndUpdate(GameTime gameTime)
@@ -154,12 +165,9 @@ namespace Leore.Objects.Level
             }
         }
 
-        public void Unlock(KeyBlock keyBlock)
+        private void TakeKeyAwayFromPlayer()
         {
             GameManager.Current.Player.Stats.KeysAndKeyblocks.Add(ID);
-
-            keyBlock.Unlock(X, Y);
-
             if (player != null)
             {
                 if (player.State == Player.PlayerState.CARRYOBJECT_IDLE
@@ -173,7 +181,13 @@ namespace Leore.Objects.Level
                 player.KeyObject = null;
                 player.KeyObjectID = -1;
                 Parent = null;
-            }
+            }            
+        }
+
+        public void Unlock(KeyBlock keyBlock)
+        {
+            TakeKeyAwayFromPlayer();
+            keyBlock.Unlock(X, Y);
         }
         
         public void Take(Player player)
