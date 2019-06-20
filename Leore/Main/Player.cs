@@ -76,6 +76,19 @@ namespace Leore.Main
 
         private Vector2 safePosition;
 
+        public void UseKey()
+        {
+            if (KeyObject != null)
+                Stats.HeldKeys--;
+            new FollowFont(X, Y - 8, "Key used.");
+        }
+        public void GetKey()
+        {
+            Stats.HeldKeys++;
+            new FollowFont(X, Y - 8, "Got key!");
+        }
+
+
         // private
 
         private Direction lastDirection;
@@ -112,7 +125,7 @@ namespace Leore.Main
 
         float gamePadLeftXFactor;
         float gamePadLeftYFactor;
-
+        
         // swim vars
 
         private float gravAir = .1f;
@@ -686,38 +699,43 @@ namespace Leore.Main
                         HurtAndSpawnBack();
                 }
 
-                // ++++ key blocks (when possessing keys) ++++
-
-                if (Stats.HeldKeys > 0)
+                if (KeyObject == null)
                 {
-                    var keyblock = this.CollisionBoundsFirstOrDefault<KeyBlock>(X + (int)Direction * 4, Y + YVel + .1f);
-                    if (keyblock != null)
+                    // ++++ key blocks (when possessing keys) ++++
+
+                    if (Stats.HeldKeys > 0)
                     {
-                        if (!keyblock.Unlocked)
+                        var keyblock = this.CollisionBoundsFirstOrDefault<KeyBlock>(X + (int)Direction * 4, Y + YVel + .1f);
+                        if (keyblock != null)
                         {
-                            keyblock.Unlock(X, Y);
-                            Stats.HeldKeys--;
+                            if (!keyblock.Unlocked)
+                            {
+                                keyblock.Unlock(X, Y);
+                                UseKey();
+                            }
                         }
                     }
-                }
 
-                // ++++ key doors (when possessing keys) ++++
+                    // ++++ key doors (when possessing keys) ++++
 
-                if (Stats.HeldKeys > 0)
-                {
-                    var keyDoor = this.CollisionBoundsFirstOrDefault<DoorDisabler>(X + (int)Direction * 4, Y);
-                    if (keyDoor != null)                        
+                    if (Stats.HeldKeys > 0 && KeyObject == null)
                     {
-                        if (keyDoor.Type == DoorDisabler.TriggerType.Key && !keyDoor.Open && !keyDoor.Unlocked)
+                        var keyDoor = this.CollisionBoundsFirstOrDefault<DoorDisabler>(X + (int)Direction * 4, Y);
+                        if (keyDoor != null)
                         {
-                            var toolTip = new ToolTip(keyDoor, this, new Vector2(0, 8), 0);
-                            if (k_upPressed)
+                            if (keyDoor.Type == DoorDisabler.TriggerType.Key && !keyDoor.Open && !keyDoor.Unlocked)
                             {
-                                keyDoor.Unlock(X, Y);
+                                var toolTip = new ToolTip(keyDoor, this, new Vector2(0, 8), 0);
+                                if (k_upPressed)
+                                {
+                                    keyDoor.Unlock(X, Y);
+                                    ObjectManager.DestroyAll<ToolTip>();
+                                }
+                            }
+                            else
+                            {
                                 ObjectManager.DestroyAll<ToolTip>();
                             }
-                        } else {
-                            ObjectManager.DestroyAll<ToolTip>();
                         }
                     }
                 }

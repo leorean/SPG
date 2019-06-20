@@ -113,8 +113,7 @@ namespace Leore.Main
                     Move(XVel, YVel);
                     if (player.MovingPlatform != null)
                         Move(player.MovingPlatform.XVel, player.MovingPlatform.YVel);
-
-
+                    
                     break;
                 case OrbState.IDLE:
 

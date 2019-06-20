@@ -72,7 +72,7 @@ namespace Leore.Objects.Level
                 return;
 
             Unlocked = true;
-            GameManager.Current.Player.Stats.HeldKeys--;
+            GameManager.Current.Player.UseKey();
 
             var emitter = new KeyBurstEmitter(x, y, this);
             emitter.OnFinishedAction = () =>

@@ -151,7 +151,7 @@ namespace SPG.Draw
 
                 var txt = lines[l];
 
-                int lineWidth = 0;
+                float lineWidth = 0;
                 float totalLineWidth = 0;
 
                 // necessary pre-calc
@@ -222,7 +222,7 @@ namespace SPG.Draw
 
                     var pos = new Vector2(posx + lineWidth, posy + l * lineHeight);
                     sb.Draw(tex, pos, null, Color, 0, Vector2.Zero, scale, SpriteEffects.None, (depth == null) ? Depth : (float)depth);
-                    lineWidth += tex.Width + (int)Spacing;
+                    lineWidth += (tex.Width + (int)Spacing) * scale;
 
                 }                
             }

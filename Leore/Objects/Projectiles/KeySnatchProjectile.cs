@@ -83,7 +83,7 @@ namespace Leore.Objects.Projectiles
                     {
                         new SingularEffect(keyBlock.Center.X, keyBlock.Center.Y, 9);
                         keyBlock.Unlock(keyBlock.Center.X, keyBlock.Center.Y);
-                        player.Stats.HeldKeys--;
+                        player.UseKey();
                         headBack = true;
                     }
                 }
@@ -100,10 +100,9 @@ namespace Leore.Objects.Projectiles
                     if (key != null)
                     {
                         player.Stats.KeysAndKeyblocks.Add(key.ID);
-                        player.Stats.HeldKeys++;
+                        player.GetKey();
 
-                        new KeyBurstEmitter(X, Y, orb);
-                        new FollowFont(X, Y, "+Key");
+                        new KeyBurstEmitter(X, Y, orb);                        
                     }
                     Destroy();
                 }

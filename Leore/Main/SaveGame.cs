@@ -31,6 +31,7 @@ namespace Leore.Main
         public List<long> Bosses { get; set; } = new List<long>();
 
         public List<string> StoryFlags { get; set; } = new List<string>();
+
         public int HeldKeys { get; set; }
     }
 
