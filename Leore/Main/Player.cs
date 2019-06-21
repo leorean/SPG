@@ -1715,6 +1715,9 @@ namespace Leore.Main
             
             var g = this.MoveAdvanced(moveWithPlatforms);
             
+            if (inWater)
+                jumps = Math.Min(jumps, 1);
+
             if (g)
             {
                 // TODO: FIX GAP TO GET TO GROUND!
