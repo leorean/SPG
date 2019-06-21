@@ -493,13 +493,16 @@ namespace Leore.Main
                 && State != PlayerState.BACKFACING)
             {
                 var obstacle = ObjectManager.CollisionBoundsFirstOrDefault<Obstacle>(this, X, Y);
-
+                
                 if (obstacle != null)
                 {
                     var vec = Position - (obstacle.Center + new Vector2(0, 0));
                     var angle = vec.VectorToAngle();                    
                     Hit(obstacle.Damage, (float)angle);
-                }
+
+                    if (obstacle is LaserObstacle)
+                        InvincibleTimer = 0;
+                }                
             }
 
             if (HP == 0)

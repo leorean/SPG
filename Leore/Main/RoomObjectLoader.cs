@@ -333,6 +333,26 @@ namespace Leore.Main
                             if (t.ID == 907)
                                 new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.RIGHT) { Activatable = true, ActiveByDefault = true };
                             break;
+                        case 908: // laser (vertical)
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            new Laser(i * Globals.TILE, j * Globals.TILE, room, Laser.Orientation.Vertical);
+                            break;
+                        case 909: // laser (horizontal)
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            new Laser(i * Globals.TILE, j * Globals.TILE, room, Laser.Orientation.Horizontal);
+                            break;
+                        case 910: // toggle laser (vertical)
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            new Laser(i * Globals.TILE, j * Globals.TILE, room, Laser.Orientation.Vertical, true);
+                            break;
+                        case 911: // toggle laser (horizontal)
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            new Laser(i * Globals.TILE, j * Globals.TILE, room, Laser.Orientation.Horizontal, true);
+                            break;
                         default:
                             var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room);
                             if (t.ID == 645) t.TileOptions.Visible = false;  // <- invisible blocks

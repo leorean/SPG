@@ -87,6 +87,7 @@
     <Compile Include="Objects\Enemies\EnemyGrassy.cs" />
     <Compile Include="Objects\Enemies\BossMirrorSelf.cs" />
     <Compile Include="Objects\Enemies\EnemyVoidling.cs" />
+    <Compile Include="Objects\Enemies\Laser.cs" />
     <Compile Include="Objects\IMovable.cs" />
     <Compile Include="Objects\Items\AbilityItem.cs" />
     <Compile Include="Objects\Items\Coin.cs" />

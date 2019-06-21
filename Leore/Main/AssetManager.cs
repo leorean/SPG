@@ -49,6 +49,7 @@ namespace Leore.Main
         public static TextureSet ToolTip { get; private set; }
         public static Texture2D WaterMill { get; private set; }
         public static Texture2D WaterMillPlatform { get; private set; }
+        public static TextureSet Laser { get; private set; }
 
         // enemies
 
@@ -101,6 +102,8 @@ namespace Leore.Main
             var waterMillSheet = content.Load<Texture2D>("watermill");
             WaterMill = waterMillSheet.Crop(new Rectangle(0, 0, 128, 128));
             WaterMillPlatform = waterMillSheet.Crop(new Rectangle(128, 0, 16, 16));
+
+            Laser = content.LoadTextureSet("laser", 32, 32);
 
             EnemyGrassy = content.LoadTextureSet("enemyGrassy");
             EnemyBat = content.LoadTextureSet("enemyBat");
