@@ -76,10 +76,9 @@ namespace Leore.Main
 
         private Vector2 safePosition;
 
-        public void UseKey()
+        public void UseKeyFromInventory()
         {
-            if (KeyObject != null)
-                Stats.HeldKeys--;
+            Stats.HeldKeys--;
             new FollowFont(X, Y - 8, "Key used.");
         }
         public void GetKey()
@@ -701,7 +700,7 @@ namespace Leore.Main
 
                 if (KeyObject == null)
                 {
-                    // ++++ key blocks (when possessing keys) ++++
+                    // ++++ key blocks (when possessing keys in inventory) ++++
 
                     if (Stats.HeldKeys > 0)
                     {
@@ -711,12 +710,12 @@ namespace Leore.Main
                             if (!keyblock.Unlocked)
                             {
                                 keyblock.Unlock(X, Y);
-                                UseKey();
+                                UseKeyFromInventory();
                             }
                         }
                     }
 
-                    // ++++ key doors (when possessing keys) ++++
+                    // ++++ key doors (when possessing keys in inventory) ++++
 
                     if (Stats.HeldKeys > 0 && KeyObject == null)
                     {
@@ -728,7 +727,7 @@ namespace Leore.Main
                                 var toolTip = new ToolTip(keyDoor, this, new Vector2(0, 8), 0);
                                 if (k_upPressed)
                                 {
-                                    keyDoor.Unlock(X, Y);
+                                    keyDoor.Unlock(X, Y, true);
                                     ObjectManager.DestroyAll<ToolTip>();
                                 }
                             }
@@ -1775,7 +1774,10 @@ namespace Leore.Main
 
             // ++++ safe position ++++
 
-            if (!hit && onGround && !inWater && this.CollisionRectangleFirstOrDefault<Solid>(Left - Globals.TILE, Top - Globals.TILE, Right + Globals.TILE, Bottom) == null)
+            var roomY = RoomCamera.Current.CurrentRoom != null ? RoomCamera.Current.CurrentRoom.Y : Top;
+
+            if (!hit && onGround && !inWater && this.CollisionRectangleFirstOrDefault<Solid>(Left - Globals.TILE, Top - Globals.TILE, Right + Globals.TILE, Bottom) == null
+                && this.CollisionRectangleFirstOrDefault<PushBlock>(Left, roomY, Right, Bottom) == null)
             {
                 var tmp = new Vector2(MathUtil.Div(X, Globals.TILE) * Globals.TILE + 8, MathUtil.Div(Y, Globals.TILE) * Globals.TILE + 8);
 

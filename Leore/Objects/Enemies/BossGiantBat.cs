@@ -46,7 +46,6 @@ namespace Leore.Objects.Enemies
         public BossGiantBat(float x, float y, Room room, string setCondition) : base(x, y, room, setCondition)
         {
             HP = 120;
-            HP = 1;
             
             AnimationTexture = AssetManager.BossGiantBat;
             DrawOffset = new Vector2(40);

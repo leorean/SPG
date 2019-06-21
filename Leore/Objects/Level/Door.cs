@@ -66,13 +66,14 @@ namespace Leore.Objects.Level
             door.Open = Open;
         }
 
-        public void Unlock(float x, float y)
+        public void Unlock(float x, float y, bool useKeyFromInv)
         {
             if (Unlocked)
                 return;
 
             Unlocked = true;
-            GameManager.Current.Player.UseKey();
+            if (useKeyFromInv)
+                GameManager.Current.Player.UseKeyFromInventory();
 
             var emitter = new KeyBurstEmitter(x, y, this);
             emitter.OnFinishedAction = () =>

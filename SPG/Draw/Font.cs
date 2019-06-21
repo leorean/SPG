@@ -184,9 +184,11 @@ namespace SPG.Draw
                         continue;
                     }
 
-                    if (highLight)
-                        tex = tex.ReplaceColor(Color, HighlightColor);
-                    
+                    //if (highLight)
+                    //    tex = tex.ReplaceColor(Color, HighlightColor);
+
+                    var color = highLight ? HighlightColor : Color;
+
                     // draw first texture when glyph is not found in set.
                     if (c != '\n' && tex == null)
                         tex = glyphs.FirstOrDefault().Value;
@@ -221,7 +223,7 @@ namespace SPG.Draw
                     }
 
                     var pos = new Vector2(posx + lineWidth, posy + l * lineHeight);
-                    sb.Draw(tex, pos, null, Color, 0, Vector2.Zero, scale, SpriteEffects.None, (depth == null) ? Depth : (float)depth);
+                    sb.Draw(tex, pos, null, color, 0, Vector2.Zero, scale, SpriteEffects.None, (depth == null) ? Depth : (float)depth);
                     lineWidth += (tex.Width + (int)Spacing) * scale;
 
                 }                

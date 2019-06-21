@@ -122,7 +122,7 @@ namespace Leore.Objects.Level
             if (keyDoor != null && keyDoor.Type == DoorDisabler.TriggerType.Key && !keyDoor.Open)
             {
                 TakeKeyAwayFromPlayer();
-                keyDoor.Unlock(X, Y);
+                keyDoor.Unlock(X, Y, false);
             }
         }
 

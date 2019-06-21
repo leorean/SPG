@@ -83,7 +83,7 @@ namespace Leore.Objects.Projectiles
                     {
                         new SingularEffect(keyBlock.Center.X, keyBlock.Center.Y, 9);
                         keyBlock.Unlock(keyBlock.Center.X, keyBlock.Center.Y);
-                        player.UseKey();
+                        player.UseKeyFromInventory();
                         headBack = true;
                     }
                 }
