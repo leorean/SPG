@@ -365,6 +365,16 @@ namespace Leore.Main
                             t.TileOptions.Solid = false;
                             new Laser(i * Globals.TILE, j * Globals.TILE, room, Laser.Orientation.Horizontal, true);
                             break;
+                        case 912: // toggle laser (vertical)
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            new Laser(i * Globals.TILE, j * Globals.TILE, room, Laser.Orientation.Vertical, true, defaultValue: false);
+                            break;
+                        case 913: // toggle laser (horizontal)
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            new Laser(i * Globals.TILE, j * Globals.TILE, room, Laser.Orientation.Horizontal, true, defaultValue: false);
+                            break;
                         default:
                             var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room);
                             if (t.ID == 645) t.TileOptions.Visible = false;  // <- invisible blocks
@@ -450,8 +460,6 @@ namespace Leore.Main
                             default:
                                 throw new NotImplementedException("Item type not implemented!");
                         }
-                        
-
                     }
                     if (type == "door")
                     {
@@ -521,6 +529,12 @@ namespace Leore.Main
                         var storyTriggerSetCondition = data.ContainsKey("setCondition") ? data["setCondition"].ToString() : null;
                         var storyTrigger = new StoryTrigger(x, y, room, storyTriggerSetCondition);
                         storyTrigger.BoundingBox = new RectF(0, 0, width, height);
+                    }
+                    if (type == "jumpDisabler")
+                    {
+                        var jumpDisablerDisappearCondition = data.ContainsKey("disappearCondition") ? data["disappearCondition"].ToString() : null;
+                        var jumpDisabler = new JumpControlDisabler(x, y, room, jumpDisablerDisappearCondition);
+                        jumpDisabler.BoundingBox = new RectF(0, 0, width, height);
                     }
                 }
             }

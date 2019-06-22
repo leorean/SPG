@@ -100,6 +100,9 @@ namespace Leore.Main
 
         private bool onGround;
         public bool OnGround { get => onGround; }
+        private bool inWater;
+        public bool InWater { get => inWater; }
+
 
         private float lastGroundY;
         private float lastGroundYbeforeWall;
@@ -181,7 +184,7 @@ namespace Leore.Main
         public Collider MovingPlatform { get; set; }
         public Orb Orb { get; set; }
 
-        public Teleporter Teleporter { get; set; }
+        public Teleporter Teleporter { get; set; }        
         
         // constructor
 
@@ -522,7 +525,7 @@ namespace Leore.Main
             var onCeil = !hit && ObjectManager.CollisionPoints<Solid>(this, X, Y - BoundingBox.Height * .5f - 1)
                 .Where(o => o.Room == currentRoom && !(o is PushBlock)).Count() > 0;
 
-            var inWater = GameManager.Current.Map.CollisionTile(X, Y + 4, GameMap.WATER_INDEX);
+            inWater = GameManager.Current.Map.CollisionTile(X, Y + 4, GameMap.WATER_INDEX);
 
             if (!Stats.Abilities.HasFlag(PlayerAbility.CLIMB_WALL))
                 onWall = false;
@@ -560,7 +563,7 @@ namespace Leore.Main
             }
             if (inWater)
             {
-                if (!Stats.Abilities.HasFlag(PlayerAbility.BREATHE_UNDERWATER))
+                if (!Stats.Abilities.HasFlag(PlayerAbility.BREATHE_UNDERWATER) && !ObjectManager.Exists<MessageBox>())
                 {
                     Oxygen = Math.Max(Oxygen - 1, 0);
 
@@ -582,7 +585,7 @@ namespace Leore.Main
 
                 if (HP > 0)
                 {
-                    if (State != PlayerState.SWIM && State != PlayerState.SWIM_DIVE_IN && State != PlayerState.SWIM_TURN_AROUND)
+                    if (State != PlayerState.SWIM && State != PlayerState.SWIM_DIVE_IN && State != PlayerState.SWIM_TURN_AROUND && State != PlayerState.BACKFACING)
                     {
                         if (State != PlayerState.HIT_AIR && State != PlayerState.HIT_GROUND)
                         {
@@ -885,7 +888,7 @@ namespace Leore.Main
 
                 if ((npc == null || !npc.Active) && door != null && door.Open)
                 {
-                    if (k_upPressed && onGround)
+                    if (k_upPressed && (onGround || inWater))
                     {
                         XVel = 0;
                         YVel = -Gravity;
@@ -1979,7 +1982,7 @@ namespace Leore.Main
                 var fg = new Color(r, g, b);
                 var bg = new Color(20, 113, 126);
 
-                sb.DrawBar(Position + new Vector2(0, 12), (int)(1.5 * Globals.TILE), Oxygen / (float)MaxOxygen, fg, bg, height: 2, border: false);
+                sb.DrawBar(Position + new Vector2(0, 12), (int)(1.5 * Globals.TILE), Oxygen / (float)MaxOxygen, fg, bg, height: 2, border: false, depth: Globals.LAYER_UI - .001f);
             }
 
             // draws safe-rect for debug

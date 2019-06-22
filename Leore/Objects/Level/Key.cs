@@ -30,7 +30,7 @@ namespace Leore.Objects.Level
         private bool stuck = false;
 
         private int timer = 0;
-        private int maxTimer = 15 * 60;
+        private int maxTimer = 1 * 60;
 
         private GameObject originalPositionObject;
 
@@ -49,11 +49,11 @@ namespace Leore.Objects.Level
             //DebugEnabled = true;
 
             DrawOffset = new Vector2(8, 8);
-            BoundingBox = new SPG.Util.RectF(-4, -7.5f, 8, 15);
+            BoundingBox = new SPG.Util.RectF(-4, -8f, 8, 16f);
 
             Gravity = .1f;
 
-            originalPositionObject = new Dummy(X, Y) { Parent = this };
+            originalPositionObject = new Dummy(X, Y) { Parent = this, BoundingBox = this.BoundingBox };
             timer = maxTimer;
         }
 
@@ -96,7 +96,7 @@ namespace Leore.Objects.Level
 
             if (stuck)
             {
-                MoveTowards(GameManager.Current.Player, 8);
+                MoveTowards(GameManager.Current.Player.Position + new Vector2(0, -4), 8);
                 
                 //var col = this.CollisionBounds<Solid>(X, Y).FirstOrDefault();
                 var col = this.CollisionRectangles<Solid>(Left, Top - 1, Right, Bottom + 1).FirstOrDefault();
@@ -150,12 +150,11 @@ namespace Leore.Objects.Level
                 Color = new Color(Color, a);
 
                 if (timer == 0)
-                {                    
+                {
                     new KeyBurstEmitter(Center.X, Center.Y, originalPositionObject);
-
                     Color = new Color(Color, 0);
-
                     Position = originalPositionObject.Position;
+                    stuck = false;
                 }
             }
             else

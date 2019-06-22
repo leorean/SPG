@@ -19,6 +19,9 @@
   <property name="setCondition" type="string"/>
   <property name="text" type="string"/>
  </objecttype>
+ <objecttype name="jumpDisabler" color="#ffd900">
+  <property name="disappearCondition" type="string"/>
+ </objecttype>
  <objecttype name="movingPlatform" color="#aaaaff">
   <property name="activatable" type="bool" default="false"/>
   <property name="timeOut" type="int" default="-1"/>

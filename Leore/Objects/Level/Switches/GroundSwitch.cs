@@ -38,7 +38,7 @@ namespace Leore.Objects.Level.Switches
             if (Texture == null)
                 return;
 
-            int active = (Active || (Room.SwitchState && !activateOnce)) ? 15 : 0;
+            int active = (Active || (Room.SwitchState && activateOnce)) ? 15 : 0;
             sb.Draw(Texture, Position + new Vector2(0, active), new Rectangle(0, active, 16, 16 - active), Color, 0, DrawOffset, Scale, SpriteEffects.None, Depth + .0002f);
         }
     }

@@ -21,6 +21,7 @@ namespace Leore.Objects.Enemies
         public bool Active { get; set; } = true;
 
         private bool canBeToggled;
+        bool defaultValue;
 
         private Orientation orientation;
         private LaserObstacle laser;
@@ -28,13 +29,14 @@ namespace Leore.Objects.Enemies
         private int T;
 
         private float alpha;
-
-        public Laser(float x, float y, Room room, Orientation orientation, bool canBeToggled = false) : base(x, y, room)
+        
+        public Laser(float x, float y, Room room, Orientation orientation, bool canBeToggled = false, bool defaultValue = true) : base(x, y, room)
         {
             this.orientation = orientation;
             this.canBeToggled = canBeToggled;
+            this.defaultValue = defaultValue;
 
-            Depth = Globals.LAYER_BG - .0005f;
+            Depth = Globals.LAYER_WATER + .0005f;
 
             DrawOffset = new Vector2(16);
 
@@ -46,7 +48,7 @@ namespace Leore.Objects.Enemies
             base.Update(gameTime);
 
             if (canBeToggled)
-                Active = !Room.SwitchState;
+                Active = defaultValue ? !Room.SwitchState : Room.SwitchState;
 
             if (!Active)
             {

@@ -93,7 +93,7 @@ namespace Leore.Objects.Items
                 Position = new Vector2(player.X, player.Y);
                 Visible = false;
 
-                if (player.OnGround)
+                if (player.OnGround || player.InWater)
                 {
                     player.State = Player.PlayerState.OBTAIN;
                     Visible = true;
