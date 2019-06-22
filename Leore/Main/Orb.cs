@@ -193,7 +193,7 @@ namespace Leore.Main
                                                 break;
                                         }
 
-                                        var proj = new StarProjectile(X, Y, Level);
+                                        var proj = new StarProjectile(TargetPosition.X, TargetPosition.Y, Level);
                                         var starDegAngle = MathUtil.VectorToAngle(new Vector2(TargetPosition.X - player.X, 0));
 
                                         var starCoilX = (float)MathUtil.LengthDirX(starDegAngle);

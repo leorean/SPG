@@ -34,8 +34,12 @@ namespace Leore.Objects.Projectiles
 
         private float yspd;
 
+        private Vector2 originalPosition;
+
         private KeySnatchProjectile(float x, float y) : base(x, y, SpellLevel.ONE)
         {
+            originalPosition = orb.TargetPosition;
+
             orb.Visible = false;
             Depth = orb.Depth - .0002f;
             BoundingBox = new RectF(-4, -4, 8, 8);
@@ -50,6 +54,8 @@ namespace Leore.Objects.Projectiles
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            orb.Position = originalPosition;
 
             cooldown = Math.Max(cooldown - 1, 0);
             if (cooldown > 0)
@@ -90,7 +96,7 @@ namespace Leore.Objects.Projectiles
                     }
                 }
 
-                var laser = this.CollisionBoundsFirstOrDefault<LaserObstacle>(X + (int)direction * 4, Y);
+                var laser = this.CollisionBoundsFirstOrDefault<LaserObstacle>(orb.TargetPosition.X + (int)direction * (dist + 0), orb.TargetPosition.Y + yspd * (dist + 0));
                 if (laser != null)
                 {
                     new StarEmitter(X, Y, 5);
@@ -117,7 +123,7 @@ namespace Leore.Objects.Projectiles
                 }
             }
 
-            Position = orb.TargetPosition + new Vector2((int)direction *  dist, yspd * dist);
+            Position = orb.Position + new Vector2((int)direction *  dist, yspd * dist);
 
             if (orb.State != OrbState.ATTACK || player.Direction != direction)
             {
