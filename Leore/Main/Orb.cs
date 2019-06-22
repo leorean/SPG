@@ -229,8 +229,12 @@ namespace Leore.Main
                                     break;
 
                                 case SpellType.SNATCH_KEYS:
-                                    KeySnatchProjectile.Create(X, Y);
-                                    Cooldown = 30;
+
+                                    //if (MathUtil.Euclidean(Position, TargetPosition) < 2)
+                                    {
+                                        KeySnatchProjectile.Create(TargetPosition.X, TargetPosition.Y);
+                                        Cooldown = 30;
+                                    }
                                     break;
 
                                 // TODO: other spells!!!

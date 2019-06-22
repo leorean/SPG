@@ -8,6 +8,7 @@ using Leore.Objects.Effects.Emitters;
 using Leore.Objects.Enemies;
 using Leore.Objects.Items;
 using Leore.Objects.Level;
+using Leore.Objects.Level.Blocks;
 using Leore.Resources;
 using Leore.Util;
 using Microsoft.Xna.Framework;

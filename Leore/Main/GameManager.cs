@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Leore.Objects.Projectiles;
+using Leore.Objects.Level.Switches;
 
 namespace Leore.Main
 {
@@ -339,6 +340,21 @@ namespace Leore.Main
                 if (!found)
                     RoomCamera.Current.CurrentRoom.SwitchState = false || manualStateEnabled;
 
+                var toggleSwitches = ObjectManager.FindAll<ToggleSwitch>();
+                if (toggleSwitches.Count > 0) {
+                    RoomCamera.Current.CurrentRoom.SwitchState = false || manualStateEnabled;
+
+                    int activeCounter = 0;
+                    foreach (var s in toggleSwitches)
+                    {
+                        if (s.Active)
+                            activeCounter++;
+                    }
+                    if (activeCounter == toggleSwitches.Count)
+                    {
+                        RoomCamera.Current.CurrentRoom.SwitchState = true || manualStateEnabled;
+                    }
+                }
             }
 
             // ++++ enable global objects ++++

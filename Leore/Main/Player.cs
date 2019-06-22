@@ -18,6 +18,7 @@ using Leore.Objects.Items;
 using Leore.Util;
 using SPG.Map;
 using Leore.Resources;
+using Leore.Objects.Level.Blocks;
 
 namespace Leore.Main
 {

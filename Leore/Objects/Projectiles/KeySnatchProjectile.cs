@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using Leore.Main;
 using Leore.Objects.Effects;
 using Leore.Objects.Effects.Emitters;
+using Leore.Objects.Enemies;
 using Leore.Objects.Items;
 using Leore.Objects.Level;
+using Leore.Objects.Level.Blocks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SPG.Objects;
@@ -87,6 +89,13 @@ namespace Leore.Objects.Projectiles
                         headBack = true;
                     }
                 }
+
+                var laser = this.CollisionBoundsFirstOrDefault<LaserObstacle>(X + (int)direction * 4, Y);
+                if (laser != null)
+                {
+                    new StarEmitter(X, Y, 5);
+                    headBack = true;
+                }
                 
                 dist = Math.Min(dist + 4f, maxDist);
                 if (dist == maxDist)
@@ -108,7 +117,7 @@ namespace Leore.Objects.Projectiles
                 }
             }
 
-            Position = orb.Position + new Vector2((int)direction *  dist, yspd * dist);
+            Position = orb.TargetPosition + new Vector2((int)direction *  dist, yspd * dist);
 
             if (orb.State != OrbState.ATTACK || player.Direction != direction)
             {

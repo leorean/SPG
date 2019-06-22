@@ -2,6 +2,7 @@
 using Leore.Main;
 using Leore.Objects.Level;
 using SPG.Objects;
+using Leore.Objects.Level.Blocks;
 
 namespace Leore.Objects.Projectiles
 {

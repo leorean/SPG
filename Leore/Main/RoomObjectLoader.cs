@@ -12,6 +12,8 @@ using Leore.Objects.Effects.Emitters;
 using Microsoft.Xna.Framework;
 using static Leore.Objects.Items.StatUpItem;
 using Leore.Objects;
+using Leore.Objects.Level.Blocks;
+using Leore.Objects.Level.Switches;
 
 namespace Leore.Main
 {
@@ -117,12 +119,12 @@ namespace Leore.Main
                             t.TileOptions.Solid = false;
                             break;
                         case 643: // switches (ground)
-                            new GroundSwitch(i * Globals.TILE, j * Globals.TILE, false, room);
+                            new GroundSwitch(i * Globals.TILE, j * Globals.TILE, false, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
                             break;
                         case 644: // switches (ground) - activate once
-                            new GroundSwitch(i * Globals.TILE, j * Globals.TILE, true, room);
+                            new GroundSwitch(i * Globals.TILE, j * Globals.TILE, true, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
                             break;
@@ -264,22 +266,32 @@ namespace Leore.Main
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
                             break;
-                        case 833: // timed switch (1s)
+                        case 833: // toggle switch (on)
+                            new ToggleSwitch(i * Globals.TILE + 8, j * Globals.TILE + 8, room, true);
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            break;
+                        case 834: // toggle switch (off)
+                            new ToggleSwitch(i * Globals.TILE + 8, j * Globals.TILE + 8, room, false);
+                            t.TileOptions.Visible = false;
+                            t.TileOptions.Solid = false;
+                            break;
+                        case 960: // timed switch (1s)
                             new TimeSwitch(i * Globals.TILE, j * Globals.TILE, 1 * 60, room);
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
                             break;
-                        case 834: // timed switch (3s)
+                        case 961: // timed switch (3s)
                             new TimeSwitch(i * Globals.TILE, j * Globals.TILE, 3 * 60, room);
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
                             break;
-                        case 835: // timed switch (5s)
+                        case 962: // timed switch (5s)
                             new TimeSwitch(i * Globals.TILE, j * Globals.TILE, 5 * 60, room);
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;
                             break;
-                        case 836: // timed switch (10s)
+                        case 963: // timed switch (10s)
                             new TimeSwitch(i * Globals.TILE, j * Globals.TILE, 10 * 60, room);
                             t.TileOptions.Visible = false;
                             t.TileOptions.Solid = false;

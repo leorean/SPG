@@ -7,6 +7,7 @@ using SPG.Map;
 using Leore.Main;
 using SPG.Util;
 using Leore.Objects.Effects;
+using Leore.Objects.Level.Blocks;
 
 namespace Leore.Objects.Level
 {
