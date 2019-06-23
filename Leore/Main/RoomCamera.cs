@@ -38,7 +38,7 @@ namespace Leore.Main
         // player-related vars
 
         private float offsetX = 0;
-        private float offsetY = -Globals.TILE;
+        private float offsetY = -Globals.T;
 
         // background vars
 
@@ -193,7 +193,7 @@ namespace Leore.Main
                             break;
                         default:
                             offsetX += Math.Sign((int)dir) * 1f;
-                            offsetX = offsetX.Clamp(-4 * Globals.TILE, 4 * Globals.TILE);                            
+                            offsetX = offsetX.Clamp(-4 * Globals.T, 4 * Globals.T);                            
                             break;
                     }
 
@@ -203,23 +203,23 @@ namespace Leore.Main
                         switch ((target as Player).LookDirection)
                         {
                             case Direction.UP:
-                                offsetY = Math.Max(offsetY - .5f, -3 * Globals.TILE);
+                                offsetY = Math.Max(offsetY - .5f, -3 * Globals.T);
                                 break;
                             case Direction.DOWN:
-                                offsetY = Math.Min(offsetY + .5f, 2 * Globals.TILE);
+                                offsetY = Math.Min(offsetY + .5f, 2 * Globals.T);
                                 break;
                             default:
-                                offsetY = -Globals.TILE;
+                                offsetY = -Globals.T;
                                 break;
                         }
                     } else
-                        offsetY = -Globals.TILE;                    
+                        offsetY = -Globals.T;                    
                 }
 
                 var tarX = Math.Min(Math.Max(target.X + offsetX, CurrentRoom.X + .5f * ViewWidth), CurrentRoom.X + CurrentRoom.BoundingBox.Width - .5f * ViewWidth);
                 var tarY = Math.Min(Math.Max(target.Y + offsetY, CurrentRoom.Y + .5f * ViewHeight), CurrentRoom.Y + CurrentRoom.BoundingBox.Height - .5f * ViewHeight);
 
-                if (Math.Abs(tarY - Position.Y) > 2 * Globals.TILE || Math.Abs(target.YVel) > 3)
+                if (Math.Abs(tarY - Position.Y) > 2 * Globals.T || Math.Abs(target.YVel) > 3)
                     dyVel = Math.Max(dyVel - .1f, 1);
                 else
                     dyVel = Math.Min(dyVel + .1f, 12f);

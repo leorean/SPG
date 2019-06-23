@@ -18,7 +18,7 @@ namespace Leore.Objects.Level
     {
         public Platform(float x, float y, Room room) : base(x, y, room)
         {            
-            BoundingBox = new SPG.Util.RectF(0, 0, Globals.TILE, 1);
+            BoundingBox = new SPG.Util.RectF(0, 0, Globals.T, 1);
             Visible = false;
         }
     }
@@ -27,15 +27,15 @@ namespace Leore.Objects.Level
     {
         public Solid(float x, float y, Room room) : base(x, y, room)
         {
-            BoundingBox = new SPG.Util.RectF(0, 0, Globals.TILE, Globals.TILE);
+            BoundingBox = new SPG.Util.RectF(0, 0, Globals.T, Globals.T);
             Visible = false;
         }
         public override void BeginUpdate(GameTime gameTime)
         {
             base.BeginUpdate(gameTime);
 
-            int tx = MathUtil.Div(X, Globals.TILE);
-            int ty = MathUtil.Div(Y, Globals.TILE);
+            int tx = MathUtil.Div(X, Globals.T);
+            int ty = MathUtil.Div(Y, Globals.T);
 
             var val = GameManager.Current.Map.LayerData[GameMap.FG_INDEX].Get(tx, ty);
             if (val?.TileOptions != null)
@@ -44,8 +44,8 @@ namespace Leore.Objects.Level
 
         public override void Destroy(bool callGC = false)
         {
-            int tx = MathUtil.Div(X, Globals.TILE);
-            int ty = MathUtil.Div(Y, Globals.TILE);
+            int tx = MathUtil.Div(X, Globals.T);
+            int ty = MathUtil.Div(Y, Globals.T);
 
             var val = GameManager.Current.Map.LayerData[GameMap.FG_INDEX].Get(tx, ty);
             if (val?.TileOptions != null)

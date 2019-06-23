@@ -350,15 +350,14 @@ namespace Leore.Main
         {
             if (State == PlayerState.LIMBO)
                 return;
-
+            
             Hit(1, 270);
 
             if (HP == 0)
                 return;
 
             new SingularEffect(X, Y, 9);
-            //new StarEmitter(X, Y, 10);
-
+            
             var dummy = new Dummy(safePosition.X, safePosition.Y);
             var burst = new KeyBurstEmitter(X, Y, dummy);
             burst.Colors = GameResources.HpColors;
@@ -420,13 +419,13 @@ namespace Leore.Main
             if (input.IsKeyPressed(Keys.LeftShift, Input.State.Holding) || input.IsKeyPressed(Keys.RightShift, Input.State.Holding))
             {
                 if (k_leftPressed)
-                    Position = new Vector2(Position.X - 16 * Globals.TILE, Position.Y);
+                    Position = new Vector2(Position.X - 16 * Globals.T, Position.Y);
                 if (k_rightPressed)
-                    Position = new Vector2(Position.X + 16 * Globals.TILE, Position.Y);
+                    Position = new Vector2(Position.X + 16 * Globals.T, Position.Y);
                 if (k_upPressed)
-                    Position = new Vector2(Position.X, Position.Y - 9 * Globals.TILE);
+                    Position = new Vector2(Position.X, Position.Y - 9 * Globals.T);
                 if (k_downPressed)
-                    Position = new Vector2(Position.X, Position.Y + 9 * Globals.TILE);
+                    Position = new Vector2(Position.X, Position.Y + 9 * Globals.T);
             }
 
             gamePadLeftXFactor = 1f;
@@ -536,7 +535,7 @@ namespace Leore.Main
             {
                 // transition from jumping to wall performance
                 if (
-                    (State == PlayerState.JUMP_UP && lastGroundY > Y + Globals.TILE)
+                    (State == PlayerState.JUMP_UP && lastGroundY > Y + Globals.T)
                     ||
                     State == PlayerState.JUMP_DOWN)
                 {
@@ -869,7 +868,7 @@ namespace Leore.Main
 
                 // ++++ npcs ++++
 
-                var t = Globals.TILE;
+                var t = Globals.T;
                 var npc = this.CollisionBoundsFirstOrDefault<NPC>(X, Y);
                 if (npc != null && npc.Active)
                 {
@@ -893,7 +892,7 @@ namespace Leore.Main
                         XVel = 0;
                         YVel = -Gravity;
 
-                        var pos = new Vector2(door.Center.X + door.Tx * Globals.TILE, door.Center.Y + door.Ty * Globals.TILE);
+                        var pos = new Vector2(door.Center.X + door.Tx * Globals.T, door.Center.Y + door.Ty * Globals.T);
                         State = PlayerState.BACKFACING;
                         RoomCamera.Current.ChangeRoomsToPosition(pos, 0);
 
@@ -1002,12 +1001,19 @@ namespace Leore.Main
 
                 if (limboTimer == 0)
                 {
+                    if (this.CollisionBoundsFirstOrDefault<PushBlock>(safePosition.X, safePosition.Y) != null)
+                    {
+                        safePosition = GameManager.Current.SaveGame.playerPosition;
+                        RoomCamera.Current.ChangeRoomsToPosition(safePosition, 0);
+                    }
+                    else
+                    {
+                        Position = safePosition;
+                    }
+
                     Visible = true;
                     if (Orb != null) Orb.Visible = true;
-                    Position = safePosition;
-
-                    //new SaveBurstEmitter(X, Y);
-
+                    
                     State = PlayerState.LIE;
                     lieTimer = 60;
                 }
@@ -1716,12 +1722,14 @@ namespace Leore.Main
                           && State != PlayerState.CEIL_IDLE
                           && State != PlayerState.BACKFACING
                           && State != PlayerState.HIT_AIR);
-            
+
+            var yVelBeforeCollision = YVel;
+
             var g = this.MoveAdvanced(moveWithPlatforms);
             
             if (inWater)
                 jumps = Math.Min(jumps, 1);
-
+                        
             if (g)
             {
                 // TODO: FIX GAP TO GET TO GROUND!
@@ -1734,7 +1742,7 @@ namespace Leore.Main
                 //}
 
                 jumps = 0;
-                if (!onGround && !inWater && State != PlayerState.BACKFACING)
+                if (!onGround && yVelBeforeCollision > Gravity && !inWater && State != PlayerState.BACKFACING)
                 {
                     new SingularEffect(X + XVel, Y, 12);
                 }
@@ -1749,7 +1757,7 @@ namespace Leore.Main
                     || State == PlayerState.CARRYOBJECT_IDLE
                     || State == PlayerState.CARRYOBJECT_WALK)
                 {
-                    if (lastGroundY < Y - 9 * Globals.TILE && !Stats.Abilities.HasFlag(PlayerAbility.NO_FALL_DAMAGE))
+                    if (lastGroundY < Y - 9 * Globals.T && !Stats.Abilities.HasFlag(PlayerAbility.NO_FALL_DAMAGE))
                     {
                         var eff = new SingularEffect(X, Y + 8);
                         Hit(3);
@@ -1758,7 +1766,7 @@ namespace Leore.Main
                     }
                     else if (KeyObject == null)
                     {
-                        if (lastGroundY < Y - Globals.TILE)
+                        if (lastGroundY < Y - Globals.T)
                             State = PlayerState.GET_UP;
                         else
                             State = PlayerState.IDLE;
@@ -1772,12 +1780,12 @@ namespace Leore.Main
             var boundY = Position.Y;
 
             if (boundX < 4) { XVel = 0; }
-            if (boundX > GameManager.Current.Map.Width * Globals.TILE - 4) { XVel = 0; }
+            if (boundX > GameManager.Current.Map.Width * Globals.T - 4) { XVel = 0; }
             if (boundY < 4) { YVel = 0; }
-            if (boundY > GameManager.Current.Map.Height * Globals.TILE - 4) { YVel = 0; }
+            if (boundY > GameManager.Current.Map.Height * Globals.T - 4) { YVel = 0; }
 
-            boundX = boundX.Clamp(4, GameManager.Current.Map.Width * Globals.TILE - 4);
-            boundY = boundY.Clamp(4, GameManager.Current.Map.Height * Globals.TILE - 4);
+            boundX = boundX.Clamp(4, GameManager.Current.Map.Width * Globals.T - 4);
+            boundY = boundY.Clamp(4, GameManager.Current.Map.Height * Globals.T - 4);
 
             Position = new Vector2(boundX, boundY);
             levitationEmitter.Position = Position;
@@ -1786,15 +1794,15 @@ namespace Leore.Main
 
             var roomY = RoomCamera.Current.CurrentRoom != null ? RoomCamera.Current.CurrentRoom.Y : Top;
 
-            if (!hit && onGround && !inWater && this.CollisionRectangleFirstOrDefault<Solid>(Left - Globals.TILE, Top - Globals.TILE, Right + Globals.TILE, Bottom) == null
+            if (!hit && onGround && !inWater && this.CollisionRectangleFirstOrDefault<Solid>(Left - Globals.T, Top - Globals.T, Right + Globals.T, Bottom) == null
                 && this.CollisionRectangleFirstOrDefault<PushBlock>(Left, roomY, Right, Bottom) == null)
             {
-                var tmp = new Vector2(MathUtil.Div(X, Globals.TILE) * Globals.TILE + 8, MathUtil.Div(Y, Globals.TILE) * Globals.TILE + 8);
+                var tmp = new Vector2(MathUtil.Div(X, Globals.T) * Globals.T + 8, MathUtil.Div(Y, Globals.T) * Globals.T + 8);
 
                 if (this.CollisionPointFirstOrDefault<Collider>(tmp.X, tmp.Y + 8) != null)
-                    safePosition = new Vector2(MathUtil.Div(X, Globals.TILE) * Globals.TILE + 8, MathUtil.Div(Y, Globals.TILE) * Globals.TILE + 8);
+                    safePosition = new Vector2(MathUtil.Div(X, Globals.T) * Globals.T + 8, MathUtil.Div(Y, Globals.T) * Globals.T + 8);
             }
-
+            
             // ++++ previous vars ++++
 
             lastDirection = Direction;
@@ -1969,7 +1977,7 @@ namespace Leore.Main
             {
                 float coinAlpha = coinTimeout / (.5f * maxCoinTimeout);
                 coinFont.Color = new Color(coinFont.Color, coinAlpha);
-                coinFont.Draw(sb, X, Y - Globals.TILE, $"+{CoinCounter}", depth: Globals.LAYER_UI - .0001f);
+                coinFont.Draw(sb, X, Y - Globals.T, $"+{CoinCounter}", depth: Globals.LAYER_UI - .0001f);
             }
             
             if (Oxygen < MaxOxygen && HP > 0)
@@ -1982,7 +1990,7 @@ namespace Leore.Main
                 var fg = new Color(r, g, b);
                 var bg = new Color(20, 113, 126);
 
-                sb.DrawBar(Position + new Vector2(0, 12), (int)(1.5 * Globals.TILE), Oxygen / (float)MaxOxygen, fg, bg, height: 2, border: false, depth: Globals.LAYER_UI - .001f);
+                sb.DrawBar(Position + new Vector2(0, 12), (int)(1.5 * Globals.T), Oxygen / (float)MaxOxygen, fg, bg, height: 2, border: false, depth: Globals.LAYER_UI - .001f);
             }
 
             // draws safe-rect for debug

@@ -23,7 +23,7 @@ namespace Leore.Objects.Level
         
         public SaveStatue(float x, float y, Room room, string name = null) : base(x, y, room)
         {            
-            BoundingBox = new RectF(4, 6, Globals.TILE - 8, Globals.TILE - 7);
+            BoundingBox = new RectF(4, 6, Globals.T - 8, Globals.T - 7);
             Visible = true;
             AnimationSpeed = .1f;
             AnimationTexture = AssetManager.SaveStatue;
@@ -42,8 +42,8 @@ namespace Leore.Objects.Level
             if (alreadyActivated)
                 return;
 
-            var posX = MathUtil.Div(X, Globals.TILE) * Globals.TILE + 8f;
-            var posY = MathUtil.Div(Y, Globals.TILE) * Globals.TILE + 7.9f;
+            var posX = MathUtil.Div(X, Globals.T) * Globals.T + 8f;
+            var posY = MathUtil.Div(Y, Globals.T) * Globals.T + 8f;
 
             var burst = new SaveBurstEmitter(emitter.Position.X, emitter.Position.Y);
             

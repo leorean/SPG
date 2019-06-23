@@ -22,19 +22,19 @@ namespace Leore.Objects.Effects.Emitters
                 case Direction.NONE:
                     break;
                 case Direction.LEFT:
-                    Position = emitter.Position + new Vector2(Globals.TILE, (float)RND.Next * Globals.TILE);
+                    Position = emitter.Position + new Vector2(Globals.T, (float)RND.Next * Globals.T);
                     XVel = -1;                    
                     break;
                 case Direction.RIGHT:
-                    Position = emitter.Position + new Vector2(0, (float)RND.Next * Globals.TILE);
+                    Position = emitter.Position + new Vector2(0, (float)RND.Next * Globals.T);
                     XVel = 1;
                     break;
                 case Direction.UP:
-                    Position = emitter.Position + new Vector2((float)RND.Next * Globals.TILE, Globals.TILE);
+                    Position = emitter.Position + new Vector2((float)RND.Next * Globals.T, Globals.T);
                     YVel = -1;
                     break;
                 case Direction.DOWN:
-                    Position = emitter.Position + new Vector2((float)RND.Next * Globals.TILE, 0);
+                    Position = emitter.Position + new Vector2((float)RND.Next * Globals.T, 0);
                     YVel = 1;
                     break;
                 default:

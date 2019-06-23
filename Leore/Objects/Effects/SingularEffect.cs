@@ -47,16 +47,12 @@ namespace Leore.Objects.Effects
                     fSpd = .4f;
                     break;
                 case 8:
-                    fAmount = 9;
-                    fSpd = .4f;
-                    break;
                 case 11:
+                case 12:
+                case 13:
+                    fAmount = 9;
                     fSpd = .4f;
                     break;
-                case 12:
-                    fSpd = .4f;
-                    fAmount = 9;
-                    break;                
             }
 
             SetAnimation(cols * Type, cols * Type + fAmount, fSpd, Loop);

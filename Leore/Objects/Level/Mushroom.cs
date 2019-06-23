@@ -15,7 +15,7 @@ namespace Leore.Objects.Level
 
         public Mushroom(float x, float y, Room room) : base(x, y, room)
         {
-            BoundingBox = new RectF(0, 8, Globals.TILE, 8);            
+            BoundingBox = new RectF(0, 8, Globals.T, 8);            
         }
 
         public void Bounce()
@@ -45,7 +45,7 @@ namespace Leore.Objects.Level
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
-            var posy = Y + (1 - scale) * Globals.TILE;
+            var posy = Y + (1 - scale) * Globals.T;
             var pos = new Vector2(X, posy);
 
             sb.Draw(Texture, pos, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);

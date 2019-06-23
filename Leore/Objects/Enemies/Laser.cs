@@ -40,7 +40,7 @@ namespace Leore.Objects.Enemies
 
             DrawOffset = new Vector2(16);
 
-            T = Globals.TILE;
+            T = Globals.T;
         }
 
         public override void Update(GameTime gameTime)

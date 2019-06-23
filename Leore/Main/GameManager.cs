@@ -318,7 +318,7 @@ namespace Leore.Main
             var room = RoomCamera.Current.CurrentRoom;
             if (room != null)
             {
-                ObjectManager.SetRegionEnabled<Collider>(room.X - Globals.TILE, room.Y - Globals.TILE, room.BoundingBox.Width + 2 * Globals.TILE, room.BoundingBox.Height + 2 * Globals.TILE, true);
+                ObjectManager.SetRegionEnabled<Collider>(room.X - Globals.T, room.Y - Globals.T, room.BoundingBox.Width + 2 * Globals.T, room.BoundingBox.Height + 2 * Globals.T, true);
             }
             
             if (RoomCamera.Current.CurrentRoom != null)

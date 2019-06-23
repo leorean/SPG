@@ -154,7 +154,7 @@ namespace SPG.Objects
 
             // draw only particles which are within the camera bounds
 
-            var t = Globals.TILE;
+            var t = Globals.T;
 
             foreach (var part in Particles)
             {

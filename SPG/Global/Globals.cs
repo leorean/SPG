@@ -2,7 +2,7 @@
 
 public static class Globals
 {
-    public static readonly int TILE = 16;
+    public static readonly int T = 16;
 
     public static readonly float LAYER_FONT
         = 0.9010f;

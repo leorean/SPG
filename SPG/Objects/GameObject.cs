@@ -120,7 +120,7 @@ namespace SPG.Objects
         /// Sets the draw offset. Use positive values because it is used in the drawing primitive 
         /// </summary>
         public Vector2 DrawOffset { get; set; }
-        public RectF BoundingBox { get; set; } = new RectF(0, 0, Globals.TILE, Globals.TILE);
+        public RectF BoundingBox { get; set; } = new RectF(0, 0, Globals.T, Globals.T);
         
         public float X { get => Position.X; }
         public float Y { get => Position.Y; }

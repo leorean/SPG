@@ -22,8 +22,8 @@ namespace Leore.Objects.Effects.Emitters
                 var posX = room.X + RND.Int((int)room.BoundingBox.Width);
                 var posY = room.Y + RND.Int((int)room.BoundingBox.Height);
 
-                int tx = MathUtil.Div(posX, Globals.TILE);
-                int ty = MathUtil.Div(posY, Globals.TILE);
+                int tx = MathUtil.Div(posX, Globals.T);
+                int ty = MathUtil.Div(posY, Globals.T);
                 
                 var inWater = GameManager.Current.Map.CollisionTile(posX, posY - 2, GameMap.WATER_INDEX);
 
@@ -110,12 +110,12 @@ namespace Leore.Objects.Effects.Emitters
                 var posY = room.Y;
 
                 waterCount = 0;
-                for (int i = (int)room.X; i < room.X + room.BoundingBox.Width; i += Globals.TILE)
+                for (int i = (int)room.X; i < room.X + room.BoundingBox.Width; i += Globals.T)
                 { 
-                    for (int j = (int)room.Y; j < room.Y + room.BoundingBox.Height; j += Globals.TILE)
+                    for (int j = (int)room.Y; j < room.Y + room.BoundingBox.Height; j += Globals.T)
                     {
-                        int tx = MathUtil.Div(i, Globals.TILE);
-                        int ty = MathUtil.Div(j, Globals.TILE);
+                        int tx = MathUtil.Div(i, Globals.T);
+                        int ty = MathUtil.Div(j, Globals.T);
 
                         if (GameManager.Current.Map.LayerData[GameMap.WATER_INDEX].Get(tx, ty) != null)
                         {

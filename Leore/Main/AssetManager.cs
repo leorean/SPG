@@ -126,7 +126,7 @@ namespace Leore.Main
 
             // backgrounds
 
-            Backgrounds = content.LoadTextureSet("backgrounds", 16 * Globals.TILE, 9 * Globals.TILE);
+            Backgrounds = content.LoadTextureSet("backgrounds", 16 * Globals.T, 9 * Globals.T);
 
             // load fonts
 

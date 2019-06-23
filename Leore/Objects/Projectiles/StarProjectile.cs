@@ -23,17 +23,17 @@ namespace Leore.Objects.Projectiles
             {
                 case SpellLevel.ONE:
                     Texture = AssetManager.Projectiles[0];
-                    maxDist = 3 * Globals.TILE;
+                    maxDist = 3 * Globals.T;
                     Damage = 1;
                     break;
                 case SpellLevel.TWO:
                     Texture = AssetManager.Projectiles[1];
-                    maxDist = 5 * Globals.TILE;
+                    maxDist = 5 * Globals.T;
                     Damage = 2;
                     break;
                 case SpellLevel.THREE:
                     Texture = AssetManager.Projectiles[2];
-                    maxDist = 8 * Globals.TILE;
+                    maxDist = 8 * Globals.T;
                     Damage = 1;
                     break;
             }

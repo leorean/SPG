@@ -12,7 +12,6 @@ namespace Leore.Objects.Level.Blocks
 
         public KeyBlock(float x, float y, Room room) : base(x, y, room)
         {
-            Texture = GameManager.Current.Map.TileSet[582];            
         }
         
         public override void BeginUpdate(GameTime gameTime)

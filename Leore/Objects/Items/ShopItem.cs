@@ -84,7 +84,7 @@ namespace Leore.Objects.Items
                     switch (type)
                     {
                         case 0: // feather
-                            var featherItem = new AbilityItem(X, Y - Globals.TILE, Room, Name);
+                            var featherItem = new AbilityItem(X, Y - Globals.T, Room, Name);
                             featherItem.Texture = AssetManager.Items[5];
                             featherItem.OnObtain = () =>
                             {
@@ -94,11 +94,11 @@ namespace Leore.Objects.Items
                             featherItem.ID = ID;
                             break;
                         case 1: // MP crystal
-                            var mpUp = new StatUpItem(X, Y - Globals.TILE, Room, StatUpItem.StatType.MP);                            
+                            var mpUp = new StatUpItem(X, Y - Globals.T, Room, StatUpItem.StatType.MP);                            
                             mpUp.ID = ID;
                             break;
                         case 2: // spell: crimson
-                            var crimsonItem = new AbilityItem(X, Y - Globals.TILE, Room, Name);
+                            var crimsonItem = new AbilityItem(X, Y - Globals.T, Room, Name);
                             crimsonItem.Texture = AssetManager.Items[6];
                             crimsonItem.OnObtain = () =>
                             {
@@ -129,15 +129,15 @@ namespace Leore.Objects.Items
                 // info
                 if (showInfo)
                 {
-                    var infoY = -2 * Globals.TILE;
-                    if (Y < RoomCamera.Current.ViewY + 4 * Globals.TILE)
-                        infoY = -1 * Globals.TILE;
+                    var infoY = -2 * Globals.T;
+                    if (Y < RoomCamera.Current.ViewY + 4 * Globals.T)
+                        infoY = -1 * Globals.T;
                     font.Draw(sb, X, Y + infoY, $"~{Name}~" + '\n' + $"{price}$");
                 }
                 else
                 {
                     // $
-                    sb.Draw(AssetManager.ShopItems, Position + new Vector2(0, -Globals.TILE + (float)z), new Rectangle(0, 0, 16, 16), Color.White, 0, DrawOffset, Vector2.One, SpriteEffects.None, Depth);
+                    sb.Draw(AssetManager.ShopItems, Position + new Vector2(0, -Globals.T + (float)z), new Rectangle(0, 0, 16, 16), Color.White, 0, DrawOffset, Vector2.One, SpriteEffects.None, Depth);
                 }
             }
             

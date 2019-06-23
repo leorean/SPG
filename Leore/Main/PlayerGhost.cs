@@ -32,7 +32,7 @@ namespace Leore.Main
             
             Color = new Color(Color, (float)alpha);
 
-            if (Math.Abs(Y - spawnY) < 3 * Globals.TILE)
+            if (Math.Abs(Y - spawnY) < 3 * Globals.T)
             {
                 alpha = Math.Min(alpha + .01, .5);
 

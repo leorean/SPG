@@ -51,6 +51,9 @@ namespace Leore.Main
                     if (t == null || t.ID == -1)
                         continue;
 
+                    t.TileOptions.Visible = false;
+                    t.TileOptions.Solid = false;
+
                     switch (t.ID)
                     {
                         case 0: // platforms
@@ -61,322 +64,225 @@ namespace Leore.Main
                         case 646:
                         case 789:
                         case 794:
-                            var platform = new Platform(i * Globals.TILE, j * Globals.TILE, room);
-                            t.TileOptions.Solid = false;
+                            var platform = new Platform(i * Globals.T, j * Globals.T, room);
+                            t.TileOptions.Visible = true;
                             if (t.ID == 646) t.TileOptions.Visible = false; // <- invisible platform
                             break;
                         case 387: // mushrooms
-                            var mushroom = new Mushroom(i * Globals.TILE, j * Globals.TILE, room)
+                            var mushroom = new Mushroom(i * Globals.T, j * Globals.T, room)
                             {
                                 Texture = GameManager.Current.Map.TileSet[t.ID]
                             };
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
                             break;
                         case 576: // save-statues
-                            var saveSatue = new SaveStatue(i * Globals.TILE, j * Globals.TILE, room);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            var saveSatue = new SaveStatue(i * Globals.T, j * Globals.T, room);
                             break;
                         case 512: // spikes (bottom)
-                            new SpikeBottom(i * Globals.TILE, j * Globals.TILE, room);
+                            new SpikeBottom(i * Globals.T, j * Globals.T, room);
                             t.TileOptions.Visible = true;
-                            t.TileOptions.Solid = false;
                             break;
                         case 513: // spikes (top)
-                            new SpikeTop(i * Globals.TILE, j * Globals.TILE, room);
+                            new SpikeTop(i * Globals.T, j * Globals.T, room);
                             t.TileOptions.Visible = true;
-                            t.TileOptions.Solid = false;
                             break;
                         case 514: // spikes (right)
-                            new SpikeRight(i * Globals.TILE, j * Globals.TILE, room);
+                            new SpikeRight(i * Globals.T, j * Globals.T, room);
                             t.TileOptions.Visible = true;
-                            t.TileOptions.Solid = false;
                             break;
                         case 515: // spikes (left)
-                            new SpikeLeft(i * Globals.TILE, j * Globals.TILE, room);
+                            new SpikeLeft(i * Globals.T, j * Globals.T, room);
                             t.TileOptions.Visible = true;
-                            t.TileOptions.Solid = false;
                             break;
                         case 577: // BIG spikes (deadly)
-                            var bigSpike = new BigSpike(i * Globals.TILE, j * Globals.TILE, room);
+                            var bigSpike = new BigSpike(i * Globals.T, j * Globals.T, room);
                             t.TileOptions.Visible = true;
-                            t.TileOptions.Solid = false;
                             break;
                         case 578: case 641: case 642:
                             t.TileOptions.Visible = true;
-                            t.TileOptions.Solid = false;
                             break;
                         case 599: // chimney smoke 
-                            new Smoke(i * Globals.TILE + 8, j * Globals.TILE + 8, room);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            new Smoke(i * Globals.T + 8, j * Globals.T + 8, room);
                             break;
                         case 640: // push-blocks
-                            var pushBlock = new PushBlock(i * Globals.TILE, j * Globals.TILE, room);
+                            var pushBlock = new PushBlock(i * Globals.T, j * Globals.T, room);
                             pushBlock.Texture = GameManager.Current.Map.TileSet[t.ID];
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
                             break;
                         case 643: // switches (ground)
-                            new GroundSwitch(i * Globals.TILE, j * Globals.TILE, false, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            new GroundSwitch(i * Globals.T, j * Globals.T, false, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
                             break;
                         case 644: // switches (ground) - activate once
-                            new GroundSwitch(i * Globals.TILE, j * Globals.TILE, true, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            new GroundSwitch(i * Globals.T, j * Globals.T, true, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
                             break;
                         case 648: // waterfall (bright)
                         case 649: // waterfall (cave)
-                            new WaterFall(i * Globals.TILE, j * Globals.TILE, room, (t.ID - 648));
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            new WaterFall(i * Globals.T, j * Globals.T, room, (t.ID - 648));
                             break;
                         case 579: // hp potion
-                            new Potion(i * Globals.TILE + 8, j * Globals.TILE + 8, room, PotionType.HP);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            new Potion(i * Globals.T + 8, j * Globals.T + 8, room, PotionType.HP);
                             break;
                         case 580: // mp potion
-                            new Potion(i * Globals.TILE + 8, j * Globals.TILE + 8, room, PotionType.MP);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            new Potion(i * Globals.T + 8, j * Globals.T + 8, room, PotionType.MP);
                             break;
                         case 581: // key
-                            var key = new Key(i * Globals.TILE + 8, j * Globals.TILE + 8, room);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            var key = new Key(i * Globals.T + 8, j * Globals.T + 8, room);
                             break;
                         case 582: // keyblock
-                            new KeyBlock(i * Globals.TILE, j * Globals.TILE, room);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            new KeyBlock(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
                             break;
                         case 647: // control disabler
-                            new JumpControlDisabler(i * Globals.TILE, j * Globals.TILE, room);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            new JumpControlDisabler(i * Globals.T, j * Globals.T, room);
                             break;
                         // coins
                         case 704: case 705: case 706: case 707: case 708: case 709: case 710:
-                            var coin = new Coin(i * Globals.TILE + 8, j * Globals.TILE + 8, room, (t.ID - 704).TileIDToCoinValue());
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            var coin = new Coin(i * Globals.T + 8, j * Globals.T + 8, room, (t.ID - 704).TileIDToCoinValue());
                             break;
                         case 711: // max HP
-                            new StatUpItem(i * Globals.TILE + 8, j * Globals.TILE + 8, room, StatType.HP);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            new StatUpItem(i * Globals.T + 8, j * Globals.T + 8, room, StatType.HP);
                             break;
                         case 712: // max MP
-                            new StatUpItem(i * Globals.TILE + 8, j * Globals.TILE + 8, room, StatType.MP);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            new StatUpItem(i * Globals.T + 8, j * Globals.T + 8, room, StatType.MP);
                             break;
                         case 713: // MP Regen +
-                            new StatUpItem(i * Globals.TILE + 8, j * Globals.TILE + 8, room, StatType.Regen);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            new StatUpItem(i * Globals.T + 8, j * Globals.T + 8, room, StatType.Regen);
                             break;
                         case 714: // destroy blocks
                         case 715:
-                            var destroyBlock = new DestroyBlock(i * Globals.TILE, j * Globals.TILE, room, t.ID - 714 + 1);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            var destroyBlock = new DestroyBlock(i * Globals.T, j * Globals.T, room, t.ID - 714 + 1);
                             break;
                         case 716: // enemy block
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
-                            new EnemyBlock(i * Globals.TILE, j * Globals.TILE, room);
+                            new EnemyBlock(i * Globals.T, j * Globals.T, room);
                             break;
                         case 717: // orb block
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
-                            new OrbBlock(i * Globals.TILE, j * Globals.TILE, room);
+                            new OrbBlock(i * Globals.T, j * Globals.T, room);
                             break;
-
                         case 719: // switch block (default: on)
-                            new SwitchBlock(i * Globals.TILE, j * Globals.TILE, room, 1);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            new SwitchBlock(i * Globals.T, j * Globals.T, room, 1);
                             break;
                         case 720: // switch block (default: off)
-                            new SwitchBlock(i * Globals.TILE, j * Globals.TILE, room, 0);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            new SwitchBlock(i * Globals.T, j * Globals.T, room, 0);
                             break;
                         case 721: // pots
-                            var pot = new Pot(i * Globals.TILE, j * Globals.TILE, room);
+                            var pot = new Pot(i * Globals.T, j * Globals.T, room);
                             pot.Texture = GameManager.Current.Map.TileSet[t.ID];
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
                             break;
                         case 722: // bushes
-                            var bush = new Bush(i * Globals.TILE, j * Globals.TILE, room);
+                            var bush = new Bush(i * Globals.T, j * Globals.T, room);
                             bush.Texture = GameManager.Current.Map.TileSet[t.ID];
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
                             break;
                         case 723:
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
-                            new AirBubbleSpawner(i * Globals.TILE, j * Globals.TILE, room) {
+                            new AirBubbleSpawner(i * Globals.T, j * Globals.T, room) {
                                 Texture = GameManager.Current.Map.TileSet[t.ID]
                             };
                             break;
                         case 724: // door disabler (switch)
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
-                            new DoorDisabler(i * Globals.TILE, j * Globals.TILE, room, DoorDisabler.TriggerType.Switch) { Texture = GameManager.Current.Map.TileSet[t.ID] };
+                            new DoorDisabler(i * Globals.T, j * Globals.T, room, DoorDisabler.TriggerType.Switch) { Texture = GameManager.Current.Map.TileSet[t.ID] };
                             break;
                         case 725: // door disabler (enemy)
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
-                            new DoorDisabler(i * Globals.TILE, j * Globals.TILE, room, DoorDisabler.TriggerType.Enemy) { Texture = GameManager.Current.Map.TileSet[t.ID] };
+                            new DoorDisabler(i * Globals.T, j * Globals.T, room, DoorDisabler.TriggerType.Enemy) { Texture = GameManager.Current.Map.TileSet[t.ID] };
                             break;
                         case 726: // door disabler (key)
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
-                            new DoorDisabler(i * Globals.TILE, j * Globals.TILE, room, DoorDisabler.TriggerType.Key) { Texture = GameManager.Current.Map.TileSet[t.ID] };
+                            new DoorDisabler(i * Globals.T, j * Globals.T, room, DoorDisabler.TriggerType.Key) { Texture = GameManager.Current.Map.TileSet[t.ID] };
                             break;
                         case 768: // enemy Bat
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
-                            new EnemyBat(i * Globals.TILE + 8, j * Globals.TILE + 8, room);
+                            new EnemyBat(i * Globals.T + 8, j * Globals.T + 8, room);
                             break;
                         case 769: // enemy Grassy
-                            new EnemyGrassy(i * Globals.TILE + 8, j * Globals.TILE + 8, room);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            new EnemyGrassy(i * Globals.T + 8, j * Globals.T + 8, room);
                             break;
                         case 770: // enemy Voidling (without shield)
-                            new EnemyVoidling(i * Globals.TILE + 8, j * Globals.TILE + 8, room, 0);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            new EnemyVoidling(i * Globals.T + 8, j * Globals.T + 8, room, 0);
                             break;
                         case 771: // enemy Voidling (with shield)
-                            new EnemyVoidling(i * Globals.TILE + 8, j * Globals.TILE + 8, room, 1);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            new EnemyVoidling(i * Globals.T + 8, j * Globals.T + 8, room, 1);
                             break;
                         case 832: // teleporters
-                            new Teleporter(i * Globals.TILE + 8, j * Globals.TILE + 8, room);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            new Teleporter(i * Globals.T + 8, j * Globals.T + 8, room);
                             break;
                         case 833: // toggle switch (on)
-                            new ToggleSwitch(i * Globals.TILE + 8, j * Globals.TILE + 8, room, true);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            new ToggleSwitch(i * Globals.T + 8, j * Globals.T + 8, room, true);
                             break;
                         case 834: // toggle switch (off)
-                            new ToggleSwitch(i * Globals.TILE + 8, j * Globals.TILE + 8, room, false);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            new ToggleSwitch(i * Globals.T + 8, j * Globals.T + 8, room, false);
+                            break;
+                        case 835:
+                            new FallingPlatform(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
                             break;
                         case 960: // timed switch (1s)
-                            new TimeSwitch(i * Globals.TILE, j * Globals.TILE, 1 * 60, room);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            new TimeSwitch(i * Globals.T, j * Globals.T, 1 * 60, room);
                             break;
                         case 961: // timed switch (3s)
-                            new TimeSwitch(i * Globals.TILE, j * Globals.TILE, 3 * 60, room);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            new TimeSwitch(i * Globals.T, j * Globals.T, 3 * 60, room);
                             break;
                         case 962: // timed switch (5s)
-                            new TimeSwitch(i * Globals.TILE, j * Globals.TILE, 5 * 60, room);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            new TimeSwitch(i * Globals.T, j * Globals.T, 5 * 60, room);
                             break;
                         case 963: // timed switch (10s)
-                            new TimeSwitch(i * Globals.TILE, j * Globals.TILE, 10 * 60, room);
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
+                            new TimeSwitch(i * Globals.T, j * Globals.T, 10 * 60, room);
                             break;
                         // flow objects:
                         case 896:
                         case 897:
                         case 898:
                         case 899:
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
                             if (t.ID == 896)
-                                new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.UP);
+                                new Flow(i * Globals.T, j * Globals.T, room, Direction.UP);
                             if (t.ID == 897)
-                                new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.DOWN);
+                                new Flow(i * Globals.T, j * Globals.T, room, Direction.DOWN);
                             if (t.ID == 898)
-                                new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.LEFT);
+                                new Flow(i * Globals.T, j * Globals.T, room, Direction.LEFT);
                             if (t.ID == 899)
-                                new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.RIGHT);
+                                new Flow(i * Globals.T, j * Globals.T, room, Direction.RIGHT);
                             break;
-
                         // flow objects (activatable)
                         case 900:
                         case 901:
                         case 902:
                         case 903:
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
                             if (t.ID == 900)
-                                new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.UP).Activatable = true;
+                                new Flow(i * Globals.T, j * Globals.T, room, Direction.UP).Activatable = true;
                             if (t.ID == 901)
-                                new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.DOWN).Activatable = true;
+                                new Flow(i * Globals.T, j * Globals.T, room, Direction.DOWN).Activatable = true;
                             if (t.ID == 902)
-                                new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.LEFT).Activatable = true;
+                                new Flow(i * Globals.T, j * Globals.T, room, Direction.LEFT).Activatable = true;
                             if (t.ID == 903)
-                                new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.RIGHT).Activatable = true;
+                                new Flow(i * Globals.T, j * Globals.T, room, Direction.RIGHT).Activatable = true;
                             break;
                         // flow objects (activatable, default: on)
                         case 904:
                         case 905:
                         case 906:
                         case 907:
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
                             if (t.ID == 904)
-                                new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.UP) { Activatable = true, ActiveByDefault = true };
+                                new Flow(i * Globals.T, j * Globals.T, room, Direction.UP) { Activatable = true, ActiveByDefault = true };
                             if (t.ID == 905)
-                                new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.DOWN) { Activatable = true, ActiveByDefault = true };
+                                new Flow(i * Globals.T, j * Globals.T, room, Direction.DOWN) { Activatable = true, ActiveByDefault = true };
                             if (t.ID == 906)
-                                new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.LEFT) { Activatable = true, ActiveByDefault = true };
+                                new Flow(i * Globals.T, j * Globals.T, room, Direction.LEFT) { Activatable = true, ActiveByDefault = true };
                             if (t.ID == 907)
-                                new Flow(i * Globals.TILE, j * Globals.TILE, room, Direction.RIGHT) { Activatable = true, ActiveByDefault = true };
+                                new Flow(i * Globals.T, j * Globals.T, room, Direction.RIGHT) { Activatable = true, ActiveByDefault = true };
                             break;
                         case 908: // laser (vertical)
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
-                            new Laser(i * Globals.TILE, j * Globals.TILE, room, Laser.Orientation.Vertical);
+                            new Laser(i * Globals.T, j * Globals.T, room, Laser.Orientation.Vertical);
                             break;
                         case 909: // laser (horizontal)
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
-                            new Laser(i * Globals.TILE, j * Globals.TILE, room, Laser.Orientation.Horizontal);
+                            new Laser(i * Globals.T, j * Globals.T, room, Laser.Orientation.Horizontal);
                             break;
                         case 910: // toggle laser (vertical)
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
-                            new Laser(i * Globals.TILE, j * Globals.TILE, room, Laser.Orientation.Vertical, true);
+                            new Laser(i * Globals.T, j * Globals.T, room, Laser.Orientation.Vertical, true);
                             break;
                         case 911: // toggle laser (horizontal)
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
-                            new Laser(i * Globals.TILE, j * Globals.TILE, room, Laser.Orientation.Horizontal, true);
+                            new Laser(i * Globals.T, j * Globals.T, room, Laser.Orientation.Horizontal, true);
                             break;
                         case 912: // toggle laser (vertical)
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
-                            new Laser(i * Globals.TILE, j * Globals.TILE, room, Laser.Orientation.Vertical, true, defaultValue: false);
+                            new Laser(i * Globals.T, j * Globals.T, room, Laser.Orientation.Vertical, true, defaultValue: false);
                             break;
                         case 913: // toggle laser (horizontal)
-                            t.TileOptions.Visible = false;
-                            t.TileOptions.Solid = false;
-                            new Laser(i * Globals.TILE, j * Globals.TILE, room, Laser.Orientation.Horizontal, true, defaultValue: false);
+                            new Laser(i * Globals.T, j * Globals.T, room, Laser.Orientation.Horizontal, true, defaultValue: false);
                             break;
                         default:
-                            var solid = new Solid(i * Globals.TILE, j * Globals.TILE, room);
+                            var solid = new Solid(i * Globals.T, j * Globals.T, room);
+                            t.TileOptions.Visible = true;
+                            t.TileOptions.Solid = true;
                             if (t.ID == 645) t.TileOptions.Visible = false;  // <- invisible blocks
                             break;
                     }
@@ -579,11 +485,11 @@ namespace Leore.Main
                 }
 
                 // load rooms of standard size when there is none
-                for (var i = 0; i < GameManager.Current.Map.Width * Globals.TILE; i += camera.ViewWidth)
+                for (var i = 0; i < GameManager.Current.Map.Width * Globals.T; i += camera.ViewWidth)
                 {
-                    for (var j = 0; j < GameManager.Current.Map.Height * Globals.TILE; j += camera.ViewHeight)
+                    for (var j = 0; j < GameManager.Current.Map.Height * Globals.T; j += camera.ViewHeight)
                     {
-                        if (ObjectManager.CollisionPoints<Room>(i + Globals.TILE, j + Globals.TILE).Count == 0)
+                        if (ObjectManager.CollisionPoints<Room>(i + Globals.T, j + Globals.T).Count == 0)
                         {
                             var room = new Room(i, j, camera.ViewWidth, camera.ViewHeight);
                             //camera.Rooms.Add(room);

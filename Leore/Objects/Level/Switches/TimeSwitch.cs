@@ -96,10 +96,10 @@ namespace Leore.Objects.Level.Switches
             sb.Draw(AssetManager.TimeSwitch[4], Position + new Vector2(-8, +8) + new Vector2(-dist, +dist) + new Vector2(0, z), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0002f);
             sb.Draw(AssetManager.TimeSwitch[5], Position + new Vector2(+8, +8) + new Vector2(+dist, +dist) + new Vector2(0, z), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0002f);
             
-            sb.Draw(AssetManager.TimeSwitch[6], Position + new Vector2(-8, -8) + new Vector2(-dist * .5f, -dist * .5f) + new Vector2(0, z), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0002f);
-            sb.Draw(AssetManager.TimeSwitch[7], Position + new Vector2(+8, -8) + new Vector2(+dist * .5f, -dist * .5f) + new Vector2(0, z), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0002f);
-            sb.Draw(AssetManager.TimeSwitch[8], Position + new Vector2(-8, +8) + new Vector2(-dist * .5f, +dist * .5f) + new Vector2(0, z), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0002f);
-            sb.Draw(AssetManager.TimeSwitch[9], Position + new Vector2(+8, +8) + new Vector2(+dist * .5f, +dist * .5f) + new Vector2(0, z), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0002f);
+            sb.Draw(AssetManager.TimeSwitch[6], Position + new Vector2(-8, -8) + new Vector2(-dist * .5f, -dist * .5f) + new Vector2(0, z), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0003f);
+            sb.Draw(AssetManager.TimeSwitch[7], Position + new Vector2(+8, -8) + new Vector2(+dist * .5f, -dist * .5f) + new Vector2(0, z), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0003f);
+            sb.Draw(AssetManager.TimeSwitch[8], Position + new Vector2(-8, +8) + new Vector2(-dist * .5f, +dist * .5f) + new Vector2(0, z), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0003f);
+            sb.Draw(AssetManager.TimeSwitch[9], Position + new Vector2(+8, +8) + new Vector2(+dist * .5f, +dist * .5f) + new Vector2(0, z), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0003f);
 
             sb.Draw(AssetManager.TimeSwitch[10], Position + new Vector2(0, z), null, new Color(Color, dist/maxDist * .5f), Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0002f);
         }

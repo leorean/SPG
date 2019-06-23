@@ -21,7 +21,7 @@ namespace Leore.Objects.Items
         protected State state = State.IDLE;
 
         protected Player player;
-        protected float maxYDist = 2 * Globals.TILE;
+        protected float maxYDist = 2 * Globals.T;
 
         protected bool flashOnTaken = true;
 

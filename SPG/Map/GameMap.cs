@@ -59,8 +59,8 @@ namespace SPG.Map
         /// <returns></returns>
         public static bool CollisionTile(this GameMap map, float x, float y, int layer = -1)
         {
-            int tx = MathUtil.Div(x, Globals.TILE);
-            int ty = MathUtil.Div(y, Globals.TILE);
+            int tx = MathUtil.Div(x, Globals.T);
+            int ty = MathUtil.Div(y, Globals.T);
 
             if (layer == -1)
                 layer = GameMap.FG_INDEX;
@@ -88,10 +88,10 @@ namespace SPG.Map
             //int tx = MathUtil.Div(o.X + xVel, Globals.TILE);
             //int ty = MathUtil.Div(o.Y + yVel, Globals.TILE);
 
-            int tl = MathUtil.Div(o.Left + xVel, Globals.TILE);
-            int tt = MathUtil.Div(o.Top + yVel, Globals.TILE);
-            int tr = MathUtil.Div(o.Right + xVel, Globals.TILE);
-            int tb = MathUtil.Div(o.Bottom + yVel, Globals.TILE);
+            int tl = MathUtil.Div(o.Left + xVel, Globals.T);
+            int tt = MathUtil.Div(o.Top + yVel, Globals.T);
+            int tr = MathUtil.Div(o.Right + xVel, Globals.T);
+            int tb = MathUtil.Div(o.Bottom + yVel, Globals.T);
 
             if (layer == -1)
                 layer = map.LayerData.Count - 1;
@@ -263,14 +263,14 @@ namespace SPG.Map
                 return;
 
             int minX = (int)Math.Max(cam.Position.X - cam.ViewWidth * .5f, 0f);
-            int maxX = (int)Math.Min(cam.Position.X + cam.ViewWidth * .5f + Globals.TILE, Width * Globals.TILE);
+            int maxX = (int)Math.Min(cam.Position.X + cam.ViewWidth * .5f + Globals.T, Width * Globals.T);
             int minY = (int)Math.Max(cam.Position.Y - cam.ViewHeight * .5f, 0f);
-            int maxY = (int)Math.Min(cam.Position.Y + cam.ViewHeight * .5f + Globals.TILE, Height * Globals.TILE);
+            int maxY = (int)Math.Min(cam.Position.Y + cam.ViewHeight * .5f + Globals.T, Height * Globals.T);
 
-            minX = MathUtil.Div(minX, Globals.TILE);
-            minY = MathUtil.Div(minY, Globals.TILE);
-            maxX = MathUtil.Div(maxX, Globals.TILE);
-            maxY = MathUtil.Div(maxY, Globals.TILE);
+            minX = MathUtil.Div(minX, Globals.T);
+            minY = MathUtil.Div(minY, Globals.T);
+            maxX = MathUtil.Div(maxX, Globals.T);
+            maxY = MathUtil.Div(maxY, Globals.T);
             
             for (var l = 0; l < LayerData.Count; l++)
             {
@@ -296,16 +296,16 @@ namespace SPG.Map
                         {
                             var tid = tile.ID;
 
-                            var tix = (tid * Globals.TILE) % TileSet.Width;
-                            var tiy = MathUtil.Div(tid * Globals.TILE, TileSet.Width) * Globals.TILE;
+                            var tix = (tid * Globals.T) % TileSet.Width;
+                            var tiy = MathUtil.Div(tid * Globals.T, TileSet.Width) * Globals.T;
 
-                            var partRect = new Rectangle(tix, tiy, Globals.TILE, Globals.TILE);
+                            var partRect = new Rectangle(tix, tiy, Globals.T, Globals.T);
 
                             float depth = LayerDepth.ElementAt(l).Value;
                             if (tile.TileOptions.Depth != -1)
                                 depth = tile.TileOptions.Depth;
 
-                            sb.Draw(TileSet.OriginalTexture, new Vector2(i * Globals.TILE, j * Globals.TILE), partRect, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, depth);
+                            sb.Draw(TileSet.OriginalTexture, new Vector2(i * Globals.T, j * Globals.T), partRect, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, depth);
                         }
                     }
                 }

@@ -15,8 +15,8 @@ namespace SPG.Map
     {
         public static TextureSet LoadTextureSet(this ContentManager content, string fileName, int? tileWidth = null, int? tileHeight = null)
         {
-            int partWidth = (tileWidth != null) ? (int)tileWidth : Globals.TILE;
-            int partHeight = (tileHeight != null) ? (int)tileHeight : Globals.TILE;
+            int partWidth = (tileWidth != null) ? (int)tileWidth : Globals.T;
+            int partHeight = (tileHeight != null) ? (int)tileHeight : Globals.T;
 
             Texture2D original = content.Load<Texture2D>(fileName);
 

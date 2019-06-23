@@ -26,7 +26,7 @@ namespace Leore.Main
         protected Font font;
         protected int maxWidth;
 
-        protected int offY = 6 * Globals.TILE;
+        protected int offY = 6 * Globals.T;
         protected int page = 0;
         protected string curText = "";
         protected float sin = 0;
@@ -117,7 +117,7 @@ namespace Leore.Main
 
             Visible = true;
 
-            maxWidth = RoomCamera.Current.ViewWidth - Globals.TILE - 4;
+            maxWidth = RoomCamera.Current.ViewWidth - Globals.T - 4;
 
             state = MessageState.FADE_IN;
         }
@@ -216,7 +216,7 @@ namespace Leore.Main
 
         public virtual void DrawActionIcons(SpriteBatch sb)
         {
-            var T = Globals.TILE;
+            var T = Globals.T;
             var z = (float)Math.Sin(sin);
 
             if (page == 0 && texts.Count > 1)
@@ -259,7 +259,7 @@ namespace Leore.Main
 
             Color = new Color(Color, alpha);
             
-            sb.Draw(Texture, Position, new Rectangle(0,0, RoomCamera.Current.ViewWidth, 3 * Globals.TILE), Color, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth);
+            sb.Draw(Texture, Position, new Rectangle(0,0, RoomCamera.Current.ViewWidth, 3 * Globals.T), Color, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth);
 
             DrawActionIcons(sb);
 

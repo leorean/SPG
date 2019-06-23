@@ -29,7 +29,7 @@ namespace Leore.Objects.Level.Blocks
 
         public PushBlock(float x, float y, Room room) : base(x, y, room)
         {
-            BoundingBox = new RectF(0, 0, Globals.TILE, Globals.TILE);
+            BoundingBox = new RectF(0, 0, Globals.T, Globals.T);
             Visible = true;
             Depth = Globals.LAYER_FG + .0001f;
 
@@ -43,7 +43,7 @@ namespace Leore.Objects.Level.Blocks
 
             this.dir = dir;
 
-            var colX = this.CollisionPointFirstOrDefault<Solid>(X + 8 + Math.Sign((int)dir) * Globals.TILE, Y + 8);
+            var colX = this.CollisionPointFirstOrDefault<Solid>(X + 8 + Math.Sign((int)dir) * Globals.T, Y + 8);
 
             if (colX != null)
                 return false;
@@ -55,7 +55,7 @@ namespace Leore.Objects.Level.Blocks
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            var T = Globals.TILE;
+            var T = Globals.T;
 
             if (initialFallDelay > 0)
             {
@@ -77,10 +77,10 @@ namespace Leore.Objects.Level.Blocks
             else
             {
                 XVel = PushVel * Math.Sign((int)dir);
-                if (Math.Abs(lastX - X) >= Globals.TILE)
+                if (Math.Abs(lastX - X) >= Globals.T)
                 {
                     XVel = 0;
-                    Position = new Vector2(MathUtil.Div(X, Globals.TILE) * Globals.TILE, Y);
+                    Position = new Vector2(MathUtil.Div(X, Globals.T) * Globals.T, Y);
                     IsPushing = false;
                     fallDelay = 1;
                 }
@@ -102,7 +102,9 @@ namespace Leore.Objects.Level.Blocks
 
                 if (colY == null)
                 {
-                    //var colPlayer = ObjectManager.CollisionRectangle(GameManager.Current.Player, Left, Top + T, Right, Bottom + 2 * T);
+                    var colPlayer = ObjectManager.CollisionRectangle(GameManager.Current.Player, Left, Top + T, Right, Bottom + T);
+                    if (colPlayer)
+                        fallDelay = Math.Max(fallDelay, 1);
 
                     if (fallDelay > 0)
                         aboutToFall = true;
@@ -141,7 +143,7 @@ namespace Leore.Objects.Level.Blocks
                 if (colY != null)
                 {
                     YVel = 0;
-                    Position = new Vector2(X, MathUtil.Div(Y, Globals.TILE) * Globals.TILE);
+                    Position = new Vector2(X, MathUtil.Div(Y, Globals.T) * Globals.T);
                     IsFalling = false;
                     new SingularEffect(Center.X, Center.Y, 12);
                 }

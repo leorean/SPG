@@ -47,7 +47,7 @@ namespace Leore.Objects.Effects.Emitters
             //XVel = Math.Sign(XVel) * Math.Min(Math.Abs(XVel), 3);
             //YVel = Math.Sign(YVel) * Math.Min(Math.Abs(YVel), 3);
 
-            var s = (float)Math.Min(Math.Max(MathUtil.Euclidean(Position, Emitter.Position) / (1f * Globals.TILE), 0), 3);            
+            var s = (float)Math.Min(Math.Max(MathUtil.Euclidean(Position, Emitter.Position) / (1f * Globals.T), 0), 3);            
             Scale = new Vector2(Math.Min(Scale.X + .1f, s));
             
             if (MathUtil.Euclidean(Position, Emitter.Position) < 8)

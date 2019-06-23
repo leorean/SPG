@@ -10,7 +10,7 @@ namespace Leore.Objects.Level
         public JumpControlDisabler(float x, float y, Room room, string disappearCondition = null) : base(x, y, room)
         {
             this.disappearCondition = disappearCondition;
-            BoundingBox = new SPG.Util.RectF(0, 0, Globals.TILE, Globals.TILE);
+            BoundingBox = new SPG.Util.RectF(0, 0, Globals.T, Globals.T);
             Visible = false;
         }
 

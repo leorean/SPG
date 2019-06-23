@@ -46,7 +46,7 @@ namespace Leore.Objects.Level
                         boss.ID = ID;
                         break;
                     case 1:
-                        boss = new BossGiantBat(Room.X + 5 * Globals.TILE, Room.Y + 5 * Globals.TILE, Room, setCondition);
+                        boss = new BossGiantBat(Room.X + 5 * Globals.T, Room.Y + 5 * Globals.T, Room, setCondition);
                         boss.ID = ID;
                         break;
                 }                

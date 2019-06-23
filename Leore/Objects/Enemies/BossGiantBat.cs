@@ -105,7 +105,7 @@ namespace Leore.Objects.Enemies
 
                     SetAnimation(4, 7, .15f, true);
 
-                    MoveTowards(player.Position + new Vector2((int)Direction * -3 * Globals.TILE, -2 * Globals.TILE), 100);
+                    MoveTowards(player.Position + new Vector2((int)Direction * -3 * Globals.T, -2 * Globals.T), 100);
 
                     if (GameManager.Current.Map.CollisionTile(this, 0, 0))
                     {

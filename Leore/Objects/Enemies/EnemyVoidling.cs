@@ -135,7 +135,7 @@ namespace Leore.Objects.Enemies
                 if (Direction == Direction.LEFT && X > player.X
                     || Direction == Direction.RIGHT && X < player.X)
                 {
-                    var dist = 5 * Globals.TILE;
+                    var dist = 5 * Globals.T;
 
                     //if (MathUtil.Euclidean(Center, player.Center) < 8 * Globals.TILE)
                     if ((Direction == Direction.LEFT && this.CollisionRectangleFirstOrDefault<Player>(X - dist, Top, X, Bottom) != null)
@@ -144,7 +144,7 @@ namespace Leore.Objects.Enemies
                         if (playerSpotted == null)
                         {
                             var xFree = true;
-                            for(var i = 0; i < Math.Abs(X - player.X); i += Globals.TILE)
+                            for(var i = 0; i < Math.Abs(X - player.X); i += Globals.T)
                             {
                                 var tileCollision = GameManager.Current.Map.CollisionTile(X + i * Math.Sign((int)Direction), Y);
                                 if (tileCollision)

@@ -25,7 +25,7 @@ namespace Leore.Objects.Projectiles
         private Player player => GameManager.Current.Player;
 
         private float dist;
-        private float maxDist = 3 * Globals.TILE;
+        private float maxDist = 3 * Globals.T;
         private Direction direction;
 
         private bool headBack;

@@ -127,7 +127,7 @@ namespace Leore.Objects.Projectiles
             {
                 //if (level > SpellLevel.ONE)
                 {
-                    var t = 1 * Globals.TILE;
+                    var t = 1 * Globals.T;
                     var enemies = this.CollisionRectangles<Enemy>(Left - t, Top - t, Right + t, Bottom + t);
                     foreach (var enemy in enemies)
                     {

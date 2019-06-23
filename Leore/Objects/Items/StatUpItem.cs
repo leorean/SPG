@@ -25,7 +25,7 @@ namespace Leore.Objects.Items
 
             //Scale = new Vector2(.5f);
 
-            maxYDist = Globals.TILE;
+            maxYDist = Globals.T;
             flashOnTaken = false;
 
             switch (type)

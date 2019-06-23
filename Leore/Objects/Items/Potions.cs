@@ -67,7 +67,7 @@ namespace Leore.Objects.Items
                 case PotionType.HP:
                     player.HP = Math.Min(player.HP + amount, GameManager.Current.SaveGame.gameStats.MaxHP);
 
-                    var fntHp = new FollowFont(player.X, player.Y - Globals.TILE, $"+{amount} HP");
+                    var fntHp = new FollowFont(player.X, player.Y - Globals.T, $"+{amount} HP");
                     fntHp.Target = player;
 
                     fntHp.Color = GameResources.HpColors.First();
@@ -76,7 +76,7 @@ namespace Leore.Objects.Items
                 case PotionType.MP:
                     player.MP = Math.Min(player.MP + amount, GameManager.Current.SaveGame.gameStats.MaxMP);
 
-                    var fntMp = new FollowFont(player.X, player.Y - Globals.TILE, $"+{amount} MP");
+                    var fntMp = new FollowFont(player.X, player.Y - Globals.T, $"+{amount} MP");
                     fntMp.Target = player;
 
                     fntMp.Color = GameResources.MpColors.First();

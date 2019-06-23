@@ -46,7 +46,7 @@ namespace Leore.Objects.Enemies
                 if (initDelay == 0)
                 {
 
-                    if (GameManager.Current.Map.CollisionTile(X, Y - Globals.TILE))
+                    if (GameManager.Current.Map.CollisionTile(X, Y - Globals.T))
                     {
                         State = EnemyState.IDLE;
                         Move(0, -2);
@@ -73,7 +73,7 @@ namespace Leore.Objects.Enemies
                 //YVel = 0;
                 SetAnimation(0, 0, 0, false);
 
-                if (MathUtil.Euclidean(Position, player.Position) < 3 * Globals.TILE || hit)
+                if (MathUtil.Euclidean(Position, player.Position) < 3 * Globals.T || hit)
                 {
                     State = EnemyState.FLY_FOLLOW;
                 }

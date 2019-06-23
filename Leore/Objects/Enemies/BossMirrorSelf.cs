@@ -79,13 +79,13 @@ namespace Leore.Objects.Enemies
 
             // limit player
             player.Position = new Vector2(Math.Max(player.X, Room.X + player.BoundingBox.Width), player.Y);
-            if (player.Direction == Direction.RIGHT && player.X > Room.X + .5f * Room.BoundingBox.Width - 3 * Globals.TILE)
+            if (player.Direction == Direction.RIGHT && player.X > Room.X + .5f * Room.BoundingBox.Width - 3 * Globals.T)
             {
                 //player.Position = new Vector2(player.Position.X - XVel, player.Y);
                 player.XVel = Math.Min(player.XVel, .5f);
-                if (player.X > Room.X + .5f * Room.BoundingBox.Width - 2 * Globals.TILE)
+                if (player.X > Room.X + .5f * Room.BoundingBox.Width - 2 * Globals.T)
                     player.XVel *= .5f;// Math.Min(player.XVel, 0f);
-                if (player.X > Room.X + .5f * Room.BoundingBox.Width - 1 * Globals.TILE)
+                if (player.X > Room.X + .5f * Room.BoundingBox.Width - 1 * Globals.T)
                     player.XVel *= .2f;// Math.Min(player.XVel, -.1f);
 
                 if (hasOrb)
@@ -102,7 +102,7 @@ namespace Leore.Objects.Enemies
                             new FlashEmitter(X, Y);
                             hasOrb = false;
 
-                            player.Move(-2 * Globals.TILE, 0);
+                            player.Move(-2 * Globals.T, 0);
 
                             player.XVel = -3;
                             player.YVel = -2;
@@ -115,7 +115,7 @@ namespace Leore.Objects.Enemies
 
                             GameManager.Current.RemoveSpell(SpellType.NONE);
 
-                            var item = new AbilityItem(Room.X + .5f * Room.BoundingBox.Width - 1.5f * Globals.TILE, Room.Y + Room.BoundingBox.Height - 3 * Globals.TILE, Room, "Void Orb");
+                            var item = new AbilityItem(Room.X + .5f * Room.BoundingBox.Width - 1.5f * Globals.T, Room.Y + Room.BoundingBox.Height - 3 * Globals.T, Room, "Void Orb");
                             item.Texture = AssetManager.Orbs[3];
                             item.DrawOffset = new Vector2(8);
                             item.OnObtain = () =>

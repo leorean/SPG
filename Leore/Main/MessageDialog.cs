@@ -36,7 +36,7 @@ namespace Leore.Main
         public override void DrawActionIcons(SpriteBatch sb)
         {
             //base.DrawActionIcons(sb);
-            var T = Globals.TILE;
+            var T = Globals.T;
 
             font.Halign = SPG.Draw.Font.HorizontalAlignment.Center;
             font.Valign = SPG.Draw.Font.VerticalAlignment.Center;

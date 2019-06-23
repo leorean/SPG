@@ -165,8 +165,8 @@ namespace Leore
 
             if (input.IsKeyPressed(Keys.D0, Input.State.Pressed))
             {
-                var posX = MathUtil.Div(GameManager.Current.Player.Position.X, Globals.TILE) * Globals.TILE + 8;
-                var posY = MathUtil.Div(GameManager.Current.Player.Position.Y, Globals.TILE) * Globals.TILE + 7;
+                var posX = MathUtil.Div(GameManager.Current.Player.Position.X, Globals.T) * Globals.T + 8;
+                var posY = MathUtil.Div(GameManager.Current.Player.Position.Y, Globals.T) * Globals.T + 8;
                 
                 GameManager.Current.Save(posX, posY);
 

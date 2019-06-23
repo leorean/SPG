@@ -40,8 +40,8 @@ namespace Leore.Objects.Level
 
             this.xv = Math.Abs(xVel);
             this.yv = Math.Abs(yVel);
-            this.xRange = xRange * Globals.TILE;
-            this.yRange = yRange * Globals.TILE;
+            this.xRange = xRange * Globals.T;
+            this.yRange = yRange * Globals.T;
 
             xSign = Math.Sign(xVel);
             ySign = Math.Sign(yVel);

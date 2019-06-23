@@ -57,7 +57,7 @@ namespace Leore.Objects.Enemies
                         XVel = 0;
                         YVel = 0;
                         
-                        if (MathUtil.Euclidean(Position, player.Position) < 3 * Globals.TILE || hit)
+                        if (MathUtil.Euclidean(Position, player.Position) < 3 * Globals.T || hit)
                         {
                             YVel = -3;
                             seenPlayer = true;                            
@@ -92,7 +92,7 @@ namespace Leore.Objects.Enemies
                     if (this.CollisionRectangleFirstOrDefault<Solid>(Left, Bottom - 1, Right, Bottom - 1) != null)
                         Move(0, -1);
 
-                    if (onGround && MathUtil.Euclidean(Center, player.Center) < 1.5f * Globals.TILE)
+                    if (onGround && MathUtil.Euclidean(Center, player.Center) < 1.5f * Globals.T)
                     {
                         XVel *= .9f;//-.25f* Math.Sign((int)Direction);
                         //YVel = -2.2f;
