@@ -128,7 +128,7 @@ namespace Leore.Objects.Effects.Emitters
             SpawnRate = (int)Math.Ceiling(roomSize * .5f);
             SpawnTimeout = 1;
 
-            if (Particles.Count >= waterCount)
+            if (Particles.Count >= waterCount * .5f)
                 SpawnRate = 0;
         }
     }

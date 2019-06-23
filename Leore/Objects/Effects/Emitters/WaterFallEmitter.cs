@@ -6,6 +6,7 @@ using SPG.Objects;
 using SPG.Util;
 using System;
 using System.Collections.Generic;
+using SPG;
 
 namespace Leore.Objects.Effects.Emitters
 {
@@ -30,7 +31,7 @@ namespace Leore.Objects.Effects.Emitters
 
             this.particleAlpha = particleAlpha;
 
-            Alpha = particleAlpha;            
+            Alpha = 1;            
             
             stuck = true;
         }
@@ -56,6 +57,7 @@ namespace Leore.Objects.Effects.Emitters
                 if (random)
                 {
                     var splash = new WaterSplashParticle(Emitter);
+                    splash.Color = new Color(Color, particleAlpha);
                     splash.Position = Position - new Vector2(0, trail * Scale.Y);
 
                     splash.XVel = -.2f + (float)(RND.Next * .4f);
@@ -77,7 +79,7 @@ namespace Leore.Objects.Effects.Emitters
             {
                 alpha += Alpha * (1f / trail);
                 if(!GameManager.Current.Map.CollisionTile(Position.X, Position.Y + i - 2, GameMap.WATER_INDEX))
-                    sb.Draw(Texture, Position + new Vector2(0, i), null, new Color(Color, alpha), Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
+                    sb.Draw(Texture, Position + new Vector2(0, i), null, new Color(Color, alpha * particleAlpha), Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
             }
         }
     }
@@ -109,15 +111,20 @@ namespace Leore.Objects.Effects.Emitters
                     {
                         new Color(71, 167, 202),
                         new Color(135, 223, 255),
-                        //new Color(46, 147, 220),
-                        //new Color(151, 230, 239),
-                        //new Color(13, 101, 129),
-                        //new Color(8, 134, 162),
                         new Color(36, 126, 158),
-                        //new Color(14, 194, 247)
                         new Color(14, 238, 255)
                     };
                     particleAlpha = .5f;
+                    break;
+                case 2:
+                    particleColors = new List<Color>
+                    {
+                        Colors.FromHex("e2d8fc"),
+                        Colors.FromHex("b1b0e1"),
+                        new Color(Colors.FromHex("646cd3"), .5f),
+                        
+                    };
+                    particleAlpha = .85f;
                     break;
             }
         }
@@ -127,7 +134,8 @@ namespace Leore.Objects.Effects.Emitters
             var waterFallParticle = new WaterFallParticle(this, particleAlpha);
 
             var colorIndex = RND.Int(particleColors.Count - 1);
-            waterFallParticle.Color = particleColors[colorIndex];            
+            waterFallParticle.Color = particleColors[colorIndex];
+            waterFallParticle.Alpha = particleColors[colorIndex].A / 255f;
         }
     }
 

@@ -115,6 +115,7 @@ namespace Leore.Main
                             break;
                         case 648: // waterfall (bright)
                         case 649: // waterfall (cave)
+                        case 650: // waterfall (mountain)
                             new WaterFall(i * Globals.T, j * Globals.T, room, (t.ID - 648));
                             break;
                         case 579: // hp potion
