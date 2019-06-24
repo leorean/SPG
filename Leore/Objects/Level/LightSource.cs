@@ -11,6 +11,8 @@ namespace Leore.Objects.Level
 {
     public class LightSource : GameObject
     {
+        public bool Active { get; set; }
+
         public LightSource(GameObject parent) : base(parent.X, parent.Y)
         {
             this.Parent = parent;

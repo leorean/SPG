@@ -6,6 +6,7 @@ using SPG.Objects;
 using SPG.View;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,11 +27,13 @@ namespace Leore.Objects.Effects.Weather
         private double t;
 
         public float Alpha { get; set; }
+        private float alpha;
+        private float targetAlpha = 1;
+
+        private int weather;
 
         private Darkness()
         {
-            Alpha = 1f;
-
             blend = new BlendState();
 
             blend.ColorBlendFunction = BlendFunction.Add;
@@ -64,17 +67,55 @@ namespace Leore.Objects.Effects.Weather
             spriteBatch.Begin(SpriteSortMode.Immediate, blend, SamplerState.PointClamp, null, null, null, null);
 
             ObjectManager.Enable<LightSource>();
-            var lightSources = ObjectManager.FindAll<LightSource>();
+            var lightSources = ObjectManager.FindAll<LightSource>().Where(o => !o.Parent.IsOutsideCurrentRoom()).ToList();
 
-            foreach (var source in lightSources)
+            if (RoomCamera.Current.CurrentRoom != null)
+                weather = RoomCamera.Current.CurrentRoom.Weather;
+
+            if (weather != 1)
             {
-                var pos = new Vector2(source.Parent.Center.X, source.Parent.Center.Y)
-                     - new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY);
+                Alpha = Math.Max(Alpha - .1f, 0);
+                if (Alpha == 0)
+                {
+                    spriteBatch.End();
+                    return;
+                }
+            } else
+            {
+                Alpha = Math.Min(Alpha + .1f, 1);
+            }
+            
+            if (lightSources.Count >= 0)
+            {
 
-                spriteBatch.Draw(AssetManager.DarknessMask, pos, null, Color.White, 0, new Vector2(32), new Vector2(.9f + .05f * (float)Math.Sin(t)), SpriteEffects.None, Globals.LAYER_UI - .001f);
+                int activeSources = -1;
+                foreach (var source in lightSources)
+                {
+                    if (source.Active)
+                        activeSources++;
+                }
 
-                //spriteBatch.Draw(AssetManager.DarknessMask, new Vector2(source.Parent.Center.X, source.Parent.Center.Y)
-                //     - new Vector2(32) - new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY), Color.White, );
+                alpha = 1 - Math.Max(activeSources, 0) / (float)lightSources.Count;
+                
+                if (activeSources == 0)
+                    alpha = 1;
+
+                if (lightSources.Count == 0)
+                    alpha = 0;
+
+                foreach (var source in lightSources)
+                {
+                    if (!source.Active)
+                        continue;
+
+                    var pos = new Vector2(source.Parent.Center.X, source.Parent.Center.Y)
+                         - new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY);
+
+                    spriteBatch.Draw(AssetManager.DarknessMask, pos, null, Color.White, 0, new Vector2(32), new Vector2(.9f + .05f * (float)Math.Sin(t)), SpriteEffects.None, Globals.LAYER_UI - .001f);
+
+                    //spriteBatch.Draw(AssetManager.DarknessMask, new Vector2(source.Parent.Center.X, source.Parent.Center.Y)
+                    //     - new Vector2(32) - new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY), Color.White, );
+                }                
             }
 
             spriteBatch.End();
@@ -82,7 +123,9 @@ namespace Leore.Objects.Effects.Weather
 
         public void Draw(SpriteBatch sb, GameTime gameTime)
         {
-            sb.Draw(darkness, new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY), null, new Color(Color.White, Alpha), 0, new Vector2(0), Vector2.One, SpriteEffects.None, Globals.LAYER_UI - .001f);
+            targetAlpha += (alpha - targetAlpha) / 60f;
+
+            sb.Draw(darkness, new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY), null, new Color(Color.White, Alpha * targetAlpha), 0, new Vector2(0), Vector2.One, SpriteEffects.None, Globals.LAYER_UI - .001f);            
         }
     }
 }

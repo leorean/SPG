@@ -122,6 +122,7 @@
     <Compile Include="Objects\Level\Teleporter.cs" />
     <Compile Include="Objects\Level\Switches\TimeSwitch.cs" />
     <Compile Include="Objects\Level\Switches\ToggleSwitch.cs" />
+    <Compile Include="Objects\Level\Torch.cs" />
     <Compile Include="Objects\Level\WaterMill.cs" />
     <Compile Include="Objects\Level\WaterMillMovingPlatform.cs" />
     <Compile Include="Main\Orb.cs" />

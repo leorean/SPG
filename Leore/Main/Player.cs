@@ -223,6 +223,7 @@ namespace Leore.Main
             safePosition = Position;
 
             light = new LightSource(this);
+            light.Active = true;
         }
 
         ~Player()

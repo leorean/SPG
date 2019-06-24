@@ -330,7 +330,7 @@ namespace Leore.Main
                         weather = null;
                     }*/
                     break;
-                case 1:                    
+                case 1: // it's dark!                 
                     break;
             }
 

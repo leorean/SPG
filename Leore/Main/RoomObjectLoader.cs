@@ -209,6 +209,12 @@ namespace Leore.Main
                         case 835:
                             new FallingPlatform(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
                             break;
+                        case 836:
+                            new Torch(i * Globals.T, j * Globals.T, room, true);
+                            break;
+                        case 837:
+                            new Torch(i * Globals.T, j * Globals.T, room, false);
+                            break;
                         case 960: // timed switch (1s)
                             new TimeSwitch(i * Globals.T, j * Globals.T, 1 * 60, room);
                             break;
