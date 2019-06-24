@@ -88,8 +88,9 @@ namespace Leore.Main
             new FollowFont(X, Y - 8, "Got key!");
         }
 
-
         // private
+
+        private LightSource light;
 
         private Direction lastDirection;
 
@@ -220,6 +221,8 @@ namespace Leore.Main
             Oxygen = MaxOxygen;
 
             safePosition = Position;
+
+            light = new LightSource(this);
         }
 
         ~Player()

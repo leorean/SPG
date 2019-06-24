@@ -1,4 +1,5 @@
 ﻿using Leore.Main;
+using Leore.Objects.Level;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SPG.Objects;
@@ -18,77 +19,70 @@ namespace Leore.Objects.Effects.Weather
         private Player player => GameManager.Current.Player;
 
         public static Darkness Current { get; private set; }
-
-        private SpriteBatch sb;
-
-        private DepthStencilState s1, s2;
-
-        private Darkness(GraphicsDevice gd)
-        {
-            sb = new SpriteBatch(gd);
-            
-            s1 = new DepthStencilState
-            {
-                StencilEnable = true,
-                StencilFunction = CompareFunction.Always,
-                StencilPass = StencilOperation.Replace,
-                ReferenceStencil = 1,
-                DepthBufferEnable = true,                
-            };
-
-            s2 = new DepthStencilState
-            {
-                StencilEnable = true,
-                StencilFunction = CompareFunction.LessEqual,
-                StencilPass = StencilOperation.Keep,
-                ReferenceStencil = 1,
-                DepthBufferEnable = true,
-            };
-        }
         
-        public void Draw(GameTime gameTime)
+        private RenderTarget2D darkness;
+        private BlendState blend;
+
+        private double t;
+
+        public float Alpha { get; set; }
+
+        private Darkness()
         {
-            var m = Matrix.CreateOrthographicOffCenter(0,
-                //sb.GraphicsDevice.PresentationParameters.BackBufferWidth,
-                //sb.GraphicsDevice.PresentationParameters.BackBufferHeight,
-                camera.ViewWidth,
-                camera.ViewHeight,
-                0, 0, 1
-            );
+            Alpha = 1f;
 
-            var a = new AlphaTestEffect(sb.GraphicsDevice)
-            {
-                Projection = m//, Alpha = .5f
-            };
+            blend = new BlendState();
 
-            Vector2 viewPos = new Vector2(camera.ViewX, camera.ViewY);
-
-            sb.GraphicsDevice.Clear(ClearOptions.Stencil, Color.Transparent, 0, 0);
-
-            //darkness = new RenderTarget2D(GraphicsDevice, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-
-            //blend.AlphaSourceBlend = Blend.Zero;
-            //blend.AlphaDestinationBlend = Blend.InverseSourceColor;
-            //blend.ColorSourceBlend = Blend.Zero;
-            //blend.ColorDestinationBlend = Blend.InverseSourceColor;
-
-            // mask
-            sb.Begin(SpriteSortMode.BackToFront, null, SamplerState.PointClamp, s1, null, a);//, camera.GetViewTransformationMatrix());
-            //sb.Draw(AssetManager.DarknessMask, Vector2.Zero, new Color(Color.White, .15f));
-            sb.Draw(AssetManager.DarknessMask, player.Position, null, Color.White, 0, new Vector2(32), Vector2.One, SpriteEffects.None, 0);
-            sb.End();
-
-            // background
-            sb.Begin(SpriteSortMode.BackToFront, null, SamplerState.PointClamp, s2, null, a);//, camera.GetViewTransformationMatrix());
-            //sb.Draw(AssetManager.Darkness, Vector2.Zero, Color.White);
-            sb.Draw(AssetManager.Darkness, Vector2.Zero, null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0);
-            sb.End();            
+            blend.ColorBlendFunction = BlendFunction.Add;
+            blend.ColorSourceBlend = Blend.Zero;
+            blend.ColorDestinationBlend = Blend.InverseSourceAlpha;
+            blend.AlphaBlendFunction = BlendFunction.Add;
+            blend.AlphaSourceBlend = Blend.Zero;
+            blend.AlphaDestinationBlend = Blend.InverseSourceAlpha;
         }
 
-        public static void Create(GraphicsDevice gd)
+        public static void Create()
         {
             if (Current == null)
-                Current = new Darkness(gd);
+                Current = new Darkness();
+        }
+
+        public void PrepareDraw(SpriteBatch spriteBatch)
+        {
+            // update
+
+            t = (t + .02f) % (2 * Math.PI);
+
+            // draw
+
+            if (darkness == null)
+                darkness = new RenderTarget2D(spriteBatch.GraphicsDevice, RoomCamera.Current.ViewWidth, RoomCamera.Current.ViewHeight);
+
+            spriteBatch.GraphicsDevice.SetRenderTarget(darkness);
+            spriteBatch.GraphicsDevice.Clear(Color.Black);
+            
+            spriteBatch.Begin(SpriteSortMode.Immediate, blend, SamplerState.PointClamp, null, null, null, null);
+
+            ObjectManager.Enable<LightSource>();
+            var lightSources = ObjectManager.FindAll<LightSource>();
+
+            foreach (var source in lightSources)
+            {
+                var pos = new Vector2(source.Parent.Center.X, source.Parent.Center.Y)
+                     - new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY);
+
+                spriteBatch.Draw(AssetManager.DarknessMask, pos, null, Color.White, 0, new Vector2(32), new Vector2(.9f + .05f * (float)Math.Sin(t)), SpriteEffects.None, Globals.LAYER_UI - .001f);
+
+                //spriteBatch.Draw(AssetManager.DarknessMask, new Vector2(source.Parent.Center.X, source.Parent.Center.Y)
+                //     - new Vector2(32) - new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY), Color.White, );
+            }
+
+            spriteBatch.End();
+        }
+
+        public void Draw(SpriteBatch sb, GameTime gameTime)
+        {
+            sb.Draw(darkness, new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY), null, new Color(Color.White, Alpha), 0, new Vector2(0), Vector2.One, SpriteEffects.None, Globals.LAYER_UI - .001f);
         }
     }
 }
