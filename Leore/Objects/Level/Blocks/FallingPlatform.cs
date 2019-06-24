@@ -68,7 +68,7 @@ namespace Leore.Objects.Level.Blocks
         {
             Visible = true;
             BoundingBox = new SPG.Util.RectF(0, 0, 16, 1);            
-            Depth = Globals.LAYER_FG;
+            Depth = Globals.LAYER_FG + .0001f;
 
             timer = maxTimer;
 
