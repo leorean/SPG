@@ -13,9 +13,9 @@ namespace SPG.View
             mBatch.Begin(SpriteSortMode.FrontToBack, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null, camera.GetViewTransformationMatrix());
         }
 
-        public static void BeginCamera(this SpriteBatch mBatch, Camera camera, BlendState bstate)
+        public static void BeginCamera(this SpriteBatch mBatch, Camera camera, BlendState bstate, DepthStencilState dstate, SpriteSortMode sortMode = SpriteSortMode.FrontToBack)
         {
-            mBatch.Begin(SpriteSortMode.FrontToBack, bstate, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, null, camera.GetViewTransformationMatrix());
+            mBatch.Begin(sortMode, bstate, SamplerState.PointClamp, dstate, RasterizerState.CullNone, null, camera.GetViewTransformationMatrix());
         }
 
         public static Rectangle NewInflate(this Rectangle rect, int width, int height)

@@ -6,13 +6,10 @@ namespace Leore.Objects
 {
     public class Room : GameObject
     {
-        // TODO: refactor/optimize: rooms should have a list of roomObjects.
-
         public int Background { get; set; } = -1;
+        public int Weather { get; set; } = -1;
 
         public bool SwitchState { get; set; }
-
-        //public List<ICollidable> Colliders { get; set; } = new List<ICollidable>();
 
         public Room(int x, int y, int width, int height) : base(x, y, "room")
         {
@@ -23,23 +20,6 @@ namespace Leore.Objects
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            // switches -> state on/off
-            /*
-            var switches = ObjectManager.Objects.FindAll(o => o is GroundSwitch).Cast<GroundSwitch>();
-            bool found = false;
-            foreach(var s in switches)
-            {
-                if (s.Active)
-                {
-                    found = true;
-                    SwitchState = true;
-                    break;
-                }
-            }
-            if (!found)
-                SwitchState = false;
-            */
         }
     }
 }

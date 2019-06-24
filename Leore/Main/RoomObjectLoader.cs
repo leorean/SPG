@@ -14,6 +14,7 @@ using static Leore.Objects.Items.StatUpItem;
 using Leore.Objects;
 using Leore.Objects.Level.Blocks;
 using Leore.Objects.Level.Switches;
+using Leore.Objects.Effects.Weather;
 
 namespace Leore.Main
 {
@@ -470,6 +471,7 @@ namespace Leore.Main
                     var w = data.ContainsKey("width") ? (int)data["width"] : camera.ViewWidth;
                     var h = data.ContainsKey("height") ? (int)data["height"] : camera.ViewHeight;
                     var bg = data.ContainsKey("bg") ? (int)data["bg"] : -1;
+                    var weather = data.ContainsKey("weather") ? (int)data["weather"] : -1;
 
                     int remX, remY, remW, remH;
                     Math.DivRem(x, camera.ViewWidth, out remX);
@@ -482,6 +484,7 @@ namespace Leore.Main
 
                     var room = new Room(x, y, w, h);
                     room.Background = bg;
+                    room.Weather = weather;
                     //camera.Rooms.Add(room);
                 }
 
@@ -512,7 +515,10 @@ namespace Leore.Main
         [Obsolete("TODO: Find a better solution to the inefficient object loading problem!")]
         public static void CleanObjectsExceptRoom(Room room)
         {
-            var toDelete = ObjectManager.Objects.Where(o => o is RoomObject && !(o is Collider) && (o as RoomObject).Room != room).ToList();
+            var toDelete = ObjectManager.Objects.Where(
+                o => o is RoomObject                
+                && !(o is Collider) 
+                && (o as RoomObject).Room != room).ToList();
 
             var arr = new GameObject[toDelete.Count];
             toDelete.CopyTo(arr);

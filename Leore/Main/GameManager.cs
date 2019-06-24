@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Leore.Objects.Projectiles;
 using Leore.Objects.Level.Switches;
+using Leore.Objects.Effects.Weather;
 
 namespace Leore.Main
 {
@@ -38,12 +39,17 @@ namespace Leore.Main
 
         private bool manualStateEnabled;
 
-        public GameManager()
+        public static void Create()
         {
-            instance = this;
+            if(instance == null)
+            {
+                instance = new GameManager();
+            }
+        }
 
+        private GameManager()
+        {
             // game setup
-
             SaveGame = new SaveGame("save.dat");
         }
         
@@ -124,7 +130,11 @@ namespace Leore.Main
             // TODO: add all objects that are alive and should be killed
 
             //var alive = ObjectManager.Objects.Where(o => !(o is Room)).ToList();
-            var alive = ObjectManager.Objects.Where(o => !(o is Room) && !(o is Player)).ToList();
+            var alive = ObjectManager.Objects.Where(
+                o => !(o is Room) 
+                && !(o is Player)
+                && !(o is Weather)
+                ).ToList();
             alive.ForEach(o => o.Destroy());
 
             LoadedRooms.Remove(room);
@@ -359,7 +369,7 @@ namespace Leore.Main
 
             // ++++ enable global objects ++++
 
-            ObjectManager.Enable<Room>();
+            ObjectManager.Enable<Room>();            
             ObjectManager.Enable<MessageBox>();
             ObjectManager.Enable<GlobalWaterBubbleEmitter>();
             ObjectManager.Enable<PlayerGhost>();
@@ -379,10 +389,11 @@ namespace Leore.Main
 
             ObjectManager.Disable<Room>();
             ObjectManager.Enable(RoomCamera.Current.CurrentRoom);
-
+            
             // ++++ update objects ++++
 
             ObjectManager.UpdateObjects(gameTime);
+
         }
 
         public void AddSpell(SpellType spellType)

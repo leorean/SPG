@@ -9,10 +9,13 @@ namespace Leore.Main
     public static class AssetManager
     {
         // common textures & objects
-
+        
         public static TextureSet TileSet { get; private set; }
 
         public static TextureSet Backgrounds { get; private set; }
+
+        public static Texture2D Darkness { get; private set; }
+        public static Texture2D DarknessMask { get; set; }
 
         public static TextureSet Player { get; private set; }
         public static TextureSet Effects { get; private set; }
@@ -71,7 +74,7 @@ namespace Leore.Main
         public static Font HUDFont { get; private set; }
         public static Font HUDFontSmall { get; private set; }
         public static Texture2D MirrorBossBG { get; private set; }
-
+        
         public static void InitializeContent(ContentManager content)
         {
             // tileset
@@ -79,6 +82,9 @@ namespace Leore.Main
             TileSet = content.LoadTextureSet("tiles");
 
             // sprites etc.
+
+            Darkness = content.Load<Texture2D>("darkness");
+            DarknessMask = content.Load<Texture2D>("darknessMask");
 
             Player = content.LoadTextureSet("player", 16, 32);
             Effects = content.LoadTextureSet("effects", 32, 32);

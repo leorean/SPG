@@ -12,6 +12,7 @@ using Leore.Main;
 using SPG.Save;
 using Leore.Objects.Items;
 using Leore.Objects.Level;
+using Leore.Objects.Effects.Weather;
 
 namespace Leore
 {
@@ -32,7 +33,7 @@ namespace Leore
         // visual unique objects belong to the MainGame
 
         public HUD HUD { get; private set; }
-
+        
         // input
 
         Input input;
@@ -48,9 +49,10 @@ namespace Leore
 
             instance = this;
 
-            var gm = new GameManager();
+            GameManager.Create();
 
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
             
             input = new Input();
 
@@ -81,8 +83,7 @@ namespace Leore
                 graphics.ApplyChanges();
 
                 Debug.WriteLine($"Size changed to {w}x{h}.");
-            };
-
+            };            
         }
         
         /// <summary>
@@ -94,6 +95,8 @@ namespace Leore
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            Darkness.Create(GraphicsDevice);
 
             // load textures & texture sets
 
@@ -302,7 +305,10 @@ namespace Leore
 
             // IMPORTANT HINT: when a texture's alpha is not "pretty", check the Content settings of that texture! Make sure that the texture has premultiplied : true.
 
-            spriteBatch.BeginCamera(RoomCamera.Current, BlendState.NonPremultiplied);
+            // actual object drawing etc.
+
+            spriteBatch.BeginCamera(RoomCamera.Current, BlendState.NonPremultiplied, DepthStencilState.Default);
+            
             RoomCamera.Current.Draw(spriteBatch, gameTime);
 
             var visibleRect = new Rectangle((int)RoomCamera.Current.ViewX, (int)RoomCamera.Current.ViewY, RoomCamera.Current.ViewWidth, RoomCamera.Current.ViewHeight);
@@ -315,6 +321,20 @@ namespace Leore
             GameManager.Current.Transition?.Draw(spriteBatch, gameTime);
             
             spriteBatch.End();
+
+
+            // darkness overlay
+
+            Darkness.Current?.Draw(gameTime);
+
+            /*spriteBatch.BeginCamera(RoomCamera.Current, BlendState.NonPremultiplied, preMask, SpriteSortMode.Immediate);
+            Darkness.Current?.DrawMask(spriteBatch, gameTime);
+            //// DRAW MASKS HERE
+            spriteBatch.End();
+
+            spriteBatch.BeginCamera(RoomCamera.Current, BlendState.NonPremultiplied, draw, SpriteSortMode.Immediate);
+            Darkness.Current?.Draw(spriteBatch, gameTime);
+            spriteBatch.End();*/
         }
     }
 }

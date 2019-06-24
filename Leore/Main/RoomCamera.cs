@@ -8,6 +8,7 @@ using SPG.Util;
 using SPG.View;
 using System;
 using System.Linq;
+using Leore.Objects.Effects.Weather;
 
 namespace Leore.Main
 {
@@ -45,6 +46,8 @@ namespace Leore.Main
         private TextureSet _backgrounds;
         private float backgroundAlpha = 1f;        
         private int lastBG = 0;
+
+        private Weather weather;
 
         // transition
         
@@ -294,7 +297,7 @@ namespace Leore.Main
                             backgroundAlpha = 0;
                             lastBG = CurrentBG;
                             CurrentBG = CurrentRoom.Background;
-                        }
+                        }                            
                     }
                 }
             }
@@ -316,7 +319,21 @@ namespace Leore.Main
             }
 
             // background interpolation
-            backgroundAlpha = Math.Min(backgroundAlpha + .02f, 1);            
+            backgroundAlpha = Math.Min(backgroundAlpha + .02f, 1);
+
+            switch (CurrentRoom?.Weather)
+            {
+                case 0:
+                    /*if (weather != null)
+                    {
+                        weather.Destroy();
+                        weather = null;
+                    }*/
+                    break;
+                case 1:                    
+                    break;
+            }
+
         }
 
         public void Reset()
