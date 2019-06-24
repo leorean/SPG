@@ -20,7 +20,9 @@ namespace Leore.Objects.Level
         private Vector2 floatPosition;
 
         private float sin;
-        
+
+        private LightSource light;
+
         public SaveStatue(float x, float y, Room room, string name = null) : base(x, y, room)
         {            
             BoundingBox = new RectF(4, 6, Globals.T - 8, Globals.T - 7);
@@ -33,6 +35,9 @@ namespace Leore.Objects.Level
             alreadyActivated = true;
 
             emitter = new SaveStatueEmitter(X + 8, Y + 8);
+
+            light = new LightSource(this);
+            light.Active = true;
         }
         
         // methods

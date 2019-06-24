@@ -1,10 +1,13 @@
 ﻿using Leore.Main;
+using Leore.Objects.Projectiles;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SPG.Objects;
+using Leore.Objects.Effects.Emitters;
 
 namespace Leore.Objects.Level
 {
@@ -12,9 +15,12 @@ namespace Leore.Objects.Level
     {
         public bool Active { get; set; }
 
-        private LightSource light;
+        private bool isBright;
 
-        public Torch(float x, float y, Room room, bool active) : base(x, y, room)
+        protected LightSource light;
+        protected TorchEmitter emitter;
+
+        public Torch(float x, float y, Room room, bool active, LightSource.LightState lightState) : base(x, y, room)
         {
             Depth = Globals.LAYER_BG + .002f;
 
@@ -22,11 +28,20 @@ namespace Leore.Objects.Level
 
             this.Active = active;
             light = new LightSource(this);
+            light.State = lightState;
+
+            emitter = new TorchEmitter(X + 8, Y + 8);
+            emitter.Parent = this;
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            if (this.CollisionBoundsFirstOrDefault<PlayerProjectile>(X, Y) != null)
+            {
+                Active = true;
+            }
 
             if (!Active)
             {
@@ -38,6 +53,7 @@ namespace Leore.Objects.Level
             }
 
             light.Active = Active;
+            emitter.Active = Active;
         }
     }
 }

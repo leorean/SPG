@@ -133,6 +133,14 @@ namespace Leore.Resources
             new Color(255, 90, 0)
         };
 
+        public static readonly List<Color> FireColors = new List<Color>
+        {
+            Colors.FromHex("ffffff"),
+            Colors.FromHex("ffe777"),
+            Colors.FromHex("ff804d"),
+            Colors.FromHex("e74431"),
+        };
+
         public static readonly List<Color> MpColors = new List<Color>
         {
             new Color(3, 243, 243),

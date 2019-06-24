@@ -43,10 +43,7 @@ namespace Leore.Objects.Items
             Angle = (float)(RND.Next * (2 * Math.PI));
 
             angVel = -.1f + (float)RND.Next * .2f;
-
-            //XVel = -.75f + (float)RND.Next * 1.5f;
-            //YVel = -1 - (float)RND.Next * .5f;
-
+            
             XVel = (1 + (float)RND.Next) * (float)MathUtil.LengthDirX(MathUtil.RadToDeg(Angle));
             YVel = (1 + (float)RND.Next) * (float)MathUtil.LengthDirY(MathUtil.RadToDeg(Angle));
 
@@ -88,19 +85,6 @@ namespace Leore.Objects.Items
                         if (Math.Abs(XVel) < .1f && Math.Abs(YVel) < .1f)
                             kinetic = false;
                     }
-                    
-                    //var onGround = CollisionExtensions.MoveAdvanced(this, false);
-
-                    //if (onGround)
-                    //{
-                    //    angVel = -.1f + (float)RND.Next * .2f;
-                    //    YVel = -.8f * yp;
-
-                    //    XVel *= .5f;
-
-                    //    if (Math.Abs(yp) < .2f)
-                    //        kinetic = false;
-                    //}
                 }
                 else
                 {
@@ -114,8 +98,12 @@ namespace Leore.Objects.Items
                     if (MathUtil.Euclidean(Center, GameManager.Current.Player.Center) > 8 && MathUtil.Euclidean(Center, GameManager.Current.Player.Center) < 8 * Globals.T)
                     {
                         kinetic = false;
-                        XVel = (GameManager.Current.Player.Center.X - Center.X) / 120;
-                        YVel = (GameManager.Current.Player.Center.Y - Center.Y) / 120;
+                        XVel = (GameManager.Current.Player.Center.X - Center.X) / 90;
+                        YVel = (GameManager.Current.Player.Center.Y - Center.Y) / 90;
+
+                        //XVel = MathUtil.AtLeast(XVel, .25f);
+                        //YVel = MathUtil.AtLeast(YVel, .25f);
+
                     } else
                     {
                         XVel *= .95f;

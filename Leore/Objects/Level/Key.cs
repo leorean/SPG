@@ -30,7 +30,7 @@ namespace Leore.Objects.Level
         private bool stuck = false;
 
         private int timer = 0;
-        private int maxTimer = 1 * 60;
+        private int maxTimer = 15 * 60;
 
         private GameObject originalPositionObject;
 
@@ -49,7 +49,7 @@ namespace Leore.Objects.Level
             //DebugEnabled = true;
 
             DrawOffset = new Vector2(8, 8);
-            BoundingBox = new SPG.Util.RectF(-4, -8f, 8, 16f);
+            BoundingBox = new SPG.Util.RectF(-4, -7.9f, 8, 16f);
 
             Gravity = .1f;
 
@@ -93,7 +93,7 @@ namespace Leore.Objects.Level
             {
                 XVel *= .5f;
             }
-
+            
             if (stuck)
             {
                 MoveTowards(GameManager.Current.Player.Position + new Vector2(0, -4), 8);

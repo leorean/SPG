@@ -11,7 +11,15 @@ namespace Leore.Objects.Level
 {
     public class LightSource : GameObject
     {
+        public enum LightState
+        {
+            Default,
+            Bright,
+            FullRoom
+        }
+
         public bool Active { get; set; }
+        public LightState State { get; set; } = LightState.Default;
 
         public LightSource(GameObject parent) : base(parent.X, parent.Y)
         {

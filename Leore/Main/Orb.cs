@@ -9,6 +9,7 @@ using SPG.Objects;
 using SPG.Util;
 using System;
 using System.Collections.Generic;
+using Leore.Objects.Level;
 
 namespace Leore.Main
 {
@@ -60,6 +61,8 @@ namespace Leore.Main
         
         private float offY;
 
+        private LightSource light;
+
         public Orb(Player player) : base(player.X, player.Y)
         {
             Scale = new Vector2(1);
@@ -70,7 +73,11 @@ namespace Leore.Main
 
             Parent = player;
             TargetPosition = player.Position;
-            lastPosition = TargetPosition;            
+            lastPosition = TargetPosition;
+
+            light = new LightSource(this);
+            light.Active = true;
+            light.Scale = new Vector2(.75f);
         }
 
         public override void BeginUpdate(GameTime gameTime)

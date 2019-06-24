@@ -73,6 +73,7 @@
     <Compile Include="Objects\Effects\Emitters\SaveStatueEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\SmokeEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\SpellEmitter.cs" />
+    <Compile Include="Objects\Effects\Emitters\TorchEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\WaterFallEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\FlowEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\WaterSplashEmitter.cs" />

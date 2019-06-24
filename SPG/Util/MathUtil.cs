@@ -68,11 +68,16 @@ namespace SPG.Util
             return Math.Sin(rad);
         }
 
-        public static float Limit(float val, uint limit)
+        public static float Limit(float val, float limit)
         {
             return Math.Sign(val) * Math.Min(Math.Abs(val), limit);
         }
-        
+
+        public static float AtLeast(float val, float limit)
+        {
+            return Math.Sign(val) * Math.Max(Math.Abs(val), limit);
+        }
+
         public static double Euclidean(Point p1, Point p2)
         {
             return Math.Sqrt(Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2));
