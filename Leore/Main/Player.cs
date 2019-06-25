@@ -19,6 +19,7 @@ using Leore.Util;
 using SPG.Map;
 using Leore.Resources;
 using Leore.Objects.Level.Blocks;
+using Leore.Objects.Effects.Weather;
 
 namespace Leore.Main
 {
@@ -313,7 +314,7 @@ namespace Leore.Main
             // death penalty
             if (hpPrev > 0 && HP == 0)
             {
-                var temp = Math.Max((float)Math.Floor(Stats.Coins * .5f), Stats.Coins - 500);
+                var temp = Math.Max((float)Math.Floor(Stats.Coins * .5f), Stats.Coins - 1000);
                 var amountToDrop = Stats.Coins - temp;
                 
                 var stats = GameManager.Current.SaveGame.gameStats;
@@ -815,6 +816,8 @@ namespace Leore.Main
                         XVel = 0;
                         YVel = 0;
 
+                        Darkness.Current.Disable();
+
                         Teleporter = tel;
                         Teleporter.Active = true;
                         Teleporter.OnFinishedAnimation = () => {
@@ -841,13 +844,7 @@ namespace Leore.Main
                     //if (Orb != null) Orb.Visible = false;
                     Gravity = 0;
                     State = PlayerState.JUMP_UP;
-                    MoveTowards(Teleporter, 60);
-
-                    if (MathUtil.Euclidean(Center, Teleporter.Center) < 2)
-                    {
-                        //teleporter.Active = false;
-                        //teleporter = null;
-                    }
+                    MoveTowards(Teleporter, 60);                    
 
                 }
                 

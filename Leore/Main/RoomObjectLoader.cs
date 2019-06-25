@@ -415,13 +415,14 @@ namespace Leore.Main
                     }                    
                     if (type == "shopItem")
                     {
-                        var shopItemText = data.ContainsKey("text") ? data["text"].ToString() : "-unknown-";
+                        var shopItemDisplayText = data.ContainsKey("displayText") ? data["displayText"].ToString() : "-unknown-";
+                        var shopItemAcquireText = data.ContainsKey("acquireText") ? data["acquireText"].ToString() : "-unknown-";
                         var shopItemName = data.ContainsKey("itemName") ? data["itemName"].ToString() : "-unknown-";
                         var shopItemType = data.ContainsKey("itemType") ? (int)data["itemType"] : 0;
                         var shopItemRespawn = data.ContainsKey("respawn") ? (bool)data["respawn"] : false;
                         var shopItemPrice = data.ContainsKey("price") ? (int)data["price"] : 0;
 
-                        var shopItem = new ShopItem(x + 8, y + 8, room, shopItemName, shopItemType, shopItemPrice, shopItemText, shopItemRespawn);
+                        var shopItem = new ShopItem(x + 8, y + 8, room, shopItemName, shopItemType, shopItemPrice, shopItemDisplayText, shopItemAcquireText, shopItemRespawn);
                     }
                     if (type == "chest")
                     {

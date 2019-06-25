@@ -35,18 +35,10 @@ namespace Leore.Objects.Effects.Weather
         private int weather;
         private float x, y;
 
+        bool enabled = true;
+
         private Darkness()
         {
-            //blend = new BlendState
-            //{
-            //    ColorBlendFunction = BlendFunction.Add,
-            //    ColorSourceBlend = Blend.Zero,
-            //    ColorDestinationBlend = Blend.InverseSourceAlpha,
-            //    AlphaBlendFunction = BlendFunction.Add,
-            //    AlphaSourceBlend = Blend.Zero,
-            //    AlphaDestinationBlend = Blend.InverseSourceAlpha
-            //};
-
             blend = new BlendState
             {
                 ColorSourceBlend = Blend.Zero, // multiplier of the source color
@@ -90,7 +82,7 @@ namespace Leore.Objects.Effects.Weather
                 weather = RoomCamera.Current.CurrentRoom.Weather;
             }
 
-            if (weather != 1)
+            if (weather != 1 || !enabled)
             {
                 globalAlpha = Math.Max(globalAlpha - .025f, 0);
                 if (globalAlpha == 0)
@@ -153,6 +145,16 @@ namespace Leore.Objects.Effects.Weather
             targetAlpha += (alpha - targetAlpha) / 60f;
 
             sb.Draw(darkness, new Vector2(x, y), null, new Color(Color.White, globalAlpha * targetAlpha), 0, new Vector2(0), Vector2.One, SpriteEffects.None, Globals.LAYER_UI - .001f);            
+        }
+
+        public void Disable()
+        {
+            enabled = false;
+        }
+
+        public void Enable()
+        {
+            enabled = true;
         }
     }
 }

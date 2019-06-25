@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SPG.Draw;
 using SPG.Util;
+using Leore.Objects.Effects.Weather;
 
 namespace Leore.Objects.Level
 {
@@ -143,6 +144,8 @@ namespace Leore.Objects.Level
 
         public void Reset()
         {
+            Darkness.Current.Enable();
+
             segIndex = 0;
             angSpd = -.5f;
             wasOpen = false;

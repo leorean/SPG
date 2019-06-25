@@ -47,11 +47,12 @@
   <property name="weather" type="int" default="-1"/>
  </objecttype>
  <objecttype name="shopItem" color="#fff9d2">
+  <property name="acquireText" type="string"/>
+  <property name="displayText" type="string"/>
   <property name="itemName" type="string"/>
   <property name="itemType" type="int" default="0"/>
   <property name="price" type="int" default="0"/>
   <property name="respawn" type="bool" default="false"/>
-  <property name="text" type="string"/>
  </objecttype>
  <objecttype name="storyTrigger" color="#ffffff">
   <property name="setCondition" type="string"/>

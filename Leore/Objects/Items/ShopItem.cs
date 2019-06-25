@@ -6,6 +6,7 @@ using SPG.Draw;
 using SPG;
 using Leore.Objects.Effects;
 using Leore.Main;
+using Leore.Objects.Level;
 
 namespace Leore.Objects.Items
 {
@@ -13,7 +14,8 @@ namespace Leore.Objects.Items
     {
         private int type;
         private int price;
-        private string text;
+        private string displayText;
+        private string acquireText;
         private bool respawn;
 
         private double t = 0;
@@ -22,9 +24,11 @@ namespace Leore.Objects.Items
 
         private Font font;
 
+        private LightSource light;
+
         public bool Sold { get; private set; }
         
-        public ShopItem(int x, int y, Room room, string itemName, int shopItemType, int shopItemPrice, string shopItemText, bool shopItemRespawn) : base(x, y, room, itemName)
+        public ShopItem(int x, int y, Room room, string name, int itemType, int price, string displayText, string acquireText, bool shopItemRespawn) : base(x, y, room, name)
         {
             DebugEnabled = true;
             BoundingBox = new SPG.Util.RectF(-4, -4, 8, 8);
@@ -37,10 +41,14 @@ namespace Leore.Objects.Items
             font.Halign = Font.HorizontalAlignment.Center;
             font.Valign = Font.VerticalAlignment.Center;
 
-            this.type = shopItemType;
-            this.price = shopItemPrice;
-            this.text = shopItemText;
-            this.respawn = shopItemRespawn;            
+            this.type = itemType;
+            this.price = price;
+            this.displayText = displayText;
+            this.acquireText = acquireText;
+            this.respawn = shopItemRespawn;
+
+            light = new LightSource(this);
+            light.Active = true;
         }
 
         public override void Update(GameTime gameTime)
@@ -63,7 +71,7 @@ namespace Leore.Objects.Items
 
         public void Buy()
         {
-            var dialog = new MessageDialog(text + '|' + "Do you want to buy this?");
+            var dialog = new MessageDialog(displayText + '|' + "Do you want to buy this?");
             dialog.YesAction = YesAction;
         }
 
@@ -90,7 +98,7 @@ namespace Leore.Objects.Items
                             {
                                 GameManager.Current.Player.Stats.Abilities |= PlayerAbility.NO_FALL_DAMAGE;
                             };
-                            featherItem.Text = $"You got the ~Feather~!\nIt prevents fall damage.";
+                            featherItem.Text = acquireText;
                             featherItem.ID = ID;
                             break;
                         case 1: // MP crystal
@@ -105,7 +113,7 @@ namespace Leore.Objects.Items
                                 GameManager.Current.AddSpell(SpellType.CRIMSON_ARC);
                             };
                             crimsonItem.HighlightColor = Colors.FromHex("c80e1f");
-                            crimsonItem.Text = $"Learned spell: ~Crimson Arc~.";
+                            crimsonItem.Text = acquireText;
                             crimsonItem.ID = ID;
                             break;
                     }
