@@ -33,17 +33,29 @@ namespace Leore.Objects.Effects.Weather
         private float targetAlpha;
 
         private int weather;
+        private float x, y;
 
         private Darkness()
         {
-            blend = new BlendState();
+            //blend = new BlendState
+            //{
+            //    ColorBlendFunction = BlendFunction.Add,
+            //    ColorSourceBlend = Blend.Zero,
+            //    ColorDestinationBlend = Blend.InverseSourceAlpha,
+            //    AlphaBlendFunction = BlendFunction.Add,
+            //    AlphaSourceBlend = Blend.Zero,
+            //    AlphaDestinationBlend = Blend.InverseSourceAlpha
+            //};
 
-            blend.ColorBlendFunction = BlendFunction.Add;
-            blend.ColorSourceBlend = Blend.Zero;
-            blend.ColorDestinationBlend = Blend.InverseSourceAlpha;
-            blend.AlphaBlendFunction = BlendFunction.Add;
-            blend.AlphaSourceBlend = Blend.Zero;
-            blend.AlphaDestinationBlend = Blend.InverseSourceAlpha;
+            blend = new BlendState
+            {
+                ColorSourceBlend = Blend.Zero, // multiplier of the source color
+                ColorBlendFunction = BlendFunction.Add, // function to combine colors
+                ColorDestinationBlend = Blend.SourceAlpha, // multiplier of the destination color
+                AlphaBlendFunction = BlendFunction.Add, // function to combine alpha
+                AlphaSourceBlend = Blend.Zero, // multiplier of the source alpha
+                AlphaDestinationBlend = Blend.InverseSourceAlpha, // multiplier of the destination alpha
+            };
         }
 
         public static void Create()
@@ -69,10 +81,14 @@ namespace Leore.Objects.Effects.Weather
             spriteBatch.Begin(SpriteSortMode.Immediate, blend, SamplerState.PointClamp, null, null, null, null);
 
             ObjectManager.Enable<LightSource>();
-            var lightSources = ObjectManager.FindAll<LightSource>().Where(o => !o.Parent.IsOutsideCurrentRoom()).ToList();
+            var lightSources = ObjectManager.FindAll<LightSource>().Where(o => !o.Parent.IsOutsideCurrentRoom(64)).ToList();
 
             if (RoomCamera.Current.CurrentRoom != null)
+            {
+                x = RoomCamera.Current.ViewX;
+                y = RoomCamera.Current.ViewY;
                 weather = RoomCamera.Current.CurrentRoom.Weather;
+            }
 
             if (weather != 1)
             {
@@ -84,9 +100,9 @@ namespace Leore.Objects.Effects.Weather
                 }
             } else
             {
-                globalAlpha = Math.Min(globalAlpha + .1f, 1);
+                globalAlpha = Math.Min(globalAlpha + .03f, 1);
             }
-
+            
             float a = 0;
             if (lightSources.Count >= 0)
             {
@@ -98,13 +114,16 @@ namespace Leore.Objects.Effects.Weather
                             a += .15f;
                         if (source.State == LightSource.LightState.FullRoom)
                         {
-                            //activeSources = lightSources.Count;
                             a = 1;
                             break;
                         }
                     }
+                    if (source.State == LightSource.LightState.Ambient)
+                    {
+                        a += .3f;
+                    }
                 }
-                //alpha = 1 - Math.Max(activeSources, 0) / (float)lightSources.Count;
+                alpha = Math.Min(alpha, 1);                
 
                 alpha = 1 - a;
                 
@@ -120,7 +139,7 @@ namespace Leore.Objects.Effects.Weather
                         continue;
 
                     var pos = new Vector2(source.Parent.Center.X, source.Parent.Center.Y)
-                         - new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY);
+                         - new Vector2(x, y);
 
                     spriteBatch.Draw(AssetManager.DarknessMask, pos, null, Color.White, 0, new Vector2(64), new Vector2(.9f + .05f * (float)Math.Sin(t)) * .5f * source.Scale.X, SpriteEffects.None, Globals.LAYER_UI - .001f);                    
                 }                
@@ -133,7 +152,7 @@ namespace Leore.Objects.Effects.Weather
         {
             targetAlpha += (alpha - targetAlpha) / 60f;
 
-            sb.Draw(darkness, new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY), null, new Color(Color.White, globalAlpha * targetAlpha), 0, new Vector2(0), Vector2.One, SpriteEffects.None, Globals.LAYER_UI - .001f);            
+            sb.Draw(darkness, new Vector2(x, y), null, new Color(Color.White, globalAlpha * targetAlpha), 0, new Vector2(0), Vector2.One, SpriteEffects.None, Globals.LAYER_UI - .001f);            
         }
     }
 }

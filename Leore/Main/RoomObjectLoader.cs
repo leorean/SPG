@@ -225,6 +225,12 @@ namespace Leore.Main
                         case 840:
                             new Torch(i * Globals.T, j * Globals.T, room, false, LightSource.LightState.FullRoom);
                             break;
+                        case 841:
+                            new AmbientLightSource(i * Globals.T, j * Globals.T, room);
+                            break;
+                        case 842:
+                            new LightObject(i * Globals.T, j * Globals.T, room);
+                            break;
                         case 960: // timed switch (1s)
                             new TimeSwitch(i * Globals.T, j * Globals.T, 1 * 60, room);
                             break;

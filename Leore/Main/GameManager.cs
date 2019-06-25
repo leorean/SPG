@@ -67,10 +67,6 @@ namespace Leore.Main
 
         public void ChangeRoom(Room oldRoom, Room newRoom)
         {
-
-            //oldRoom.Colliders.Clear();
-            //newRoom.Colliders.Clear();
-
             // unload all rooms that exist
             Room[] tmp = new Room[LoadedRooms.Count];
             LoadedRooms.CopyTo(tmp);
@@ -377,7 +373,7 @@ namespace Leore.Main
             ObjectManager.Enable<Player>();
             ObjectManager.Enable<PlayerProjectile>();
             ObjectManager.Enable<KeySnatchProjectile>();
-
+            
             // todo: solve more smoothly?
             foreach (var o in ObjectManager.Objects.Where(o => o is Enemy && (o as RoomObject).Room == room)) {
                 ObjectManager.Enable(o);
