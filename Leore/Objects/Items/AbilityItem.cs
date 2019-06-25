@@ -2,6 +2,7 @@
 using Leore.Main;
 using Leore.Objects.Effects.Emitters;
 using System;
+using Leore.Objects.Level;
 
 namespace Leore.Objects.Items
 {
@@ -35,6 +36,8 @@ namespace Leore.Objects.Items
         private string appearCondition;
         private bool appeared;
 
+        private LightSource light;
+
         public AbilityItem(float x, float y, Room room, string name = null, string setCondition = null, string appearCondition = null) : base(x, y, room, name)
         {
             Visible = false;
@@ -52,6 +55,8 @@ namespace Leore.Objects.Items
             Save = true;
             Visible = false;
 
+            light = new LightSource(this);
+            
             this.setCondition = setCondition;
             this.appearCondition = appearCondition;
         }
@@ -80,6 +85,8 @@ namespace Leore.Objects.Items
                     appeared = true;
                 }
             }
+
+            light.Active = true;
 
             if (state == State.IDLE)
             {
