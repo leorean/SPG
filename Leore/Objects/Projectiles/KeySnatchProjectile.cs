@@ -55,7 +55,7 @@ namespace Leore.Objects.Projectiles
         {
             base.Update(gameTime);
 
-            orb.Position = originalPosition;
+            //orb.Position = originalPosition;
 
             cooldown = Math.Max(cooldown - 1, 0);
             if (cooldown > 0)
