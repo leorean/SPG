@@ -187,8 +187,10 @@ namespace Leore.Main
         public Collider MovingPlatform { get; set; }
         public Orb Orb { get; set; }
 
-        public Teleporter Teleporter { get; set; }        
-        
+        public Teleporter Teleporter { get; set; }
+
+        private Direction flowDirection;
+
         // constructor
 
         public Player(float x, float y) : base(x, y)
@@ -692,6 +694,8 @@ namespace Leore.Main
                 Orb.Level = Stats.Spells.ElementAt(Stats.SpellIndex).Value;
             }
 
+            var currentFlowDirection = Direction.NONE;
+
             // ++++++++++++++++++++++++++++++
             // INTERACTION WITH OTHER OBJECTS
             // ++++++++++++++++++++++++++++++
@@ -928,6 +932,9 @@ namespace Leore.Main
                 {
                     if (!f.Active)
                         continue;
+                    
+                    flowDirection = f.Direction;
+                    currentFlowDirection = f.Direction;
 
                     var flowPower = .3f;
                     switch (f.Direction)
@@ -983,13 +990,23 @@ namespace Leore.Main
             // ++++ state logic ++++
             // +++++++++++++++++++++
 
-            var maxVel = 1.2f;
+            var defaultMaxVel = 1.2f;
+
+            // reset maxVel through this
+            if (Direction != flowDirection)
+                flowDirection = Direction.NONE;
+
+            var maxVel = (Direction == flowDirection) ? 2 : defaultMaxVel;
 
             if (YVel != 0) onGround = false;
 
             if (onGround)
             {
                 lastGroundY = Y;
+
+                if (flowDirection != currentFlowDirection)
+                    flowDirection = Direction.NONE;
+
             }
 
             // limbo
@@ -1051,12 +1068,12 @@ namespace Leore.Main
 
                     Direction = Direction.LEFT;
                 }
-            }
+            }                        
             // walk
             if (State == PlayerState.WALK)
             {
                 var colSide = this.CollisionBoundsFirstOrDefault<Solid>(X + Math.Sign((int)Direction), Y);
-
+                
                 if (k_rightHolding)
                 {
                     if (Direction == Direction.RIGHT)
@@ -1323,10 +1340,10 @@ namespace Leore.Main
                 if (!onWall)
                     State = PlayerState.JUMP_DOWN;
 
+                var jumpOff = false;
+
                 if (Direction == Direction.LEFT)
                 {
-                    var jumpOff = false;
-                    
                     if (k_jumpPressed || k_rightHolding)
                     {
                         if (k_rightHolding)
@@ -1337,15 +1354,9 @@ namespace Leore.Main
                         jumpOff = true;
 
                     }
-                    if (jumpOff)
-                    {
-                        // switch back the ground Y
-                        lastGroundY = Math.Min(lastGroundY, lastGroundYbeforeWall);
-                    }                    
                 }
                 else if (Direction == Direction.RIGHT)
                 {
-                    var jumpOff = false;
                     
                     if (k_jumpPressed || k_leftHolding)
                     {
@@ -1356,14 +1367,15 @@ namespace Leore.Main
                         State = PlayerState.JUMP_UP;
                         jumpOff = true;
                     }
-
-                    if (jumpOff)
-                    {
-                        // switch back the ground Y
-                        lastGroundY = Math.Min(lastGroundY, lastGroundYbeforeWall);
-                    }
                 }
-                
+
+                if (jumpOff)
+                {
+                    // switch back the ground Y
+                    lastGroundY = Math.Min(lastGroundY, lastGroundYbeforeWall);
+                    jumps++;
+                }
+
                 if (k_upHolding || k_downHolding)
                     State = PlayerState.WALL_CLIMB;
 
@@ -1401,15 +1413,16 @@ namespace Leore.Main
             // hit -> ground / stand up
             if (State == PlayerState.HIT_AIR)
             {
+                jumps = maxJumps;
 
-                if (YVel > 0)
-                {
-                    if (k_jumpPressed)
-                    {
-                        YVel = -1;
-                        State = PlayerState.JUMP_UP;
-                    }
-                }
+                //if (YVel > 0)
+                //{
+                //    if (k_jumpPressed)
+                //    {
+                //        YVel = -1;
+                //        State = PlayerState.JUMP_UP;
+                //    }
+                //}
 
                 if (onGround)
                 {
@@ -1736,7 +1749,7 @@ namespace Leore.Main
 
             var g = this.MoveAdvanced(moveWithPlatforms);
             
-            if (inWater || onWall || onCeil)
+            if (inWater || onWall || onCeil)                
                 jumps = Math.Min(jumps, 1);
                         
             if (g)

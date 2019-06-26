@@ -65,6 +65,7 @@ namespace Leore.Main
                         case 646:
                         case 789:
                         case 794:
+                        case 1041:
                             var platform = new Platform(i * Globals.T, j * Globals.T, room);
                             t.TileOptions.Visible = true;
                             if (t.ID == 646) t.TileOptions.Visible = false; // <- invisible platform
@@ -79,19 +80,38 @@ namespace Leore.Main
                             var saveSatue = new SaveStatue(i * Globals.T, j * Globals.T, room);
                             break;
                         case 512: // spikes (bottom)
+                        case 1105:
                             new SpikeBottom(i * Globals.T, j * Globals.T, room);
                             t.TileOptions.Visible = true;
                             break;
                         case 513: // spikes (top)
+                        case 977:
                             new SpikeTop(i * Globals.T, j * Globals.T, room);
                             t.TileOptions.Visible = true;
                             break;
                         case 514: // spikes (right)
+                        case 1040:
                             new SpikeRight(i * Globals.T, j * Globals.T, room);
                             t.TileOptions.Visible = true;
                             break;
                         case 515: // spikes (left)
+                        case 1042:
                             new SpikeLeft(i * Globals.T, j * Globals.T, room);
+                            t.TileOptions.Visible = true;
+                            break;
+                        // spikes (corner, inside)
+                        case 976:
+                        case 978:
+                        case 1104:
+                        case 1106:
+                            new SpikeCorner(i * Globals.T, j * Globals.T, room);
+                            t.TileOptions.Visible = true;
+                            break;
+                        // invisible fg tiles
+                        case 1102:
+                        case 1103:
+                        case 1168:
+                        case 1232:
                             t.TileOptions.Visible = true;
                             break;
                         case 577: // BIG spikes (deadly)

@@ -16,9 +16,14 @@ namespace Leore.Objects.Enemies
         }
     }
 
+    public class SpikeCorner : Obstacle
+    {
+        public SpikeCorner(float x, float y, Room room) : base(x, y, room) { BoundingBox = new RectF(4, 4, 8, 8); }
+    }
+
     public class SpikeBottom : Obstacle
     {
-        public SpikeBottom(float x, float y, Room room) : base(x, y, room) { BoundingBox = new RectF(2, 8, 12, 8); }        
+        public SpikeBottom(float x, float y, Room room) : base(x, y, room) { BoundingBox = new RectF(2, 8, 12, 8); }
     }
 
     public class SpikeTop : Obstacle

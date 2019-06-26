@@ -209,7 +209,7 @@ namespace Leore
                 GameManager.Current.Player.Stats.Abilities |= PlayerAbility.NO_FALL_DAMAGE;
 
                 //GameManager.Current.Player.Stats.Abilities |= PlayerAbility.LEVITATE;
-                //GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_CEIL;
+                GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_CEIL;
                 GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_WALL;
 
                 GameManager.Current.AddSpell(SpellType.STAR);

@@ -96,7 +96,9 @@ namespace Leore.Objects.Level.Blocks
                 var colY = this.CollisionRectangles<Collider>(X + 8, Y + 8, X + 8, Y + 16).FirstOrDefault();
 
                 if (fallDelay == 0)
+                {
                     fallDelay = 60;
+                }
                 else
                     fallDelay = Math.Max(fallDelay - 1, 0);
 
