@@ -104,8 +104,9 @@ namespace Leore.Main
         public bool OnGround { get => onGround; }
         private bool inWater;
         public bool InWater { get => inWater; }
-
-
+        private bool onWall;
+        public bool OnWall { get => onWall; }
+        
         private float lastGroundY;
         private float lastGroundYbeforeWall;
 
@@ -523,9 +524,15 @@ namespace Leore.Main
             // ++++ collision flags ++++
 
             var currentRoom = RoomCamera.Current.CurrentRoom;
-            
-            var onWall = !hit && ObjectManager.CollisionPoints<Solid>(this, X + (.5f * BoundingBox.Width + 1) * Math.Sign((int)Direction), Y + 4)
-                            .Where(o => o.Room == currentRoom).Count() > 0;
+
+            //onWall = !hit && ObjectManager.CollisionPoints<Solid>(this, X + (.5f * BoundingBox.Width + 1) * Math.Sign((int)Direction), Y + 4)
+            //                .Where(o => o.Room == currentRoom).Count() > 0;
+            onWall = !hit && 
+                (GameManager.Current.Map.CollisionTile(X + (.5f * BoundingBox.Width + 1) * Math.Sign((int)Direction), Y + 4)
+                && Left > currentRoom.X + 2 && Right < currentRoom.X + currentRoom.BoundingBox.Width - 2);
+
+            // TODO: fix ceil flag for room transitions
+
             var onCeil = !hit && ObjectManager.CollisionPoints<Solid>(this, X, Y - BoundingBox.Height * .5f - 1)
                 .Where(o => o.Room == currentRoom && !(o is PushBlock)).Count() > 0;
 
@@ -1310,11 +1317,11 @@ namespace Leore.Main
             {
                 XVel = 0;
                 YVel = -Gravity;
-
+                
+                var wallJumpVel = -2.2f;
+                
                 if (!onWall)
                     State = PlayerState.JUMP_DOWN;
-
-                var wallJumpVel = -2.2f;
 
                 if (Direction == Direction.LEFT)
                 {
@@ -1370,6 +1377,7 @@ namespace Leore.Main
             // wall climb
             if (State == PlayerState.WALL_CLIMB)
             {
+
                 if (k_upHolding)
                 {
                     YVel = -1;
@@ -1728,7 +1736,7 @@ namespace Leore.Main
 
             var g = this.MoveAdvanced(moveWithPlatforms);
             
-            if (inWater)
+            if (inWater || onWall || onCeil)
                 jumps = Math.Min(jumps, 1);
                         
             if (g)

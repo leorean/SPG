@@ -9,6 +9,7 @@ using SPG.View;
 using System;
 using System.Linq;
 using Leore.Objects.Effects.Weather;
+using System.Diagnostics;
 
 namespace Leore.Main
 {
@@ -125,6 +126,8 @@ namespace Leore.Main
             GameManager.Current.Transition.OnTransitionEnd = Transition_1;
         }
 
+        private Vector2 vel;
+
         private enum TransitionDirection { Horizontal, Vertical }
 
         private TransitionDirection moveDirection;
@@ -227,7 +230,7 @@ namespace Leore.Main
                 else
                     dyVel = Math.Min(dyVel + .1f, 12f);
 
-                var vel = new Vector2((tarX - Position.X) / 12f, (tarY - Position.Y) / dyVel);
+                vel = new Vector2((tarX - Position.X) / 12f, (tarY - Position.Y) / dyVel);
 
                 if (lookLocked > 0)
                 {
@@ -272,7 +275,6 @@ namespace Leore.Main
                 if ((!MathUtil.In(target.X, CurrentRoom.X, CurrentRoom.X + CurrentRoom.BoundingBox.Width)
                         || !MathUtil.In(target.Y, CurrentRoom.Y, CurrentRoom.Y + CurrentRoom.BoundingBox.Height)))
                 {
-
                     if (!target.X.In(CurrentRoom.X, CurrentRoom.X + CurrentRoom.BoundingBox.Width))
                         moveDirection = TransitionDirection.Horizontal;
                     if (!target.Y.In(CurrentRoom.Y, CurrentRoom.Y + CurrentRoom.BoundingBox.Height))

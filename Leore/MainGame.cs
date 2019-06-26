@@ -210,14 +210,14 @@ namespace Leore
 
                 //GameManager.Current.Player.Stats.Abilities |= PlayerAbility.LEVITATE;
                 //GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_CEIL;
-                //GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_WALL;
+                GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_WALL;
 
                 GameManager.Current.AddSpell(SpellType.STAR);
                 GameManager.Current.AddSpell(SpellType.CRIMSON_ARC);
                 
-                //GameManager.Current.Player.Stats.MaxHP = 50;
-                //GameManager.Current.Player.Stats.MaxMP = 100;
-                //GameManager.Current.Player.Stats.MPRegen = 2;
+                GameManager.Current.Player.Stats.MaxHP = 14;
+                GameManager.Current.Player.Stats.MaxMP = 40;
+                GameManager.Current.Player.Stats.MPRegen = .4f;
             }
 
             if (input.IsKeyPressed(Keys.O, Input.State.Pressed))
