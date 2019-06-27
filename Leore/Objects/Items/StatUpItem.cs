@@ -19,11 +19,13 @@ namespace Leore.Objects.Items
 
         private PotionEmitter potionEmitter;
 
-        public StatUpItem(float x, float y, Room room, StatType type) : base(x, y, room)
+        private bool fromShop;
+
+        public StatUpItem(float x, float y, Room room, StatType type, bool fromShop = false) : base(x, y, room)
         {
             Type = type;
 
-            //Scale = new Vector2(.5f);
+            this.fromShop = fromShop;
 
             maxYDist = Globals.T;
             flashOnTaken = false;
@@ -37,12 +39,14 @@ namespace Leore.Objects.Items
                     HighlightColor = GameResources.HpColors.First();
 
                     Name = "HP-Up";
-                    Text = "~Max. HP~ increased by 3.";
+                    Text = "~Max. HP~ increased by 1.";
                     OnObtain = () => 
                     {
-                        player.Stats.MaxHP += 3;
+                        player.Stats.MaxHP += 1;
                         player.HP = player.Stats.MaxHP;
                         new PotionBurstEmitter(X, Y, PotionType.HP);
+                        if (fromShop)
+                            GameManager.Current.OverwriteSwitchStateTo(false);
                     };
                     break;
                 case StatType.MP:
@@ -52,12 +56,14 @@ namespace Leore.Objects.Items
                     HighlightColor = GameResources.MpColors.First();
 
                     Name = "MP-Up";
-                    Text = "~Max. MP~ increased by 5.";
+                    Text = "~Max. MP~ increased by 1.";
                     OnObtain = () => 
                     {
-                        player.Stats.MaxMP += 5;
+                        player.Stats.MaxMP += 1;
                         player.MP = player.Stats.MaxMP;
                         new PotionBurstEmitter(X, Y, PotionType.MP);
+                        if (fromShop)
+                            GameManager.Current.OverwriteSwitchStateTo(false);
                     };
                     break;
                 case StatType.Regen:
@@ -70,9 +76,11 @@ namespace Leore.Objects.Items
                     Text = "~MP regeneration~ rate increased.";
                     OnObtain = () =>
                     {
-                        player.Stats.MPRegen += .1f;
+                        player.Stats.MPRegen += .05f;
                         player.MP = player.Stats.MaxMP;
                         new PotionBurstEmitter(X, Y, PotionType.Regen);
+                        if (fromShop)
+                            GameManager.Current.OverwriteSwitchStateTo(false);
                     };
                     break;
             }
@@ -91,7 +99,7 @@ namespace Leore.Objects.Items
 
             if (potionEmitter != null)
             {
-                potionEmitter.Position = Position + new Vector2(0, -8);
+                potionEmitter.Position = Position + new Vector2(0, -12);
                 potionEmitter.Active = !Taken;
             }
         }        

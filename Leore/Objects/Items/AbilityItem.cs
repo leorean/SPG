@@ -22,7 +22,7 @@ namespace Leore.Objects.Items
         protected State state = State.IDLE;
 
         protected Player player;
-        protected float maxYDist = 2 * Globals.T;
+        protected float maxYDist = Globals.T;
 
         protected bool flashOnTaken = true;
 
@@ -100,7 +100,7 @@ namespace Leore.Objects.Items
                 Position = new Vector2(player.X, player.Y);
                 Visible = false;
 
-                if (player.OnGround || player.InWater)
+                if (player.OnGround || player.InWater || player.OnCeil || player.OnWall)
                 {
                     player.State = Player.PlayerState.OBTAIN;
                     Visible = true;
@@ -174,7 +174,7 @@ namespace Leore.Objects.Items
             if (state == State.IDLE)
             {
                 state = State.TAKING;
-                this.player = player;                
+                this.player = player;
             }
         }        
     }

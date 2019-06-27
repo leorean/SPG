@@ -134,10 +134,13 @@ namespace Leore.Resources
 
         public static readonly List<Color> HpColors = new List<Color>
         {
-            new Color(248, 40, 40),
-            new Color(218, 36, 0),
-            new Color(231, 99, 73),
-            new Color(255, 90, 0)
+            //new Color(248, 40, 40),
+            //new Color(218, 36, 0),
+            //new Color(231, 99, 73),
+            //new Color(255, 90, 0)
+            Colors.FromHex("ff1734"),
+            Colors.FromHex("e20c22"),
+            Colors.FromHex("c3000f")
         };
 
         public static readonly List<Color> MpColors = new List<Color>

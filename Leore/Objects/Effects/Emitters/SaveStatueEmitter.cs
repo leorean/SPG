@@ -46,7 +46,7 @@ namespace Leore.Objects.Effects.Emitters
     public class SaveStatueEmitter : ParticleEmitter
     {
         protected List<Color> particleColors;
-
+        
         public SaveStatueEmitter(float x, float y) : base(x, y)
         {
             SpawnTimeout = 10;

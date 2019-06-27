@@ -112,7 +112,7 @@ namespace Leore.Objects.Effects.Weather
                     }
                     if (source.State == LightSource.LightState.Ambient)
                     {
-                        a += .3f;
+                        a += .15f;
                     }
                 }
                 alpha = Math.Min(alpha, 1);                

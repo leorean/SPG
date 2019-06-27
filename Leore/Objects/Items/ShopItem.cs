@@ -34,7 +34,7 @@ namespace Leore.Objects.Items
             BoundingBox = new SPG.Util.RectF(-4, -4, 8, 8);
 
             DrawOffset = new Vector2(8);
-            Depth = Globals.LAYER_FG;
+            Depth = Globals.LAYER_FG + .0001f;
 
             font = AssetManager.DamageFont.Copy();
             font.HighlightColor = Colors.FromHex("FFF382");
@@ -83,7 +83,9 @@ namespace Leore.Objects.Items
                 
                 GameManager.Current.Player.Stats.Coins -= price;
                 new FollowFont(GameManager.Current.Player.X, GameManager.Current.Player.Y - 12, $"-{price}$");
-                
+
+                GameManager.Current.OverwriteSwitchStateTo(true);
+
                 if (!respawn)
                 {
                     // add this only for items that are not already adding the ID when taken
@@ -97,12 +99,13 @@ namespace Leore.Objects.Items
                             featherItem.OnObtain = () =>
                             {
                                 GameManager.Current.Player.Stats.Abilities |= PlayerAbility.NO_FALL_DAMAGE;
+                                GameManager.Current.OverwriteSwitchStateTo(false);
                             };
                             featherItem.Text = acquireText;
                             featherItem.ID = ID;
                             break;
                         case 1: // MP crystal
-                            var mpUp = new StatUpItem(X, Y - Globals.T, Room, StatUpItem.StatType.MP);                            
+                            var mpUp = new StatUpItem(X, Y - Globals.T, Room, StatUpItem.StatType.MP, true);                            
                             mpUp.ID = ID;
                             break;
                         case 2: // spell: crimson
@@ -111,6 +114,7 @@ namespace Leore.Objects.Items
                             crimsonItem.OnObtain = () =>
                             {
                                 GameManager.Current.AddSpell(SpellType.CRIMSON_ARC);
+                                GameManager.Current.OverwriteSwitchStateTo(false);
                             };
                             crimsonItem.HighlightColor = Colors.FromHex("c80e1f");
                             crimsonItem.Text = acquireText;
@@ -119,7 +123,8 @@ namespace Leore.Objects.Items
                     }
                 }
 
-                new MessageBox("Thank you!|..don't forget to take that item with you!");
+                //new MessageBox("Thank you!|..don't forget to take that item with you!");
+                new MessageBox("Thank you!");
 
             } else
             {

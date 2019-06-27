@@ -144,10 +144,10 @@ namespace Leore.Main
                             new WaterFall(i * Globals.T, j * Globals.T, room, (t.ID - 648));
                             break;
                         case 579: // hp potion
-                            new Potion(i * Globals.T + 8, j * Globals.T + 8, room, PotionType.HP);
+                            new Potion(i * Globals.T + 8, j * Globals.T + 8, room, PotionType.HP) { Texture = GameManager.Current.Map.TileSet[t.ID] };
                             break;
                         case 580: // mp potion
-                            new Potion(i * Globals.T + 8, j * Globals.T + 8, room, PotionType.MP);
+                            new Potion(i * Globals.T + 8, j * Globals.T + 8, room, PotionType.MP) { Texture = GameManager.Current.Map.TileSet[t.ID] };
                             break;
                         case 581: // key
                             var key = new Key(i * Globals.T + 8, j * Globals.T + 8, room);

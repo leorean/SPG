@@ -301,7 +301,13 @@ namespace Leore.Main
                 UnloadRoomObjects(room);
             }
 
-            Player.Destroy();            
+            if (Player.Orb != null)
+            {
+                Player.Orb.Parent = null;
+                Player.Orb.Destroy();
+            }
+
+            Player.Destroy();
             Player = null;
             RoomCamera.Current.Reset();
 

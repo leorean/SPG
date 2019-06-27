@@ -10,6 +10,7 @@ using Leore.Objects.Projectiles;
 using SPG.Draw;
 using SPG.Objects;
 using SPG.Util;
+using Leore.Objects.Level.Obstacles;
 
 namespace Leore.Objects.Enemies
 {
@@ -93,9 +94,14 @@ namespace Leore.Objects.Enemies
             
             if (HP > 0)
             {
+                if (!(this is Boss) && this.CollisionBoundsFirstOrDefault<Lava>(X, Y) != null)
+                {
+                    Hit(999, 90);
+                }
+
                 if (!IgnoreProjectiles)
                 {
-                    var projectile = ObjectManager.CollisionBoundsFirstOrDefault<PlayerProjectile>(this, X, Y);
+                    var projectile = this.CollisionBoundsFirstOrDefault<PlayerProjectile>(X, Y);
 
                     if (projectile != null)
                     {

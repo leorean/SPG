@@ -284,6 +284,14 @@ namespace Leore.Main
             lastPosition = Position;
         }
 
+        //public override void Destroy(bool callGC = false)
+        //{
+        //    light.Parent = null;
+        //    light.Destroy();
+        //    Parent = null;
+        //    base.Destroy(callGC);
+        //}
+
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
             //base.Draw(sb, gameTime);

@@ -28,18 +28,20 @@ namespace Leore.Objects.Items
             Depth = Globals.LAYER_FG + .0001f;
             DrawOffset = new Vector2(8);
             
-            potionEmitter = new PotionEmitter(x, y - 6, potionType);
+            potionEmitter = new PotionEmitter(x, y - 3, potionType);
             potionEmitter.Parent = this;
+            potionEmitter.SpawnTimeout = 20;
+            potionEmitter.Radius = 4;
 
             if (Type == PotionType.HP)
             {
                 amount = 5;
-                Texture = AssetManager.Potions[0];
+                //Texture = AssetManager.Potions[0];
             }
             if (Type == PotionType.MP)
             {
                 amount = 20;
-                Texture = AssetManager.Potions[1];
+                //Texture = AssetManager.Potions[1];
             }
             if (Type == PotionType.Regen)
             {
