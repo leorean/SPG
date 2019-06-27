@@ -15,6 +15,7 @@ using Leore.Objects;
 using Leore.Objects.Level.Blocks;
 using Leore.Objects.Level.Switches;
 using Leore.Objects.Effects.Weather;
+using Leore.Objects.Level.Obstacles;
 
 namespace Leore.Main
 {
@@ -76,8 +77,11 @@ namespace Leore.Main
                                 Texture = GameManager.Current.Map.TileSet[t.ID]
                             };
                             break;
+                        case 367: // lava
+                            new Lava(i * Globals.T, j * Globals.T, room);
+                            break;
                         case 576: // save-statues
-                            var saveSatue = new SaveStatue(i * Globals.T, j * Globals.T, room);
+                            new SaveStatue(i * Globals.T, j * Globals.T, room);
                             break;
                         case 512: // spikes (bottom)
                         case 1105:

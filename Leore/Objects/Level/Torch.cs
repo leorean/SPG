@@ -14,9 +14,7 @@ namespace Leore.Objects.Level
     public class Torch : RoomObject
     {
         public bool Active { get; set; }
-
-        private bool isBright;
-
+        
         protected LightSource light;
         protected TorchEmitter emitter;
 
@@ -30,8 +28,9 @@ namespace Leore.Objects.Level
             light = new LightSource(this);
             light.State = lightState;
 
-            emitter = new TorchEmitter(X + 8, Y + 8);
+            emitter = new TorchEmitter(X + 8, Y + 6);
             emitter.Parent = this;
+            emitter.Depth = Depth;
         }
 
         public override void Update(GameTime gameTime)

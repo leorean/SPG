@@ -109,6 +109,7 @@
     <Compile Include="Objects\Level\JumpControlDisabler.cs" />
     <Compile Include="Objects\Level\Door.cs" />
     <Compile Include="Objects\Level\LightSource.cs" />
+    <Compile Include="Objects\Level\Obstacles\Lava.cs" />
     <Compile Include="Objects\Level\Switches\GroundSwitch.cs" />
     <Compile Include="Objects\Level\Key.cs" />
     <Compile Include="Objects\Level\Blocks\KeyBlock.cs" />

@@ -20,6 +20,7 @@ using SPG.Map;
 using Leore.Resources;
 using Leore.Objects.Level.Blocks;
 using Leore.Objects.Effects.Weather;
+using Leore.Objects.Level.Obstacles;
 
 namespace Leore.Main
 {
@@ -507,13 +508,21 @@ namespace Leore.Main
                 
                 if (obstacle != null)
                 {
-                    var vec = Position - (obstacle.Center + new Vector2(0, 0));
-                    var angle = vec.VectorToAngle();                    
-                    Hit(obstacle.Damage, (float)angle);
+                    if (obstacle is Lava)
+                    {
+                        HurtAndSpawnBack();
+                    }
+                    else
+                    {
 
-                    if (obstacle is LaserObstacle)
-                        InvincibleTimer = 0;
-                }                
+                        var vec = Position - (obstacle.Center + new Vector2(0, 0));
+                        var angle = vec.VectorToAngle();
+                        Hit(obstacle.Damage, (float)angle);
+
+                        if (obstacle is LaserObstacle)
+                            InvincibleTimer = 0;
+                    }
+                }
             }
 
             if (HP == 0)
