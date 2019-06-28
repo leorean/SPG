@@ -17,6 +17,7 @@ namespace Leore.Objects.Items
         private string displayText;
         private string acquireText;
         private bool respawn;
+        private string appearCondition;
 
         private double t = 0;
         private double z = 0;
@@ -27,8 +28,9 @@ namespace Leore.Objects.Items
         private LightSource light;
 
         public bool Sold { get; private set; }
+        public bool CanBeBought { get => !Room.SwitchState && !Sold; }
         
-        public ShopItem(int x, int y, Room room, string name, int itemType, int price, string displayText, string acquireText, bool shopItemRespawn) : base(x, y, room, name)
+        public ShopItem(int x, int y, Room room, string name, int itemType, int price, string displayText, string acquireText, bool shopItemRespawn, string appearCondition) : base(x, y, room, name)
         {
             DebugEnabled = true;
             BoundingBox = new SPG.Util.RectF(-4, -4, 8, 8);
@@ -46,6 +48,7 @@ namespace Leore.Objects.Items
             this.displayText = displayText;
             this.acquireText = acquireText;
             this.respawn = shopItemRespawn;
+            this.appearCondition = appearCondition;
 
             light = new LightSource(this);
             light.Active = true;
@@ -58,8 +61,11 @@ namespace Leore.Objects.Items
             if (GameManager.Current.Player.Stats.Items.ContainsKey(ID))
                 Sold = true;
 
-            // magic can't be bought until player has the orb
-            if ((type == 1 || type == 2) && !GameManager.Current.Player.Stats.Abilities.HasFlag(PlayerAbility.ORB))
+            //// magic can't be bought until player has the orb
+            //if ((type == 1 || type == 2) && !GameManager.Current.Player.Stats.Abilities.HasFlag(PlayerAbility.ORB))
+            //    Sold = true;
+
+            if (!GameManager.Current.HasStoryFlag(appearCondition))
                 Sold = true;
 
             if (!Sold)
@@ -150,7 +156,8 @@ namespace Leore.Objects.Items
                 else
                 {
                     // $
-                    sb.Draw(AssetManager.ShopItems, Position + new Vector2(0, -Globals.T + (float)z), new Rectangle(0, 0, 16, 16), Color.White, 0, DrawOffset, Vector2.One, SpriteEffects.None, Depth);
+                    if (CanBeBought)
+                        sb.Draw(AssetManager.ShopItems, Position + new Vector2(0, -Globals.T + (float)z), new Rectangle(0, 0, 16, 16), Color.White, 0, DrawOffset, Vector2.One, SpriteEffects.None, Depth);
                 }
             }
             

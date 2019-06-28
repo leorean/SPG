@@ -925,7 +925,7 @@ namespace Leore.Main
                 // ++++ shop items ++++
 
                 var shopItem = this.CollisionBoundsFirstOrDefault<ShopItem>(X, Y);
-                if (shopItem != null && !shopItem.Sold)
+                if (shopItem != null && !shopItem.Sold && shopItem.CanBeBought)
                 {
                     if (!ObjectManager.Exists<MessageBox>())
                     {

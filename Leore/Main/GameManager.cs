@@ -311,6 +311,8 @@ namespace Leore.Main
             Player = null;
             RoomCamera.Current.Reset();
 
+            OverwriteSwitchStateTo(false);
+
             // reset savegame (will be loaded and updates afterwards)
             SaveGame = new SaveGame(SaveGame.FileName);
 

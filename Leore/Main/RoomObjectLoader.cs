@@ -445,8 +445,9 @@ namespace Leore.Main
                         var shopItemType = data.ContainsKey("itemType") ? (int)data["itemType"] : 0;
                         var shopItemRespawn = data.ContainsKey("respawn") ? (bool)data["respawn"] : false;
                         var shopItemPrice = data.ContainsKey("price") ? (int)data["price"] : 0;
+                        var shopItemAppearCondition = data.ContainsKey("appearCondition") ? data["appearCondition"].ToString() : null;
 
-                        var shopItem = new ShopItem(x + 8, y + 8, room, shopItemName, shopItemType, shopItemPrice, shopItemDisplayText, shopItemAcquireText, shopItemRespawn);
+                        var shopItem = new ShopItem(x + 8, y + 8, room, shopItemName, shopItemType, shopItemPrice, shopItemDisplayText, shopItemAcquireText, shopItemRespawn, shopItemAppearCondition);
                     }
                     if (type == "chest")
                     {

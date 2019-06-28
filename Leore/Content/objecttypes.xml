@@ -48,6 +48,7 @@
  </objecttype>
  <objecttype name="shopItem" color="#fff9d2">
   <property name="acquireText" type="string"/>
+  <property name="appearCondition" type="string"/>
   <property name="displayText" type="string"/>
   <property name="itemName" type="string"/>
   <property name="itemType" type="int" default="0"/>
