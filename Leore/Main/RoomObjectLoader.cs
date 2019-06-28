@@ -61,6 +61,7 @@ namespace Leore.Main
                         case 0: // platforms
                         case 12:
                         case 34:
+                        case 304:
                         case 535:
                         case 612:
                         case 646:

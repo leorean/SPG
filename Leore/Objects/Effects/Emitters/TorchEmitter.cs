@@ -44,6 +44,9 @@ namespace Leore.Objects.Effects.Emitters
 
     public class TorchEmitter : ParticleEmitter
     {
+        public int XRange { get; set; } = 6;
+        public int YRange { get; set; } = 8;
+
         public TorchEmitter(float x, float y) : base(x, y)
         {
             SpawnRate = 1;
@@ -52,7 +55,7 @@ namespace Leore.Objects.Effects.Emitters
 
         public override void CreateParticle()
         {
-            new TorchParticle(this) { Position = this.Position + new Vector2(-3 + RND.Int(6), -4 + RND.Int(8)) };
+            new TorchParticle(this) { Position = this.Position + new Vector2(-.5f * XRange + RND.Int(XRange), -.5f * YRange + RND.Int(YRange)), Depth = Depth };
         }        
     }
 }

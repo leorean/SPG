@@ -1832,7 +1832,9 @@ namespace Leore.Main
             {
                 var tmp = new Vector2(MathUtil.Div(X, Globals.T) * Globals.T + 8, MathUtil.Div(Y, Globals.T) * Globals.T + 8);
 
-                if (this.CollisionPointFirstOrDefault<Collider>(tmp.X, tmp.Y + 8) != null)
+                var groundCollider = this.CollisionPointFirstOrDefault<Collider>(tmp.X, tmp.Y + 8);
+
+                if (groundCollider != null && !(groundCollider is FallingPlatform || groundCollider is MovingPlatform))
                     safePosition = new Vector2(MathUtil.Div(X, Globals.T) * Globals.T + 8, MathUtil.Div(Y, Globals.T) * Globals.T + 8);
             }
             
