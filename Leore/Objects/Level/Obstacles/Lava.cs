@@ -16,7 +16,7 @@ namespace Leore.Objects.Level.Obstacles
         {
             BoundingBox = new SPG.Util.RectF(0, 4, 16, 12);
             
-            Depth = Globals.LAYER_FG;
+            Depth = Globals.LAYER_FG + .00001f;
 
             AnimationTexture = AssetManager.Lava;
 

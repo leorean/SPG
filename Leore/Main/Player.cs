@@ -538,17 +538,17 @@ namespace Leore.Main
 
             var currentRoom = RoomCamera.Current.CurrentRoom;
 
-            //onWall = !hit && ObjectManager.CollisionPoints<Solid>(this, X + (.5f * BoundingBox.Width + 1) * Math.Sign((int)Direction), Y + 4)
-            //                .Where(o => o.Room == currentRoom).Count() > 0;
-            onWall = !hit && 
-                (GameManager.Current.Map.CollisionTile(X + (.5f * BoundingBox.Width + 1) * Math.Sign((int)Direction), Y + 4)
-                && Left > currentRoom.X + 2 && Right < currentRoom.X + currentRoom.BoundingBox.Width - 2);
+            if (currentRoom != null)                
+            {
+                onWall = !hit &&
+                    (GameManager.Current.Map.CollisionTile(X + (.5f * BoundingBox.Width + 1) * Math.Sign((int)Direction), Y + 4)
+                    && Left > currentRoom.X + 2 && Right < currentRoom.X + currentRoom.BoundingBox.Width - 2);
 
-            // TODO: fix ceil flag for room transitions
+                // TODO: fix ceil flag for room transitions
 
-            onCeil = !hit && ObjectManager.CollisionPoints<Solid>(this, X, Y - BoundingBox.Height * .5f - 1)
-                .Where(o => o.Room == currentRoom && !(o is PushBlock)).Count() > 0;
-
+                onCeil = !hit && ObjectManager.CollisionPoints<Solid>(this, X, Y - BoundingBox.Height * .5f - 1)
+                    .Where(o => o.Room == currentRoom && !(o is PushBlock)).Count() > 0;
+            }
             inWater = GameManager.Current.Map.CollisionTile(X, Y + 4, GameMap.WATER_INDEX);
 
             if (!Stats.Abilities.HasFlag(PlayerAbility.CLIMB_WALL))
@@ -972,15 +972,17 @@ namespace Leore.Main
 
             foreach (var waterFall in waterFalls)
             {
+                //bool isLava = (waterFall.Parent != null && (waterFall.Parent as WaterFall).IsLava);
+                //bool partCol = false;
+
                 if (waterFall.X < Right && waterFall.X + waterFall.BoundingBox.Width > Left && waterFall.Y < Top)
                 {
                     foreach (var part in waterFall.Particles)
                     {
-                        //if (!(part is WaterFallParticle))
-                        //    continue;
-
                         if (part.Position.X > Left - 2&& part.Position.Y + part.YVel > Top && part.Position.X < Right + 2 && part.Position.Y + part.YVel < Bottom)
                         {
+                            //if (isLava) partCol = true;
+
                             if (part is WaterFallParticle)
                                 (part as WaterFallParticle).Collision = true;
                             if (part is WaterSplashParticle && part.YVel > 0)
@@ -992,9 +994,12 @@ namespace Leore.Main
                                 if (part.Alpha == 0)
                                     part.LifeTime = 0;                                
                             }
-                        }
-                    }                    
+                        }                        
+                    }
                 }
+
+                //if (partCol)
+                //    HurtAndSpawnBack();
             }
 
             // +++++++++++++++++++++

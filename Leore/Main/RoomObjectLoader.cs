@@ -80,6 +80,8 @@ namespace Leore.Main
                             break;
                         case 367: // lava
                             new Lava(i * Globals.T, j * Globals.T, room);
+                            t.TileOptions.Solid = true;
+                            t.TileOptions.Visible = true;
                             break;
                         case 576: // save-statues
                             new SaveStatue(i * Globals.T, j * Globals.T, room);

@@ -247,9 +247,9 @@ namespace SPG.Objects
                 {
                     var last = _currentFrame;
                     _currentFrame = _currentFrame + AnimationSpeed;
-                    if (_currentFrame > (MaxFrame - MinFrame) + 1)
+                    if (_currentFrame > (MaxFrame - MinFrame) + 1 - AnimationSpeed)
                     {
-                        _currentFrame -= ((MaxFrame - MinFrame) + 1);
+                        _currentFrame -= ((MaxFrame - MinFrame) + 1 - AnimationSpeed);
                         AnimationComplete?.Invoke(this, new EventArgs());
                     }
                 }
