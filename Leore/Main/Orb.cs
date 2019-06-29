@@ -102,8 +102,8 @@ namespace Leore.Main
 
             Scale = new Vector2(1, 1);
 
-            if (Type == SpellType.SNATCH_KEYS)
-                Scale = new Vector2((int)player.Direction, 1);
+            //if (Type == SpellType.SNATCH_KEYS)
+            //    Scale = new Vector2((int)player.Direction, 1);
 
             switch (State)
             {
@@ -155,6 +155,7 @@ namespace Leore.Main
                                     ParticleColors = new List<Color> { Color.White },
                                     SpawnRate = 5
                                 };
+                                new SingularEffect(X, Y, 10);
                             }
                             TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 6, 2 * Math.Sign((int)player.LookDirection));
                             //Position = TargetPosition;
