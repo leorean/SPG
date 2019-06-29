@@ -105,6 +105,13 @@ namespace Leore.Main
         public bool OnGround { get => onGround; }
         private bool inWater;
         public bool InWater { get => inWater; }
+
+        private bool inputEnabled = true;
+        public void SetControlsEnabled(bool enabled)
+        {
+            inputEnabled = enabled;
+        }
+
         private bool onWall;
         public bool OnWall { get => onWall; }
         private bool onCeil;
@@ -396,7 +403,7 @@ namespace Leore.Main
             }
             else
             {
-                input.Enabled = true;
+                input.Enabled = inputEnabled;
             }
 
             input.Update(gameTime);

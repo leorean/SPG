@@ -96,11 +96,13 @@ namespace Leore.Objects.Items
             }
             if (state == State.TAKING)
             {
+                player.SetControlsEnabled(false);
+
                 player.XVel = 0;
                 Position = new Vector2(player.X, player.Y);
                 Visible = false;
 
-                if (player.OnGround || player.InWater || player.OnCeil || player.OnWall)
+                if (player.OnGround || player.InWater)// || player.OnCeil || player.OnWall)
                 {
                     player.State = Player.PlayerState.OBTAIN;
                     Visible = true;
@@ -156,6 +158,8 @@ namespace Leore.Objects.Items
 
                     Taken = true;
                     GameManager.Current.AddStoryFlag(setCondition);
+
+                    player.SetControlsEnabled(true);
                 }
             }
 

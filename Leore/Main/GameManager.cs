@@ -90,9 +90,7 @@ namespace Leore.Main
 
             RoomObjectLoader.CleanObjectsExceptRoom(newRoom);
         }
-
         
-
         public void Initialize()
         {
             // handle room changing <-> object loading/unloading
@@ -223,6 +221,23 @@ namespace Leore.Main
             {
                 Player.Stats.Coins = CoinsAfterDeath;
                 CoinsAfterDeath = 0;
+            }
+        }
+
+        public int GetStatUpItemCount(string key)
+        {
+            if (!Player.Stats.ItemsBought.ContainsKey(key))
+                return 0;
+            return Player.Stats.ItemsBought[key];
+        }
+
+        public void AddStatUpItemCount(string key)
+        {
+            if (!Player.Stats.ItemsBought.ContainsKey(key))
+                Player.Stats.ItemsBought.Add(key, 1);
+            else
+            {
+                Player.Stats.ItemsBought[key] = Player.Stats.ItemsBought[key] + 1;
             }
         }
 

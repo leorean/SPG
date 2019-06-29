@@ -269,6 +269,9 @@ namespace Leore.Main
             font.Valign = valign;
             font.Color = Color;
 
+            if (hiColor != null)
+                font.HighlightColor = new Color((Color)hiColor, alpha);
+
             if (!string.IsNullOrEmpty(curText))
                 font.Draw(sb, X + 8 + 2 + offX, Y + 8 + 2, curText, maxWidth);
         }
