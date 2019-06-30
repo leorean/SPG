@@ -10,7 +10,7 @@ namespace Leore.Objects
         public int Weather { get; set; } = -1;
 
         public bool SwitchState { get; set; }
-
+        
         public Room(int x, int y, int width, int height) : base(x, y, "room")
         {
             BoundingBox = new RectF(0, 0, width, height);            

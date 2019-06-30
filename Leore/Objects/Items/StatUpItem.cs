@@ -73,7 +73,7 @@ namespace Leore.Objects.Items
                     HighlightColor = GameResources.RegenColors.First();
 
                     Name = "MP-Regen-Up";
-                    Text = "~MP regeneration~ rate increased.";
+                    Text = "~MP regeneration~ rate increased by 5%.";
                     OnObtain = () =>
                     {
                         player.Stats.MPRegen += .05f;

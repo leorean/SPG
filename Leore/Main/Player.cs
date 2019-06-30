@@ -370,10 +370,7 @@ namespace Leore.Main
                 return;
             
             Hit(1, 270);
-
-            if (HP == 0)
-                return;
-
+            
             new SingularEffect(X, Y, 9);
             
             var dummy = new Dummy(safePosition.X, safePosition.Y);
@@ -382,7 +379,7 @@ namespace Leore.Main
             dummy.Parent = burst;
             
             State = PlayerState.LIMBO;
-            limboTimer = 1 * 60;
+            limboTimer = 1 * 60;            
         }
 
         // ++++++++++++++++++++++++++
@@ -508,29 +505,33 @@ namespace Leore.Main
             // ++++ getting hit ++++
 
             InvincibleTimer = Math.Max(InvincibleTimer - 1, 0);
-            
+
+            var obstacle = ObjectManager.CollisionBoundsFirstOrDefault<Obstacle>(this, X, Y);
+
+            if (obstacle is Lava)
+            {
+                if (HP > 0)
+                    HurtAndSpawnBack();
+                else
+                {
+                    XVel *= .75f; YVel = Math.Min(-Gravity, YVel - .2f);
+                    State = PlayerState.DEAD;                    
+                }                
+            }
+
             if (InvincibleTimer == 0 && HP > 0 
                 && State != PlayerState.OBTAIN
                 && State != PlayerState.BACKFACING)
-            {
-                var obstacle = ObjectManager.CollisionBoundsFirstOrDefault<Obstacle>(this, X, Y);
-                
+            {                
                 if (obstacle != null)
                 {
-                    if (obstacle is Lava)
-                    {
-                        HurtAndSpawnBack();
-                    }
-                    else
-                    {
+                    var vec = Position - (obstacle.Center + new Vector2(0, 0));
+                    var angle = vec.VectorToAngle();
+                    Hit(obstacle.Damage, (float)angle);
 
-                        var vec = Position - (obstacle.Center + new Vector2(0, 0));
-                        var angle = vec.VectorToAngle();
-                        Hit(obstacle.Damage, (float)angle);
-
-                        if (obstacle is LaserObstacle)
-                            InvincibleTimer = 0;
-                    }
+                    if (obstacle is LaserObstacle)
+                        InvincibleTimer = 0;
+                    
                 }
             }
 
@@ -958,18 +959,18 @@ namespace Leore.Main
                     switch (f.Direction)
                     {
                         case Direction.LEFT:
-                            XVel = MathUtil.Limit(XVel - flowPower, 2);
+                            XVel = MathUtil.AtMost(XVel - flowPower, 2);
                             break;
                         case Direction.RIGHT:
-                            XVel = MathUtil.Limit(XVel + flowPower, 2);
+                            XVel = MathUtil.AtMost(XVel + flowPower, 2);
                             break;
                         case Direction.UP:
                             if (onGround)
                                 YVel -= 1;
-                            YVel = MathUtil.Limit(YVel - flowPower, 2);
+                            YVel = MathUtil.AtMost(YVel - flowPower, 2);
                             break;
                         case Direction.DOWN:
-                            YVel = MathUtil.Limit(YVel + flowPower, 2);
+                            YVel = MathUtil.AtMost(YVel + flowPower, 2);
                             break;                        
                     }
                 }
@@ -1064,6 +1065,9 @@ namespace Leore.Main
                     
                     State = PlayerState.LIE;
                     lieTimer = 60;
+
+                    //if (HP == 0)
+                    //    State = PlayerState.DEAD;
                 }
 
                 return;

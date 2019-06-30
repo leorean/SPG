@@ -209,15 +209,18 @@ namespace Leore
                 GameManager.Current.Player.Stats.Abilities |= PlayerAbility.NO_FALL_DAMAGE;
 
                 //GameManager.Current.Player.Stats.Abilities |= PlayerAbility.LEVITATE;
-                GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_CEIL;
-                GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_WALL;
+                GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.CLIMB_CEIL;
+                GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.CLIMB_WALL;
 
                 GameManager.Current.AddSpell(SpellType.STAR);
                 GameManager.Current.AddSpell(SpellType.CRIMSON_ARC);
-                
-                GameManager.Current.Player.Stats.MaxHP = 14;
-                GameManager.Current.Player.Stats.MaxMP = 40;
-                GameManager.Current.Player.Stats.MPRegen = .4f;
+
+                //GameManager.Current.Player.Stats.MaxHP = 5;
+                //GameManager.Current.Player.Stats.MaxMP = 30;
+                //GameManager.Current.Player.Stats.MPRegen = .1f;
+                //GameManager.Current.Player.Stats.MaxHP = 14;
+                //GameManager.Current.Player.Stats.MaxMP = 40;
+                //GameManager.Current.Player.Stats.MPRegen = .4f;
             }
 
             if (input.IsKeyPressed(Keys.O, Input.State.Pressed))

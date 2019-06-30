@@ -17,17 +17,14 @@ namespace SPG.Objects
         public static List<GameObject> Objects { get; private set; } = new List<GameObject>();
 
         public static List<GameObject> ActiveObjects { get; private set; } = new List<GameObject>();
-
-        //private static int idCounter;
-
+        
         public static double ElapsedTime { get; private set; } = 0;
         
         public static double GameDelay { get; set; }
         public static RectF Region { get; set; }
 
-        //private static long counter;
-        //private static List<long> uniqueIds = new List<long>();
-
+        public static long GlobalIDCounter { get; private set; }
+        
         public static void Add(GameObject o)
         {
             if (!Objects.Contains(o))
@@ -35,8 +32,7 @@ namespace SPG.Objects
                 Objects.Add(o);
                 ActiveObjects.Add(o);
 
-                //UpdateActiveObjectList();
-
+                GlobalIDCounter++;
             } else
             {                
                 throw new Exception("Object already registered!");
@@ -51,7 +47,7 @@ namespace SPG.Objects
             long id = long.Parse(strX + strY + $"0000");
 
             o.ID = id;
-
+            
             //if (uniqueIds.Contains(id))
             //{
             //    counter = (counter + 1) % long.MaxValue;

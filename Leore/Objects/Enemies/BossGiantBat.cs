@@ -179,8 +179,8 @@ namespace Leore.Objects.Enemies
             }
 
 
-            XVel = MathUtil.Limit(XVel, 1);
-            YVel = MathUtil.Limit(YVel, 1);
+            XVel = MathUtil.AtMost(XVel, 1);
+            YVel = MathUtil.AtMost(YVel, 1);
 
             Move(XVel, YVel);
             var tx = 48;

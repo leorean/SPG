@@ -16,7 +16,7 @@ namespace Leore.Objects.Enemies
 {
     public abstract class Enemy : Obstacle , IMovable
     {
-        public int MaxHP { get; private set; }
+        public int MaxHP { get; protected set; }
         private int hp;
         public int HP {
             get
@@ -29,6 +29,8 @@ namespace Leore.Objects.Enemies
             }
         }
         public int EXP { get; set; } = 3;
+
+        public bool Respawn { get; set; } = false;
 
         public Direction Direction { get; set; }
 
@@ -84,7 +86,7 @@ namespace Leore.Objects.Enemies
         {
             base.Update(gameTime);
 
-            if (GameManager.Current.NonRespawnableIDs.Contains(ID))
+            if (!Respawn && GameManager.Current.NonRespawnableIDs.Contains(ID))
             {
                 Destroy();
                 return;
@@ -131,7 +133,8 @@ namespace Leore.Objects.Enemies
 
             new SingularEffect(X, Y);
 
-            GameManager.Current.NonRespawnableIDs.Add(ID);            
+            if (!Respawn)
+                GameManager.Current.NonRespawnableIDs.Add(ID);
         }
 
         public override void EndUpdate(GameTime gameTime)

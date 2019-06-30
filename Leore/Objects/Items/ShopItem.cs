@@ -86,7 +86,7 @@ namespace Leore.Objects.Items
                     break;
                 case 4: // regen
                     var regenCount = GameManager.Current.GetStatUpItemCount("regen");
-                    price = 500 * (regenCount + 1) + 1500 * regenCount + 2000 * Math.Max(regenCount - 3, 0);
+                    price = 350 + 450 * (regenCount + 1) + 1800 * regenCount + 2000 * Math.Max(regenCount - 3, 0);
                     break;
             }
 

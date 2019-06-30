@@ -68,7 +68,7 @@ namespace SPG.Util
             return Math.Sin(rad);
         }
 
-        public static float Limit(float val, float limit)
+        public static float AtMost(float val, float limit)
         {
             return Math.Sign(val) * Math.Min(Math.Abs(val), limit);
         }

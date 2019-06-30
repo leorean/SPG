@@ -24,6 +24,8 @@ namespace Leore.Objects.Items
 
         private int lifeTime;
 
+        private Player player { get => GameManager.Current.Player; }
+
         public SpellEXPValue Exp { get; private set; }
 
         float t = (float)Math.PI;
@@ -76,9 +78,9 @@ namespace Leore.Objects.Items
                     XVel *= .9f;
                     YVel *= .9f;
                     
-                    if (GameManager.Current.Map.CollisionTile(X, Y))
+                    if (player.HP > 0 && GameManager.Current.Map.CollisionTile(X, Y))
                     {
-                        MoveTowards(GameManager.Current.Player, 30);
+                        MoveTowards(player, 30);
                     }
                     else
                     {
@@ -95,14 +97,11 @@ namespace Leore.Objects.Items
                     var yv = .05f * (float)Math.Sin(t);
                     Move(0, yv);
                     
-                    if (MathUtil.Euclidean(Center, GameManager.Current.Player.Center) > 8 && MathUtil.Euclidean(Center, GameManager.Current.Player.Center) < 8 * Globals.T)
+                    if (player.HP > 0 && MathUtil.Euclidean(Center, player.Center) > 8 && MathUtil.Euclidean(Center, player.Center) < 8 * Globals.T)
                     {
                         kinetic = false;
-                        XVel = (GameManager.Current.Player.Center.X - Center.X) / 90;
-                        YVel = (GameManager.Current.Player.Center.Y - Center.Y) / 90;
-
-                        //XVel = MathUtil.AtLeast(XVel, .25f);
-                        //YVel = MathUtil.AtLeast(YVel, .25f);
+                        XVel = (player.X - Center.X) / 90;
+                        YVel = (player.Y - Center.Y) / 90;                        
 
                     } else
                     {

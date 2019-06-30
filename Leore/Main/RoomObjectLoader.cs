@@ -224,6 +224,9 @@ namespace Leore.Main
                         case 771: // enemy Voidling (with shield)
                             new EnemyVoidling(i * Globals.T + 8, j * Globals.T + 8, room, 1);
                             break;
+                        case 773: // lava slime
+                            new EnemySlime(i * Globals.T + 8, j * Globals.T + 8, room, 0, 1);
+                            break;
                         case 832: // teleporters
                             new Teleporter(i * Globals.T + 8, j * Globals.T + 8, room);
                             break;

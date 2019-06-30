@@ -24,18 +24,7 @@ namespace Leore.Objects.Effects.Emitters
             Angle = (float)((RND.Next * 360) / (2 * Math.PI));
 
             XVel = -1 + (float)(RND.Next * 2f) + xVel;
-            YVel = -1.5f - (float)(RND.Next * 1f);
-
-            List<Color> particleColors = new List<Color>
-            {
-                new Color(255, 255, 255),
-                new Color(206, 255, 255),
-                new Color(168, 248, 248),
-                new Color(104, 216, 248)
-            };
-
-            var colorIndex = RND.Int(particleColors.Count - 1);
-            Color = particleColors[colorIndex];            
+            YVel = -1.5f - (float)(RND.Next * 1f);            
         }
 
         public override void Update(GameTime gameTime)
@@ -78,13 +67,19 @@ namespace Leore.Objects.Effects.Emitters
     {
         private float xVel;
 
+        public List<Color> ParticleColors { get; set; } = new List<Color>
+        {
+            new Color(255, 255, 255),
+            new Color(206, 255, 255),
+            new Color(168, 248, 248),
+            new Color(104, 216, 248)
+        };
+
         public WaterSplashEmitter(float x, float y, float xVel = 0) : base(x, y)
         {
-            
-
             SpawnRate = 15;
 
-            this.xVel = xVel;
+            this.xVel = xVel;            
         }
 
         public override void Update(GameTime gameTime)
@@ -99,7 +94,10 @@ namespace Leore.Objects.Effects.Emitters
 
         public override void CreateParticle()
         {
-            var particle = new WaterSplashParticle(this, xVel);            
+            var colorIndex = RND.Int(ParticleColors.Count - 1);
+            
+            var particle = new WaterSplashParticle(this, xVel);
+            particle.Color = ParticleColors[colorIndex];
         }        
     }
 }

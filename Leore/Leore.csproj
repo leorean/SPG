@@ -89,6 +89,7 @@
     <Compile Include="Objects\Enemies\EnemyBat.cs" />
     <Compile Include="Objects\Enemies\EnemyGrassy.cs" />
     <Compile Include="Objects\Enemies\BossMirrorSelf.cs" />
+    <Compile Include="Objects\Enemies\EnemySlime.cs" />
     <Compile Include="Objects\Enemies\EnemyVoidling.cs" />
     <Compile Include="Objects\Enemies\Laser.cs" />
     <Compile Include="Objects\IMovable.cs" />

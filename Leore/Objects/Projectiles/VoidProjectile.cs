@@ -144,8 +144,8 @@ namespace Leore.Objects.Projectiles
                         var ex = enemy.XVel + lx * sign * succ;
                         var ey = enemy.YVel + ly * sign * succ;
 
-                        enemy.XVel = MathUtil.Limit(ex, 2);
-                        enemy.YVel = MathUtil.Limit(ey, 2);
+                        enemy.XVel = MathUtil.AtMost(ex, 2);
+                        enemy.YVel = MathUtil.AtMost(ey, 2);
                     }
 
                     var coins = this.CollisionRectangles<Coin>(Left - t, Top - t, Right + t, Bottom + t);
@@ -162,8 +162,8 @@ namespace Leore.Objects.Projectiles
                         var ex = coin.XVel + lx * sign * succ;
                         var ey = coin.YVel + ly * sign * succ;
 
-                        coin.XVel = MathUtil.Limit(ex, 2);
-                        coin.YVel = MathUtil.Limit(ey, 2);
+                        coin.XVel = MathUtil.AtMost(ex, 2);
+                        coin.YVel = MathUtil.AtMost(ey, 2);
                     }
                 }
             }

@@ -109,8 +109,8 @@ namespace Leore.Objects.Enemies
                 if (colY)
                     YVel = -Math.Sign(YVel) * .1f;
 
-                XVel = MathUtil.Limit(XVel, 2);
-                YVel = MathUtil.Limit(YVel, 2);
+                XVel = MathUtil.AtMost(XVel, 2);
+                YVel = MathUtil.AtMost(YVel, 2);
                 
                 SetAnimation(1, 4, .3f, true);
             }
@@ -121,8 +121,8 @@ namespace Leore.Objects.Enemies
                 YVel *= .6f;
             }
 
-            XVel = MathUtil.Limit(XVel, 1);
-            YVel = MathUtil.Limit(YVel, 1);
+            XVel = MathUtil.AtMost(XVel, 1);
+            YVel = MathUtil.AtMost(YVel, 1);
             {
                 var colX = GameManager.Current.Map.CollisionTile(this, XVel, 0) || GameManager.Current.Map.CollisionTile(Position.X, Position.Y, GameMap.WATER_INDEX);
                 if (!colX)
