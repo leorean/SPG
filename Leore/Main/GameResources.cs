@@ -18,7 +18,7 @@ namespace Leore.Resources
 
         public static readonly EnemyStats EnemyBat = new EnemyStats { HP = 5, EXP = 3, Damage = 1 };
         public static readonly EnemyStats EnemyGrassy = new EnemyStats { HP = 10, EXP = 15, Damage = 2 };
-        public static readonly EnemyStats EnemySlime = new EnemyStats { HP = 8, EXP = 5, Damage = 2 };
+        public static readonly EnemyStats EnemySlime = new EnemyStats { HP = 8, EXP = 5, Damage = 1 };
 
         public static readonly List<EnemyStats> EnemyVoidling = new List<EnemyStats>
         {

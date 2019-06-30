@@ -143,10 +143,5 @@ namespace Leore.Objects.Enemies
 
             hit = false;
         }
-
-        public override void Draw(SpriteBatch sb, GameTime gameTime)
-        {
-            base.Draw(sb, gameTime);
-        }
     }
 }

@@ -34,12 +34,14 @@ namespace Leore.Objects.Enemies
 
         private float scale;
         private int invincible = 30;
-        private int mergeTimer = 3 * 60;
+        private int maxMergeTimer = 3 * 60;
+        private int mergeTimer = 0;
         private int regenTimer = 1 * 60;
 
         double t = 0;
+        float xs, ys;
         
-        public EnemySlime(float x, float y, Room room, int type, float scale) : base(x, y, room)
+        public EnemySlime(float x, float y, Room room, int type) : base(x, y, room)
         {
             this.type = type;
 
@@ -51,18 +53,19 @@ namespace Leore.Objects.Enemies
 
             // draw stats
 
+            Visible = false;
             DebugEnabled = true;
             DrawOffset = new Vector2(16);
             
             AnimationTexture = AssetManager.EnemySlime;
 
             // other stats
-
-            this.scale = scale;
-            Scale = new Vector2(scale);
+            
             Direction = RND.Choose(Direction.LEFT, Direction.RIGHT);
 
             UpdateScaleAndBoundingBox();
+
+            mergeTimer = maxMergeTimer;
 
             originalID = ID;
             Gravity = .1f;            
@@ -70,8 +73,7 @@ namespace Leore.Objects.Enemies
 
         public override void Hit(int hitPoints, float degAngle)
         {
-            if (invincible > 0)
-                return;
+            regenTimer = 60;
 
             base.Hit(hitPoints, degAngle);
             if (onGround)
@@ -82,29 +84,26 @@ namespace Leore.Objects.Enemies
             else
             {
                 XVel *= .8f;
-                YVel *= .8f;                
+                YVel *= .4f;                
             }
-            if (MaxHP > 2) {
+            if (HP < .5f * MaxHP && MaxHP >= 4) {
                 Split();
             }
         }
 
         private EnemySlime SpawnSlime(Direction dir)
         {
-            var newScale = .5f;
-
-            var slime = new EnemySlime(X, Y, Room, type, scale * newScale);
+            var slime = new EnemySlime(X, Y - 2, Room, type);
             slime.Respawn = true;
             slime.XVel = 1 * (int)dir;
             slime.YVel = -1.5f;
             slime.Direction = dir;
             slime.ID = ID + ObjectManager.GlobalIDCounter;
-            var newHp = (int)Math.Ceiling(HP * .5f);
+            var newHp = (int)Math.Ceiling(HP * .66f);
             slime.MaxHP = newHp;
             slime.HP = newHp;
             slime.originalID = originalID;
-            slime.mergeTimer = 3 * 60;
-
+            
             return slime;
         }
 
@@ -112,7 +111,7 @@ namespace Leore.Objects.Enemies
         {
             var hpr = (HP / (float)MaxHP);
 
-            if (hpr <= .5f)
+            //if (hpr >= .75f)
             {
                 var slime1 = SpawnSlime(Direction.LEFT);
                 var slime2 = SpawnSlime(Direction.RIGHT);
@@ -124,17 +123,19 @@ namespace Leore.Objects.Enemies
         {
             if (mergeTimer > 0 || other.mergeTimer > 0)
                 return;
+
+            if (HP >= 2 * GameResources.EnemySlime.HP || other.HP >= 2 * GameResources.EnemySlime.HP)
+                return;
             
-            MaxHP = HP + other.HP;
+            MaxHP = Math.Min(HP + other.HP, 2 * GameResources.EnemySlime.HP);
             HP = MaxHP;
 
             UpdateScaleAndBoundingBox();
-
-            //while (GameManager.Current.Map.CollisionTile(this, 0, 0))
-            //    Move(0, -1);
-
-            //new SingularEffect(X, Y, 14) { Scale = Scale };
+            
+            // TODO
             new WaterSplashEmitter(X, Y) { SpawnRate = 50, ParticleColors = GameResources.HpColors };
+
+            mergeTimer = maxMergeTimer;
 
             other.Destroy();
         }
@@ -152,8 +153,7 @@ namespace Leore.Objects.Enemies
 
             var exp = (int)Math.Ceiling(EXP * scale);
             SpellEXP.Spawn(X, Y, exp);
-            new SingularEffect(X, Y) { Scale = new Vector2(scale) };
-
+            
             if (children == 0)
                 GameManager.Current.NonRespawnableIDs.Add(originalID);
 
@@ -162,58 +162,41 @@ namespace Leore.Objects.Enemies
 
         private void UpdateScaleAndBoundingBox()
         {
-
-            var mhp = MathUtil.Clamp(HP, .5f * GameResources.EnemySlime.HP, 2 * GameResources.EnemySlime.HP);
+            var mhp = MathUtil.Clamp(HP + 4, 4, 2 * GameResources.EnemySlime.HP);
 
             scale = (mhp / GameResources.EnemySlime.HP);
 
-            BoundingBox = new SPG.Util.RectF(-6 * scale, -4 * scale, 12 * scale, 12 * scale);
-
-            var blocks = this.CollisionBounds<Solid>(X, Y);
-            
-            //bool moveX = false;
-            //while (XVel >= 0 && GameManager.Current.Map.CollisionTile(Right + .1f, Y - 1))
-            //{
-            //    Move(-.1f, 0);
-            //    moveX = true;
-            //}
-            //while (XVel < 0 && GameManager.Current.Map.CollisionTile(Left - .1f, Y - 1))
-            //{
-            //    Move(.1f, 0);
-            //    moveX = true;
-            //}
-            //if (XVel == 0 && GameManager.Current.Map.CollisionTile(this, XVel, YVel))
-            //{
-            //    Move(0, -.5f);
-            //}
+            BoundingBox = new SPG.Util.RectF(-6 * scale, -2 * scale, 12 * scale, 14 * scale);            
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            UpdateScaleAndBoundingBox();
-
+            
             invincible = Math.Max(invincible - 1, 0);
             mergeTimer = Math.Max(mergeTimer - 1, 0);
             regenTimer = Math.Max(regenTimer - 1, 0);
 
-            if (MaxHP >= 2 * GameResources.EnemySlime.HP)
-                regenTimer = 1;
+            IgnoreProjectiles = invincible > 0;
 
             if (regenTimer == 0)
             {
-                MaxHP++;
-                HP++;
-                regenTimer = 60;
+                HP = Math.Min(HP + 1, Math.Max(MaxHP, 4));
+                regenTimer = 30;
             }
-            if (mergeTimer == 0)
-            {
-                var other = this.CollisionBoundsFirstOrDefault<EnemySlime>(X + XVel, Y + YVel);
+            var other = this.CollisionBoundsFirstOrDefault<EnemySlime>(X + XVel, Y + YVel);
 
-                if (other != null)
-                {
+            if (other != null)
+            {
+                if (mergeTimer == 0)
                     Merge(other);
+                else
+                {
+                    XVel += Math.Sign(X - other.X) * .5f;
+                    other.XVel += Math.Sign(other.X - X) * .5f;
+
+                    XVel = MathUtil.AtMost(XVel, 1f);
+                    other.XVel = MathUtil.AtMost(other.XVel, 1f);
                 }
             }
 
@@ -242,16 +225,34 @@ namespace Leore.Objects.Enemies
                     break;           
             }
 
+            UpdateScaleAndBoundingBox();
             onGround = this.MoveAdvanced(false);
+            
+            var blocks = this.CollisionBounds<Solid>(X, Y);
+
+            bool left = false;
+            bool right = false;
+            bool bottom = false;
+
+            foreach (var block in blocks)
+            {
+                if (this.CollisionBounds(block, X - 8, Y - 1))
+                    left = true;
+                if (this.CollisionBounds(block, X + 8, Y - 1))
+                    right = true;
+                if (this.CollisionBounds(block, X, Y + 2))
+                    bottom = true;
+            }
+
+            if (right) Move(-1, 0);
+            if (left) Move(1, 0);
+            if (bottom)
+            {
+                Move(0, -2);                
+            }
             
             // ++++ draw <-> state logic ++++
 
-            //var cols = 5; // how many columns there are in the sheet
-            //var row = 0; // which row in the sheet
-            //var fSpd = 0f; // frame speed
-            //var fAmount = 4; // how many frames
-            //var loopAnim = true; // loop animation?
-            
             switch (state)
             {
                 case State.IDLE:
@@ -264,11 +265,14 @@ namespace Leore.Objects.Enemies
 
             Position = new Vector2(MathUtil.Clamp(X, Room.X + XVel, Room.X + XVel + Room.BoundingBox.Width), Y);
 
-            var xs = (float)(.95 + Math.Sin(t) * .1);
-            var ys = 1;
+            xs = (float)(.99 + Math.Sin(t) * .01);
+            ys = (float)(.995 + Math.Sin(t) * .015);
 
-            //SetAnimation(cols * row, cols * row + fAmount - 1, fSpd, loopAnim);
+            DrawOffset = new Vector2(16, 8 * ys);
+
             Scale = new Vector2((int)Direction * scale * .5f * xs, .5f * scale * ys);
+
+            Visible = true;
 
             if (this.IsOutsideCurrentRoom(1 * Globals.T))
                 Destroy();
@@ -276,7 +280,11 @@ namespace Leore.Objects.Enemies
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
+            if (!Visible)
+                return;
+
             base.Draw(sb, gameTime);
+            //sb.Draw(Texture, Position + new Vector2(0, 0), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
 
             AssetManager.DefaultFont.Draw(sb, X, Bottom + Globals.T, $"{HP}", scale:.5f);
         }
