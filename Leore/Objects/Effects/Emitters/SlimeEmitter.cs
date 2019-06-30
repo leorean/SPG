@@ -9,22 +9,25 @@ using Leore.Main;
 
 namespace Leore.Objects.Effects.Emitters
 {
-    public class WaterSplashParticle : Particle
+    public class SlimeParticle : Particle
     {
         private bool visible;
 
-        public WaterSplashParticle(ParticleEmitter emitter, float xVel = 0, float scale = 2f) : base(emitter)
+        public SlimeParticle(ParticleEmitter emitter) : base(emitter)
         {
-            Scale = new Vector2(scale);
+            Scale = new Vector2(.5f);
             LifeTime = 120;
 
             Position = new Vector2(emitter.X - 6 + (float)(RND.Next * 12), emitter.Y);
 
+            Texture = AssetManager.Particles[8];
+            DrawOffset = new Vector2(8);
+
             Alpha = 1;
             Angle = (float)((RND.Next * 360) / (2 * Math.PI));
 
-            XVel = -1 + (float)(RND.Next * 2f) + xVel;
-            YVel = -1.5f - (float)(RND.Next * 1f);            
+            XVel = -.5f + (float)(RND.Next * 1f);
+            YVel = -.25f - (float)(RND.Next * .5f);
         }
 
         public override void Update(GameTime gameTime)
@@ -43,13 +46,12 @@ namespace Leore.Objects.Effects.Emitters
             {
                 YVel *= .7f;
                 XVel *= .9f;
-
-                //YVel -= .3f;
+                
                 Alpha = Math.Max(Alpha - .04f, 0);
             }
             else
             {
-                YVel = Math.Min(YVel + .15f, 1.5f);
+                YVel = Math.Min(YVel + .05f, 1.5f);
             }
 
             if (Alpha == 0)
@@ -65,10 +67,8 @@ namespace Leore.Objects.Effects.Emitters
         }
     }
 
-    public class WaterSplashEmitter : ParticleEmitter
+    public class SlimeEmitter : ParticleEmitter
     {
-        private float xVel;
-
         public List<Color> ParticleColors { get; set; } = new List<Color>
         {
             new Color(255, 255, 255),
@@ -77,11 +77,9 @@ namespace Leore.Objects.Effects.Emitters
             new Color(104, 216, 248)
         };
 
-        public WaterSplashEmitter(float x, float y, float xVel = 0) : base(x, y)
+        public SlimeEmitter(float x, float y, int type) : base(x, y)
         {
-            SpawnRate = 15;
-
-            this.xVel = xVel;            
+            SpawnRate = 15;            
         }
 
         public override void Update(GameTime gameTime)
@@ -98,9 +96,8 @@ namespace Leore.Objects.Effects.Emitters
         {
             var colorIndex = RND.Int(ParticleColors.Count - 1);
             
-            var particle = new WaterSplashParticle(this, xVel, Scale.X);
-            particle.Color = ParticleColors[colorIndex];
-            particle.Texture = Texture == null ? particle.Texture : Texture;
+            var particle = new SlimeParticle(this);
+            particle.Color = ParticleColors[colorIndex];            
         }        
     }
 }

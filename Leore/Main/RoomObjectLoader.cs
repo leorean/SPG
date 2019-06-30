@@ -225,7 +225,7 @@ namespace Leore.Main
                             new EnemyVoidling(i * Globals.T + 8, j * Globals.T + 8, room, 1);
                             break;
                         case 773: // lava slime
-                            new EnemySlime(i * Globals.T + 8, j * Globals.T + 8, room, 0);
+                            new EnemySlime(i * Globals.T + 8, j * Globals.T, room, 0);
                             break;
                         case 832: // teleporters
                             new Teleporter(i * Globals.T + 8, j * Globals.T + 8, room);

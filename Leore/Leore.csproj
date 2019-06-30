@@ -76,6 +76,7 @@
     <Compile Include="Objects\Effects\Emitters\TorchEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\WaterFallEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\FlowEmitter.cs" />
+    <Compile Include="Objects\Effects\Emitters\SlimeEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\WaterSplashEmitter.cs" />
     <Compile Include="Objects\Effects\FallingFont.cs" />
     <Compile Include="Objects\Effects\ToolTip.cs" />
