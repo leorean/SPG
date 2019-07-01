@@ -41,6 +41,9 @@ namespace Leore.Objects.Enemies
         double t = 0;
         float xs, ys;
         float drawScale = 1;
+        int animationTimer = 0;
+
+        private bool top, bottom, left, right, free;
         
         public EnemySlime(float x, float y, Room room, int type) : base(x, y, room)
         {
@@ -56,8 +59,8 @@ namespace Leore.Objects.Enemies
 
             Visible = false;
             DebugEnabled = true;
-            DrawOffset = new Vector2(16);
-            
+            DrawOffset = new Vector2(16, 32);
+
             AnimationTexture = AssetManager.EnemySlime;
 
             // other stats
@@ -69,7 +72,15 @@ namespace Leore.Objects.Enemies
             mergeTimer = maxMergeTimer;            
 
             originalID = ID;
-            Gravity = .1f;            
+            Gravity = .1f;
+
+            AnimationComplete += EnemySlime_AnimationComplete;
+        }
+
+        private void EnemySlime_AnimationComplete(object sender, EventArgs e)
+        {
+            SetAnimation(1, 1, 0, false);
+            animationTimer = 60 + RND.Int(60);
         }
 
         private void SpawnParticles(int spawnRate)
@@ -101,7 +112,7 @@ namespace Leore.Objects.Enemies
 
         private EnemySlime SpawnSlime(Direction dir)
         {
-            var slime = new EnemySlime(X, Y - 2, Room, type);
+            var slime = new EnemySlime(X, Y, Room, type);
             slime.Respawn = true;
             slime.XVel = 1 * (int)dir;
             slime.YVel = -1.5f;
@@ -126,7 +137,7 @@ namespace Leore.Objects.Enemies
 
         private void Merge(EnemySlime other)
         {
-            if (mergeTimer > 0 || other.mergeTimer > 0)
+            if (mergeTimer > 0 || other.mergeTimer > 0 || top || other.top)
                 return;
 
             if (HP >= 2 * GameResources.EnemySlime.HP || other.HP >= 2 * GameResources.EnemySlime.HP)
@@ -172,7 +183,8 @@ namespace Leore.Objects.Enemies
 
             scale = (mhp / GameResources.EnemySlime.HP);
 
-            BoundingBox = new SPG.Util.RectF(-6 * scale, -2 * scale, 12 * scale, 14 * scale);            
+            //BoundingBox = new SPG.Util.RectF(-6 * scale, -2 * scale, 12 * scale, 14 * scale);
+            BoundingBox = new SPG.Util.RectF(-6 * scale, -14 * scale, 12 * scale, 14 * scale);
         }
 
         public override void Update(GameTime gameTime)
@@ -182,13 +194,27 @@ namespace Leore.Objects.Enemies
             invincible = Math.Max(invincible - 1, 0);
             mergeTimer = Math.Max(mergeTimer - 1, 0);
             regenTimer = Math.Max(regenTimer - 1, 0);
+            animationTimer = Math.Max(animationTimer - 1, 0);
 
+            if (animationTimer == 0)
+            {
+                // for the eyes
+                SetAnimation(1, 4, .2f, true);                
+            }
+            
             IgnoreProjectiles = invincible > 0;
 
-            if (regenTimer == 0)
+            if (!top)
             {
-                HP = Math.Min(HP + 1, Math.Max(MaxHP, 4));
-                regenTimer = 30;
+                if (regenTimer == 0)
+                {
+                    HP = Math.Min(HP + 1, Math.Max(MaxHP, 4));
+                    regenTimer = 30;
+                }
+            }
+            else
+            {
+                //Split();
             }
             var other = this.CollisionBoundsFirstOrDefault<EnemySlime>(X + XVel, Y + YVel);
 
@@ -213,7 +239,8 @@ namespace Leore.Objects.Enemies
                     XVel *= .9f;
 
                     xs = (float)(.99 + Math.Sin(t) * .01);
-                    ys = (float)(.995 + Math.Sin(t) * .015);
+                    //ys = (float)(.995 + Math.Sin(t) * .015);
+                    ys = (float)(.95 + Math.Sin(t) * .1);
 
                     if (idleTimer == 0)
                     {
@@ -245,14 +272,22 @@ namespace Leore.Objects.Enemies
                     break;           
             }
 
+            // ++++ collision ++++
+
             UpdateScaleAndBoundingBox();
+
+            var inWater = GameManager.Current.Map.CollisionTile(X, Y - 2, GameMap.WATER_INDEX);
+            if (inWater && Math.Abs(YVel) <= 1)
+                YVel = Math.Max(YVel - Gravity - .1f, -.75f);
+
             onGround = this.MoveAdvanced(false);
             
             var blocks = this.CollisionBounds<Solid>(X, Y);
 
-            bool left = false;
-            bool right = false;
-            bool bottom = false;
+            left = false;
+            right = false;
+            top = false;
+            bottom = false;
 
             foreach (var block in blocks)
             {
@@ -260,18 +295,21 @@ namespace Leore.Objects.Enemies
                     left = true;
                 if (this.CollisionBounds(block, X + 8, Y - 1))
                     right = true;
+                if (this.CollisionBounds(block, X, Y - 1))
+                    top = true;
                 if (this.CollisionBounds(block, X, Y + 2))
                     bottom = true;
             }
 
             if (right) Move(-1, 0);
             if (left) Move(1, 0);
-            if (bottom)
-            {
-                Move(0, -.5f);                
-                //Split();
-            }
+            if (top) Move(0, 1);
+            if (bottom) Move(0, -1);
             
+            free = !left && !right && !top && !bottom;
+
+            if (!free) HP = Math.Max(HP - 1, 0);
+
             // ++++ draw <-> state logic ++++
 
             switch (state)
@@ -286,8 +324,6 @@ namespace Leore.Objects.Enemies
 
             Position = new Vector2(MathUtil.Clamp(X, Room.X + XVel, Room.X + XVel + Room.BoundingBox.Width), Y);
             
-            DrawOffset = new Vector2(16, 22);
-
             drawScale += (scale - drawScale) / 40;
 
             Scale = new Vector2((int)Direction * drawScale * .5f * xs, .5f * drawScale * ys);
@@ -304,9 +340,22 @@ namespace Leore.Objects.Enemies
                 return;
 
             //base.Draw(sb, gameTime);
-            sb.Draw(Texture, Position + new Vector2(0, BoundingBox.Height *  .5f), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
+            sb.Draw(AssetManager.EnemySlime[0], Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
+
+            var faceScale = new Vector2((int)Direction * drawScale * .5f, .5f * drawScale);
+
+            var eyeFrame = AnimationFrame;//1 + Convert.ToInt32(AnimationFrame == 3);
+
+            sb.Draw(AssetManager.EnemySlime[eyeFrame], Position + new Vector2(0, -.5f * (float)Math.Sin(t)), null, Color.White, Angle, DrawOffset, faceScale, SpriteEffects.None, Depth + .0001f);
 
             AssetManager.DefaultFont.Draw(sb, X, Bottom + Globals.T, $"{HP}", scale:.5f);
+        }
+
+        public void OverrideHP(int hp)
+        {
+            var m = MaxHP;
+            HP = hp;
+            MaxHP = m;
         }
     }
 }
