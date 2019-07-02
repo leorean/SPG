@@ -12,13 +12,14 @@ namespace Leore.Objects.Effects.Emitters
     public class SlimeParticle : Particle
     {
         private bool visible;
+        private bool onGround;
 
-        public SlimeParticle(ParticleEmitter emitter) : base(emitter)
+        public SlimeParticle(ParticleEmitter emitter, float radius) : base(emitter)
         {
             Scale = new Vector2(.5f);
             LifeTime = 120;
-
-            Position = new Vector2(emitter.X - 6 + (float)(RND.Next * 12), emitter.Y);
+            
+            Position = new Vector2(emitter.X - .5f * radius + (float)(RND.Next * radius), emitter.Y - .5f * radius + (float)(RND.Next * radius));
 
             Texture = AssetManager.Particles[8];
             DrawOffset = new Vector2(8);
@@ -26,8 +27,8 @@ namespace Leore.Objects.Effects.Emitters
             Alpha = 1;
             Angle = (float)((RND.Next * 360) / (2 * Math.PI));
 
-            XVel = -.5f + (float)(RND.Next * 1f);
-            YVel = -.25f - (float)(RND.Next * .5f);
+            XVel = -.25f + (float)(RND.Next * .5f);
+            YVel = -1f - (float)(RND.Next * .5f);
         }
 
         public override void Update(GameTime gameTime)
@@ -39,8 +40,9 @@ namespace Leore.Objects.Effects.Emitters
             // destroy:
 
             var inWater = GameManager.Current.Map.CollisionTile(Position.X, Position.Y, GameMap.WATER_INDEX);
-            if (GameManager.Current.Map.CollisionTile(Position.X, Position.Y))
-                LifeTime = 0;
+            if (GameManager.Current.Map.CollisionTile(Position.X, Position.Y + YVel))
+                onGround = true;
+                //LifeTime = 0;
 
             if (inWater)
             {
@@ -51,12 +53,20 @@ namespace Leore.Objects.Effects.Emitters
             }
             else
             {
-                YVel = Math.Min(YVel + .05f, 1.5f);
+                YVel = Math.Min(YVel + .08f, 1.5f);
+            }
+
+            if (onGround)
+            {
+                XVel = 0;
+                YVel = 0;
+                Scale = new Vector2(Math.Max(Scale.X - .01f, 0));
+                Alpha = Math.Max(Alpha - .01f, 0);
             }
 
             if (Alpha == 0)
                 LifeTime = 0;
-
+            
             visible = true;
         }
 
@@ -69,16 +79,13 @@ namespace Leore.Objects.Effects.Emitters
 
     public class SlimeEmitter : ParticleEmitter
     {
-        public List<Color> ParticleColors { get; set; } = new List<Color>
-        {
-            new Color(255, 255, 255),
-            new Color(206, 255, 255),
-            new Color(168, 248, 248),
-            new Color(104, 216, 248)
-        };
+        public float Alpha { get; set; }
 
-        public SlimeEmitter(float x, float y, int type) : base(x, y)
+        private float radius;
+
+        public SlimeEmitter(float x, float y, int type, float radius) : base(x, y)
         {
+            this.radius = radius;
             SpawnRate = 15;            
         }
 
@@ -94,10 +101,9 @@ namespace Leore.Objects.Effects.Emitters
 
         public override void CreateParticle()
         {
-            var colorIndex = RND.Int(ParticleColors.Count - 1);
-            
-            var particle = new SlimeParticle(this);
-            particle.Color = ParticleColors[colorIndex];            
+            var particle = new SlimeParticle(this, radius);
+            particle.Color = Color;
+            particle.Alpha = Alpha;
         }        
     }
 }

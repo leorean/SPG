@@ -14,6 +14,7 @@ using SPG.Util;
 using SPG.Map;
 using Leore.Objects.Effects.Emitters;
 using Leore.Objects.Level;
+using SPG.Draw;
 
 namespace Leore.Objects.Enemies
 {
@@ -42,6 +43,7 @@ namespace Leore.Objects.Enemies
         float xs, ys;
         float drawScale = 1;
         int animationTimer = 0;
+        private Color particleColor;
 
         private bool top, bottom, left, right, free;
         
@@ -61,10 +63,14 @@ namespace Leore.Objects.Enemies
             DebugEnabled = true;
             DrawOffset = new Vector2(16, 32);
 
-            AnimationTexture = AssetManager.EnemySlime;
+            //AnimationTexture = AssetManager.EnemySlime;
+
+            Color pixel;
+            pixel = AssetManager.EnemySlime[type].GetPixels().GetPixel(16, 16, AssetManager.EnemySlime[type].Width);
+            particleColor = pixel;
 
             // other stats
-            
+
             Direction = RND.Choose(Direction.LEFT, Direction.RIGHT);
 
             UpdateScaleAndBoundingBox();
@@ -79,21 +85,21 @@ namespace Leore.Objects.Enemies
 
         private void EnemySlime_AnimationComplete(object sender, EventArgs e)
         {
-            SetAnimation(1, 1, 0, false);
+            SetAnimation(0, 0, 0, false);
             animationTimer = 60 + RND.Int(60);
         }
 
-        private void SpawnParticles(int spawnRate)
+        private void SpawnParticles(float x, float y, int spawnRate, float radius = 16)
         {
-            new SlimeEmitter(X, Y, type) { SpawnRate = spawnRate };
+            new SlimeEmitter(x, y, type, radius) { SpawnRate = spawnRate, Color = particleColor, Alpha = particleColor.A / 255f };
         }
 
         public override void Hit(int hitPoints, float degAngle)
         {
             regenTimer = 60;
 
-            SpawnParticles(5);
-
+            SpawnParticles(Center.X, Center.Y, 5);
+            
             base.Hit(hitPoints, degAngle);
             if (onGround)
             {
@@ -122,17 +128,24 @@ namespace Leore.Objects.Enemies
             slime.MaxHP = newHp;
             slime.HP = newHp;
             slime.originalID = originalID;
+            slime.Depth = Depth + .00001f;
             
             return slime;
         }
 
         private void Split()
         {
-            SpawnParticles(20);
+            SpawnParticles(Center.X, Center.Y, 16, 32 * scale);
+            CreateSplashEffect(Center.X, Center.Y);
 
             var slime1 = SpawnSlime(Direction.LEFT);
             var slime2 = SpawnSlime(Direction.RIGHT);
-            OnDeath();            
+            OnDeath();
+        }
+
+        private void CreateSplashEffect(float x, float y)
+        {
+            new SingularEffect(x, y, 14) { Color = new Color(particleColor.R, particleColor.G, particleColor.B) };
         }
 
         private void Merge(EnemySlime other)
@@ -147,10 +160,10 @@ namespace Leore.Objects.Enemies
             HP = MaxHP;
 
             UpdateScaleAndBoundingBox();
+            
+            SpawnParticles(other.Center.X, other.Center.Y, 16, 32 * other.scale);
 
-            SpawnParticles(20);
-
-            new SingularEffect(X, Y, 9);
+            CreateSplashEffect(other.X, other.Y);
 
             mergeTimer = maxMergeTimer;
 
@@ -182,8 +195,7 @@ namespace Leore.Objects.Enemies
             var mhp = MathUtil.Clamp(HP + 4, 4, 2 * GameResources.EnemySlime.HP);
 
             scale = (mhp / GameResources.EnemySlime.HP);
-
-            //BoundingBox = new SPG.Util.RectF(-6 * scale, -2 * scale, 12 * scale, 14 * scale);
+            
             BoundingBox = new SPG.Util.RectF(-6 * scale, -14 * scale, 12 * scale, 14 * scale);
         }
 
@@ -199,7 +211,7 @@ namespace Leore.Objects.Enemies
             if (animationTimer == 0)
             {
                 // for the eyes
-                SetAnimation(1, 4, .2f, true);                
+                SetAnimation(0, 3, .2f, true);                
             }
             
             IgnoreProjectiles = invincible > 0;
@@ -255,9 +267,10 @@ namespace Leore.Objects.Enemies
 
                     if (onGround)
                     {
-                        xs = 1.05f;
-                        ys = .95f;
+                        xs = 1.15f;
+                        ys = .85f;
                         YVel = -1f;
+                        SpawnParticles(Center.X, Center.Y, 2, 8f);
                     }
 
                     xs += (1 - xs) / 20f;
@@ -340,13 +353,13 @@ namespace Leore.Objects.Enemies
                 return;
 
             //base.Draw(sb, gameTime);
-            sb.Draw(AssetManager.EnemySlime[0], Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
+            sb.Draw(AssetManager.EnemySlime[type], Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
 
             var faceScale = new Vector2((int)Direction * drawScale * .5f, .5f * drawScale);
 
-            var eyeFrame = AnimationFrame;//1 + Convert.ToInt32(AnimationFrame == 3);
+            var eyeFrame = MathUtil.Div(AssetManager.EnemySlime.OriginalTexture.Width, 32) + AnimationFrame;
 
-            sb.Draw(AssetManager.EnemySlime[eyeFrame], Position + new Vector2(0, -.5f * (float)Math.Sin(t)), null, Color.White, Angle, DrawOffset, faceScale, SpriteEffects.None, Depth + .0001f);
+            sb.Draw(AssetManager.EnemySlime[eyeFrame], Position + new Vector2(0, -.5f * (float)Math.Sin(t)), null, Color.White, Angle, DrawOffset, faceScale, SpriteEffects.None, Depth + .000001f);
 
             AssetManager.DefaultFont.Draw(sb, X, Bottom + Globals.T, $"{HP}", scale:.5f);
         }
