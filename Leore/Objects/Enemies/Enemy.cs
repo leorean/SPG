@@ -69,9 +69,10 @@ namespace Leore.Objects.Enemies
 
             HP = Math.Max(HP - hitPoints, 0);
 
-            new SingularEffect(X - 4 + (float)(RND.Next * 8), Y - 4 + (float)(RND.Next * 8), 5);
+            // should come from the projectile, not the enemy
+            //new SingularEffect(Center.X - 4 + (float)(RND.Next * 8), Center.Y - 4 + (float)(RND.Next * 8), 5);
 
-            new FallingFont(X, Y, $"-{hitPoints}", new Color(255, 0, 55), new Color(255, 255, 0));
+            new FallingFont(Center.X, Center.Y, $"-{hitPoints}", new Color(255, 0, 55), new Color(255, 255, 0));
 
             var ldx = MathUtil.LengthDirX((float)degAngle) * knockback;
             var ldy = MathUtil.LengthDirY((float)degAngle) * knockback;

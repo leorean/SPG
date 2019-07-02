@@ -14,9 +14,9 @@ namespace Leore.Objects.Effects.Emitters
         private bool visible;
         private bool onGround;
 
-        public SlimeParticle(ParticleEmitter emitter, float radius) : base(emitter)
+        public SlimeParticle(ParticleEmitter emitter, float radius, float scale) : base(emitter)
         {
-            Scale = new Vector2(.5f);
+            Scale = new Vector2(.5f * scale);
             LifeTime = 120;
             
             Position = new Vector2(emitter.X - .5f * radius + (float)(RND.Next * radius), emitter.Y - .5f * radius + (float)(RND.Next * radius));
@@ -25,7 +25,7 @@ namespace Leore.Objects.Effects.Emitters
             DrawOffset = new Vector2(8);
 
             Alpha = 1;
-            Angle = (float)((RND.Next * 360) / (2 * Math.PI));
+            //Angle = (float)((RND.Next * 360) / (2 * Math.PI));
 
             XVel = -.25f + (float)(RND.Next * .5f);
             YVel = -1f - (float)(RND.Next * .5f);
@@ -101,9 +101,10 @@ namespace Leore.Objects.Effects.Emitters
 
         public override void CreateParticle()
         {
-            var particle = new SlimeParticle(this, radius);
+            var particle = new SlimeParticle(this, radius, Scale.X);
             particle.Color = Color;
             particle.Alpha = Alpha;
+            particle.Depth = Depth;
         }        
     }
 }

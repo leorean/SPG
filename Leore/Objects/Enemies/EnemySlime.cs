@@ -41,9 +41,11 @@ namespace Leore.Objects.Enemies
 
         double t = 0;
         float xs, ys;
-        float drawScale = 1;
+        float drawScale = .25f;
         int animationTimer = 0;
         private Color particleColor;
+
+        int maxPossibleHP = 4 * GameResources.EnemySlime.HP;
 
         private bool top, bottom, left, right, free;
         
@@ -91,7 +93,7 @@ namespace Leore.Objects.Enemies
 
         private void SpawnParticles(float x, float y, int spawnRate, float radius = 16)
         {
-            new SlimeEmitter(x, y, type, radius) { SpawnRate = spawnRate, Color = particleColor, Alpha = particleColor.A / 255f };
+            new SlimeEmitter(x, y, type, radius) { SpawnRate = spawnRate, Color = particleColor, Alpha = particleColor.A / 255f, Depth = Depth - .0001f, Scale = new Vector2(Math.Min(scale, 1.5f)) };
         }
 
         public override void Hit(int hitPoints, float degAngle)
@@ -150,13 +152,13 @@ namespace Leore.Objects.Enemies
 
         private void Merge(EnemySlime other)
         {
-            if (mergeTimer > 0 || other.mergeTimer > 0 || top || other.top)
-                return;
-
-            if (HP >= 2 * GameResources.EnemySlime.HP || other.HP >= 2 * GameResources.EnemySlime.HP)
+            if (mergeTimer > 0 || other.mergeTimer > 0 || top || other.top || type != other.type)
                 return;
             
-            MaxHP = Math.Min(HP + other.HP, 2 * GameResources.EnemySlime.HP);
+            if (HP + other.HP >= maxPossibleHP)
+                return;
+            
+            MaxHP = Math.Min(HP + other.HP, maxPossibleHP);
             HP = MaxHP;
 
             UpdateScaleAndBoundingBox();
@@ -187,12 +189,14 @@ namespace Leore.Objects.Enemies
             if (children == 0)
                 GameManager.Current.NonRespawnableIDs.Add(originalID);
 
+            CreateSplashEffect(Center.X, Center.Y);
+
             Destroy();
         }
 
         private void UpdateScaleAndBoundingBox()
         {
-            var mhp = MathUtil.Clamp(HP + 4, 4, 2 * GameResources.EnemySlime.HP);
+            var mhp = MathUtil.Clamp(HP + 4, 4, maxPossibleHP);
 
             scale = (mhp / GameResources.EnemySlime.HP);
             
@@ -220,7 +224,8 @@ namespace Leore.Objects.Enemies
             {
                 if (regenTimer == 0)
                 {
-                    HP = Math.Min(HP + 1, Math.Max(MaxHP, 4));
+                    //HP = Math.Min(HP + 1, Math.Max(MaxHP, 4));
+                    HP = Math.Min(HP + 1, Math.Max(MaxHP, 2));
                     regenTimer = 30;
                 }
             }
@@ -264,13 +269,16 @@ namespace Leore.Objects.Enemies
                     break;
                 case State.WALK:
                     walkTimer = Math.Max(walkTimer - 1, 0);
-
+                    
                     if (onGround)
                     {
                         xs = 1.15f;
                         ys = .85f;
+
+                        //if (yVelPrev > .5f)
+                        //    SpawnParticles(Center.X, Center.Y, 2, 8f);
+
                         YVel = -1f;
-                        SpawnParticles(Center.X, Center.Y, 2, 8f);
                     }
 
                     xs += (1 - xs) / 20f;
@@ -293,8 +301,13 @@ namespace Leore.Objects.Enemies
             if (inWater && Math.Abs(YVel) <= 1)
                 YVel = Math.Max(YVel - Gravity - .1f, -.75f);
 
+            var prevYVel = YVel;
+
             onGround = this.MoveAdvanced(false);
-            
+
+            if (onGround && prevYVel > 0)
+                SpawnParticles(Center.X, Center.Y, 5, 8);
+
             var blocks = this.CollisionBounds<Solid>(X, Y);
 
             left = false;
@@ -361,7 +374,7 @@ namespace Leore.Objects.Enemies
 
             sb.Draw(AssetManager.EnemySlime[eyeFrame], Position + new Vector2(0, -.5f * (float)Math.Sin(t)), null, Color.White, Angle, DrawOffset, faceScale, SpriteEffects.None, Depth + .000001f);
 
-            AssetManager.DefaultFont.Draw(sb, X, Bottom + Globals.T, $"{HP}", scale:.5f);
+            //AssetManager.DefaultFont.Draw(sb, X, Bottom + Globals.T, $"{HP}", scale:.5f);
         }
 
         public void OverrideHP(int hp)
