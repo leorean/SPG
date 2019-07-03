@@ -95,7 +95,7 @@ namespace Leore.Objects.Enemies
 
         private void SpawnParticles(float x, float y, int spawnRate, float radius = 16)
         {
-            new SlimeEmitter(x, y, type, radius) { SpawnRate = spawnRate, Color = particleColor, Alpha = particleColor.A / 255f, Depth = Depth - .0001f, Scale = new Vector2(Math.Min(scale, 1.5f)) };
+            new SlimeEmitter(x, y, type, radius) { SpawnRate = spawnRate, Color = particleColor, Alpha = particleColor.A / 255f, Depth = Depth - .0001f, Scale = new Vector2(Math.Min(.5f * scale, 1.5f)) };
         }
 
         public override void Hit(int hitPoints, float degAngle)
@@ -366,7 +366,7 @@ namespace Leore.Objects.Enemies
 
             Position = new Vector2(MathUtil.Clamp(X, Room.X + XVel, Room.X + XVel + Room.BoundingBox.Width), Y);
             
-            drawScale += (scale - drawScale) / 40;
+            drawScale += (scale - drawScale) / 20;
 
             Scale = new Vector2((int)Direction * drawScale * .5f * xs, .5f * drawScale * ys);
 

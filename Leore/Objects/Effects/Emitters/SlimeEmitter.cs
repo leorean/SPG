@@ -13,7 +13,7 @@ namespace Leore.Objects.Effects.Emitters
     {
         private bool visible;
         private bool onGround;
-
+        
         public SlimeParticle(ParticleEmitter emitter, float radius, float scale) : base(emitter)
         {
             Scale = new Vector2(.5f * scale);
@@ -25,7 +25,6 @@ namespace Leore.Objects.Effects.Emitters
             DrawOffset = new Vector2(8);
 
             Alpha = 1;
-            //Angle = (float)((RND.Next * 360) / (2 * Math.PI));
 
             XVel = -.25f + (float)(RND.Next * .5f);
             YVel = -1f - (float)(RND.Next * .5f);
@@ -41,8 +40,15 @@ namespace Leore.Objects.Effects.Emitters
 
             var inWater = GameManager.Current.Map.CollisionTile(Position.X, Position.Y, GameMap.WATER_INDEX);
             if (GameManager.Current.Map.CollisionTile(Position.X, Position.Y + YVel))
-                onGround = true;
-                //LifeTime = 0;
+            {
+                if (Scale.X > .1f)
+                {
+                    Scale = Scale * .5f;
+                    YVel *= -.75f;                    
+                }
+                else
+                    onGround = true;
+            }
 
             if (inWater)
             {
