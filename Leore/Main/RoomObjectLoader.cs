@@ -16,6 +16,7 @@ using Leore.Objects.Level.Blocks;
 using Leore.Objects.Level.Switches;
 using Leore.Objects.Effects.Weather;
 using Leore.Objects.Level.Obstacles;
+using Leore.Resources;
 
 namespace Leore.Main
 {
@@ -433,6 +434,13 @@ namespace Leore.Main
                                 item.Texture = AssetManager.Items[8];
                                 item.OnObtain = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.DOUBLE_JUMP; };
                                 item.Text = itemText;
+                                break;
+                            case 5: // spell: fire
+                                item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
+                                item.Texture = AssetManager.Items[9];
+                                item.OnObtain = () => { GameManager.Current.AddSpell(SpellType.FIRE); };
+                                item.Text = itemText;
+                                item.HighlightColor = GameResources.FireColors[0];
                                 break;
                             // TODO: add other item types, collectables etc.
                             default:

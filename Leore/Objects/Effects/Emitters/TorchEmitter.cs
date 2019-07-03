@@ -14,9 +14,12 @@ namespace Leore.Objects.Effects.Emitters
     public class TorchParticle : Particle
     {
         private int maxLifeTime = 90;
-        
+        private float initialScale = 1;
+
         public TorchParticle(ParticleEmitter emitter) : base(emitter)
         {
+            this.initialScale = emitter.Scale.X;
+
             Depth = emitter.Depth + .0001f;
             int colorIndex = RND.Int(GameResources.FireColors.Count - 1);
             Color = GameResources.FireColors[colorIndex];
@@ -37,13 +40,15 @@ namespace Leore.Objects.Effects.Emitters
             
             var r = LifeTime / (float)maxLifeTime;
 
-            Scale = new Vector2(r) * 2;
+            Scale = new Vector2(r) * initialScale * 2;
             Alpha = (float)Math.Sin(r * Math.PI);
         }
     }
 
     public class TorchEmitter : ParticleEmitter
     {
+        private bool readyToDie;
+
         public int XRange { get; set; } = 6;
         public int YRange { get; set; } = 8;
 
@@ -53,9 +58,23 @@ namespace Leore.Objects.Effects.Emitters
             SpawnTimeout = 4;
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            if (readyToDie && Particles.Count == 0)
+                Destroy();
+        }
+
         public override void CreateParticle()
         {
             new TorchParticle(this) { Position = this.Position + new Vector2(-.5f * XRange + RND.Int(XRange), -.5f * YRange + RND.Int(YRange)), Depth = Depth };
         }        
+
+        public void Kill()
+        {
+            Active = false;
+            readyToDie = true;
+        }
     }
 }

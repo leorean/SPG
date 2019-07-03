@@ -71,7 +71,7 @@ namespace Leore.Objects.Level
             {
                 GameManager.Current.Player.Oxygen = GameManager.Current.Player.MaxOxygen + 60;
                 var fnt = new FollowFont(GameManager.Current.Player.X, GameManager.Current.Player.Y - 8, "+Air");
-                fnt.Color = GameResources.OxygenColor1;
+                fnt.Color = GameResources.OxygenColors[0];
                 Destroy();
             }
 

@@ -10,6 +10,7 @@ using SPG.Util;
 using System;
 using System.Collections.Generic;
 using Leore.Objects.Level;
+using System.Diagnostics;
 
 namespace Leore.Main
 {
@@ -164,6 +165,9 @@ namespace Leore.Main
                             TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 6, 2 * Math.Sign((int)player.LookDirection));
                             //Position = TargetPosition;
                             break;
+                        case SpellType.FIRE:
+                            TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 0, -18);
+                            break;
                         default:
                             TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 14, 14 * Math.Sign((int)player.LookDirection));
                             break;
@@ -248,6 +252,16 @@ namespace Leore.Main
                                         KeySnatchProjectile.Create(TargetPosition.X, TargetPosition.Y);
                                         Cooldown = 30;
                                     }
+                                    break;
+
+                                case SpellType.FIRE:
+
+                                    Cooldown = 20;
+
+                                    //var fire = new FireProjectile(player.X + Math.Sign((int)player.Direction) * 4, player.Y, Level);
+                                    
+                                    FireSpell.Create(TargetPosition.X, TargetPosition.Y, Level);
+
                                     break;
 
                                 // TODO: other spells!!!

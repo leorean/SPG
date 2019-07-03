@@ -133,6 +133,8 @@
     <Compile Include="Objects\Items\ShopItem.cs" />
     <Compile Include="Objects\Projectiles\CrimsonProjectile.cs" />
     <Compile Include="Objects\Projectiles\CrimsonBow.cs" />
+    <Compile Include="Objects\Projectiles\FireProjectile.cs" />
+    <Compile Include="Objects\Projectiles\FireSpell.cs" />
     <Compile Include="Objects\Projectiles\KeySnatchProjectile.cs" />
     <Compile Include="Objects\Projectiles\PlayerProjectile.cs" />
     <Compile Include="Objects\Projectiles\StarProjectile.cs" />
