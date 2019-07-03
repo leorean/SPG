@@ -73,6 +73,14 @@ namespace Leore.Resources
                     {SpellLevel.THREE, 0 }
                 }
             },
+            {
+                SpellType.FIRE,
+                new Dictionary<SpellLevel, int> {
+                    {SpellLevel.ONE, 120 },
+                    {SpellLevel.TWO, 240 },
+                    {SpellLevel.THREE, 30 }
+                }
+            },
         };
                 
         public static readonly Dictionary<SpellType, Dictionary<SpellLevel, float>> MPCost = new Dictionary<SpellType, Dictionary<SpellLevel, float>>
@@ -116,7 +124,15 @@ namespace Leore.Resources
                     {SpellLevel.TWO, 0 },
                     {SpellLevel.THREE, 0 }
                 }
-            }
+            },
+            {
+                SpellType.FIRE,
+                new Dictionary<SpellLevel, float> {
+                    {SpellLevel.ONE, 0 },
+                    {SpellLevel.TWO, 0 },
+                    {SpellLevel.THREE, 0 }
+                }
+            },
         };
 
         // colors
@@ -135,10 +151,6 @@ namespace Leore.Resources
 
         public static readonly List<Color> HpColors = new List<Color>
         {
-            //new Color(248, 40, 40),
-            //new Color(218, 36, 0),
-            //new Color(231, 99, 73),
-            //new Color(255, 90, 0)
             Colors.FromHex("ff1734"),
             Colors.FromHex("e20c22"),
             Colors.FromHex("c3000f")

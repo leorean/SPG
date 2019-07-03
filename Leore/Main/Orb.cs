@@ -26,11 +26,11 @@ namespace Leore.Main
         STAR,
         CRIMSON_ARC,
         VOID,
-        SNATCH_KEYS
+        SNATCH_KEYS,
+        FIRE
         //BOOMERANG,
         //ROCK,
-        //LIGHTNING,
-        //FIRE
+        //LIGHTNING,        
     }
 
     public enum SpellLevel

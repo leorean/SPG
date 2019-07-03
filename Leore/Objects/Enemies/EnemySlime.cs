@@ -181,7 +181,7 @@ namespace Leore.Objects.Enemies
 
             UpdateScaleAndBoundingBox();
             
-            SpawnParticles(other.Center.X, other.Center.Y, 16, 32 * other.scale);
+            SpawnParticles(other.Center.X, other.Center.Y, 16, 4 * other.scale);
 
             CreateSplashEffect(other.X, other.Y);
 
@@ -322,7 +322,7 @@ namespace Leore.Objects.Enemies
             onGround = this.MoveAdvanced(false);
 
             if (onGround && prevYVel > 0)
-                SpawnParticles(Center.X, Center.Y, 5, 8);
+                SpawnParticles(Center.X, Center.Y, 5, 4 * scale);
 
             var blocks = this.CollisionBounds<Solid>(X, Y);
 
