@@ -12,6 +12,8 @@ namespace Leore.Objects.Level.Obstacles
 {
     public class Lava : Obstacle
     {
+        private LightSource light;
+
         public Lava(float x, float y, Room room) : base(x, y, room)
         {
             BoundingBox = new SPG.Util.RectF(0, 4, 16, 12);
@@ -27,6 +29,9 @@ namespace Leore.Objects.Level.Obstacles
             emitter.YRange = 0;
             emitter.Parent = this;
             emitter.Depth = Depth - .0001f;
+
+            light = new LightSource(this);
+            light.Active = true;
         }
 
         public override void Update(GameTime gameTime)

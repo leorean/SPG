@@ -32,7 +32,7 @@ namespace Leore.Objects.Effects.Weather
         private float alpha;
         private float targetAlpha;
 
-        private int weather;
+        private bool isRoomDark;
         private float x, y;
 
         bool enabled = true;
@@ -79,10 +79,10 @@ namespace Leore.Objects.Effects.Weather
             {
                 x = RoomCamera.Current.ViewX;
                 y = RoomCamera.Current.ViewY;
-                weather = RoomCamera.Current.CurrentRoom.Weather;
+                isRoomDark = RoomCamera.Current.CurrentRoom.IsDark;
             }
 
-            if (weather != 1 || !enabled)
+            if (!isRoomDark || !enabled)
             {
                 globalAlpha = Math.Max(globalAlpha - .025f, 0);
                 if (globalAlpha == 0)

@@ -8,6 +8,7 @@ namespace Leore.Objects
     {
         public int Background { get; set; } = -1;
         public int Weather { get; set; } = -1;
+        public bool IsDark { get; set; } = false;
 
         public bool SwitchState { get; set; }
         

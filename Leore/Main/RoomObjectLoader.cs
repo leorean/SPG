@@ -541,6 +541,7 @@ namespace Leore.Main
                     var h = data.ContainsKey("height") ? (int)data["height"] : camera.ViewHeight;
                     var bg = data.ContainsKey("bg") ? (int)data["bg"] : -1;
                     var weather = data.ContainsKey("weather") ? (int)data["weather"] : -1;
+                    var isDark = data.ContainsKey("dark") ? Convert.ToBoolean(data["dark"]) : false;
 
                     int remX, remY, remW, remH;
                     Math.DivRem(x, camera.ViewWidth, out remX);
@@ -554,7 +555,7 @@ namespace Leore.Main
                     var room = new Room(x, y, w, h);
                     room.Background = bg;
                     room.Weather = weather;
-                    //camera.Rooms.Add(room);
+                    room.IsDark = isDark;
                 }
 
                 // load rooms of standard size when there is none
@@ -564,8 +565,7 @@ namespace Leore.Main
                     {
                         if (ObjectManager.CollisionPoints<Room>(i + Globals.T, j + Globals.T).Count == 0)
                         {
-                            var room = new Room(i, j, camera.ViewWidth, camera.ViewHeight);
-                            //camera.Rooms.Add(room);
+                            var room = new Room(i, j, camera.ViewWidth, camera.ViewHeight);                            
                         }
                     }
                 }
