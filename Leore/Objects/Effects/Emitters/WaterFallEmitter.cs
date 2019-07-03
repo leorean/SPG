@@ -171,7 +171,7 @@ namespace Leore.Objects.Effects.Emitters
 
             yoff = (yoff + flowSpd) % Globals.T;
 
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < Room.BoundingBox.Height / 9f; i++)
             {
                 var col = GameManager.Current.Map.CollisionTile(Position.X, Position.Y + i * Globals.T, GameMap.WATER_INDEX)
                 || (GameManager.Current.Map.CollisionTile(Position.X, Position.Y + i * Globals.T, GameMap.FG_INDEX));

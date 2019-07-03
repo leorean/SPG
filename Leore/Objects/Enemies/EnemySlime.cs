@@ -36,7 +36,7 @@ namespace Leore.Objects.Enemies
         private float scale;
         private int invincible = 30;
         private int maxMergeTimer = 3 * 60;
-        private int mergeTimer = 0;
+        public int MergeTimer { get; set; } = 0;
         private int regenTimer = 3 * 60;
 
         double t = 0;
@@ -48,6 +48,8 @@ namespace Leore.Objects.Enemies
         int maxPossibleHP = 4 * GameResources.EnemySlime.HP;
 
         private bool top, bottom, left, right, free;
+
+        private List<long> saveIDs = new List<long>();
         
         public EnemySlime(float x, float y, Room room, int type) : base(x, y, room)
         {
@@ -77,7 +79,7 @@ namespace Leore.Objects.Enemies
 
             UpdateScaleAndBoundingBox();
 
-            mergeTimer = maxMergeTimer;            
+            MergeTimer = maxMergeTimer;            
 
             originalID = ID;
             Gravity = .1f;
@@ -152,12 +154,28 @@ namespace Leore.Objects.Enemies
 
         private void Merge(EnemySlime other)
         {
-            if (mergeTimer > 0 || other.mergeTimer > 0 || top || other.top || type != other.type)
-                return;
-            
+            bool merge = true;
+
+            if (MergeTimer > 0 || other.MergeTimer > 0 || top || other.top || type != other.type)
+            {
+                merge = false;
+            }
+
+
             if (HP + other.HP >= maxPossibleHP)
+                merge = false;
+
+            if (!merge)
+            {
+                XVel += Math.Sign(X - other.X) * .5f;
+                other.XVel += Math.Sign(other.X - X) * .5f;
+
+                XVel = MathUtil.AtMost(XVel, 1f);
+                other.XVel = MathUtil.AtMost(other.XVel, 1f);
+
                 return;
-            
+            }
+
             MaxHP = Math.Min(HP + other.HP, maxPossibleHP);
             HP = MaxHP;
 
@@ -167,7 +185,10 @@ namespace Leore.Objects.Enemies
 
             CreateSplashEffect(other.X, other.Y);
 
-            mergeTimer = maxMergeTimer;
+            MergeTimer = maxMergeTimer;
+
+            if (!saveIDs.Contains(other.originalID))
+                saveIDs.Add(other.originalID);
 
             other.Destroy();
         }
@@ -185,9 +206,13 @@ namespace Leore.Objects.Enemies
 
             var exp = (int)Math.Ceiling(EXP * scale);
             SpellEXP.Spawn(X, Y, exp);
-            
+
             if (children == 0)
+            {
                 GameManager.Current.NonRespawnableIDs.Add(originalID);
+                foreach(var id in saveIDs)
+                    GameManager.Current.NonRespawnableIDs.Add(id);
+            }
 
             CreateSplashEffect(Center.X, Center.Y);
 
@@ -208,7 +233,7 @@ namespace Leore.Objects.Enemies
             base.Update(gameTime);
             
             invincible = Math.Max(invincible - 1, 0);
-            mergeTimer = Math.Max(mergeTimer - 1, 0);
+            MergeTimer = Math.Max(MergeTimer - 1, 0);
             regenTimer = Math.Max(regenTimer - 1, 0);
             animationTimer = Math.Max(animationTimer - 1, 0);
 
@@ -237,16 +262,7 @@ namespace Leore.Objects.Enemies
 
             if (other != null)
             {
-                if (mergeTimer == 0)
-                    Merge(other);
-                else
-                {
-                    XVel += Math.Sign(X - other.X) * .5f;
-                    other.XVel += Math.Sign(other.X - X) * .5f;
-
-                    XVel = MathUtil.AtMost(XVel, 1f);
-                    other.XVel = MathUtil.AtMost(other.XVel, 1f);
-                }
+                Merge(other);                
             }
 
             switch (state)

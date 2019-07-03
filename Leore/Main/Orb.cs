@@ -63,6 +63,9 @@ namespace Leore.Main
 
         private LightSource light;
 
+        private float lightScaleNormal = .75f;
+        private float lightScaleDark = .3f;
+
         public Orb(Player player) : base(player.X, player.Y)
         {
             Scale = new Vector2(1);
@@ -76,13 +79,14 @@ namespace Leore.Main
             lastPosition = TargetPosition;
 
             light = new LightSource(this);
-            light.Active = true;
-            light.Scale = new Vector2(.75f);
+            light.Active = true;            
         }
 
         public override void BeginUpdate(GameTime gameTime)
         {
             base.BeginUpdate(gameTime);
+
+            light.Scale = new Vector2(Type == SpellType.VOID ?  lightScaleDark : lightScaleNormal);
 
             TargetPosition += new Vector2(player.XVel, player.YVel);
 
@@ -202,7 +206,7 @@ namespace Leore.Main
                                         }
 
                                         //var proj = new StarProjectile(TargetPosition.X, TargetPosition.Y, Level);
-                                        var proj = new StarProjectile(X, Y, Level);
+                                        var proj = new StarProjectile(TargetPosition.X, Y, Level);
                                         var starDegAngle = MathUtil.VectorToAngle(new Vector2(TargetPosition.X - player.X, 0));
 
                                         var starCoilX = (float)MathUtil.LengthDirX(starDegAngle);

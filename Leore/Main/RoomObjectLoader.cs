@@ -228,18 +228,21 @@ namespace Leore.Main
                             {
                                 var slime = new EnemySlime(i * Globals.T + 8, j * Globals.T + 16, room, 0);
                                 slime.OverrideHP(4);
+                                slime.MergeTimer = 0;
                             }
                             break;
                         case 774: // ice slime
                             {
                                 var slime = new EnemySlime(i * Globals.T + 8, j * Globals.T + 16, room, 1);
                                 slime.OverrideHP(2);
+                                slime.MergeTimer = 0;
                             }
                             break;
                         case 775: // dark slime
                             {
                                 var slime = new EnemySlime(i * Globals.T + 8, j * Globals.T + 16, room, 2);
                                 slime.OverrideHP(4);
+                                slime.MergeTimer = 0;
                             }
                             break;
                         case 832: // teleporters
