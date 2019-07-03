@@ -918,7 +918,7 @@ namespace Leore.Main
 
                 if ((npc == null || !npc.Active) && door != null && door.Open)
                 {
-                    if (k_upPressed && (onGround || inWater))
+                    if (k_upPressed && !k_attackHolding && (onGround || inWater))
                     {
                         XVel = 0;
                         YVel = -Gravity;

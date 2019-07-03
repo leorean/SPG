@@ -235,7 +235,7 @@ namespace Leore.Objects.Projectiles
             sb.Draw(AssetManager.VoidCircle[0], Position, null, new Color(Color, alpha * .3f), angle1, DrawOffset, Scale, SpriteEffects.None, Depth + .00001f);
             sb.Draw(AssetManager.VoidCircle[1], Position, null, new Color(Color, alpha * .5f), angle2, DrawOffset, Scale, SpriteEffects.None, Depth + .00002f);
             sb.Draw(AssetManager.VoidCircle[2], Position, null, new Color(Color, alpha * .8f), angle3, DrawOffset, Scale, SpriteEffects.None, Depth + .00003f);
-            sb.Draw(AssetManager.VoidCircle[3], Position, null, new Color(Color, alpha * 1f), 0, DrawOffset, Scale, SpriteEffects.None, Depth);
+            sb.Draw(AssetManager.VoidCircle[3], Position, null, new Color(Color, alpha * 1.2f), 2 * angle1, DrawOffset, Scale, SpriteEffects.None, Depth);
             
         }
 
