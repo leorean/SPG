@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SPG.Objects;
 using SPG.Map;
+using Leore.Objects.Effects.Emitters;
 
 namespace Leore.Objects.Projectiles
 {
@@ -18,6 +19,8 @@ namespace Leore.Objects.Projectiles
         private Player player => GameManager.Current.Player;
         private Orb orb => GameManager.Current.Player.Orb;
 
+        private TorchEmitter torchEmitter;
+
         public FireProjectile(float x, float y, SpellLevel level) : base(x, y, level)
         {
             Depth = player.Depth + .0002f;
@@ -27,14 +30,24 @@ namespace Leore.Objects.Projectiles
             DrawOffset = new Vector2(8);
             BoundingBox = new SPG.Util.RectF(-3, -3, 6, 6);
 
-            DebugEnabled = true;            
+            Gravity = .1f;
+
+            //DebugEnabled = true;
+
+            torchEmitter = new TorchEmitter(X, Y);
+            torchEmitter.XRange = 8;
+            torchEmitter.YRange = 8;
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            XVel *= .93f;
+            torchEmitter.Position = Position;
+            torchEmitter.SpawnRate = 5;
+            torchEmitter.Scale = new Vector2(.75f);
+
+            //XVel *= .93f;
 
             if (Math.Abs(XVel) < .1f)
                 Destroy();
@@ -46,23 +59,31 @@ namespace Leore.Objects.Projectiles
                 Move(XVel, 0);
             else
             {
-                Destroy();
-                //XVel = -XVel;
+                XVel = -XVel * .5f;
+
+                if (Math.Abs(XVel) < .5f)
+                    Destroy();
             }
 
             if (!yCol)
             {
+                YVel += Gravity;
                 Move(0, YVel);
             }
             else
             {
-                Destroy();
+                YVel = Math.Max(YVel * -.75f, -2.5f);
+
+                if (Math.Abs(YVel) < .5f)
+                    Destroy();
             }
         }
 
         public override void Destroy(bool callGC = false)
         {
             base.Destroy(callGC);
+
+            torchEmitter.Kill();
 
             if (!dead)
             {

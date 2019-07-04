@@ -27,11 +27,11 @@ namespace Leore.Objects.Projectiles
         private TorchEmitter torchEmitter;
 
         private float power;
-        private float maxPower = 2 * 60;
+        private float maxPower = 1 * 60;
 
-        private float delay;
-        private float maxDelay;
-        private float maxMaxDelay;
+        //private float delay;
+        //private float maxDelay;
+        //private float maxMaxDelay;
 
         private SpellLevel level;
 
@@ -45,21 +45,21 @@ namespace Leore.Objects.Projectiles
             orb.Visible = false;
             Depth = player.Depth + .0002f;
 
-            switch (level)
-            {
-                case SpellLevel.ONE:
-                    maxMaxDelay = 20;
-                    break;
-                case SpellLevel.TWO:
-                    maxMaxDelay = 15;
-                    break;
-                case SpellLevel.THREE:
-                    maxMaxDelay = 10;
-                    break;
-            }
+            //switch (level)
+            //{
+            //    case SpellLevel.ONE:
+            //        maxMaxDelay = 20;
+            //        break;
+            //    case SpellLevel.TWO:
+            //        maxMaxDelay = 10;
+            //        break;
+            //    case SpellLevel.THREE:
+            //        maxMaxDelay = 5;
+            //        break;
+            //}
 
 
-            torchEmitter = new TorchEmitter(X, Y);            
+            torchEmitter = new TorchEmitter(X, Y);
             torchEmitter.XRange = 8;
             torchEmitter.YRange = 8;
         }
@@ -70,26 +70,35 @@ namespace Leore.Objects.Projectiles
             
             power = Math.Min(power + 1, maxPower);
 
-            var ratio = power / maxPower;
+            var p = power / maxPower;
 
             Position = player.Position + new Vector2(7 * Math.Sign((int)player.Direction), 0);
 
             torchEmitter.Position = Position;// + new Vector2(player.XVel, player.YVel);
 
-            torchEmitter.SpawnRate = 2 + (int)(10 * ratio);
-            torchEmitter.Scale = new Vector2(.5f) + new Vector2(.75f * ratio);
+            torchEmitter.SpawnRate = 2 + (int)(10 * p);
+            torchEmitter.Scale = new Vector2(.5f) + new Vector2(.75f * p);
 
-            maxDelay = maxMaxDelay - .5f * maxMaxDelay * ratio;
-            delay = Math.Min(delay, maxDelay);
+            //maxDelay = maxMaxDelay - .5f * maxMaxDelay * ratio;
+            //delay = Math.Min(delay, maxDelay);
+            //maxDelay = maxMaxDelay;
 
-            delay = Math.Max(delay - 1, 0);
-            if (delay == 0)
+            //delay = Math.Max(delay - 1, 0);
+            if (orb.State != OrbState.ATTACK)
             {
-                var proj = new FireProjectile(X, Y, level);
-                proj.XVel = (2 + 4 * ratio) * Math.Sign((int)player.Direction);
-                proj.YVel = 0;// (float)(-.2f + RND.Next * .4f);
+                for (var i = 0; i < 3 * p; i++)
+                {
+                    var proj = new FireProjectile(X, Y + (i - 1) * 6, level);
 
-                delay = maxDelay;
+                    proj.XVel = Math.Sign((int)player.Direction) * (1f + .2f * p) - .3f * Math.Abs(i - 1) + player.XVel;
+                    proj.YVel = -1.5f;
+                }
+                //proj.XVel = (1 + .5f * ratio) * Math.Sign((int)player.Direction);
+                //proj.YVel = -2f * ratio;
+
+                //delay = maxDelay;
+
+                new CrimsonBurstEmitter(X, Y) { ParticleColors = GameResources.FireColors };
             }
 
             if (orb.State != OrbState.ATTACK)
@@ -106,7 +115,7 @@ namespace Leore.Objects.Projectiles
         {
             base.Draw(sb, gameTime);
 
-            //sb.DrawBar(orb.Position + new Vector2(0, -8), 24, power / maxPower, Color.White, Color.Black, orb.Depth + .0001f, 2, false);
+            sb.DrawBar(player.Position + new Vector2(0, -16), 24, power / maxPower, Color.White, Color.Black, orb.Depth + .0001f, 2, false);
         }
         
         public override void Destroy(bool callGC = false)
