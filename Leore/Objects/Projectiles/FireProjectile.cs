@@ -24,19 +24,17 @@ namespace Leore.Objects.Projectiles
         public FireProjectile(float x, float y, SpellLevel level) : base(x, y, level)
         {
             Depth = player.Depth + .0002f;
-
-            Texture = AssetManager.Projectiles[10];
             
+            Texture = AssetManager.Projectiles[10];
+            Scale = new Vector2(.5f * (int)player.Direction, .5f);
+
             DrawOffset = new Vector2(8);
             BoundingBox = new SPG.Util.RectF(-3, -3, 6, 6);
-
-            Gravity = .1f;
-
-            //DebugEnabled = true;
-
+            
             torchEmitter = new TorchEmitter(X, Y);
             torchEmitter.XRange = 8;
             torchEmitter.YRange = 8;
+            torchEmitter.SpawnRate = 20;
         }
 
         public override void Update(GameTime gameTime)
@@ -44,10 +42,11 @@ namespace Leore.Objects.Projectiles
             base.Update(gameTime);
 
             torchEmitter.Position = Position;
-            torchEmitter.SpawnRate = 5;
+            torchEmitter.SpawnRate = 1;
             torchEmitter.Scale = new Vector2(.75f);
 
-            //XVel *= .93f;
+            XVel *= .96f;
+            YVel *= .96f;
 
             if (Math.Abs(XVel) < .1f)
                 Destroy();
@@ -59,10 +58,7 @@ namespace Leore.Objects.Projectiles
                 Move(XVel, 0);
             else
             {
-                XVel = -XVel * .5f;
-
-                if (Math.Abs(XVel) < .5f)
-                    Destroy();
+                XVel = -XVel * .5f;                
             }
 
             if (!yCol)
@@ -77,6 +73,9 @@ namespace Leore.Objects.Projectiles
                 if (Math.Abs(YVel) < .5f)
                     Destroy();
             }
+
+            if (Math.Max(Math.Abs(XVel), Math.Abs(YVel)) < .5f)
+                Destroy();
         }
 
         public override void Destroy(bool callGC = false)
@@ -101,7 +100,7 @@ namespace Leore.Objects.Projectiles
 
         public override void HandleCollision(GameObject obj)
         {
-            //
+            Destroy();
         }
     }
 }

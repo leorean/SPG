@@ -23,15 +23,16 @@ namespace Leore.Objects.Projectiles
         private Orb orb => GameManager.Current.Player.Orb;
 
         private static FireSpell instance;
-
-        private TorchEmitter torchEmitter;
-
+        
         private float power;
-        private float maxPower = 1 * 60;
+        private float maxPower = 2 * 60;
 
-        //private float delay;
-        //private float maxDelay;
-        //private float maxMaxDelay;
+        private int delay;
+        private int maxDelay = 5;
+
+        private float spellVel;
+
+        private double t;
 
         private SpellLevel level;
 
@@ -45,23 +46,19 @@ namespace Leore.Objects.Projectiles
             orb.Visible = false;
             Depth = player.Depth + .0002f;
 
-            //switch (level)
-            //{
-            //    case SpellLevel.ONE:
-            //        maxMaxDelay = 20;
-            //        break;
-            //    case SpellLevel.TWO:
-            //        maxMaxDelay = 10;
-            //        break;
-            //    case SpellLevel.THREE:
-            //        maxMaxDelay = 5;
-            //        break;
-            //}
-
-
-            torchEmitter = new TorchEmitter(X, Y);
-            torchEmitter.XRange = 8;
-            torchEmitter.YRange = 8;
+            switch (level)
+            {
+                case SpellLevel.ONE:
+                    spellVel = 1.7f;
+                    break;
+                case SpellLevel.TWO:
+                    spellVel = 2.3f;
+                    break;
+                case SpellLevel.THREE:
+                    spellVel = 3f;
+                    break;
+            }
+            
         }
 
         public override void Update(GameTime gameTime)
@@ -70,35 +67,23 @@ namespace Leore.Objects.Projectiles
             
             power = Math.Min(power + 1, maxPower);
 
+            t = (t + .5f) % (Math.PI * 2);
+
+            Angle = (Angle + .2f) % (int)(2 * Math.PI);
+
             var p = power / maxPower;
 
             Position = player.Position + new Vector2(7 * Math.Sign((int)player.Direction), 0);
+            
+            delay = Math.Max(delay - 1, 0);
 
-            torchEmitter.Position = Position;// + new Vector2(player.XVel, player.YVel);
-
-            torchEmitter.SpawnRate = 2 + (int)(10 * p);
-            torchEmitter.Scale = new Vector2(.5f) + new Vector2(.75f * p);
-
-            //maxDelay = maxMaxDelay - .5f * maxMaxDelay * ratio;
-            //delay = Math.Min(delay, maxDelay);
-            //maxDelay = maxMaxDelay;
-
-            //delay = Math.Max(delay - 1, 0);
-            if (orb.State != OrbState.ATTACK)
+            if (delay == 0)
             {
-                for (var i = 0; i < 3 * p; i++)
-                {
-                    var proj = new FireProjectile(X, Y + (i - 1) * 6, level);
+                var proj = new FireProjectile(X, Y, level);
+                proj.XVel = Math.Sign((int)player.Direction) * spellVel * Math.Max(.75f, p) + player.XVel;
+                proj.YVel = -.3f * (float)Math.Sin(t) + player.YVel + .5f * (int)player.LookDirection;
 
-                    proj.XVel = Math.Sign((int)player.Direction) * (1f + .2f * p) - .3f * Math.Abs(i - 1) + player.XVel;
-                    proj.YVel = -1.5f;
-                }
-                //proj.XVel = (1 + .5f * ratio) * Math.Sign((int)player.Direction);
-                //proj.YVel = -2f * ratio;
-
-                //delay = maxDelay;
-
-                new CrimsonBurstEmitter(X, Y) { ParticleColors = GameResources.FireColors };
+                delay = (int)(maxDelay * (1 - .75f * p) * 3);
             }
 
             if (orb.State != OrbState.ATTACK)
@@ -115,13 +100,13 @@ namespace Leore.Objects.Projectiles
         {
             base.Draw(sb, gameTime);
 
+            //sb.Draw(AssetManager.FireBall, Position, null, Color, Angle, new Vector2(16), new Vector2(.5f + .5f * power / maxPower), SpriteEffects.None, Depth + .0001f);
+
             sb.DrawBar(player.Position + new Vector2(0, -16), 24, power / maxPower, Color.White, Color.Black, orb.Depth + .0001f, 2, false);
         }
         
         public override void Destroy(bool callGC = false)
         {
-            torchEmitter.Kill();
-            
             orb.Visible = true;
             instance = null;
             base.Destroy(callGC);

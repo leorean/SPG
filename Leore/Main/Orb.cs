@@ -139,7 +139,7 @@ namespace Leore.Main
 
                     break;
                 case OrbState.ATTACK:
-                    headBackTimer = 20;
+                    headBackTimer = 5;
 
                     // positioning
                     switch (Type)
@@ -257,7 +257,7 @@ namespace Leore.Main
 
                                 case SpellType.FIRE:
 
-                                    Cooldown = 20;
+                                    Cooldown = 5;
 
                                     //var fire = new FireProjectile(player.X + Math.Sign((int)player.Direction) * 4, player.Y, Level);
                                     

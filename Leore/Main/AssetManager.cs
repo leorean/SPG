@@ -40,6 +40,7 @@ namespace Leore.Main
 
         // misc
 
+        public static Texture2D FireBall { get; private set; }
         public static Texture2D Door { get; private set; }
         public static TextureSet Torch { get; private set; }
         public static TextureSet Particles { get; private set; }
@@ -97,6 +98,7 @@ namespace Leore.Main
             SaveStatue = content.LoadTextureSet("save");
             Teleporter = content.Load<Texture2D>("teleporter");
 
+            FireBall = content.Load<Texture2D>("fireball");
             Door = content.Load<Texture2D>("door");
             Torch = content.LoadTextureSet("torch");
             Particles = content.LoadTextureSet("particles", 16, 16);
