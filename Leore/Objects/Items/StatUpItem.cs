@@ -30,6 +30,8 @@ namespace Leore.Objects.Items
             maxYDist = Globals.T;
             flashOnTaken = false;
 
+            string statColorHex = "f8e038";
+
             switch (type)
             {
                 case StatType.HP:
@@ -39,7 +41,7 @@ namespace Leore.Objects.Items
                     HighlightColor = GameResources.HpColors.First();
 
                     Name = "HP-Up";
-                    Text = "~Max. HP~ increased by 1.";
+                    Text = $"~Max. HP~ increased by [{statColorHex}]~1~.";
                     OnObtain = () => 
                     {
                         player.Stats.MaxHP += 1;
@@ -56,7 +58,7 @@ namespace Leore.Objects.Items
                     HighlightColor = GameResources.MpColors.First();
 
                     Name = "MP-Up";
-                    Text = "~Max. MP~ increased by 5.";
+                    Text = $"~Max. MP~ increased by [{statColorHex}]~5~.";
                     OnObtain = () => 
                     {
                         player.Stats.MaxMP += 5;
@@ -73,7 +75,7 @@ namespace Leore.Objects.Items
                     HighlightColor = GameResources.RegenColors.First();
 
                     Name = "MP-Regen-Up";
-                    Text = "~MP regeneration~ rate increased by 5%.";
+                    Text = $"~MP regeneration~ rate increased by [{statColorHex}]~5%~.";
                     OnObtain = () =>
                     {
                         player.Stats.MPRegen += .05f;

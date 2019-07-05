@@ -80,8 +80,8 @@ namespace Leore.Objects.Projectiles
             if (delay == 0)
             {
                 var proj = new FireProjectile(X, Y, level);
-                proj.XVel = Math.Sign((int)player.Direction) * spellVel * Math.Max(.75f, p) + player.XVel;
-                proj.YVel = -.3f * (float)Math.Sin(t) + player.YVel + .5f * (int)player.LookDirection;
+                proj.XVel = Math.Sign((int)player.Direction) * (.5f + spellVel * p) + player.XVel;
+                proj.YVel = -.3f * (float)Math.Sin(t) + player.YVel + .85f * (int)player.LookDirection;
 
                 delay = (int)(maxDelay * (1 - .75f * p) * 3);
             }

@@ -9,6 +9,9 @@ using Microsoft.Xna.Framework.Graphics;
 using SPG.Objects;
 using SPG.Map;
 using Leore.Objects.Effects.Emitters;
+using SPG.Util;
+using Leore.Objects.Level;
+using Leore.Objects.Effects;
 
 namespace Leore.Objects.Projectiles
 {
@@ -19,36 +22,50 @@ namespace Leore.Objects.Projectiles
         private Player player => GameManager.Current.Player;
         private Orb orb => GameManager.Current.Player.Orb;
 
-        private TorchEmitter torchEmitter;
+        //private TorchEmitter torchEmitter;
+        private LightSource light;
 
         public FireProjectile(float x, float y, SpellLevel level) : base(x, y, level)
         {
             Depth = player.Depth + .0002f;
             
             Texture = AssetManager.Projectiles[10];
-            Scale = new Vector2(.5f * (int)player.Direction, .5f);
+            Scale = new Vector2(.25f);
 
             DrawOffset = new Vector2(8);
             BoundingBox = new SPG.Util.RectF(-3, -3, 6, 6);
             
-            torchEmitter = new TorchEmitter(X, Y);
-            torchEmitter.XRange = 8;
-            torchEmitter.YRange = 8;
-            torchEmitter.SpawnRate = 20;
+            //torchEmitter = new TorchEmitter(X, Y);
+            //torchEmitter.XRange = 8;
+            //torchEmitter.YRange = 8;
+            //torchEmitter.SpawnRate = 20;
+
+            light = new LightSource(this);
+            light.Active = true;
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            torchEmitter.Position = Position;
-            torchEmitter.SpawnRate = 1;
-            torchEmitter.Scale = new Vector2(.75f);
+            //torchEmitter.Position = Position;
+            //torchEmitter.SpawnRate = 1;
+            //torchEmitter.Scale = new Vector2(.75f);
 
             XVel *= .96f;
             YVel *= .96f;
 
+            Angle = (float)MathUtil.VectorToAngle(new Vector2(XVel, YVel), true);
+
+            Scale = new Vector2(Math.Min(Scale.X + .02f, 1f));
+
+            light.Scale = Scale;
+
             if (Math.Abs(XVel) < .1f)
+                Destroy();
+
+            var inWater = GameManager.Current.Map.CollisionTile(X, Y, GameMap.WATER_INDEX);
+            if (inWater)
                 Destroy();
 
             var xCol = GameManager.Current.Map.CollisionTile(X + XVel, Y);
@@ -58,7 +75,7 @@ namespace Leore.Objects.Projectiles
                 Move(XVel, 0);
             else
             {
-                XVel = -XVel * .5f;                
+                XVel = -XVel * .85f;
             }
 
             if (!yCol)
@@ -68,7 +85,7 @@ namespace Leore.Objects.Projectiles
             }
             else
             {
-                YVel = Math.Max(YVel * -.75f, -2.5f);
+                YVel = -YVel * .85f;
 
                 if (Math.Abs(YVel) < .5f)
                     Destroy();
@@ -82,13 +99,13 @@ namespace Leore.Objects.Projectiles
         {
             base.Destroy(callGC);
 
-            torchEmitter.Kill();
+            //torchEmitter.Kill();
 
             if (!dead)
             {
-                dead = true;
+                new SingularEffect(X, Y, 15) { Scale = Scale };
 
-                // TODO
+                dead = true;                
             }
         }
 

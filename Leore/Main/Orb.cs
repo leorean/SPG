@@ -166,7 +166,7 @@ namespace Leore.Main
                             //Position = TargetPosition;
                             break;
                         case SpellType.FIRE:
-                            TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 0, -18);
+                            TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 0, 0);
                             //TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 6, 0);
                             break;
                         default:

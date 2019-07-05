@@ -51,6 +51,7 @@ namespace Leore.Main
         /// \n ... new line
         /// | ... new page
         /// ~ ... toggle highlighting (example: ~word~)
+        /// [ffffff] ... overriding the highlight color
         /// 
         /// #l ... left arrow
         /// #r ... right arrow
@@ -205,10 +206,19 @@ namespace Leore.Main
             {
                 if (curText.Length < texts[page].Length)
                 {
-                    curText = curText + texts[page].ElementAt(curText.Length);
+                    var newChar = texts[page].ElementAt(curText.Length);
+                    curText = curText + newChar;
+
+                    var inColorFindingMode = newChar == '[';
+
+                    while (inColorFindingMode && newChar != ']')
+                    {
+                        newChar = texts[page].ElementAt(curText.Length);
+                        curText = curText + newChar;
+                    }
                 }
 
-                timeOut = (int)textSpeed;
+                timeOut = (int)textSpeed;                
             }
             
             sin = (float)((sin + .1) % (2 * Math.PI));            

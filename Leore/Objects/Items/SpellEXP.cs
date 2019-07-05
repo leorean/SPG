@@ -5,6 +5,7 @@ using System;
 using Leore.Objects.Level;
 using SPG.Map;
 using Leore.Main;
+using System.Diagnostics;
 
 namespace Leore.Objects.Items
 {
@@ -33,6 +34,8 @@ namespace Leore.Objects.Items
         public bool CanTake { get; set; }
         public bool Taken { get; set; }
         private float alpha = .75f;
+
+        float spd = 0;
 
         public SpellEXP(float x, float y, SpellEXPValue value) : base(x, y)
         {
@@ -70,23 +73,16 @@ namespace Leore.Objects.Items
             if (!Taken)
             {
                 var yp = YVel;
-
+                
                 if (kinetic)
                 {
                     Move(XVel, YVel);
 
                     XVel *= .9f;
                     YVel *= .9f;
-                    
-                    if (player.HP > 0 && GameManager.Current.Map.CollisionTile(X, Y))
-                    {
-                        MoveTowards(player, 30);
-                    }
-                    else
-                    {
-                        if (Math.Abs(XVel) < .1f && Math.Abs(YVel) < .1f)
-                            kinetic = false;
-                    }
+
+                    if (Math.Abs(XVel) < .1f && Math.Abs(YVel) < .1f)
+                        kinetic = false;
                 }
                 else
                 {
@@ -97,13 +93,24 @@ namespace Leore.Objects.Items
                     var yv = .05f * (float)Math.Sin(t);
                     Move(0, yv);
                     
-                    if (player.HP > 0 && MathUtil.Euclidean(Center, player.Center) > 8 && MathUtil.Euclidean(Center, player.Center) < 8 * Globals.T)
+                    if (player.HP > 0 && MathUtil.Euclidean(Center, player.Center) > 1 && MathUtil.Euclidean(Center, player.Center) < 8 * Globals.T)
                     {
                         kinetic = false;
-                        XVel = (player.X - Center.X) / 90;
-                        YVel = (player.Y - Center.Y) / 90;                        
 
-                    } else
+                        var dst = (float)MathUtil.Euclidean(Center, player.Center);
+
+                        spd = Math.Max(spd, 1 - MathUtil.Clamp(dst / (6f * Globals.T), 0, 1));
+                        
+                        XVel += (player.X - Center.X) * spd / 80;
+                        YVel += (player.Y - Center.Y) * spd / 80;
+
+                        if (MathUtil.Euclidean(Center, player.Center) < 4 * Globals.T)
+                        {
+                            Move(player.XVel, player.YVel);
+                        }
+
+                    }
+                    else
                     {
                         XVel *= .95f;
                         YVel *= .95f;
