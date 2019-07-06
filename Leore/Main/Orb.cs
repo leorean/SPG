@@ -271,8 +271,8 @@ namespace Leore.Main
 
                                     Cooldown = 5;
 
-                                    //var fire = new FireProjectile(player.X + Math.Sign((int)player.Direction) * 4, player.Y, Level);
-                                    
+                                    player.MP += GameResources.MPCost[Type][Level];
+
                                     FireSpell.Create(TargetPosition.X, TargetPosition.Y, Level);
 
                                     break;

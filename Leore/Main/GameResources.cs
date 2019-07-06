@@ -128,9 +128,9 @@ namespace Leore.Resources
             {
                 SpellType.FIRE,
                 new Dictionary<SpellLevel, float> {
-                    {SpellLevel.ONE, 0 },
-                    {SpellLevel.TWO, 0 },
-                    {SpellLevel.THREE, 0 }
+                    {SpellLevel.ONE, 2 },
+                    {SpellLevel.TWO, 1f },
+                    {SpellLevel.THREE, .3f }
                 }
             },
         };

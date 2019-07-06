@@ -172,15 +172,18 @@ namespace Leore.Objects.Projectiles
         private float amp;
         private float spd;
 
+        private float maxSpd;
+
         private float tVel = .15f;
 
-        public FireProjectile2(float x, float y, Direction dir, Direction lookDir, float amp, float spd, float t) : base(x, y, SpellLevel.TWO)
+        public FireProjectile2(float x, float y, Direction dir, Direction lookDir, float amp, float spd, float t, float tVel) : base(x, y, SpellLevel.TWO)
         {
             Scale = new Vector2(.75f);
 
-            this.spd = spd;
+            this.maxSpd = spd;
             this.amp = amp;
             this.t = t;
+            this.tVel = tVel;
             this.dir = dir;
             this.lookDir = lookDir;
 
@@ -201,20 +204,21 @@ namespace Leore.Objects.Projectiles
 
             lifeTime = Math.Max(lifeTime - 1, 0);
             
-            var col = GameManager.Current.Map.CollisionTile(X, Y);
-
-            if (col)
-            {
-                lifeTime = 0;
-            }
-
+            var col = GameManager.Current.Map.CollisionTile(X + XVel, Y + YVel);
+                        
             var inWater = GameManager.Current.Map.CollisionTile(X, Y, GameMap.WATER_INDEX);
-            if (inWater)
+            if (inWater && !col)
                 Destroy();
             
             t = (t + tVel) % (float)(2 * Math.PI);
 
-            spd *= .98f;
+            spd = Math.Min(spd + .15f, maxSpd);
+            if (spd == maxSpd)
+            {
+                if (Math.Abs(spd) < .5f)
+                    lifeTime = 0;
+                maxSpd *= .9f;
+            }
 
             var angle = 0;
             switch (lookDir)
@@ -262,6 +266,9 @@ namespace Leore.Objects.Projectiles
                 ind = (ind + 1) % a.Count;
                 d = 0;
             }
+
+            //if (Math.Max(Math.Abs(XVel), Math.Abs(YVel)) < .5f && spd == maxSpd)
+                //Destroy();
         }
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)

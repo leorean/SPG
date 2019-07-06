@@ -42,7 +42,7 @@ namespace Leore.Objects.Projectiles
                     maxPower = 1 * 60;
                     break;
                 case SpellLevel.TWO:
-                    maxPower = .5f * 60;
+                    maxPower = 3 * 60;
                     break;
                 case SpellLevel.THREE:
                     maxPower = 1 * 60;
@@ -75,6 +75,9 @@ namespace Leore.Objects.Projectiles
 
             if (delay == 0)
             {
+
+                player.MP = Math.Max(player.MP - GameResources.MPCost[SpellType.FIRE][level], 0);
+
                 switch (level)
                 {
                     case SpellLevel.ONE:
@@ -89,18 +92,31 @@ namespace Leore.Objects.Projectiles
 
                     case SpellLevel.TWO:
                         {
-                            new FireProjectile2(X, Y, player.Direction, player.LookDirection, 0, 2f, 0);
+                            var tVel = .3f;
 
-                            if (power == maxPower)
+                            new FireProjectile2(X, Y, player.Direction, player.LookDirection, 0, 3f, 0, tVel);
+
+                            //if (p > .3f)
+                            //{ 
+                            //    new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 3.2f, 1.5f * (float)Math.PI) { Scale = new Vector2(.4f), Damage = 1 };
+                            //    new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 3.2f, 0.5f * (float)Math.PI) { Scale = new Vector2(.4f), Damage = 1 };                                
+                            //}
+                            //if (p > .6f)
+                            //{
+                            //    new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 2.9f, 1f * (float)Math.PI) { Scale = new Vector2(.4f), Damage = 1 };
+                            //    new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 2.9f, 2f * (float)Math.PI) { Scale = new Vector2(.4f), Damage = 1 };
+                            //}
+                            if (p > .25f)
                             {
-                                new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 1.9f, 1f * (float)Math.PI) { Scale = new Vector2(.4f), Damage = 1 };
-                                new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 2.2f, 1.5f * (float)Math.PI) { Scale = new Vector2(.4f), Damage = 1 };
-                                new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 2.2f, 0.5f * (float)Math.PI) { Scale = new Vector2(.4f), Damage = 1 };
-                                new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 1.9f, 2f * (float)Math.PI) { Scale = new Vector2(.4f), Damage = 1 };
-
-                                power = .01f;
+                                new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 2.5f, 1.5f * (float)Math.PI, tVel) { Scale = new Vector2(.4f), Damage = 1 };
+                                new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 2.5f, 0.5f * (float)Math.PI, tVel) { Scale = new Vector2(.4f), Damage = 1 };
                             }
-                            delay = 20 + (int)(20 * (1 - p));
+                            if (p > .5f)
+                            {
+                                new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 3.2f, 1f * (float)Math.PI, tVel) { Scale = new Vector2(.4f), Damage = 1 };
+                                new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 3.2f, 2f * (float)Math.PI, tVel) { Scale = new Vector2(.4f), Damage = 1 };
+                            }
+                            delay = 10 + (int)(15 * (1 - p));
                         }
                         break;
 
@@ -115,8 +131,8 @@ namespace Leore.Objects.Projectiles
                         break;
                 }
             }
-
-            if (orb.State != OrbState.ATTACK || level != orb.Level)
+            
+            if (orb.State != OrbState.ATTACK || level != orb.Level || player.MP < GameResources.MPCost[SpellType.FIRE][level])
             {
                 new CrimsonBurstEmitter(orb.X, orb.Y) { ParticleColors = GameResources.FireColors };
 
