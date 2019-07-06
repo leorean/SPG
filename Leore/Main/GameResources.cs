@@ -76,9 +76,9 @@ namespace Leore.Resources
             {
                 SpellType.FIRE,
                 new Dictionary<SpellLevel, int> {
-                    {SpellLevel.ONE, 12 },
-                    {SpellLevel.TWO, 24 },
-                    {SpellLevel.THREE, 30 }
+                    {SpellLevel.ONE, 120 },
+                    {SpellLevel.TWO, 240 },
+                    {SpellLevel.THREE, 300 }
                 }
             },
         };

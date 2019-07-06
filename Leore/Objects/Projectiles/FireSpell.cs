@@ -25,7 +25,7 @@ namespace Leore.Objects.Projectiles
         private static FireSpell instance;
         
         private float power;
-        private float maxPower = 1 * 60;
+        private float maxPower;
 
         private int delay;
         private int maxDelay = 5;
@@ -36,6 +36,18 @@ namespace Leore.Objects.Projectiles
 
         public FireSpell(float x, float y, SpellLevel level) : base(x, y)
         {
+            switch (level)
+            {
+                case SpellLevel.ONE:
+                    maxPower = 1 * 60;
+                    break;
+                case SpellLevel.TWO:
+                    maxPower = .5f * 60;
+                    break;
+                case SpellLevel.THREE:
+                    maxPower = 1 * 60;
+                    break;
+            }
 
             this.level = level;
 
@@ -77,10 +89,18 @@ namespace Leore.Objects.Projectiles
 
                     case SpellLevel.TWO:
                         {
-                            var proj = new FireProjectile2(X, Y, player.LookDirection);
-                            proj.XVel = Math.Sign((int)player.Direction) * 2f;
-                            proj.YVel = Math.Sign((int)player.LookDirection) * 1f;
-                            delay = (int)(20 + (1 - p) * 20);
+                            new FireProjectile2(X, Y, player.Direction, player.LookDirection, 0, 2f, 0);
+
+                            if (power == maxPower)
+                            {
+                                new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 1.9f, 1f * (float)Math.PI) { Scale = new Vector2(.4f), Damage = 1 };
+                                new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 2.2f, 1.5f * (float)Math.PI) { Scale = new Vector2(.4f), Damage = 1 };
+                                new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 2.2f, 0.5f * (float)Math.PI) { Scale = new Vector2(.4f), Damage = 1 };
+                                new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 1.9f, 2f * (float)Math.PI) { Scale = new Vector2(.4f), Damage = 1 };
+
+                                power = .01f;
+                            }
+                            delay = 20 + (int)(20 * (1 - p));
                         }
                         break;
 
@@ -98,21 +118,6 @@ namespace Leore.Objects.Projectiles
 
             if (orb.State != OrbState.ATTACK || level != orb.Level)
             {
-                // TODO
-
-                //if (power == maxPower)
-                //{
-                //    if (level == SpellLevel.THREE)
-                //    {
-                //        for (var i = -1; i < 2; i++)
-                //        {
-                //            var proj = new FireProjectile(X, Y + i * 4, level);
-                //            proj.XVel = 4 * Math.Sign((int)player.Direction);
-                //            proj.YVel = 2.8f * (int)player.LookDirection;                            
-                //        }
-                //    }
-                //}
-
                 new CrimsonBurstEmitter(orb.X, orb.Y) { ParticleColors = GameResources.FireColors };
 
                 Destroy();

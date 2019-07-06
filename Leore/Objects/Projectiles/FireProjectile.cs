@@ -150,8 +150,8 @@ namespace Leore.Objects.Projectiles
             for (var i = 0; i < a.Count; i++)
             {
                 var shadow = .75f - i / (float)(a.Count + 1);
-                sb.Draw(Texture, pos[i], null, new Color(Color, shadow), Angle - (float)MathUtil.DegToRad(30), DrawOffset, Scale, SpriteEffects.None, Depth - .0001f * (float)i);
-            }            
+                sb.Draw(Texture, pos[i], null, new Color(Color, shadow), Angle - (float)MathUtil.DegToRad((360 / (float)i) * i), DrawOffset, Scale, SpriteEffects.None, Depth - .0001f * (float)i);
+            }
         }
     }
 
@@ -164,15 +164,24 @@ namespace Leore.Objects.Projectiles
         private float d;
 
         private int lifeTime = 80;
-        private float t = .5f * (float)Math.PI;
-
+        
+        private Direction dir;
         private Direction lookDir;
-        private float ang;
 
-        public FireProjectile2(float x, float y, Direction lookDir) : base(x, y, SpellLevel.TWO)
+        private float t;
+        private float amp;
+        private float spd;
+
+        private float tVel = .15f;
+
+        public FireProjectile2(float x, float y, Direction dir, Direction lookDir, float amp, float spd, float t) : base(x, y, SpellLevel.TWO)
         {
             Scale = new Vector2(.75f);
 
+            this.spd = spd;
+            this.amp = amp;
+            this.t = t;
+            this.dir = dir;
             this.lookDir = lookDir;
 
             Damage = 2;
@@ -186,56 +195,61 @@ namespace Leore.Objects.Projectiles
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            ang = (float)MathUtil.VectorToAngle(new Vector2(XVel, YVel));
-
-            Angle = Angle + .3f * Math.Sign((int)XVel != 0 ? XVel : 1);
+            
+            //Angle = Angle + .3f * Math.Sign((int)XVel != 0 ? XVel : 1);
             light.Scale = Scale * .6f;
 
             lifeTime = Math.Max(lifeTime - 1, 0);
+            
+            var col = GameManager.Current.Map.CollisionTile(X, Y);
 
-            var xCol = GameManager.Current.Map.CollisionTile(X + XVel, Y);
-
-            if (xCol)
+            if (col)
             {
-                XVel *= -.75f;
-                lifeTime = (int)(lifeTime * .5f);
+                lifeTime = 0;
             }
 
             var inWater = GameManager.Current.Map.CollisionTile(X, Y, GameMap.WATER_INDEX);
             if (inWater)
                 Destroy();
-
-            t = (t + .4f) % (float)(2 * Math.PI);
             
-            Move(XVel, YVel);
+            t = (t + tVel) % (float)(2 * Math.PI);
 
+            spd *= .98f;
+
+            var angle = 0;
             switch (lookDir)
             {
                 case Direction.NONE:
-                    {
-                        var tyVel = (float)(2.5f * Math.Sin(t));
-                        Move(0, tyVel);
-                    }
+                    angle = 90;
                     break;
                 case Direction.UP:
-                    {
-                        var tyVel = (float)(2.5f * Math.Sin(t));
-
-                        var txVel = (float)MathUtil.LengthDirX(ang) * -2.5f * .5f;
-                        
-                        Move(txVel, tyVel);
-                    }
+                    angle = 45;
+                    break;
+                case Direction.DOWN:
+                    angle = - 45;
                     break;
             }
 
-            //var ang = (float)MathUtil.VectorToAngle(new Vector2(XVel, YVel), true);
-
-            //var txVel = 0;// (float)(2.5f * Math.Sin(t));
-            //var tyVel = (float)(2.5f * Math.Sin(t));
+            // sine wave
             
-            //Move((float)MathUtil.LengthDirX(lookDir) * txVel, (float)MathUtil.LengthDirY(lookDir) * tyVel);
+            var xv = (float)MathUtil.LengthDirX(angle) * (float)Math.Sin(t) * amp * Math.Sign((int)dir);
+            var yv = (float)MathUtil.LengthDirY(angle) * (float)Math.Sin(t) * amp;
 
+            var lx = Math.Sign((int)dir) * spd;
+            var ly = Math.Sign((int)lookDir) * spd;
+            
+            XVel = xv + lx;
+            YVel = yv + ly;
+
+            if (amp > 0)
+                Angle = (float)MathUtil.VectorToAngle(new Vector2(XVel, YVel), true);
+            else
+                Angle = (float)MathUtil.VectorToAngle(new Vector2(lx, ly), true);
+
+            // linear movement
+
+            Move(XVel, YVel);
+            
             if (lifeTime == 0)
                 Destroy();
 
@@ -246,7 +260,7 @@ namespace Leore.Objects.Projectiles
             {
                 a[ind] = Position;
                 ind = (ind + 1) % a.Count;
-                d = 2;
+                d = 0;
             }
         }
 
@@ -254,22 +268,22 @@ namespace Leore.Objects.Projectiles
         {
             sb.Draw(Texture, Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
 
-            var pos = a.ToList();
+            //var pos = a.ToList();
 
-            pos.Sort(
-                delegate (Vector2 o1, Vector2 o2)
-                {
-                    if (MathUtil.Euclidean(o1, Position) < MathUtil.Euclidean(o2, Position)) return -1;
-                    if (MathUtil.Euclidean(o1, Position) > MathUtil.Euclidean(o2, Position)) return 1;
-                    return 0;
-                }
-            );
+            //pos.Sort(
+            //    delegate (Vector2 o1, Vector2 o2)
+            //    {
+            //        if (MathUtil.Euclidean(o1, Position) < MathUtil.Euclidean(o2, Position)) return -1;
+            //        if (MathUtil.Euclidean(o1, Position) > MathUtil.Euclidean(o2, Position)) return 1;
+            //        return 0;
+            //    }
+            //);
 
-            for (var i = 0; i < a.Count; i++)
-            {
-                var shadow = .75f - i / (float)(a.Count + 1);
-                sb.Draw(Texture, pos[i], null, new Color(Color, shadow), Angle - (float)MathUtil.DegToRad(30), DrawOffset, Scale, SpriteEffects.None, Depth - .0001f * (float)i);
-            }
+            //for (var i = 0; i < a.Count; i++)
+            //{
+            //    var shadow = .75f - i / (float)(a.Count + 1);
+            //    sb.Draw(Texture, pos[i], null, new Color(Color, shadow), Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0001f * (float)i);
+            //}
         }
     }
 

@@ -8,7 +8,7 @@ namespace Leore.Objects.Projectiles
 {
     public abstract class PlayerProjectile : SPG.Objects.GameObject
     {
-        public int Damage { get; protected set; } = 1;
+        public int Damage { get; set; } = 1;
 
         public SpellElement Element { get; protected set; } = SpellElement.NONE;
 
