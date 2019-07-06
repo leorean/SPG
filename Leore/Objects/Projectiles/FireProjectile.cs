@@ -61,7 +61,7 @@ namespace Leore.Objects.Projectiles
         }
     }
 
-    // ++++ Level: 1 & 2 ++++
+    // ++++ Level: 1 ++++
 
     public class FireProjectile1 : FireProjectile
     {
@@ -70,7 +70,7 @@ namespace Leore.Objects.Projectiles
         private int ind;
         private float d;
         
-        public FireProjectile1(float x, float y, SpellLevel level) : base(x, y, level)
+        public FireProjectile1(float x, float y) : base(x, y, SpellLevel.ONE)
         {
             Scale = new Vector2(.75f);
             Gravity = .13f;
@@ -151,8 +151,125 @@ namespace Leore.Objects.Projectiles
             {
                 var shadow = .75f - i / (float)(a.Count + 1);
                 sb.Draw(Texture, pos[i], null, new Color(Color, shadow), Angle - (float)MathUtil.DegToRad(30), DrawOffset, Scale, SpriteEffects.None, Depth - .0001f * (float)i);
+            }            
+        }
+    }
+
+    // ++++ Level: 2 ++++
+
+    public class FireProjectile2 : FireProjectile
+    {
+        private List<Vector2> a;
+        private int ind;
+        private float d;
+
+        private int lifeTime = 80;
+        private float t = .5f * (float)Math.PI;
+
+        private Direction lookDir;
+        private float ang;
+
+        public FireProjectile2(float x, float y, Direction lookDir) : base(x, y, SpellLevel.TWO)
+        {
+            Scale = new Vector2(.75f);
+
+            this.lookDir = lookDir;
+
+            Damage = 2;
+
+            a = new List<Vector2>() { Position, Position, Position, Position };
+            d = 0;
+
+            Texture = AssetManager.Projectiles[11];
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            ang = (float)MathUtil.VectorToAngle(new Vector2(XVel, YVel));
+
+            Angle = Angle + .3f * Math.Sign((int)XVel != 0 ? XVel : 1);
+            light.Scale = Scale * .6f;
+
+            lifeTime = Math.Max(lifeTime - 1, 0);
+
+            var xCol = GameManager.Current.Map.CollisionTile(X + XVel, Y);
+
+            if (xCol)
+            {
+                XVel *= -.75f;
+                lifeTime = (int)(lifeTime * .5f);
             }
-            //sb.Draw(Texture, new Vector2(x2, y2), null, new Color(Color, .6f), Angle - (float)MathUtil.DegToRad(30), DrawOffset, Scale, SpriteEffects.None, Depth - .0002f);
+
+            var inWater = GameManager.Current.Map.CollisionTile(X, Y, GameMap.WATER_INDEX);
+            if (inWater)
+                Destroy();
+
+            t = (t + .4f) % (float)(2 * Math.PI);
+            
+            Move(XVel, YVel);
+
+            switch (lookDir)
+            {
+                case Direction.NONE:
+                    {
+                        var tyVel = (float)(2.5f * Math.Sin(t));
+                        Move(0, tyVel);
+                    }
+                    break;
+                case Direction.UP:
+                    {
+                        var tyVel = (float)(2.5f * Math.Sin(t));
+
+                        var txVel = (float)MathUtil.LengthDirX(ang) * -2.5f * .5f;
+                        
+                        Move(txVel, tyVel);
+                    }
+                    break;
+            }
+
+            //var ang = (float)MathUtil.VectorToAngle(new Vector2(XVel, YVel), true);
+
+            //var txVel = 0;// (float)(2.5f * Math.Sin(t));
+            //var tyVel = (float)(2.5f * Math.Sin(t));
+            
+            //Move((float)MathUtil.LengthDirX(lookDir) * txVel, (float)MathUtil.LengthDirY(lookDir) * tyVel);
+
+            if (lifeTime == 0)
+                Destroy();
+
+            // shadow
+
+            d = Math.Max(d - 1, 0);
+            if (d == 0)
+            {
+                a[ind] = Position;
+                ind = (ind + 1) % a.Count;
+                d = 2;
+            }
+        }
+
+        public override void Draw(SpriteBatch sb, GameTime gameTime)
+        {
+            sb.Draw(Texture, Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
+
+            var pos = a.ToList();
+
+            pos.Sort(
+                delegate (Vector2 o1, Vector2 o2)
+                {
+                    if (MathUtil.Euclidean(o1, Position) < MathUtil.Euclidean(o2, Position)) return -1;
+                    if (MathUtil.Euclidean(o1, Position) > MathUtil.Euclidean(o2, Position)) return 1;
+                    return 0;
+                }
+            );
+
+            for (var i = 0; i < a.Count; i++)
+            {
+                var shadow = .75f - i / (float)(a.Count + 1);
+                sb.Draw(Texture, pos[i], null, new Color(Color, shadow), Angle - (float)MathUtil.DegToRad(30), DrawOffset, Scale, SpriteEffects.None, Depth - .0001f * (float)i);
+            }
         }
     }
 
@@ -160,7 +277,7 @@ namespace Leore.Objects.Projectiles
 
     public class FireProjectile3 : FireProjectile
     {
-        public FireProjectile3(float x, float y, SpellLevel level) : base(x, y, level)
+        public FireProjectile3(float x, float y) : base(x, y, SpellLevel.THREE)
         {
             Scale = new Vector2(.4f);
             Texture = AssetManager.Projectiles[12];

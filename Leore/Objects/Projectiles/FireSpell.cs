@@ -67,17 +67,26 @@ namespace Leore.Objects.Projectiles
                 {
                     case SpellLevel.ONE:
                         {
-                            var proj = new FireProjectile1(X, Y, level);
+                            var proj = new FireProjectile1(X, Y);
                             proj.XVel = Math.Sign((int)player.Direction) * (1.5f - Math.Abs(.5f * (int)player.LookDirection));
                             proj.YVel = Math.Max(-2f + 1f * (int)player.LookDirection, -2.5f);
+                            
+                            delay = (int)(20 + (1 - p) * 20);
+                        }
+                        break;
 
-                            delay = (int) (20 + (1 - p) * 20);
+                    case SpellLevel.TWO:
+                        {
+                            var proj = new FireProjectile2(X, Y, player.LookDirection);
+                            proj.XVel = Math.Sign((int)player.Direction) * 2f;
+                            proj.YVel = Math.Sign((int)player.LookDirection) * 1f;
+                            delay = (int)(20 + (1 - p) * 20);
                         }
                         break;
 
                     case SpellLevel.THREE:
                         {
-                            var proj = new FireProjectile3(X, Y, level);
+                            var proj = new FireProjectile3(X, Y);
                             proj.XVel = Math.Sign((int)player.Direction) * (.75f + 2.5f * p) + player.XVel;
                             proj.YVel = -.3f * (float)Math.Sin(t) + player.YVel + 1f * (int)player.LookDirection;
 
