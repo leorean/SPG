@@ -21,8 +21,6 @@ namespace Leore.Objects.Effects.Emitters
             this.initialScale = emitter.Scale.X;
 
             Depth = emitter.Depth + .0001f;
-            int colorIndex = RND.Int(GameResources.FireColors.Count - 1);
-            Color = GameResources.FireColors[colorIndex];
             
             Alpha = 0f;
 
@@ -52,6 +50,8 @@ namespace Leore.Objects.Effects.Emitters
         public int XRange { get; set; } = 6;
         public int YRange { get; set; } = 8;
 
+        public List<Color> ParticleColors { get; set; } = GameResources.FireColors;
+
         public TorchEmitter(float x, float y) : base(x, y)
         {
             SpawnRate = 1;
@@ -68,8 +68,12 @@ namespace Leore.Objects.Effects.Emitters
 
         public override void CreateParticle()
         {
-            new TorchParticle(this) { Position = this.Position + new Vector2(-.5f * XRange + RND.Int(XRange), -.5f * YRange + RND.Int(YRange)), Depth = Depth };
-        }        
+            var part = new TorchParticle(this) { Position = this.Position + new Vector2(-.5f * XRange + RND.Int(XRange), -.5f * YRange + RND.Int(YRange)), Depth = Depth };
+
+            int colorIndex = RND.Int(ParticleColors.Count - 1);
+            part.Color = ParticleColors[colorIndex];
+
+        }
 
         public void Kill()
         {

@@ -10,6 +10,8 @@ namespace Leore.Objects.Projectiles
     {
         public int Damage { get; protected set; } = 1;
 
+        public SpellElement Element { get; protected set; } = SpellElement.NONE;
+
         protected SpellLevel level;
 
         public PlayerProjectile(float x, float y, SpellLevel level) : base(x, y)

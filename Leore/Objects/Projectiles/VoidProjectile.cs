@@ -54,6 +54,8 @@ namespace Leore.Objects.Projectiles
             Parent = parent;
             level = parent.Level;
 
+            Element = SpellElement.DARK;
+
             DrawOffset = new Vector2(32);
             Scale = Vector2.Zero;
             Depth = parent.Depth - .0001f;

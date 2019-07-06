@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using SPG.Objects;
 using Leore.Objects.Effects.Emitters;
+using Leore.Objects.Effects;
+using Leore.Resources;
 
 namespace Leore.Objects.Level
 {
@@ -18,11 +20,15 @@ namespace Leore.Objects.Level
         protected LightSource light;
         protected TorchEmitter emitter;
 
-        public Torch(float x, float y, Room room, bool active, LightSource.LightState lightState) : base(x, y, room)
+        public bool TriggerSwitch { get; private set; }
+
+        public Torch(float x, float y, Room room, bool active, LightSource.LightState lightState, bool triggerSwitch) : base(x, y, room)
         {
             Depth = Globals.LAYER_BG + .002f;
 
             AnimationTexture = AssetManager.Torch;
+
+            this.TriggerSwitch = triggerSwitch;
 
             this.Active = active;
             light = new LightSource(this);
@@ -31,24 +37,46 @@ namespace Leore.Objects.Level
             emitter = new TorchEmitter(X + 8, Y + 6);
             emitter.Parent = this;
             emitter.Depth = Depth;
+
+            if (TriggerSwitch)
+                emitter.ParticleColors = GameResources.MpColors;
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            if (this.CollisionBoundsFirstOrDefault<PlayerProjectile>(X, Y) != null)
+            var projectile = this.CollisionBoundsFirstOrDefault<PlayerProjectile>(X, Y);
+
+            if (projectile != null)
             {
-                Active = true;
+                if (projectile.Element == SpellElement.FIRE)
+                {
+                    if (!Active)
+                        new SingularEffect(Center.X, Center.Y, 7);
+                    Active = true;
+                }
+
+                if (projectile.Element == SpellElement.ICE 
+                    || projectile.Element == SpellElement.DARK
+                    || projectile.Element == SpellElement.WIND)
+                {
+                    if (Active)
+                        new SingularEffect(Center.X, Center.Y, 7);
+
+                    Active = false;
+                }
             }
+
+            int off = !TriggerSwitch ? 0 : 5;
 
             if (!Active)
             {
-                SetAnimation(0, 1, 0, false);
+                SetAnimation(0 + off, 1 + off, 0, false);
             }
             if (Active)
             {
-                SetAnimation(1, 4, .2f, true);
+                SetAnimation(1 + off, 4 + off, .2f, true);
             }
 
             light.Active = Active;

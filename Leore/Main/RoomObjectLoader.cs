@@ -260,19 +260,19 @@ namespace Leore.Main
                             break;
                         // torches
                         case 836:
-                            new Torch(i * Globals.T, j * Globals.T, room, false, LightSource.LightState.Bright);
+                            new Torch(i * Globals.T, j * Globals.T, room, false, LightSource.LightState.Bright, false);
                             break;
                         case 837:
-                            new Torch(i * Globals.T, j * Globals.T, room, true, LightSource.LightState.Default);
+                            new Torch(i * Globals.T, j * Globals.T, room, true, LightSource.LightState.Default, false);
                             break;
                         case 838:
-                            new Torch(i * Globals.T, j * Globals.T, room, false, LightSource.LightState.Bright);
+                            new Torch(i * Globals.T, j * Globals.T, room, false, LightSource.LightState.Bright, false);
                             break;
                         case 839:
-                            new Torch(i * Globals.T, j * Globals.T, room, true, LightSource.LightState.Bright);
+                            new Torch(i * Globals.T, j * Globals.T, room, true, LightSource.LightState.Bright, false);
                             break;
                         case 840:
-                            new Torch(i * Globals.T, j * Globals.T, room, false, LightSource.LightState.FullRoom);
+                            new Torch(i * Globals.T, j * Globals.T, room, false, LightSource.LightState.Default, true);
                             break;
                         case 841:
                             new AmbientLightSource(i * Globals.T, j * Globals.T, room);

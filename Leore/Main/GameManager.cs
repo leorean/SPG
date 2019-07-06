@@ -369,6 +369,19 @@ namespace Leore.Main
                 if (!found)
                     RoomCamera.Current.CurrentRoom.SwitchState = false || manualStateEnabled;
 
+                // switch from torches
+
+                var torches = ObjectManager.FindAll<Torch>().Where(t => t.TriggerSwitch == true);
+                if (torches.Count() > 0)
+                {
+                    if (RoomCamera.Current.CurrentRoom.SwitchState == false)
+                    {
+                        RoomCamera.Current.CurrentRoom.SwitchState = torches.Count() == torches.Where(t => t.Active == true).Count();
+                    }
+                }
+                
+                // switch from toggleSwitches (overrides switch behaviour)
+
                 var toggleSwitches = ObjectManager.FindAll<ToggleSwitch>();
                 if (toggleSwitches.Count > 0) {
                     RoomCamera.Current.CurrentRoom.SwitchState = false || manualStateEnabled;

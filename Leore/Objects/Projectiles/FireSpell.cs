@@ -25,13 +25,11 @@ namespace Leore.Objects.Projectiles
         private static FireSpell instance;
         
         private float power;
-        private float maxPower = 2 * 60;
+        private float maxPower = 1 * 60;
 
         private int delay;
         private int maxDelay = 5;
-
-        private float spellVel;
-
+        
         private double t;
 
         private SpellLevel level;
@@ -44,21 +42,7 @@ namespace Leore.Objects.Projectiles
             new CrimsonBurstEmitter(orb.X, orb.Y) { ParticleColors = GameResources.FireColors };
 
             orb.Visible = false;
-            Depth = player.Depth + .0002f;
-
-            switch (level)
-            {
-                case SpellLevel.ONE:
-                    spellVel = 1.7f;
-                    break;
-                case SpellLevel.TWO:
-                    spellVel = 2.3f;
-                    break;
-                case SpellLevel.THREE:
-                    spellVel = 3f;
-                    break;
-            }
-            
+            Depth = player.Depth + .0002f;            
         }
 
         public override void Update(GameTime gameTime)
@@ -79,16 +63,46 @@ namespace Leore.Objects.Projectiles
 
             if (delay == 0)
             {
-                var proj = new FireProjectile(X, Y, level);
-                proj.XVel = Math.Sign((int)player.Direction) * (.5f + spellVel * p) + player.XVel;
-                proj.YVel = -.3f * (float)Math.Sin(t) + player.YVel + .85f * (int)player.LookDirection;
+                switch (level)
+                {
+                    case SpellLevel.ONE:
+                        {
+                            var proj = new FireProjectile1(X, Y, level);
+                            proj.XVel = Math.Sign((int)player.Direction) * (1.5f - Math.Abs(.5f * (int)player.LookDirection));
+                            proj.YVel = Math.Max(-2f + 1f * (int)player.LookDirection, -2.5f);
 
-                delay = (int)(maxDelay * (1 - .75f * p) * 3);
+                            delay = (int) (20 + (1 - p) * 20);
+                        }
+                        break;
+
+                    case SpellLevel.THREE:
+                        {
+                            var proj = new FireProjectile3(X, Y, level);
+                            proj.XVel = Math.Sign((int)player.Direction) * (.75f + 2.5f * p) + player.XVel;
+                            proj.YVel = -.3f * (float)Math.Sin(t) + player.YVel + 1f * (int)player.LookDirection;
+
+                            delay = (int)(maxDelay * (1 - .75f * p) * 3);
+                        }
+                        break;
+                }
             }
 
-            if (orb.State != OrbState.ATTACK)
+            if (orb.State != OrbState.ATTACK || level != orb.Level)
             {
                 // TODO
+
+                //if (power == maxPower)
+                //{
+                //    if (level == SpellLevel.THREE)
+                //    {
+                //        for (var i = -1; i < 2; i++)
+                //        {
+                //            var proj = new FireProjectile(X, Y + i * 4, level);
+                //            proj.XVel = 4 * Math.Sign((int)player.Direction);
+                //            proj.YVel = 2.8f * (int)player.LookDirection;                            
+                //        }
+                //    }
+                //}
 
                 new CrimsonBurstEmitter(orb.X, orb.Y) { ParticleColors = GameResources.FireColors };
 
@@ -102,7 +116,8 @@ namespace Leore.Objects.Projectiles
 
             //sb.Draw(AssetManager.FireBall, Position, null, Color, Angle, new Vector2(16), new Vector2(.5f + .5f * power / maxPower), SpriteEffects.None, Depth + .0001f);
 
-            sb.DrawBar(player.Position + new Vector2(0, -16), 24, power / maxPower, Color.White, Color.Black, orb.Depth + .0001f, 2, false);
+            if (power / maxPower > 0)
+                sb.DrawBar(player.Position + new Vector2(0, -16), 24, power / maxPower, Color.White, Color.Black, orb.Depth + .0001f, 2, false);
         }
         
         public override void Destroy(bool callGC = false)

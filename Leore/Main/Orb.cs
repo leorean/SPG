@@ -21,6 +21,18 @@ namespace Leore.Main
         ATTACK
     }
 
+    public enum SpellElement
+    {
+        NONE = 0,
+        FIRE,
+        ICE,
+        WIND,
+        EARTH,
+        DARK,
+
+        // .. TODO
+    }
+
     public enum SpellType
     {
         NONE = 0,
