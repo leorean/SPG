@@ -83,7 +83,7 @@ namespace Leore.Objects.Projectiles
                     case SpellLevel.ONE:
                         {
                             var proj = new FireProjectile1(X, Y);
-                            proj.XVel = Math.Sign((int)player.Direction) * (1.5f - Math.Abs(.5f * (int)player.LookDirection));
+                            proj.XVel = Math.Sign((int)player.Direction) * (1.25f - Math.Abs(.25f * (int)player.LookDirection));
                             proj.YVel = Math.Max(-2f + 1f * (int)player.LookDirection, -2.5f);
                             
                             delay = (int)(20 + (1 - p) * 20);

@@ -439,8 +439,19 @@ namespace Leore.Main
                                 item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
                                 item.Texture = AssetManager.Items[9];
                                 item.OnObtain = () => { GameManager.Current.AddSpell(SpellType.FIRE); };
+                                item.Text = itemText;                                
+                                break;
+                            case 6: // token of leon (1)
+                                item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
+                                item.Texture = AssetManager.Items[10];
+                                item.OnObtain = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_WALL; };
                                 item.Text = itemText;
-                                item.HighlightColor = GameResources.FireColors[0];
+                                break;
+                            case 7: // token of leon (2)
+                                item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
+                                item.Texture = AssetManager.Items[11];
+                                item.OnObtain = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_CEIL; };
+                                item.Text = itemText;
                                 break;
                             // TODO: add other item types, collectables etc.
                             default:
