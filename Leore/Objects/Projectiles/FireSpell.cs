@@ -94,18 +94,8 @@ namespace Leore.Objects.Projectiles
                         {
                             var tVel = .3f;
 
-                            new FireProjectile2(X, Y, player.Direction, player.LookDirection, 0, 3f, 0, tVel);
-
-                            //if (p > .3f)
-                            //{ 
-                            //    new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 3.2f, 1.5f * (float)Math.PI) { Scale = new Vector2(.4f), Damage = 1 };
-                            //    new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 3.2f, 0.5f * (float)Math.PI) { Scale = new Vector2(.4f), Damage = 1 };                                
-                            //}
-                            //if (p > .6f)
-                            //{
-                            //    new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 2.9f, 1f * (float)Math.PI) { Scale = new Vector2(.4f), Damage = 1 };
-                            //    new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 2.9f, 2f * (float)Math.PI) { Scale = new Vector2(.4f), Damage = 1 };
-                            //}
+                            new FireProjectile2(X, Y, player.Direction, player.LookDirection, 0, 3f, 0, tVel) { IsPrimary = true };
+                            
                             if (p > .25f)
                             {
                                 new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 2.5f, 1.5f * (float)Math.PI, tVel) { Scale = new Vector2(.4f), Damage = 1 };

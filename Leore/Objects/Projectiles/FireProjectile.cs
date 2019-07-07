@@ -18,6 +18,8 @@ namespace Leore.Objects.Projectiles
 {
     public abstract class FireProjectile : PlayerProjectile
     {
+        public bool IsPrimary { get; set; }
+
         protected bool dead;
 
         protected Player player => GameManager.Current.Player;
@@ -44,8 +46,8 @@ namespace Leore.Objects.Projectiles
 
         public override void Destroy(bool callGC = false)
         {
-
-            new SingularEffect(X, Y, 10) { Scale = Scale * .75f };
+            if (IsPrimary)
+                new SingularEffect(X, Y, 10) { Scale = Scale * .75f };
             base.Destroy(callGC);
         }
 
@@ -65,7 +67,7 @@ namespace Leore.Objects.Projectiles
 
     public class FireProjectile1 : FireProjectile
     {
-        private int bounce = 3;
+        public int Bounce { get; set; } = 3;
         private List<Vector2> a;
         private int ind;
         private float d;
@@ -81,6 +83,8 @@ namespace Leore.Objects.Projectiles
             d = 0;
 
             Texture = AssetManager.Projectiles[10];
+
+            IsPrimary = true;
         }
 
         public override void Update(GameTime gameTime)
@@ -114,10 +118,10 @@ namespace Leore.Objects.Projectiles
                 XVel *= .95f;
                 YVel = -Math.Sign(YVel) * Math.Max(Math.Abs(YVel) * .85f, 1.3f);
 
-                bounce = Math.Max(bounce - 1, 0);
+                Bounce = Math.Max(Bounce - 1, 0);
             }
 
-            if ((bounce == 0)
+            if ((Bounce == 0)
                 || Math.Max(Math.Abs(XVel), Math.Abs(YVel)) < .1f)
                 Destroy();
 
@@ -159,10 +163,6 @@ namespace Leore.Objects.Projectiles
 
     public class FireProjectile2 : FireProjectile
     {
-        private List<Vector2> a;
-        private int ind;
-        private float d;
-
         private int lifeTime = 80;
         
         private Direction dir;
@@ -175,7 +175,7 @@ namespace Leore.Objects.Projectiles
         private float maxSpd;
 
         private float tVel = .15f;
-
+        
         public FireProjectile2(float x, float y, Direction dir, Direction lookDir, float amp, float spd, float t, float tVel) : base(x, y, SpellLevel.TWO)
         {
             Scale = new Vector2(.75f);
@@ -188,10 +188,7 @@ namespace Leore.Objects.Projectiles
             this.lookDir = lookDir;
 
             Damage = 2;
-
-            a = new List<Vector2>() { Position, Position, Position, Position };
-            d = 0;
-
+            
             Texture = AssetManager.Projectiles[11];
         }
 
@@ -199,13 +196,39 @@ namespace Leore.Objects.Projectiles
         {
             base.Update(gameTime);
             
-            //Angle = Angle + .3f * Math.Sign((int)XVel != 0 ? XVel : 1);
             light.Scale = Scale * .6f;
 
             lifeTime = Math.Max(lifeTime - 1, 0);
             
             var col = GameManager.Current.Map.CollisionTile(X + XVel, Y + YVel);
-                        
+
+            var colX = GameManager.Current.Map.CollisionTile(X + XVel, Y);
+            var colY = GameManager.Current.Map.CollisionTile(X, Y + YVel);
+            
+            if (colY)
+            {
+                //if (IsPrimary)
+                //{
+                //    var colxv = MathUtil.AtMost(XVel, 1.5f);
+                //    var colyv = -1 * MathUtil.AtMost(YVel, 1.5f) - 1;
+                //    if (colyv > 0)
+                //        colxv *= .5f;
+                    
+                //    new FireProjectile1(X - XVel, Y - YVel) { XVel = colxv, YVel = colyv, Bounce = 2 };
+                //}
+                Destroy();
+                return;
+            }
+            if (colX)
+            {
+                //if (IsPrimary)
+                //{
+                //    new FireProjectile1(X - XVel, Y - YVel) { XVel = -1 * MathUtil.AtMost(XVel, 1.5f), YVel = MathUtil.AtMost(YVel, 1.5f), Bounce = 2 };
+                //}
+                Destroy();
+                return;
+            }
+
             var inWater = GameManager.Current.Map.CollisionTile(X, Y, GameMap.WATER_INDEX);
             if (inWater && !col)
                 Destroy();
@@ -255,42 +278,12 @@ namespace Leore.Objects.Projectiles
             Move(XVel, YVel);
             
             if (lifeTime == 0)
-                Destroy();
-
-            // shadow
-
-            d = Math.Max(d - 1, 0);
-            if (d == 0)
-            {
-                a[ind] = Position;
-                ind = (ind + 1) % a.Count;
-                d = 0;
-            }
-
-            //if (Math.Max(Math.Abs(XVel), Math.Abs(YVel)) < .5f && spd == maxSpd)
-                //Destroy();
+                Destroy();            
         }
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
-            sb.Draw(Texture, Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
-
-            //var pos = a.ToList();
-
-            //pos.Sort(
-            //    delegate (Vector2 o1, Vector2 o2)
-            //    {
-            //        if (MathUtil.Euclidean(o1, Position) < MathUtil.Euclidean(o2, Position)) return -1;
-            //        if (MathUtil.Euclidean(o1, Position) > MathUtil.Euclidean(o2, Position)) return 1;
-            //        return 0;
-            //    }
-            //);
-
-            //for (var i = 0; i < a.Count; i++)
-            //{
-            //    var shadow = .75f - i / (float)(a.Count + 1);
-            //    sb.Draw(Texture, pos[i], null, new Color(Color, shadow), Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0001f * (float)i);
-            //}
+            sb.Draw(Texture, Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);            
         }
     }
 
@@ -302,6 +295,8 @@ namespace Leore.Objects.Projectiles
         {
             Scale = new Vector2(.4f);
             Texture = AssetManager.Projectiles[12];
+
+            IsPrimary = true;
         }
 
         public override void Update(GameTime gameTime)

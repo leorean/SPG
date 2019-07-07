@@ -79,6 +79,8 @@ namespace Leore.Main
         private float lightScaleNormal = .75f;
         private float lightScaleDark = .3f;
 
+        private float targetAngle;
+
         public Orb(Player player) : base(player.X, player.Y)
         {
             Scale = new Vector2(1);
@@ -100,9 +102,8 @@ namespace Leore.Main
             base.BeginUpdate(gameTime);
 
             light.Scale = new Vector2(Type == SpellType.VOID ?  lightScaleDark : lightScaleNormal);
-
             TargetPosition += new Vector2(player.XVel, player.YVel);
-
+                        
             Cooldown = Math.Max(Cooldown - 1, 0);
 
             if (alphaTimeout > 0)
@@ -119,8 +120,19 @@ namespace Leore.Main
 
             Scale = new Vector2(1, 1);
 
-            //if (Type == SpellType.SNATCH_KEYS)
-            //    Scale = new Vector2((int)player.Direction, 1);
+            if (Type == SpellType.SNATCH_KEYS)
+            {
+                if (player.Direction == Direction.LEFT)
+                    targetAngle = (float)MathUtil.VectorToAngle(new Vector2(1, -Math.Sign((int)player.LookDirection)), true);
+                if (player.Direction == Direction.RIGHT)
+                    targetAngle = (float)MathUtil.VectorToAngle(new Vector2(1, Math.Sign((int)player.LookDirection)), true);
+                Scale = new Vector2((int)player.Direction, 1);
+            } else
+            {
+                targetAngle = 0;
+            }
+
+            Angle += (targetAngle - Angle) / 6f;
 
             switch (State)
             {
@@ -172,9 +184,10 @@ namespace Leore.Main
                                     ParticleColors = new List<Color> { Color.White },
                                     SpawnRate = 5
                                 };
-                                new SingularEffect(X, Y, 10);
+                                if (player.LookDirection != Direction.NONE)
+                                    new SingularEffect(X, Y, 10);
                             }
-                            TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 6, 2 * Math.Sign((int)player.LookDirection));
+                            TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 8, 2 * Math.Sign((int)player.LookDirection));
                             //Position = TargetPosition;
                             break;
                         case SpellType.FIRE:
