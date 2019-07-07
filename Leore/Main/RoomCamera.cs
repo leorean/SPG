@@ -115,11 +115,12 @@ namespace Leore.Main
         {
             GameManager.Current.Transition.OnTransitionEnd = null;
             GameManager.Current.Transition = null;
+            player.Visible = true;
         }
 
         public void ChangeRoomsToPosition(Vector2 position, int type)
         {
-            //player.State = Player.PlayerState.BACKFACING;
+            //player.State = Player.PlayerState.BACKFACING;            
             GameManager.Current.Transition = new Transition(type);
             GameManager.Current.Transition.FadeIn();
             newPosition = position;

@@ -101,6 +101,9 @@ namespace Leore.Objects.Projectiles
             var xCol = GameManager.Current.Map.CollisionTile(X + XVel, Y);
             var yCol = GameManager.Current.Map.CollisionTile(X, Y + YVel);
 
+            if (!xCol) xCol = ObjectManager.CollisionPointFirstOrDefault<Solid>(X + XVel, Y) != null;
+            if (!yCol) yCol = ObjectManager.CollisionPointFirstOrDefault<Solid>(X, Y + YVel) != null;
+
             if (!xCol)
                 Move(XVel, 0);
             else
@@ -201,30 +204,12 @@ namespace Leore.Objects.Projectiles
             lifeTime = Math.Max(lifeTime - 1, 0);
             
             var col = GameManager.Current.Map.CollisionTile(X + XVel, Y + YVel);
-
-            var colX = GameManager.Current.Map.CollisionTile(X + XVel, Y);
-            var colY = GameManager.Current.Map.CollisionTile(X, Y + YVel);
             
-            if (colY)
+            if (!col)
+                col = ObjectManager.CollisionPointFirstOrDefault<Solid>(X, Y) != null;
+
+            if (col)
             {
-                //if (IsPrimary)
-                //{
-                //    var colxv = MathUtil.AtMost(XVel, 1.5f);
-                //    var colyv = -1 * MathUtil.AtMost(YVel, 1.5f) - 1;
-                //    if (colyv > 0)
-                //        colxv *= .5f;
-                    
-                //    new FireProjectile1(X - XVel, Y - YVel) { XVel = colxv, YVel = colyv, Bounce = 2 };
-                //}
-                Destroy();
-                return;
-            }
-            if (colX)
-            {
-                //if (IsPrimary)
-                //{
-                //    new FireProjectile1(X - XVel, Y - YVel) { XVel = -1 * MathUtil.AtMost(XVel, 1.5f), YVel = MathUtil.AtMost(YVel, 1.5f), Bounce = 2 };
-                //}
                 Destroy();
                 return;
             }
@@ -321,6 +306,9 @@ namespace Leore.Objects.Projectiles
 
             var xCol = GameManager.Current.Map.CollisionTile(X + XVel, Y);
             var yCol = GameManager.Current.Map.CollisionTile(X, Y + YVel);
+
+            if (!xCol) xCol = ObjectManager.CollisionPointFirstOrDefault<Solid>(X + XVel, Y) != null;
+            if (!yCol) yCol = ObjectManager.CollisionPointFirstOrDefault<Solid>(X, Y + YVel) != null;
 
             if (!xCol)
                 Move(XVel, 0);

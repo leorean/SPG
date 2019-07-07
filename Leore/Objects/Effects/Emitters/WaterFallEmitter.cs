@@ -153,6 +153,8 @@ namespace Leore.Objects.Effects.Emitters
             emitter.Parent = this;
             emitter.Active = true;
 
+            BoundingBox = new RectF(1, 0, 14, 16);
+
             Depth = Globals.LAYER_BG + .00001f;
 
             switch (type)
@@ -181,6 +183,7 @@ namespace Leore.Objects.Effects.Emitters
                     height = i;
                     break;
                 }
+                height = i;
             }
         }
 

@@ -398,13 +398,13 @@ namespace Leore.Main
 
                         switch (itemType)
                         {
-                            case 0: // ability item: push
+                            case 0: // magic gloves
                                 item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
                                 item.Texture = AssetManager.Items[0];
                                 item.Text = itemText;
                                 item.OnObtain = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.PUSH; };
                                 break;
-                            case 1: // ability item: orb
+                            case 1: // orb
                                 item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
                                 item.Texture = AssetManager.Orbs[0];
                                 item.DrawOffset = new Vector2(8);
@@ -420,7 +420,7 @@ namespace Leore.Main
                                 };
                                 item.Text = itemText;
                                 break;
-                            case 3: // spell :mystic keychain
+                            case 3: // spell: snatch
                                 item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
                                 item.Texture = AssetManager.Items[7];
                                 item.OnObtain = () =>
@@ -429,7 +429,7 @@ namespace Leore.Main
                                 };
                                 item.Text = itemText;
                                 break;
-                            case 4: // scroll of jumps
+                            case 4: // seraph cape
                                 item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
                                 item.Texture = AssetManager.Items[8];
                                 item.OnObtain = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.DOUBLE_JUMP; };

@@ -1050,7 +1050,7 @@ namespace Leore.Main
 
                 if (limboTimer == 0)
                 {
-                    if (this.CollisionBoundsFirstOrDefault<PushBlock>(safePosition.X, safePosition.Y) != null)
+                    if (this.CollisionBoundsFirstOrDefault<PushBlock>(safePosition.X, safePosition.Y + 1) != null)
                     {
                         safePosition = GameManager.Current.SaveGame.playerPosition;
                         RoomCamera.Current.ChangeRoomsToPosition(safePosition, 0);
@@ -1850,7 +1850,7 @@ namespace Leore.Main
 
                 var groundCollider = this.CollisionPointFirstOrDefault<Collider>(tmp.X, tmp.Y + 8);
 
-                if (groundCollider != null && !(groundCollider is FallingPlatform || groundCollider is IMovable))
+                if (groundCollider != null && !(groundCollider is FallingPlatform || groundCollider is IMovable || groundCollider is PushBlock))
                     safePosition = new Vector2(MathUtil.Div(X, Globals.T) * Globals.T + 8, MathUtil.Div(Y, Globals.T) * Globals.T + 8);
             }
             
