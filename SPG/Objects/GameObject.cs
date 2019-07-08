@@ -199,7 +199,7 @@ namespace SPG.Objects
 
             foreach(var c in copy)
             {
-                c.RemoveAndCallGC(callGC);
+                c.RemoveAndCallGC(callGC);                
             }
 
             RemoveAndCallGC(callGC);

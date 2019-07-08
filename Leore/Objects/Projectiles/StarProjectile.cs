@@ -80,5 +80,12 @@ namespace Leore.Objects.Projectiles
             new StarEmitter(X, Y, 2, 0);
             Destroy();
         }
+
+        public override void Destroy(bool callGC = false)
+        {
+            FadeOutLight.Create(this, light.Scale);
+
+            base.Destroy(callGC);
+        }
     }
 }

@@ -26,6 +26,8 @@ namespace Leore.Objects.Level
         {
             Depth = Globals.LAYER_BG + .002f;
 
+            BoundingBox = new SPG.Util.RectF(4, 5, 8, 11);
+            
             AnimationTexture = AssetManager.Torch;
 
             this.TriggerSwitch = triggerSwitch;
@@ -53,7 +55,10 @@ namespace Leore.Objects.Level
                 if (projectile.Element == SpellElement.FIRE)
                 {
                     if (!Active)
+                    {
+                        projectile.HandleCollision(this);
                         new SingularEffect(Center.X, Center.Y, 7);
+                    }
                     Active = true;
                 }
 

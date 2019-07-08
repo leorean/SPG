@@ -18,7 +18,7 @@ namespace Leore.Objects.Level
             light = new LightSource(this);
             light.State = LightSource.LightState.Default;
             light.Active = true;
-        }
+        }        
     }
 
     public class AmbientLightSource : RoomObject
@@ -44,15 +44,45 @@ namespace Leore.Objects.Level
 
         public bool Active { get; set; }
         public LightState State { get; set; } = LightState.Default;
-
+        
         public LightSource(GameObject parent) : base(parent.Center.X, parent.Center.Y)
         {
             this.Parent = parent;
         }
-
+        
         public override void BeginUpdate(GameTime gameTime)
         {
             base.BeginUpdate(gameTime);            
         }        
+    }
+
+    public class FadeOutLight : GameObject
+    {
+        private LightSource light;
+
+        public static FadeOutLight Create(GameObject parent, Vector2 scale)
+        {
+            if (parent.IsOutsideCurrentRoom())
+                return null;
+
+            return new FadeOutLight(parent.Center.X, parent.Center.Y, scale) { BoundingBox = parent.BoundingBox };
+        }
+
+        private FadeOutLight(float x, float y, Vector2 scale) : base(x, y)
+        {
+            light = new LightSource(this) { Scale = scale, Active = true };
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            light.Scale *= .9f;
+
+            if (Math.Abs(light.Scale.X) < .1f)
+            {
+                Destroy();
+            }
+        }
     }
 }

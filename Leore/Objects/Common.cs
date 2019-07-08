@@ -24,7 +24,7 @@ namespace Leore
 
             //return o.X < cam.ViewX || o.Y < cam.ViewY || o.X > cam.ViewX + cam.ViewWidth || o.Y > cam.ViewY + cam.ViewHeight;
 
-            if (cam.CurrentRoom == null)
+            if (cam.CurrentRoom == null || o == null)
                 return false;
 
             return o.X < cam.CurrentRoom.X - threshold || o.Y < cam.CurrentRoom.Y - threshold || o.X > cam.CurrentRoom.X + cam.CurrentRoom.BoundingBox.Width + threshold || o.Y > cam.CurrentRoom.Y + cam.CurrentRoom.BoundingBox.Height + threshold;

@@ -48,6 +48,9 @@ namespace Leore.Objects.Projectiles
         {
             if (IsPrimary)
                 new SingularEffect(X, Y, 10) { Scale = Scale * .75f };
+
+            FadeOutLight.Create(this, light.Scale);
+            
             base.Destroy(callGC);
         }
 
