@@ -13,7 +13,9 @@ namespace Leore.Objects.Projectiles
     {
         private Vector2 origin;
         private int maxDist;
-        
+
+        private LightSource light;
+
         public StarProjectile(float x, float y, SpellLevel level) : base(x, y, level)
         {            
             BoundingBox = new RectF(-2, -2, 4, 4);
@@ -37,7 +39,9 @@ namespace Leore.Objects.Projectiles
                     Damage = 1;
                     break;
             }
-            
+
+            light = new LightSource(this) { Active = true, Scale = new Vector2(.45f) };
+
             origin = Position;
         }
 

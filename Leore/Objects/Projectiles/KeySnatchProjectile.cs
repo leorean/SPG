@@ -36,6 +36,8 @@ namespace Leore.Objects.Projectiles
 
         private Vector2 originalPosition;
 
+        private LightSource light;
+
         private KeySnatchProjectile(float x, float y) : base(x, y, SpellLevel.ONE)
         {
             originalPosition = orb.TargetPosition;
@@ -49,6 +51,8 @@ namespace Leore.Objects.Projectiles
 
             if (yspd != 0)
                 maxDist *= .75f;
+
+            light = new LightSource(this) { Active = true, Scale = new Vector2(.45f) };
         }
 
         public override void Update(GameTime gameTime)

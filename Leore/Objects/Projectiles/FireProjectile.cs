@@ -77,7 +77,7 @@ namespace Leore.Objects.Projectiles
             Scale = new Vector2(.75f);
             Gravity = .13f;
 
-            Damage = 2;
+            Damage = 3;
 
             a = new List<Vector2>() { Position, Position, Position, Position };            
             d = 0;
