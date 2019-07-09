@@ -285,15 +285,20 @@ namespace Leore.Objects.Enemies
                     break;
                 case State.WALK:
                     walkTimer = Math.Max(walkTimer - 1, 0);
+
+                    //if (!GameManager.Current.Map.CollisionTile(X + Globals.T, Y + Globals.T))
+                    //    Direction = Direction.LEFT;
+                    //if (!GameManager.Current.Map.CollisionTile(X - Globals.T, Y + Globals.T))
+                    //    Direction = Direction.LEFT;
                     
                     if (onGround)
                     {
+                        var noGroundAhead = this.CollisionBoundsFirstOrDefault<Collider>(X + Math.Sign((int)Direction) * 8, Bottom + 4) == null;
+                        if (noGroundAhead)
+                            Direction = Direction.Reverse();
+
                         xs = 1.15f;
-                        ys = .85f;
-
-                        //if (yVelPrev > .5f)
-                        //    SpawnParticles(Center.X, Center.Y, 2, 8f);
-
+                        ys = .85f;                        
                         YVel = -1f;
                     }
 
