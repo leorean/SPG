@@ -595,7 +595,15 @@ namespace Leore.Main
             }
             if (inWater)
             {
-                if (!Stats.Abilities.HasFlag(PlayerAbility.BREATHE_UNDERWATER) && !ObjectManager.Exists<MessageBox>())
+                Gravity = gravWater;
+
+                if (ObjectManager.Exists<MessageBox>())
+                {
+                    YVel = -Gravity;
+                    Oxygen = Math.Min(Oxygen + 2, MaxOxygen);
+                }
+
+                if (!Stats.Abilities.HasFlag(PlayerAbility.BREATHE_UNDERWATER))
                 {
                     Oxygen = Math.Max(Oxygen - 1, 0);
 
@@ -612,9 +620,7 @@ namespace Leore.Main
                         }
                     }
                 }
-
-                Gravity = gravWater;
-
+                
                 if (HP > 0)
                 {
                     if (State != PlayerState.SWIM && State != PlayerState.SWIM_DIVE_IN && State != PlayerState.SWIM_TURN_AROUND && State != PlayerState.BACKFACING)
