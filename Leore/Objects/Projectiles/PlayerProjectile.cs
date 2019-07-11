@@ -38,7 +38,7 @@ namespace Leore.Objects.Projectiles
 
         public virtual void HandleCollisionFromDestroyBlock(DestroyBlock block)
         {
-            block.Hit(Damage);
+            block.Hit(this);
             HandleCollision(block);
         }
 

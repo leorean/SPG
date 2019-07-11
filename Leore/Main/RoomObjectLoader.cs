@@ -177,7 +177,10 @@ namespace Leore.Main
                             break;
                         case 714: // destroy blocks
                         case 715:
-                            var destroyBlock = new DestroyBlock(i * Globals.T, j * Globals.T, room, t.ID - 714 + 1);
+                            new DestroyBlock(i * Globals.T, j * Globals.T, room, t.ID - 714 + 1);
+                            break;
+                        case 964: // ice block
+                            new IceBlock(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
                             break;
                         case 716: // enemy block
                             new EnemyBlock(i * Globals.T, j * Globals.T, room);

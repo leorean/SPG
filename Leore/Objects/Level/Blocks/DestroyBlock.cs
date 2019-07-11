@@ -5,9 +5,38 @@ using Leore.Main;
 using Leore.Objects.Effects;
 using Leore.Objects.Effects.Emitters;
 using SPG.Util;
+using Leore.Objects.Projectiles;
 
 namespace Leore.Objects.Level.Blocks
 {
+    public class IceBlock : DestroyBlock
+    {
+        public IceBlock(float x, float y, Room room) : base(x, y, room, 1)
+        {
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+        }
+
+        public override void Hit(PlayerProjectile projectile)
+        {
+            if (projectile.Damage == 0 || projectile.Element != SpellElement.FIRE)
+                return;
+
+            // TODO: effect
+
+            //if (HP > projectile.Damage)
+            //    new SingularEffect(Center.X - 4 + (float)(RND.Next * 8), Center.Y - 4 + (float)(RND.Next * 8), 5);
+            //else
+            //    new DestroyEmitter(X + 8, Y + 8);
+
+            HP = Math.Max(HP - projectile.Damage, 0);
+
+        }
+    }
+
     public class DestroyBlock : Solid
     {
         public int HP { get; set; }
@@ -20,19 +49,25 @@ namespace Leore.Objects.Level.Blocks
             Depth = Globals.LAYER_FG;
             Visible = true;
             HP = hp;
+
+            if (HP == 1) Texture = tex1;
+            if (HP == 2) Texture = tex2;
         }
 
-        internal void Hit(int damage)
+        public virtual void Hit(PlayerProjectile projectile)
         {
-            if (damage == 0)
+            if (projectile.Damage == 0)
                 return;
 
-            if (HP > damage)
+            if (HP > projectile.Damage)
                 new SingularEffect(Center.X - 4 + (float)(RND.Next * 8), Center.Y - 4 + (float)(RND.Next * 8), 5);
             else
                 new DestroyEmitter(X + 8, Y + 8);
             
-            HP = Math.Max(HP - damage, 0);
+            HP = Math.Max(HP - projectile.Damage, 0);
+
+            if (HP == 1) Texture = tex1;
+            if (HP == 2) Texture = tex2;
         }
 
         public override void Update(GameTime gameTime)
@@ -43,10 +78,7 @@ namespace Leore.Objects.Level.Blocks
             {
                 new SingularEffect(X + 8, Y + 8);
                 Destroy();
-            }
-
-            if (HP == 1) Texture = tex1;
-            if (HP == 2) Texture = tex2;
+            }            
         }
     }
 }

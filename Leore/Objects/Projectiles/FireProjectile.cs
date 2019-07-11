@@ -284,6 +284,8 @@ namespace Leore.Objects.Projectiles
             Scale = new Vector2(.4f);
             Texture = AssetManager.Projectiles[12];
 
+            Damage = 2;
+
             IsPrimary = true;
         }
 
