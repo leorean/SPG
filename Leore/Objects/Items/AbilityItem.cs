@@ -147,7 +147,10 @@ namespace Leore.Objects.Items
                 
                 if (Math.Abs(X - player.X) < 2 && Math.Abs(Y - ty) < 2)
                 {
-                    player.State = Player.PlayerState.IDLE;
+                    if (!player.InWater)
+                        player.State = Player.PlayerState.IDLE;
+                    else
+                        player.State = Player.PlayerState.SWIM;
 
                     if (flashOnTaken)
                     {
