@@ -17,7 +17,7 @@ namespace Leore.Objects.Effects.Emitters
             Scale = new Vector2(1.5f + (float)RND.Next * 1f);
 
             Position = emitter.Position + new Vector2(-5 + RND.Int(10), 0);
-            Depth = Globals.LAYER_BG2 - .0001f;
+            Depth = emitter.Depth;
 
             XVel = -.2f + (float)RND.Next * .4f;
             YVel = -.4f;
@@ -43,6 +43,7 @@ namespace Leore.Objects.Effects.Emitters
     {
         public SmokeEmitter(float x, float y) : base(x, y)
         {
+            Depth = Globals.LAYER_FG + .0001f;
             SpawnRate = 2;
         }
 
@@ -57,8 +58,10 @@ namespace Leore.Objects.Effects.Emitters
         private SmokeEmitter emitter;
         public Smoke(float x, float y, Room room) : base(x, y, room)
         {
+            Depth = Globals.LAYER_BG2 - .0001f;
             emitter = new SmokeEmitter(x, y);
             emitter.Parent = this;
+            emitter.Depth = Depth;
         }
     }
 }

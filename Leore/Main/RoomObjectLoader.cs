@@ -182,6 +182,9 @@ namespace Leore.Main
                         case 964: // ice block
                             new IceBlock(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
                             break;
+                        case 965: // fire block
+                            new FireBlock(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
+                            break;
                         case 716: // enemy block
                             new EnemyBlock(i * Globals.T, j * Globals.T, room);
                             break;

@@ -26,7 +26,7 @@ namespace Leore.Objects.Effects.Emitters
             Position = new Vector2(emitter.X + (float)RND.Next * (16f - Scale.X), emitter.Y - trail * Scale.Y);
 
             YVel = yVel + (float)RND.Next * .5f;
-            LifeTime = 200;
+            LifeTime = (emitter as WaterFallEmitter).ParticleLifeTime;
             
             Depth = Globals.LAYER_BG + .0001f * YVel;
 
@@ -68,7 +68,9 @@ namespace Leore.Objects.Effects.Emitters
             } else
             {
                 if (LifeTime < 60)
-                    Alpha = Math.Max(Alpha - .02f, 0);
+                {
+                    Alpha = Math.Max(Alpha - .03f, 0);
+                }
             }
         }
 
@@ -92,6 +94,8 @@ namespace Leore.Objects.Effects.Emitters
         private float particleAlpha = 1f;
         private float trail = 1f;
         private float yVel = .7f;
+
+        public int ParticleLifeTime { get; set; } = 200;
 
         public WaterFallEmitter(float x, float y, int type) : base(x, y)
         {

@@ -77,7 +77,7 @@ namespace Leore.Objects.Effects.Emitters
         private bool stuck;
         private bool die;
         
-        public DestroyParticle(ParticleEmitter emitter, int type) : base(emitter)
+        public DestroyParticle(ParticleEmitter emitter, int type, Vector2 scale) : base(emitter)
         {
             LifeTime = 120;
 
@@ -85,7 +85,7 @@ namespace Leore.Objects.Effects.Emitters
             YVel = -1 - (float)RND.Next * .5f;
 
             Texture = RND.Choose(AssetManager.Particles[1 + type * 2], AssetManager.Particles[2 + type * 2]);
-            Scale = new Vector2(.5f);
+            Scale = scale;
 
             DrawOffset = new Vector2(8);
 
@@ -150,8 +150,14 @@ namespace Leore.Objects.Effects.Emitters
             this.type = type;            
             SpawnRate = 4;
 
-            if (type == 2)
+            Scale = new Vector2(.5f);
+
+            if (type == 2) // bush
                 SpawnRate = 8;
+            if (type == 4) // ice
+                SpawnRate = 8;
+            if (type == 6) // fire
+                SpawnRate = 6;            
         }
 
         public override void Update(GameTime gameTime)
@@ -166,7 +172,7 @@ namespace Leore.Objects.Effects.Emitters
         public override void CreateParticle()
         {
             if (type != 2)
-                new DestroyParticle(this, type);
+                new DestroyParticle(this, type, Scale);
             else
                 new BushParticle(this);
         }
