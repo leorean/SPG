@@ -157,7 +157,7 @@ namespace Leore.Objects.Effects.Emitters
             if (type == 4) // ice
                 SpawnRate = 8;
             if (type == 6) // fire
-                SpawnRate = 6;            
+                SpawnRate = 12;            
         }
 
         public override void Update(GameTime gameTime)

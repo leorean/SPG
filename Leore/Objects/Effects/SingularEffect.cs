@@ -54,6 +54,7 @@ namespace Leore.Objects.Effects
                     fSpd = .4f;
                     break;
                 case 14:
+                case 15:
                     fAmount = 9;
                     fSpd = .3f;
                     break;

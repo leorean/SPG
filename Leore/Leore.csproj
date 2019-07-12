@@ -103,6 +103,8 @@
     <Compile Include="Objects\Items\StatUpItem.cs" />
     <Compile Include="Objects\Level\AirBubble.cs" />
     <Compile Include="Objects\Level\Blocks\FallingPlatform.cs" />
+    <Compile Include="Objects\Level\Blocks\FireBlock.cs" />
+    <Compile Include="Objects\Level\Blocks\IceBlock.cs" />
     <Compile Include="Objects\Level\BossSpawn.cs" />
     <Compile Include="Objects\Level\Blocks\DestroyBlock.cs" />
     <Compile Include="Objects\Level\Flow.cs" />

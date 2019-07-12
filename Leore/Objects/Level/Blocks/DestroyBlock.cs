@@ -10,94 +10,6 @@ using Leore.Objects.Enemies;
 
 namespace Leore.Objects.Level.Blocks
 {
-    public class IceBlock : DestroyBlock
-    {
-        private float maxHp;
-        private int regenDelay;
-
-        public IceBlock(float x, float y, Room room) : base(x, y, room, 6)
-        {
-            maxHp = HP;            
-        }
-
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-
-            regenDelay = Math.Max(regenDelay - 1, 0);
-            if (regenDelay == 0)
-            {
-                HP = (int)Math.Min(HP + 1, maxHp);
-                regenDelay = 30;
-            }            
-        }
-        
-        public override void Hit(PlayerProjectile projectile)
-        {
-            if (projectile.Damage == 0 || projectile.Element != SpellElement.FIRE)
-                return;
-
-            // TODO: effect
-
-            if (HP <= projectile.Damage)
-                new DestroyEmitter(X + 8, Y + 8, 4);
-
-            HP = Math.Max(HP - projectile.Damage, 0);
-        }
-
-        public override void Draw(SpriteBatch sb, GameTime gameTime)
-        {
-            base.Draw(sb, gameTime);
-
-            var alpha = HP / maxHp;
-            var col = new Color(Color, .5f - .5f * alpha);            
-            sb.Draw(AssetManager.Particles[11], Position + new Vector2(8), null, col, Angle, new Vector2(8), Scale, SpriteEffects.None, Depth + .0001f);
-        }
-    }
-
-    public class FireBlock : DestroyBlock
-    {
-        private float maxHp;
-
-        private Obstacle obstacle;
-
-        public FireBlock(float x, float y, Room room) : base(x, y, room, 5)
-        {
-            maxHp = HP;
-
-            obstacle = new ObstacleBlock(x, y, room) { Parent = this };
-        }
-
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-        }
-
-        public override void Hit(PlayerProjectile projectile)
-        {
-            if (projectile.Damage == 0)
-            //if (projectile.Damage == 0 || projectile.Element != SpellElement.ICE)
-            //if (projectile.Damage == 0 || (projectile.Element != SpellElement.ICE && projectile.Element != SpellElement.WATER))
-                return;
-
-            // TODO: effect
-
-            if (HP <= projectile.Damage)
-                new DestroyEmitter(X + 8, Y + 8, 6);
-            
-            HP = Math.Max(HP - projectile.Damage, 0);
-        }
-
-        public override void Draw(SpriteBatch sb, GameTime gameTime)
-        {
-            base.Draw(sb, gameTime);
-
-            var alpha = HP / maxHp;
-            var col = new Color(Color, 1f - .5f * alpha);
-            sb.Draw(AssetManager.Particles[12], Position + new Vector2(8), null, col, Angle, new Vector2(8), Scale, SpriteEffects.None, Depth + .0001f);
-        }
-    }
-
     public class DestroyBlock : Solid
     {
         public int HP { get; set; }
@@ -117,7 +29,7 @@ namespace Leore.Objects.Level.Blocks
 
         public virtual void Hit(PlayerProjectile projectile)
         {
-            if (projectile.Damage == 0)
+            if (projectile.Damage == 0 || HP == 0)
                 return;
 
             if (HP > projectile.Damage)
@@ -139,7 +51,7 @@ namespace Leore.Objects.Level.Blocks
             {
                 new SingularEffect(X + 8, Y + 8);
                 Destroy();
-            }            
+            }
         }
     }
 }
