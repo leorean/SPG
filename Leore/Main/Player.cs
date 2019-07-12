@@ -106,6 +106,9 @@ namespace Leore.Main
         private bool inWater;
         public bool InWater { get => inWater; }
 
+        private bool onIce;
+        public bool OnIce { get => onIce; }
+
         private bool inputEnabled = true;
         public void SetControlsEnabled(bool enabled)
         {
@@ -559,6 +562,20 @@ namespace Leore.Main
             }
             inWater = GameManager.Current.Map.CollisionTile(X, Y + 4, GameMap.WATER_INDEX);
 
+            var tile = GameManager.Current.Map.CollisionTile<Tile>(X, Y + Globals.T + 4);
+            
+            if (tile != null)
+            {
+                switch (tile.ID)
+                {
+                    case 497: case 498: case 499: case 500: case 964: case 689: case 690: case 691:
+                        onIce = true;
+                        break;
+                    default:
+                        onIce = false;
+                        break;
+                }
+            }
             if (!Stats.Abilities.HasFlag(PlayerAbility.CLIMB_WALL))
                 onWall = false;
             if (!Stats.Abilities.HasFlag(PlayerAbility.CLIMB_CEIL))
@@ -1028,7 +1045,11 @@ namespace Leore.Main
 
             var maxVel = (Direction == flowDirection) ? 2 : defaultMaxVel;
 
-            if (YVel != 0) onGround = false;
+            if (YVel != 0)
+            {
+                onGround = false;
+                onIce = false; 
+            }
 
             if (onGround)
             {
@@ -1082,7 +1103,9 @@ namespace Leore.Main
             // idle
             if (State == PlayerState.IDLE || State == PlayerState.CARRYOBJECT_IDLE)
             {
-                XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - .2f, 0f);
+                var xAcc = onIce ? .02f : .2f;
+
+                XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - xAcc, 0f);
                 if (k_rightHolding)
                 {
                     if (State == PlayerState.IDLE)
@@ -1106,12 +1129,14 @@ namespace Leore.Main
             if (State == PlayerState.WALK)
             {
                 var colSide = this.CollisionBoundsFirstOrDefault<Solid>(X + Math.Sign((int)Direction), Y);
-                
+
+                var xAcc = onIce ? .02f : .2f;
+
                 if (k_rightHolding)
                 {
                     if (Direction == Direction.RIGHT)
                     {
-                        XVel = Math.Min(XVel + .2f, maxVel * gamePadLeftXFactor);
+                        XVel = Math.Min(XVel + xAcc, maxVel * gamePadLeftXFactor);
 
                         if (colSide != null && Stats.Abilities.HasFlag(PlayerAbility.PUSH))
                             State = PlayerState.PUSH;
@@ -1125,7 +1150,7 @@ namespace Leore.Main
                 {
                     if (Direction == Direction.LEFT)
                     {
-                        XVel = Math.Max(XVel - .2f, -maxVel * gamePadLeftXFactor);
+                        XVel = Math.Max(XVel - xAcc, -maxVel * gamePadLeftXFactor);
 
                         if (colSide != null && Stats.Abilities.HasFlag(PlayerAbility.PUSH))
                             State = PlayerState.PUSH;
@@ -1137,7 +1162,7 @@ namespace Leore.Main
                 }
                 if (!k_leftHolding && !k_rightHolding)
                 {
-                    XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - .2f, 0);
+                    XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - xAcc, 0);
                     if (XVel == 0)
                     {
                         State = PlayerState.IDLE;
@@ -1345,7 +1370,9 @@ namespace Leore.Main
             // getting back up
             if (State == PlayerState.GET_UP)
             {
-                XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - .2f, 0f);
+                var xAcc = onIce ? .03f : .2f;
+
+                XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - xAcc, 0f);
                 if (animationComplete)
                 {
                     State = PlayerState.IDLE;
@@ -1354,7 +1381,9 @@ namespace Leore.Main
             // turning around
             if (State == PlayerState.TURN_AROUND)
             {
-                XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - .1f, 0);
+                var xAcc = onIce ? .03f : .1f;
+
+                XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - xAcc, 0);
 
                 if (XVel > 0) Direction = Direction.LEFT;
                 if (XVel < 0) Direction = Direction.RIGHT;

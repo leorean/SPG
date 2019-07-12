@@ -57,7 +57,7 @@ namespace SPG.Map
         /// <param name="y"></param>
         /// <param name="layer"></param>
         /// <returns></returns>
-        public static bool CollisionTile(this GameMap map, float x, float y, int layer = -1)
+        public static T CollisionTile<T>(this GameMap map, float x, float y, int layer = -1)
         {
             int tx = MathUtil.Div(x, Globals.T);
             int ty = MathUtil.Div(y, Globals.T);
@@ -67,10 +67,24 @@ namespace SPG.Map
 
             var tile = map.LayerData[layer].Get(tx, ty);
 
-            if (tile != null && tile.TileOptions.Solid)
-                return true;
+            if (typeof(T) == typeof(bool))
+            {
+                if (tile != null && tile.TileOptions.Solid)
+                    return (T)(object)true;
 
-            return false;
+                return (T)(object)false;
+            }
+            else if (typeof(T) == typeof(Tile))
+            {
+                return (T)(object)tile;
+            }
+
+            return default(T);
+        }
+
+        public static bool CollisionTile(this GameMap map, float x, float y, int layer = -1)
+        {
+            return map.CollisionTile<bool>(x, y, layer);
         }
 
         /// <summary>
