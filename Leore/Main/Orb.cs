@@ -253,12 +253,12 @@ namespace Leore.Main
 
                                     //cooldown = 60;
 
-                                    ObjectManager.Enable<CrimsonBow>();
+                                    ObjectManager.Enable<CrimsonSpell>();
                                     
-                                    if (!ObjectManager.Exists<CrimsonBow>())// && GameManager.Current.Player.MP >= GameResources.MPCost[SpellType.CRIMSON_ARC][Level])
+                                    if (!ObjectManager.Exists<CrimsonSpell>())// && GameManager.Current.Player.MP >= GameResources.MPCost[SpellType.CRIMSON_ARC][Level])
                                     {
                                         new CrimsonBurstEmitter(X, Y);
-                                        new CrimsonBow(this);
+                                        new CrimsonSpell(this);
                                     } else
                                     {
                                         player.MP += GameResources.MPCost[Type][Level];
@@ -299,7 +299,7 @@ namespace Leore.Main
                     {
                         var shake = true;
 
-                        if (ObjectManager.Exists<CrimsonBow>())
+                        if (ObjectManager.Exists<CrimsonSpell>())
                             shake = false;
 
                         if (Type == SpellType.SNATCH_KEYS)

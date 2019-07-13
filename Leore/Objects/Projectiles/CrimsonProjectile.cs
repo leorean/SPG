@@ -67,7 +67,7 @@ namespace Leore.Objects.Projectiles
 
             Move(XVel, YVel);
 
-            if (this.IsOutsideCurrentRoom())
+            if (this.IsOutsideCurrentRoom(Globals.T))
                 Destroy();
         }
         

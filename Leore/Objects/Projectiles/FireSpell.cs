@@ -17,7 +17,7 @@ using Leore.Resources;
 
 namespace Leore.Objects.Projectiles
 {
-    public class FireSpell : GameObject
+    public class FireSpell : SpellObject
     {
         private Player player => GameManager.Current.Player;
         private Orb orb => GameManager.Current.Player.Orb;

@@ -6,7 +6,17 @@ using Leore.Objects.Level.Blocks;
 
 namespace Leore.Objects.Projectiles
 {
-    public abstract class PlayerProjectile : SPG.Objects.GameObject
+    /// <summary>
+    /// Every spell should inherit from this object, else there are problems when holding a spell at the room border or while changing rooms
+    /// </summary>
+    public abstract class SpellObject : GameObject
+    {
+        public SpellObject(float x, float y, string name = null) : base(x, y, name)
+        {
+        }
+    }
+
+    public abstract class PlayerProjectile : SpellObject
     {
         public int Damage { get; set; } = 1;
 

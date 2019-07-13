@@ -411,8 +411,8 @@ namespace Leore.Main
 
             // todo: instead of those, let them inherit from spell and activate spell
             ObjectManager.Enable<FireSpell>();
-            ObjectManager.Enable<CrimsonBow>();
-            ObjectManager.Enable<KeySnatchProjectile>();
+            ObjectManager.Enable<CrimsonSpell>();
+            //ObjectManager.Enable<KeySnatchProjectile>();
             
             // todo: solve more smoothly?
             foreach (var o in ObjectManager.Objects.Where(o => o is Enemy && (o as RoomObject).Room == room)) {

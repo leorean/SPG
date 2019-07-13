@@ -27,7 +27,7 @@ namespace Leore.Objects.Projectiles
         }
     }
 
-    public class CrimsonBow : GameObject
+    public class CrimsonSpell : SpellObject
     {
         private Orb orb;
 
@@ -36,8 +36,9 @@ namespace Leore.Objects.Projectiles
 
         private int level;
 
-        public CrimsonBow(Orb orb) : base(orb.X, orb.Y)
+        public CrimsonSpell(Orb orb) : base(orb.X, orb.Y)
         {
+            Parent = orb;
             this.orb = orb;
             DrawOffset = new Vector2(8);
         }
@@ -92,15 +93,17 @@ namespace Leore.Objects.Projectiles
 
                 new CrimsonBurstEmitter(X, Y);
 
+                Parent = null;
                 Destroy();
             }
 
-            if (this.IsOutsideCurrentRoom())
-                Destroy();
+            //if (this.IsOutsideCurrentRoom(2 * Globals.T))
+            //    Destroy();
         }
 
         public override void Destroy(bool callGC = false)
         {
+            //Parent = null;
             orb.Visible = true;
             base.Destroy(callGC);            
         }
