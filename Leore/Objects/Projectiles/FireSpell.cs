@@ -42,7 +42,7 @@ namespace Leore.Objects.Projectiles
                     maxPower = 1 * 60;
                     break;
                 case SpellLevel.TWO:
-                    maxPower = 3 * 60;
+                    maxPower = 2 * 60;
                     break;
                 case SpellLevel.THREE:
                     maxPower = 1 * 60;

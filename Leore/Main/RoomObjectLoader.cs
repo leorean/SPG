@@ -107,6 +107,12 @@ namespace Leore.Main
                             new SpikeLeft(i * Globals.T, j * Globals.T, room);
                             t.TileOptions.Visible = true;
                             break;
+                        case 966:
+                            new HiddenPlatform(i * Globals.T, j * Globals.T, room)
+                            {
+                                Texture = GameManager.Current.Map.TileSet[t.ID]
+                            };
+                            break;
                         // spikes (corner, inside)
                         case 976:
                         case 978:

@@ -110,6 +110,7 @@
     <Compile Include="Objects\Level\Flow.cs" />
     <Compile Include="Objects\Level\Blocks\OrbBlock.cs" />
     <Compile Include="Objects\Level\Blocks\EnemyBlock.cs" />
+    <Compile Include="Objects\Level\HiddenPlatform.cs" />
     <Compile Include="Objects\Level\JumpControlDisabler.cs" />
     <Compile Include="Objects\Level\Door.cs" />
     <Compile Include="Objects\Level\LightSource.cs" />
