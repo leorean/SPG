@@ -307,35 +307,7 @@ namespace Leore
             // IMPORTANT HINT: when a texture's alpha is not "pretty", check the Content settings of that texture! Make sure that the texture has premultiplied : true.
 
             // ++++++++++++++++ darkness ++++++++++++++++
-
-            //if (darkness == null)
-            //    darkness = new RenderTarget2D(spriteBatch.GraphicsDevice, viewSize.Width, viewSize.Height);
-
-            //spriteBatch.GraphicsDevice.SetRenderTarget(darkness);
-            //GraphicsDevice.Clear(Color.Black);
-
-            //BlendState blend = new BlendState();
-
-            //blend.ColorBlendFunction = BlendFunction.Add;
-            //blend.ColorSourceBlend = Blend.Zero;
-            //blend.ColorDestinationBlend = Blend.InverseSourceAlpha;
-            //blend.AlphaBlendFunction = BlendFunction.Add;
-            //blend.AlphaSourceBlend = Blend.Zero;
-            //blend.AlphaDestinationBlend = Blend.InverseSourceAlpha;
-
-            //spriteBatch.Begin(SpriteSortMode.Immediate, blend, SamplerState.PointClamp, null, null, null, null);
-
-            //ObjectManager.Enable<LightSource>();
-            //var lightSources = ObjectManager.FindAll<LightSource>();
-
-            //foreach(var source in lightSources)
-            //{
-            //    spriteBatch.Draw(AssetManager.DarknessMask, new Vector2(source.Parent.Center.X, source.Parent.Center.Y) 
-            //         - new Vector2(32) - new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY), Color.White);
-            //}
-
-            //spriteBatch.End();
-
+            
             Darkness.Current.PrepareDraw(spriteBatch);
 
             GraphicsDevice.SetRenderTarget(null);

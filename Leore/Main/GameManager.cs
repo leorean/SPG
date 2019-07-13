@@ -408,6 +408,10 @@ namespace Leore.Main
             ObjectManager.Enable<Orb>();
             ObjectManager.Enable<Player>();
             ObjectManager.Enable<PlayerProjectile>();
+
+            // todo: instead of those, let them inherit from spell and activate spell
+            ObjectManager.Enable<FireSpell>();
+            ObjectManager.Enable<CrimsonBow>();
             ObjectManager.Enable<KeySnatchProjectile>();
             
             // todo: solve more smoothly?
