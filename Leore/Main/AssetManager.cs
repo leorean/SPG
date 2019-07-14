@@ -58,6 +58,7 @@ namespace Leore.Main
         public static TextureSet Laser { get; private set; }
         public static TextureSet Lava { get; private set; }
         public static TextureSet WaterFall { get; private set; }
+        public static TextureSet WaterSurface { get; private set; }
 
         // enemies
 
@@ -122,6 +123,7 @@ namespace Leore.Main
             Laser = content.LoadTextureSet("laser", 32, 32);
             Lava = content.LoadTextureSet("lava");
             WaterFall = content.LoadTextureSet("waterFall", 16, 32);
+            WaterSurface = content.LoadTextureSet("waterSurface", 16, 16);
 
             EnemyGrassy = content.LoadTextureSet("enemyGrassy");
             EnemyBat = content.LoadTextureSet("enemyBat");

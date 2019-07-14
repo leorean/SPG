@@ -106,6 +106,9 @@ namespace Leore.Main
         private bool inWater;
         public bool InWater { get => inWater; }
 
+        private bool onIceWall;
+        private float iceWallVel;
+
         private bool onIce;
         public bool OnIce { get => onIce; }
 
@@ -206,7 +209,7 @@ namespace Leore.Main
         public bool OutOfScreen { get; set; }
         private int outOfScreenTimer = 0;
         private bool outOfScreenTransitionStarted;
-
+        
         // constructor
 
         public Player(float x, float y) : base(x, y)
@@ -571,19 +574,18 @@ namespace Leore.Main
             inWater = GameManager.Current.Map.CollisionTile(X, Y + 4, GameMap.WATER_INDEX);
 
             var tile = GameManager.Current.Map.CollisionTile<Tile>(X, Y + Globals.T + 4);
-            
+
             if (tile != null)
-            {
-                switch (tile.ID)
-                {
-                    case 497: case 498: case 499: case 500: case 964: case 689: case 690: case 691:
-                        onIce = true;
-                        break;
-                    default:
-                        onIce = false;
-                        break;
-                }
-            }
+                onIce = new List<int>() { 497, 498, 499, 500, 964, 689, 690, 691 }.Contains(tile.ID);
+            else
+                onIce = false;
+
+            tile = GameManager.Current.Map.CollisionTile<Tile>(X + (int)Direction * 16, Y);
+            if (tile != null)
+                onIceWall = new List<int>() { 497, 499, 500, 561, 563, 564, 625, 627, 628, 689, 691, 964 }.Contains(tile.ID);
+            else
+                onIceWall = false;
+
             if (!Stats.Abilities.HasFlag(PlayerAbility.CLIMB_WALL))
                 onWall = false;
             if (!Stats.Abilities.HasFlag(PlayerAbility.CLIMB_CEIL))
@@ -972,29 +974,7 @@ namespace Leore.Main
                     YVel = -Gravity;
                     Visible = false;
                 }
-
-                //if (limboTimer == 0)
-                //{
-                //    if (this.CollisionBoundsFirstOrDefault<PushBlock>(safePosition.X, safePosition.Y + 1) != null)
-                //    {
-                //        safePosition = GameManager.Current.SaveGame.playerPosition;
-                //        RoomCamera.Current.ChangeRoomsToPosition(safePosition, 0);
-                //    }
-                //    else
-                //    {
-                //        Position = safePosition;
-                //    }
-
-                //    Visible = true;
-                //    if (Orb != null) Orb.Visible = true;
-
-                //    State = PlayerState.LIE;
-                //    lieTimer = 60;
-
-                //    //if (HP == 0)
-                //    //    State = PlayerState.DEAD;
-                //}
-
+                
                 // ++++ doors ++++
 
                 var door = this.CollisionBoundsFirstOrDefault<Door>(X, Y);
@@ -1454,8 +1434,13 @@ namespace Leore.Main
             // wall
             if (State == PlayerState.WALL_IDLE || State == PlayerState.WALL_CLIMB)
             {
+                if (onIceWall)
+                    iceWallVel = Math.Min(iceWallVel + .02f, .5f);
+                else
+                    iceWallVel = Math.Max(iceWallVel - .1f, 0);
+
                 XVel = 0;
-                YVel = -Gravity;
+                YVel = -Gravity + iceWallVel;
                 
                 var wallJumpVel = -2.2f;
                 
@@ -1508,17 +1493,22 @@ namespace Leore.Main
                     State = PlayerState.HIT_AIR;
                 }
             }
+            else
+            {
+                iceWallVel = 0;
+            }
+
             // wall climb
             if (State == PlayerState.WALL_CLIMB)
             {
 
                 if (k_upHolding)
                 {
-                    YVel = -1;
+                    YVel = -1 + iceWallVel;
                 }
                 else if (k_downHolding)
                 {
-                    YVel = 1;
+                    YVel = 1 + iceWallVel;
                 }
                 else
                     State = PlayerState.WALL_IDLE;

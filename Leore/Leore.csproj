@@ -55,6 +55,7 @@
     <Compile Include="Main\RoomObjectLoader.cs" />
     <Compile Include="Main\SaveGame.cs" />
     <Compile Include="Objects\Common.cs" />
+    <Compile Include="Objects\Effects\Ambience\AnimatedWaterSurface.cs" />
     <Compile Include="Objects\Effects\Emitters\DestroyEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\EvilEyeEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\FlashEmitter.cs" />

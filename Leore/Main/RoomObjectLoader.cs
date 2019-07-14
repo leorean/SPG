@@ -17,6 +17,7 @@ using Leore.Objects.Level.Switches;
 using Leore.Objects.Effects.Weather;
 using Leore.Objects.Level.Obstacles;
 using Leore.Resources;
+using Leore.Objects.Effects.Ambience;
 
 namespace Leore.Main
 {
@@ -36,350 +37,387 @@ namespace Leore.Main
             var w = MathUtil.Div(room.BoundingBox.Width, RoomCamera.Current.ViewWidth) * 16;
             var h = MathUtil.Div(room.BoundingBox.Height, RoomCamera.Current.ViewHeight) * 9;
 
-            var index = GameManager.Current.Map.LayerDepth.ToList().IndexOf(GameManager.Current.Map.LayerDepth.First(o => o.Key.ToLower() == "fg"));
-
-            var data = GameManager.Current.Map.LayerData.ElementAt(index);
-
-            x = (int)((float)x).Clamp(0, data.Width);
-            y = (int)((float)y).Clamp(0, data.Height);
-
-            // load objects from tile data
-            
-            for (int i = x; i < x + w; i++)
+            // load objects from FG tile data
             {
-                for (int j = y; j < y + h; j++)
+                var index = GameManager.Current.Map.LayerDepth.ToList().IndexOf(GameManager.Current.Map.LayerDepth.First(o => o.Key.ToLower() == "fg"));
+                var data = GameManager.Current.Map.LayerData.ElementAt(index);
+
+                x = (int)((float)x).Clamp(0, data.Width);
+                y = (int)((float)y).Clamp(0, data.Height);
+                
+                for (int i = x; i < x + w; i++)
                 {
-                    var t = data.Get(i, j);
-
-                    if (t == null || t.ID == -1)
-                        continue;
-
-                    t.TileOptions.Visible = false;
-                    t.TileOptions.Solid = false;
-
-                    switch (t.ID)
+                    for (int j = y; j < y + h; j++)
                     {
-                        case 0: // platforms
-                        case 12:
-                        case 34:
-                        case 304:
-                        case 535:
-                        case 612:
-                        case 646:
-                        case 789:
-                        case 794:
-                        case 1041:
-                            var platform = new Platform(i * Globals.T, j * Globals.T, room);
-                            t.TileOptions.Visible = true;
-                            if (t.ID == 646) t.TileOptions.Visible = false; // <- invisible platform
-                            break;
-                        case 387: // mushrooms
-                            var mushroom = new Mushroom(i * Globals.T, j * Globals.T, room)
-                            {
-                                Texture = GameManager.Current.Map.TileSet[t.ID]
-                            };
-                            break;
-                        case 367: // lava
-                            new Lava(i * Globals.T, j * Globals.T, room);
-                            t.TileOptions.Solid = true;
-                            t.TileOptions.Visible = true;
-                            break;
-                        case 576: // save-statues
-                            new SaveStatue(i * Globals.T, j * Globals.T, room);
-                            break;
-                        case 512: // spikes (bottom)
-                        case 1105:
-                            new SpikeBottom(i * Globals.T, j * Globals.T, room);
-                            t.TileOptions.Visible = true;
-                            break;
-                        case 513: // spikes (top)
-                        case 977:
-                            new SpikeTop(i * Globals.T, j * Globals.T, room);
-                            t.TileOptions.Visible = true;
-                            break;
-                        case 514: // spikes (right)
-                        case 1040:
-                            new SpikeRight(i * Globals.T, j * Globals.T, room);
-                            t.TileOptions.Visible = true;
-                            break;
-                        case 515: // spikes (left)
-                        case 1042:
-                            new SpikeLeft(i * Globals.T, j * Globals.T, room);
-                            t.TileOptions.Visible = true;
-                            break;
-                        case 966:
-                            new HiddenPlatform(i * Globals.T, j * Globals.T, room)
-                            {
-                                Texture = GameManager.Current.Map.TileSet[t.ID]
-                            };
-                            break;
-                        // spikes (corner, inside)
-                        case 976:
-                        case 978:
-                        case 1104:
-                        case 1106:
-                            new SpikeCorner(i * Globals.T, j * Globals.T, room);
-                            t.TileOptions.Visible = true;
-                            break;
-                        // invisible fg tiles
-                        case 1102:
-                        case 1103:
-                        case 1168:
-                        case 1232:
-                            t.TileOptions.Visible = true;
-                            break;
-                        case 577: // BIG spikes (deadly)
-                            var bigSpike = new BigSpike(i * Globals.T, j * Globals.T, room);
-                            t.TileOptions.Visible = true;
-                            break;
-                        case 578: case 641: case 642:
-                            t.TileOptions.Visible = true;
-                            break;
-                        case 599: // chimney smoke 
-                            new Smoke(i * Globals.T + 8, j * Globals.T + 8, room);
-                            break;
-                        case 640: // push-blocks
-                            var pushBlock = new PushBlock(i * Globals.T, j * Globals.T, room);
-                            pushBlock.Texture = GameManager.Current.Map.TileSet[t.ID];
-                            break;
-                        case 643: // switches (ground)
-                            new GroundSwitch(i * Globals.T, j * Globals.T, false, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
-                            break;
-                        case 644: // switches (ground) - activate once
-                            new GroundSwitch(i * Globals.T, j * Globals.T, true, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
-                            break;
-                        case 648: // waterfall (bright)
-                        case 649: // waterfall (cave)
-                        case 650: // waterfall (mountain)
-                            new WaterFall(i * Globals.T, j * Globals.T, room, (t.ID - 648));
-                            break;
-                        case 579: // hp potion
-                            new Potion(i * Globals.T + 8, j * Globals.T + 8, room, PotionType.HP) { Texture = GameManager.Current.Map.TileSet[t.ID] };
-                            break;
-                        case 580: // mp potion
-                            new Potion(i * Globals.T + 8, j * Globals.T + 8, room, PotionType.MP) { Texture = GameManager.Current.Map.TileSet[t.ID] };
-                            break;
-                        case 581: // key
-                            var key = new Key(i * Globals.T + 8, j * Globals.T + 8, room);
-                            break;
-                        case 582: // keyblock
-                            new KeyBlock(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
-                            break;
-                        case 647: // control disabler
-                            new JumpControlDisabler(i * Globals.T, j * Globals.T, room);
-                            break;
-                        // coins
-                        case 704: case 705: case 706: case 707: case 708: case 709: case 710:
-                            var coin = new Coin(i * Globals.T + 8, j * Globals.T + 8, room, (t.ID - 704).TileIDToCoinValue());
-                            break;
-                        case 711: // max HP
-                            new StatUpItem(i * Globals.T + 8, j * Globals.T + 8, room, StatType.HP);
-                            break;
-                        case 712: // max MP
-                            new StatUpItem(i * Globals.T + 8, j * Globals.T + 8, room, StatType.MP);
-                            break;
-                        case 713: // MP Regen +
-                            new StatUpItem(i * Globals.T + 8, j * Globals.T + 8, room, StatType.Regen);
-                            break;
-                        case 714: // destroy blocks
-                        case 715:
-                            new DestroyBlock(i * Globals.T, j * Globals.T, room, t.ID - 714 + 1);
-                            break;
-                        case 964: // ice block
-                            new IceBlock(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
-                            break;
-                        case 965: // fire block
-                            new FireBlock(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
-                            break;
-                        case 716: // enemy block
-                            new EnemyBlock(i * Globals.T, j * Globals.T, room);
-                            break;
-                        case 717: // orb block
-                            new OrbBlock(i * Globals.T, j * Globals.T, room);
-                            break;
-                        case 719: // switch block (default: on)
-                            new SwitchBlock(i * Globals.T, j * Globals.T, room, 1);
-                            break;
-                        case 720: // switch block (default: off)
-                            new SwitchBlock(i * Globals.T, j * Globals.T, room, 0);
-                            break;
-                        case 721: // pots
-                            var pot = new Pot(i * Globals.T, j * Globals.T, room);
-                            pot.Texture = GameManager.Current.Map.TileSet[t.ID];
-                            break;
-                        case 722: // bushes
-                            var bush = new Bush(i * Globals.T, j * Globals.T, room);
-                            bush.Texture = GameManager.Current.Map.TileSet[t.ID];
-                            break;
-                        case 723:
-                            new AirBubbleSpawner(i * Globals.T, j * Globals.T, room) {
-                                Texture = GameManager.Current.Map.TileSet[t.ID]
-                            };
-                            break;
-                        case 724: // door disabler (switch)
-                            new DoorDisabler(i * Globals.T, j * Globals.T, room, DoorDisabler.TriggerType.Switch) { Texture = GameManager.Current.Map.TileSet[t.ID] };
-                            break;
-                        case 725: // door disabler (enemy)
-                            new DoorDisabler(i * Globals.T, j * Globals.T, room, DoorDisabler.TriggerType.Enemy) { Texture = GameManager.Current.Map.TileSet[t.ID] };
-                            break;
-                        case 726: // door disabler (key)
-                            new DoorDisabler(i * Globals.T, j * Globals.T, room, DoorDisabler.TriggerType.Key) { Texture = GameManager.Current.Map.TileSet[t.ID] };
-                            break;
-                        case 768: // enemy Bat
-                            new EnemyBat(i * Globals.T + 8, j * Globals.T + 8, room);
-                            break;
-                        case 769: // enemy Grassy
-                            new EnemyGrassy(i * Globals.T + 8, j * Globals.T + 8, room);
-                            break;
-                        case 770: // enemy Voidling (without shield)
-                            new EnemyVoidling(i * Globals.T + 8, j * Globals.T + 8, room, 0);
-                            break;
-                        case 771: // enemy Voidling (with shield)
-                            new EnemyVoidling(i * Globals.T + 8, j * Globals.T + 8, room, 1);
-                            break;
-                        case 773: // lava slime
-                            {
-                                var slime = new EnemySlime(i * Globals.T + 8, j * Globals.T + 16, room, 0);
-                                slime.OverrideHP(4);
-                                slime.MergeTimer = 0;
-                            }
-                            break;
-                        case 774: // ice slime
-                            {
-                                var slime = new EnemySlime(i * Globals.T + 8, j * Globals.T + 16, room, 1);
-                                slime.OverrideHP(2);
-                                slime.MergeTimer = 0;
-                            }
-                            break;
-                        case 775: // dark slime
-                            {
-                                var slime = new EnemySlime(i * Globals.T + 8, j * Globals.T + 16, room, 2);
-                                slime.OverrideHP(4);
-                                slime.MergeTimer = 0;
-                            }
-                            break;
-                        case 776:
-                            new EnemySlurp(i * Globals.T + 8, j * Globals.T + 8, room);
-                            break;
-                        case 832: // teleporters
-                            new Teleporter(i * Globals.T + 8, j * Globals.T + 8, room);
-                            break;
-                        case 833: // toggle switch (on)
-                            new ToggleSwitch(i * Globals.T + 8, j * Globals.T + 8, room, true);
-                            break;
-                        case 834: // toggle switch (off)
-                            new ToggleSwitch(i * Globals.T + 8, j * Globals.T + 8, room, false);
-                            break;
-                        case 835:
-                            new FallingPlatform(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
-                            break;
-                        // torches
-                        case 836:
-                            new Torch(i * Globals.T, j * Globals.T, room, false, LightSource.LightState.Bright, false);
-                            break;
-                        case 837:
-                            new Torch(i * Globals.T, j * Globals.T, room, true, LightSource.LightState.Default, false);
-                            break;
-                        case 838:
-                            new Torch(i * Globals.T, j * Globals.T, room, false, LightSource.LightState.Bright, false);
-                            break;
-                        case 839:
-                            new Torch(i * Globals.T, j * Globals.T, room, true, LightSource.LightState.Bright, false);
-                            break;
-                        case 840:
-                            new Torch(i * Globals.T, j * Globals.T, room, false, LightSource.LightState.Default, true);
-                            break;
-                        case 841:
-                            new AmbientLightSource(i * Globals.T, j * Globals.T, room);
-                            break;
-                        case 842:
-                            new LightObject(i * Globals.T, j * Globals.T, room);
-                            break;
-                        case 843:
-                            new FallOutOfScreenObject(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
-                            break;
-                        case 960: // timed switch (1s)
-                            new TimeSwitch(i * Globals.T, j * Globals.T, 1 * 60, room);
-                            break;
-                        case 961: // timed switch (3s)
-                            new TimeSwitch(i * Globals.T, j * Globals.T, 3 * 60, room);
-                            break;
-                        case 962: // timed switch (5s)
-                            new TimeSwitch(i * Globals.T, j * Globals.T, 5 * 60, room);
-                            break;
-                        case 963: // timed switch (10s)
-                            new TimeSwitch(i * Globals.T, j * Globals.T, 10 * 60, room);
-                            break;
-                        // flow objects:
-                        case 896:
-                        case 897:
-                        case 898:
-                        case 899:
-                            if (t.ID == 896)
-                                new Flow(i * Globals.T, j * Globals.T, room, Direction.UP);
-                            if (t.ID == 897)
-                                new Flow(i * Globals.T, j * Globals.T, room, Direction.DOWN);
-                            if (t.ID == 898)
-                                new Flow(i * Globals.T, j * Globals.T, room, Direction.LEFT);
-                            if (t.ID == 899)
-                                new Flow(i * Globals.T, j * Globals.T, room, Direction.RIGHT);
-                            break;
-                        // flow objects (activatable)
-                        case 900:
-                        case 901:
-                        case 902:
-                        case 903:
-                            if (t.ID == 900)
-                                new Flow(i * Globals.T, j * Globals.T, room, Direction.UP).Activatable = true;
-                            if (t.ID == 901)
-                                new Flow(i * Globals.T, j * Globals.T, room, Direction.DOWN).Activatable = true;
-                            if (t.ID == 902)
-                                new Flow(i * Globals.T, j * Globals.T, room, Direction.LEFT).Activatable = true;
-                            if (t.ID == 903)
-                                new Flow(i * Globals.T, j * Globals.T, room, Direction.RIGHT).Activatable = true;
-                            break;
-                        // flow objects (activatable, default: on)
-                        case 904:
-                        case 905:
-                        case 906:
-                        case 907:
-                            if (t.ID == 904)
-                                new Flow(i * Globals.T, j * Globals.T, room, Direction.UP) { Activatable = true, ActiveByDefault = true };
-                            if (t.ID == 905)
-                                new Flow(i * Globals.T, j * Globals.T, room, Direction.DOWN) { Activatable = true, ActiveByDefault = true };
-                            if (t.ID == 906)
-                                new Flow(i * Globals.T, j * Globals.T, room, Direction.LEFT) { Activatable = true, ActiveByDefault = true };
-                            if (t.ID == 907)
-                                new Flow(i * Globals.T, j * Globals.T, room, Direction.RIGHT) { Activatable = true, ActiveByDefault = true };
-                            break;
-                        case 908: // laser (vertical)
-                            new Laser(i * Globals.T, j * Globals.T, room, Laser.Orientation.Vertical);
-                            break;
-                        case 909: // laser (horizontal)
-                            new Laser(i * Globals.T, j * Globals.T, room, Laser.Orientation.Horizontal);
-                            break;
-                        case 910: // toggle laser (vertical)
-                            new Laser(i * Globals.T, j * Globals.T, room, Laser.Orientation.Vertical, true);
-                            break;
-                        case 911: // toggle laser (horizontal)
-                            new Laser(i * Globals.T, j * Globals.T, room, Laser.Orientation.Horizontal, true);
-                            break;
-                        case 912: // toggle laser (vertical)
-                            new Laser(i * Globals.T, j * Globals.T, room, Laser.Orientation.Vertical, true, defaultValue: false);
-                            break;
-                        case 913: // toggle laser (horizontal)
-                            new Laser(i * Globals.T, j * Globals.T, room, Laser.Orientation.Horizontal, true, defaultValue: false);
-                            break;
-                        default:
-                            var solid = new Solid(i * Globals.T, j * Globals.T, room);
-                            t.TileOptions.Visible = true;
-                            t.TileOptions.Solid = true;
-                            if (t.ID == 645) t.TileOptions.Visible = false;  // <- invisible blocks
-                            break;
+                        var t = data.Get(i, j);
+
+                        if (t == null || t.ID == -1)
+                            continue;
+
+                        t.TileOptions.Visible = false;
+                        t.TileOptions.Solid = false;
+
+                        switch (t.ID)
+                        {
+                            case 0: // platforms
+                            case 12:
+                            case 34:
+                            case 304:
+                            case 535:
+                            case 612:
+                            case 646:
+                            case 789:
+                            case 794:
+                            case 1041:
+                                var platform = new Platform(i * Globals.T, j * Globals.T, room);
+                                t.TileOptions.Visible = true;
+                                if (t.ID == 646) t.TileOptions.Visible = false; // <- invisible platform
+                                break;
+                            case 387: // mushrooms
+                                var mushroom = new Mushroom(i * Globals.T, j * Globals.T, room)
+                                {
+                                    Texture = GameManager.Current.Map.TileSet[t.ID]
+                                };
+                                break;
+                            case 367: // lava
+                                new Lava(i * Globals.T, j * Globals.T, room);
+                                t.TileOptions.Solid = true;
+                                t.TileOptions.Visible = true;
+                                break;
+                            case 576: // save-statues
+                                new SaveStatue(i * Globals.T, j * Globals.T, room);
+                                break;
+                            case 512: // spikes (bottom)
+                            case 1105:
+                                new SpikeBottom(i * Globals.T, j * Globals.T, room);
+                                t.TileOptions.Visible = true;
+                                break;
+                            case 513: // spikes (top)
+                            case 977:
+                                new SpikeTop(i * Globals.T, j * Globals.T, room);
+                                t.TileOptions.Visible = true;
+                                break;
+                            case 514: // spikes (right)
+                            case 1040:
+                                new SpikeRight(i * Globals.T, j * Globals.T, room);
+                                t.TileOptions.Visible = true;
+                                break;
+                            case 515: // spikes (left)
+                            case 1042:
+                                new SpikeLeft(i * Globals.T, j * Globals.T, room);
+                                t.TileOptions.Visible = true;
+                                break;
+                            case 966:
+                                new HiddenPlatform(i * Globals.T, j * Globals.T, room)
+                                {
+                                    Texture = GameManager.Current.Map.TileSet[t.ID]
+                                };
+                                break;
+                            // spikes (corner, inside)
+                            case 976:
+                            case 978:
+                            case 1104:
+                            case 1106:
+                                new SpikeCorner(i * Globals.T, j * Globals.T, room);
+                                t.TileOptions.Visible = true;
+                                break;
+                            // invisible fg tiles
+                            case 1102:
+                            case 1103:
+                            case 1168:
+                            case 1232:
+                                t.TileOptions.Visible = true;
+                                break;
+                            case 577: // BIG spikes (deadly)
+                                var bigSpike = new BigSpike(i * Globals.T, j * Globals.T, room);
+                                t.TileOptions.Visible = true;
+                                break;
+                            case 578:
+                            case 641:
+                            case 642:
+                                t.TileOptions.Visible = true;
+                                break;
+                            case 599: // chimney smoke 
+                                new Smoke(i * Globals.T + 8, j * Globals.T + 8, room);
+                                break;
+                            case 640: // push-blocks
+                                var pushBlock = new PushBlock(i * Globals.T, j * Globals.T, room);
+                                pushBlock.Texture = GameManager.Current.Map.TileSet[t.ID];
+                                break;
+                            case 643: // switches (ground)
+                                new GroundSwitch(i * Globals.T, j * Globals.T, false, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
+                                break;
+                            case 644: // switches (ground) - activate once
+                                new GroundSwitch(i * Globals.T, j * Globals.T, true, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
+                                break;
+                            case 648: // waterfall (bright)
+                            case 649: // waterfall (cave)
+                            case 650: // waterfall (mountain)
+                                new WaterFall(i * Globals.T, j * Globals.T, room, (t.ID - 648));
+                                break;
+                            case 579: // hp potion
+                                new Potion(i * Globals.T + 8, j * Globals.T + 8, room, PotionType.HP) { Texture = GameManager.Current.Map.TileSet[t.ID] };
+                                break;
+                            case 580: // mp potion
+                                new Potion(i * Globals.T + 8, j * Globals.T + 8, room, PotionType.MP) { Texture = GameManager.Current.Map.TileSet[t.ID] };
+                                break;
+                            case 581: // key
+                                var key = new Key(i * Globals.T + 8, j * Globals.T + 8, room);
+                                break;
+                            case 582: // keyblock
+                                new KeyBlock(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
+                                break;
+                            case 647: // control disabler
+                                new JumpControlDisabler(i * Globals.T, j * Globals.T, room);
+                                break;
+                            // coins
+                            case 704:
+                            case 705:
+                            case 706:
+                            case 707:
+                            case 708:
+                            case 709:
+                            case 710:
+                                var coin = new Coin(i * Globals.T + 8, j * Globals.T + 8, room, (t.ID - 704).TileIDToCoinValue());
+                                break;
+                            case 711: // max HP
+                                new StatUpItem(i * Globals.T + 8, j * Globals.T + 8, room, StatType.HP);
+                                break;
+                            case 712: // max MP
+                                new StatUpItem(i * Globals.T + 8, j * Globals.T + 8, room, StatType.MP);
+                                break;
+                            case 713: // MP Regen +
+                                new StatUpItem(i * Globals.T + 8, j * Globals.T + 8, room, StatType.Regen);
+                                break;
+                            case 714: // destroy blocks
+                            case 715:
+                                new DestroyBlock(i * Globals.T, j * Globals.T, room, t.ID - 714 + 1);
+                                break;
+                            case 964: // ice block
+                                new IceBlock(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
+                                break;
+                            case 965: // fire block
+                                new FireBlock(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
+                                break;
+                            case 716: // enemy block
+                                new EnemyBlock(i * Globals.T, j * Globals.T, room);
+                                break;
+                            case 717: // orb block
+                                new OrbBlock(i * Globals.T, j * Globals.T, room);
+                                break;
+                            case 719: // switch block (default: on)
+                                new SwitchBlock(i * Globals.T, j * Globals.T, room, 1);
+                                break;
+                            case 720: // switch block (default: off)
+                                new SwitchBlock(i * Globals.T, j * Globals.T, room, 0);
+                                break;
+                            case 721: // pots
+                                var pot = new Pot(i * Globals.T, j * Globals.T, room);
+                                pot.Texture = GameManager.Current.Map.TileSet[t.ID];
+                                break;
+                            case 722: // bushes
+                                var bush = new Bush(i * Globals.T, j * Globals.T, room);
+                                bush.Texture = GameManager.Current.Map.TileSet[t.ID];
+                                break;
+                            case 723:
+                                new AirBubbleSpawner(i * Globals.T, j * Globals.T, room)
+                                {
+                                    Texture = GameManager.Current.Map.TileSet[t.ID]
+                                };
+                                break;
+                            case 724: // door disabler (switch)
+                                new DoorDisabler(i * Globals.T, j * Globals.T, room, DoorDisabler.TriggerType.Switch) { Texture = GameManager.Current.Map.TileSet[t.ID] };
+                                break;
+                            case 725: // door disabler (enemy)
+                                new DoorDisabler(i * Globals.T, j * Globals.T, room, DoorDisabler.TriggerType.Enemy) { Texture = GameManager.Current.Map.TileSet[t.ID] };
+                                break;
+                            case 726: // door disabler (key)
+                                new DoorDisabler(i * Globals.T, j * Globals.T, room, DoorDisabler.TriggerType.Key) { Texture = GameManager.Current.Map.TileSet[t.ID] };
+                                break;
+                            case 768: // enemy Bat
+                                new EnemyBat(i * Globals.T + 8, j * Globals.T + 8, room);
+                                break;
+                            case 769: // enemy Grassy
+                                new EnemyGrassy(i * Globals.T + 8, j * Globals.T + 8, room);
+                                break;
+                            case 770: // enemy Voidling (without shield)
+                                new EnemyVoidling(i * Globals.T + 8, j * Globals.T + 8, room, 0);
+                                break;
+                            case 771: // enemy Voidling (with shield)
+                                new EnemyVoidling(i * Globals.T + 8, j * Globals.T + 8, room, 1);
+                                break;
+                            case 773: // lava slime
+                                {
+                                    var slime = new EnemySlime(i * Globals.T + 8, j * Globals.T + 16, room, 0);
+                                    slime.OverrideHP(4);
+                                    slime.MergeTimer = 0;
+                                }
+                                break;
+                            case 774: // ice slime
+                                {
+                                    var slime = new EnemySlime(i * Globals.T + 8, j * Globals.T + 16, room, 1);
+                                    slime.OverrideHP(2);
+                                    slime.MergeTimer = 0;
+                                }
+                                break;
+                            case 775: // dark slime
+                                {
+                                    var slime = new EnemySlime(i * Globals.T + 8, j * Globals.T + 16, room, 2);
+                                    slime.OverrideHP(4);
+                                    slime.MergeTimer = 0;
+                                }
+                                break;
+                            case 776:
+                                new EnemySlurp(i * Globals.T + 8, j * Globals.T + 8, room);
+                                break;
+                            case 832: // teleporters
+                                new Teleporter(i * Globals.T + 8, j * Globals.T + 8, room);
+                                break;
+                            case 833: // toggle switch (on)
+                                new ToggleSwitch(i * Globals.T + 8, j * Globals.T + 8, room, true);
+                                break;
+                            case 834: // toggle switch (off)
+                                new ToggleSwitch(i * Globals.T + 8, j * Globals.T + 8, room, false);
+                                break;
+                            case 835:
+                                new FallingPlatform(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
+                                break;
+                            // torches
+                            case 836:
+                                new Torch(i * Globals.T, j * Globals.T, room, false, LightSource.LightState.Bright, false);
+                                break;
+                            case 837:
+                                new Torch(i * Globals.T, j * Globals.T, room, true, LightSource.LightState.Default, false);
+                                break;
+                            case 838:
+                                new Torch(i * Globals.T, j * Globals.T, room, false, LightSource.LightState.Bright, false);
+                                break;
+                            case 839:
+                                new Torch(i * Globals.T, j * Globals.T, room, true, LightSource.LightState.Bright, false);
+                                break;
+                            case 840:
+                                new Torch(i * Globals.T, j * Globals.T, room, false, LightSource.LightState.Default, true);
+                                break;
+                            case 841:
+                                new AmbientLightSource(i * Globals.T, j * Globals.T, room);
+                                break;
+                            case 842:
+                                new LightObject(i * Globals.T, j * Globals.T, room);
+                                break;
+                            case 843:
+                                new FallOutOfScreenObject(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
+                                break;
+                            case 960: // timed switch (1s)
+                                new TimeSwitch(i * Globals.T, j * Globals.T, 1 * 60, room);
+                                break;
+                            case 961: // timed switch (3s)
+                                new TimeSwitch(i * Globals.T, j * Globals.T, 3 * 60, room);
+                                break;
+                            case 962: // timed switch (5s)
+                                new TimeSwitch(i * Globals.T, j * Globals.T, 5 * 60, room);
+                                break;
+                            case 963: // timed switch (10s)
+                                new TimeSwitch(i * Globals.T, j * Globals.T, 10 * 60, room);
+                                break;
+                            // flow objects:
+                            case 896:
+                            case 897:
+                            case 898:
+                            case 899:
+                                if (t.ID == 896)
+                                    new Flow(i * Globals.T, j * Globals.T, room, Direction.UP);
+                                if (t.ID == 897)
+                                    new Flow(i * Globals.T, j * Globals.T, room, Direction.DOWN);
+                                if (t.ID == 898)
+                                    new Flow(i * Globals.T, j * Globals.T, room, Direction.LEFT);
+                                if (t.ID == 899)
+                                    new Flow(i * Globals.T, j * Globals.T, room, Direction.RIGHT);
+                                break;
+                            // flow objects (activatable)
+                            case 900:
+                            case 901:
+                            case 902:
+                            case 903:
+                                if (t.ID == 900)
+                                    new Flow(i * Globals.T, j * Globals.T, room, Direction.UP).Activatable = true;
+                                if (t.ID == 901)
+                                    new Flow(i * Globals.T, j * Globals.T, room, Direction.DOWN).Activatable = true;
+                                if (t.ID == 902)
+                                    new Flow(i * Globals.T, j * Globals.T, room, Direction.LEFT).Activatable = true;
+                                if (t.ID == 903)
+                                    new Flow(i * Globals.T, j * Globals.T, room, Direction.RIGHT).Activatable = true;
+                                break;
+                            // flow objects (activatable, default: on)
+                            case 904:
+                            case 905:
+                            case 906:
+                            case 907:
+                                if (t.ID == 904)
+                                    new Flow(i * Globals.T, j * Globals.T, room, Direction.UP) { Activatable = true, ActiveByDefault = true };
+                                if (t.ID == 905)
+                                    new Flow(i * Globals.T, j * Globals.T, room, Direction.DOWN) { Activatable = true, ActiveByDefault = true };
+                                if (t.ID == 906)
+                                    new Flow(i * Globals.T, j * Globals.T, room, Direction.LEFT) { Activatable = true, ActiveByDefault = true };
+                                if (t.ID == 907)
+                                    new Flow(i * Globals.T, j * Globals.T, room, Direction.RIGHT) { Activatable = true, ActiveByDefault = true };
+                                break;
+                            case 908: // laser (vertical)
+                                new Laser(i * Globals.T, j * Globals.T, room, Laser.Orientation.Vertical);
+                                break;
+                            case 909: // laser (horizontal)
+                                new Laser(i * Globals.T, j * Globals.T, room, Laser.Orientation.Horizontal);
+                                break;
+                            case 910: // toggle laser (vertical)
+                                new Laser(i * Globals.T, j * Globals.T, room, Laser.Orientation.Vertical, true);
+                                break;
+                            case 911: // toggle laser (horizontal)
+                                new Laser(i * Globals.T, j * Globals.T, room, Laser.Orientation.Horizontal, true);
+                                break;
+                            case 912: // toggle laser (vertical)
+                                new Laser(i * Globals.T, j * Globals.T, room, Laser.Orientation.Vertical, true, defaultValue: false);
+                                break;
+                            case 913: // toggle laser (horizontal)
+                                new Laser(i * Globals.T, j * Globals.T, room, Laser.Orientation.Horizontal, true, defaultValue: false);
+                                break;
+                            default:
+                                var solid = new Solid(i * Globals.T, j * Globals.T, room);
+                                t.TileOptions.Visible = true;
+                                t.TileOptions.Solid = true;
+                                if (t.ID == 645) t.TileOptions.Visible = false;  // <- invisible blocks
+                                break;
+                        }
                     }
                 }
             }
-            
+
+            // water animated tiles
+            {
+                var index = GameManager.Current.Map.LayerDepth.ToList().IndexOf(GameManager.Current.Map.LayerDepth.First(o => o.Key.ToLower() == "water"));
+                var data = GameManager.Current.Map.LayerData.ElementAt(index);
+
+                x = (int)((float)x).Clamp(0, data.Width);
+                y = (int)((float)y).Clamp(0, data.Height);
+
+                // load objects from water tile data
+
+                for (int i = x; i < x + w; i++)
+                {
+                    for (int j = y; j < y + h; j++)
+                    {
+                        var t = data.Get(i, j);
+
+                        if (t == null || t.ID == -1)
+                            continue;
+
+                        if (t.ID == 199)
+                        {
+                            t.TileOptions.Visible = false;
+                            new AnimatedWaterSurface(i * Globals.T, j * Globals.T, room, 0);
+                        }
+                    }
+                }
+            }
+
             //Debug.WriteLine("Created " + solidCount + " solid objects.");
             GameManager.Current.LoadedRooms.Add(room);
         }
