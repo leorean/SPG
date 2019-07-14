@@ -90,7 +90,9 @@
     <Compile Include="Objects\Enemies\EnemyBat.cs" />
     <Compile Include="Objects\Enemies\EnemyGrassy.cs" />
     <Compile Include="Objects\Enemies\BossMirrorSelf.cs" />
+    <Compile Include="Objects\Enemies\EnemyProjectile.cs" />
     <Compile Include="Objects\Enemies\EnemySlime.cs" />
+    <Compile Include="Objects\Enemies\EnemySlurp.cs" />
     <Compile Include="Objects\Enemies\EnemyVoidling.cs" />
     <Compile Include="Objects\Enemies\Laser.cs" />
     <Compile Include="Objects\IMovable.cs" />
@@ -107,6 +109,7 @@
     <Compile Include="Objects\Level\Blocks\IceBlock.cs" />
     <Compile Include="Objects\Level\BossSpawn.cs" />
     <Compile Include="Objects\Level\Blocks\DestroyBlock.cs" />
+    <Compile Include="Objects\Level\FallOutOfScreenObject.cs" />
     <Compile Include="Objects\Level\Flow.cs" />
     <Compile Include="Objects\Level\Blocks\OrbBlock.cs" />
     <Compile Include="Objects\Level\Blocks\EnemyBlock.cs" />

@@ -258,6 +258,9 @@ namespace Leore.Main
                                 slime.MergeTimer = 0;
                             }
                             break;
+                        case 776:
+                            new EnemySlurp(i * Globals.T + 8, j * Globals.T + 8, room);
+                            break;
                         case 832: // teleporters
                             new Teleporter(i * Globals.T + 8, j * Globals.T + 8, room);
                             break;
@@ -291,6 +294,9 @@ namespace Leore.Main
                             break;
                         case 842:
                             new LightObject(i * Globals.T, j * Globals.T, room);
+                            break;
+                        case 843:
+                            new FallOutOfScreenObject(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
                             break;
                         case 960: // timed switch (1s)
                             new TimeSwitch(i * Globals.T, j * Globals.T, 1 * 60, room);

@@ -95,6 +95,7 @@ namespace Leore.Main
             if (player.Orb != null) player.Orb.Visible = true;
 
             player.State = Player.PlayerState.IDLE;
+            player.OutOfScreen = false;
             player.Position = newPosition;
 
             if (player.Orb != null)
@@ -109,13 +110,14 @@ namespace Leore.Main
             GameManager.Current.Transition.FadeOut();
 
             GameManager.Current.Transition.OnTransitionEnd = Transition_2;
+            player.Visible = true;
         }
 
         private void Transition_2()
         {
             GameManager.Current.Transition.OnTransitionEnd = null;
             GameManager.Current.Transition = null;
-            player.Visible = true;
+            //player.Visible = true; <- done already at end of transition_1
         }
 
         public void ChangeRoomsToPosition(Vector2 position, int type)

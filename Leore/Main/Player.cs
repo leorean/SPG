@@ -203,6 +203,9 @@ namespace Leore.Main
         public Teleporter Teleporter { get; set; }
 
         private Direction flowDirection;
+        public bool OutOfScreen { get; set; }
+        private int outOfScreenTimer = 0;
+        private bool outOfScreenTransitionStarted;
 
         // constructor
 
@@ -511,6 +514,11 @@ namespace Leore.Main
 
             var obstacle = ObjectManager.CollisionBoundsFirstOrDefault<Obstacle>(this, X, Y);
 
+            if (obstacle is EnemyProjectile)
+            {
+                (obstacle as EnemyProjectile).Kill();
+            }
+
             if (obstacle is Lava)
             {
                 if (HP > 0)
@@ -580,6 +588,9 @@ namespace Leore.Main
                 onWall = false;
             if (!Stats.Abilities.HasFlag(PlayerAbility.CLIMB_CEIL))
                 onCeil = false;
+
+            if (k_attackHolding)
+                onWall = false;
 
             if (onWall)
             {
@@ -934,6 +945,55 @@ namespace Leore.Main
                         npc.Interact(this);
                     }
                 }
+
+                // ++++ falling out of the screen ++++
+
+                if (OutOfScreen == false)
+                {
+                    outOfScreenTransitionStarted = false;
+                    OutOfScreen = this.CollisionBoundsFirstOrDefault<FallOutOfScreenObject>(X, Y) != null;
+                    if (OutOfScreen)
+                    {
+                        new StarEmitter(X, Y);
+                        //new KeyBurstEmitter(X, Y, this) { Colors = new List<Color> { Colors.FromHex("222034") } };
+                        outOfScreenTimer = 60;                        
+                    }
+                }
+                else
+                {
+                    outOfScreenTimer = Math.Max(outOfScreenTimer - 1, 0);
+                    if (outOfScreenTimer == 0 && !outOfScreenTransitionStarted)
+                    {
+                        outOfScreenTransitionStarted = true;
+                        RoomCamera.Current.ChangeRoomsToPosition(safePosition, 0);
+                    }
+
+                    XVel = 0;
+                    YVel = -Gravity;
+                    Visible = false;
+                }
+
+                //if (limboTimer == 0)
+                //{
+                //    if (this.CollisionBoundsFirstOrDefault<PushBlock>(safePosition.X, safePosition.Y + 1) != null)
+                //    {
+                //        safePosition = GameManager.Current.SaveGame.playerPosition;
+                //        RoomCamera.Current.ChangeRoomsToPosition(safePosition, 0);
+                //    }
+                //    else
+                //    {
+                //        Position = safePosition;
+                //    }
+
+                //    Visible = true;
+                //    if (Orb != null) Orb.Visible = true;
+
+                //    State = PlayerState.LIE;
+                //    lieTimer = 60;
+
+                //    //if (HP == 0)
+                //    //    State = PlayerState.DEAD;
+                //}
 
                 // ++++ doors ++++
 
@@ -1402,6 +1462,9 @@ namespace Leore.Main
                 if (!onWall)
                     State = PlayerState.JUMP_DOWN;
 
+                if (k_upHolding || k_downHolding)
+                    State = PlayerState.WALL_CLIMB;
+
                 var jumpOff = false;
 
                 if (Direction == Direction.LEFT)
@@ -1437,10 +1500,7 @@ namespace Leore.Main
                     lastGroundY = Math.Min(lastGroundY, lastGroundYbeforeWall);
                     jumps++;
                 }
-
-                if (k_upHolding || k_downHolding)
-                    State = PlayerState.WALL_CLIMB;
-
+                
                 if (hit)
                 {
                     XVel = -Math.Sign((int)Direction) * .5f;
