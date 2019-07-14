@@ -7,25 +7,30 @@ using System.Text;
 using System.Threading.Tasks;
 using SPG.Map;
 using SPG.Objects;
+using Leore.Resources;
+using Leore.Objects.Effects;
 
 namespace Leore.Objects.Enemies
 {
     public class EnemySlurp : Enemy
     {
-        public int ShotDelay { get; set; } = 60;
+        public int ShotDelay { get; set; } = 90;
         private int shot;
 
         public EnemySlurp(float x, float y, Room room) : base(x, y, room)
         {
-            Damage = 2;
-            DebugEnabled = true;
-
+            Damage = GameResources.EnemySlurp.Damage;
+            EXP = GameResources.EnemySlurp.EXP;
+            HP = GameResources.EnemySlurp.HP;
+            
             DrawOffset = new Vector2(8);
             BoundingBox = new SPG.Util.RectF(-4, -4, 8, 8);
 
             AnimationTexture = AssetManager.EnemySlurp;
 
             SetAnimation(0, 3, .1f, true);
+
+            shot = ShotDelay;
 
             Direction = Direction.NONE;
         }
@@ -47,7 +52,7 @@ namespace Leore.Objects.Enemies
             if (shot == 0)
             {
                 shot = ShotDelay;
-
+                new SingularEffect(X, Y, 7);
                 new DefaultEnemyProjectile(X, Y) { XVel = 2 * (int)Direction, YVel = 0 };
             }
 

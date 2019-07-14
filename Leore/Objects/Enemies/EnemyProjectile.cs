@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using SPG.Map;
 using SPG.Objects;
 using Leore.Objects.Effects;
+using SPG.Util;
 
 namespace Leore.Objects.Enemies
 {
@@ -15,6 +16,14 @@ namespace Leore.Objects.Enemies
     {
         public DefaultEnemyProjectile(float x, float y) : base(x, y)
         {
+            Texture = AssetManager.Projectiles[13];
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            Angle = (Angle + (float)MathUtil.DegToRad(45)) % 360;
         }
     }
 
@@ -25,7 +34,8 @@ namespace Leore.Objects.Enemies
             Depth = Globals.LAYER_ENEMY + .0005f;
 
             BoundingBox = new SPG.Util.RectF(-2, -2, 4, 4);
-            DebugEnabled = true;
+            DrawOffset = new Vector2(8);
+            //DebugEnabled = true;
         }
 
         public override void Update(GameTime gameTime)
@@ -38,7 +48,10 @@ namespace Leore.Objects.Enemies
             if (col)
             {
                 Kill();
-            }            
+            }
+
+            if (this.IsOutsideCurrentRoom(Globals.T))
+                Destroy();
         }
 
         public virtual void Kill()
