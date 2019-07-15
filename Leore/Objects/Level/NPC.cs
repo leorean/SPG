@@ -116,7 +116,7 @@ namespace Leore.Objects.Level
 
             var cols = 4; // how many columns there are in the sheet            
             var fSpd = .04f; // frame speed
-            var fAmount = 2; // how many frames
+            var fAmount = 4; // how many frames
             var loopAnim = true; // loop animation?
 
             switch (type)
