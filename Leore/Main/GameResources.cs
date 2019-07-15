@@ -138,7 +138,7 @@ namespace Leore.Resources
 
         // colors
 
-        public static readonly Color VoidColor = Colors.FromHex("#973bba");
+        public static readonly Color VoidColor = Colors.FromHex("973bba");
 
         public static readonly List<Color> OxygenColors = new List<Color>
         {

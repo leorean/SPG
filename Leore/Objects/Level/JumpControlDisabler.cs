@@ -18,7 +18,7 @@ namespace Leore.Objects.Level
         {
             base.Update(gameTime);
 
-            if (disappearCondition != null && GameManager.Current.HasStoryFlag(disappearCondition))
+            if (!string.IsNullOrEmpty(disappearCondition) && GameManager.Current.HasStoryFlag(disappearCondition))
                 Destroy();
         }
     }

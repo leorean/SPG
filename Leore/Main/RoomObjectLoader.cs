@@ -416,7 +416,7 @@ namespace Leore.Main
                                 new AnimatedWaterSurface(i * Globals.T, j * Globals.T, room, 0);
                                 break;
                             case 140: // cave water
-                                t.TileOptions.Visible = false;
+                                t.TileOptions.Visible = false;                                
                                 new AnimatedWaterSurface(i * Globals.T, j * Globals.T, room, 1);
                                 break;
                         }                        
