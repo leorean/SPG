@@ -409,11 +409,17 @@ namespace Leore.Main
                         if (t == null || t.ID == -1)
                             continue;
 
-                        if (t.ID == 199)
+                        switch (t.ID)
                         {
-                            t.TileOptions.Visible = false;
-                            new AnimatedWaterSurface(i * Globals.T, j * Globals.T, room, 0);
-                        }
+                            case 199: // default water
+                                t.TileOptions.Visible = false;
+                                new AnimatedWaterSurface(i * Globals.T, j * Globals.T, room, 0);
+                                break;
+                            case 140: // cave water
+                                t.TileOptions.Visible = false;
+                                new AnimatedWaterSurface(i * Globals.T, j * Globals.T, room, 1);
+                                break;
+                        }                        
                     }
                 }
             }
