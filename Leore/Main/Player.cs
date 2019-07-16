@@ -1736,7 +1736,7 @@ namespace Leore.Main
 
                 lieTimer = Math.Max(lieTimer - 1, 0);
 
-                if (lieTimer == 0)
+                if (lieTimer == 0 && (k_jumpHolding || k_attackHolding || k_upHolding || k_downHolding || k_leftHolding || k_rightHolding))
                     State = PlayerState.GET_UP;
             }
             // death
