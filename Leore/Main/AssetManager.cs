@@ -129,7 +129,7 @@ namespace Leore.Main
             WaterFall = content.LoadTextureSet("waterFall", 16, 32);
 
             WaterSurface = content.LoadTextureSet("waterSurface", 16, 16);
-            LittleStuff = content.LoadTextureSet("littleStuff", 8, 8);
+            LittleStuff = content.LoadTextureSet("littleStuff", 16, 16);
 
             EnemyGrassy = content.LoadTextureSet("enemyGrassy");
             EnemyBat = content.LoadTextureSet("enemyBat");

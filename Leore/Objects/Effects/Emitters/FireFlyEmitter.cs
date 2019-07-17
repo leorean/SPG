@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Leore.Main;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using SPG.Objects;
 using SPG.Util;
 
@@ -51,6 +52,13 @@ namespace Leore.Objects.Effects.Emitters
                 animDelay = 2;
             }
         }
+
+        //public override void Draw(SpriteBatch sb, GameTime gameTime)
+        //{
+        //    base.Draw(sb, gameTime);
+
+        //    sb.Draw(AssetManager.LittleStuff[1], Position, null, new Color(Color, Alpha), Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0001f);
+        //}
     }
 
     public class FireFlyEmitter : ParticleEmitter
@@ -58,7 +66,7 @@ namespace Leore.Objects.Effects.Emitters
         public FireFlyEmitter(float x, float y) : base(x, y)
         {
             Texture = AssetManager.LittleStuff[0];
-            DrawOffset = new Vector2(4);            
+            DrawOffset = new Vector2(8);            
         }
 
         public override void CreateParticle()

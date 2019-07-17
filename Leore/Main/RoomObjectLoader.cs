@@ -382,6 +382,9 @@ namespace Leore.Main
                             case 1024: // AMBIENCE (firefly)
                                 new EmitterSpawner<FireFlyEmitter>(i * Globals.T, j * Globals.T, room);
                                 break;
+                            case 1025: // AMBIENCE (small bird)
+                                new SmallBird(i * Globals.T + 8, j * Globals.T, room);
+                                break;
                             default:
                                 var solid = new Solid(i * Globals.T, j * Globals.T, room);
                                 t.TileOptions.Visible = true;

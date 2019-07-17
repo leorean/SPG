@@ -46,85 +46,7 @@ namespace SPG.Map
         public static Dictionary<string, object> FindFirstDataByTypeName(this List<Dictionary<string, object>> list, string name)
         {
             return list.Where(x => x.Values.Contains(name)).First();
-        }
-
-        /// <summary>
-        /// Checks if there is a solid & visible tile at positon x, y. 
-        /// If layer is specified, checks a certain map layer. default: the topmost layer of the map data.
-        /// </summary>
-        /// <param name="map"></param>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="layer"></param>
-        /// <returns></returns>
-        public static T CollisionTile<T>(this GameMap map, float x, float y, int layer = -1)
-        {
-            int tx = MathUtil.Div(x, Globals.T);
-            int ty = MathUtil.Div(y, Globals.T);
-
-            if (layer == -1)
-                layer = GameMap.FG_INDEX;
-
-            var tile = map.LayerData[layer].Get(tx, ty);
-
-            if (typeof(T) == typeof(bool))
-            {
-                if (tile != null && tile.TileOptions.Solid)
-                    return (T)(object)true;
-
-                return (T)(object)false;
-            }
-            else if (typeof(T) == typeof(Tile))
-            {
-                return (T)(object)tile;
-            }
-
-            return default(T);
-        }
-
-        public static bool CollisionTile(this GameMap map, float x, float y, int layer = -1)
-        {
-            return map.CollisionTile<bool>(x, y, layer);
-        }
-
-        /// <summary>
-        /// Checks if there is a solid & visible tile at within the bounds of the gameObject plus a velocity xVel, yVel. 
-        /// If layer is specified, checks a certain map layer. default: the topmost layer of the map data.
-        /// </summary>
-        /// <param name="map"></param>
-        /// <param name="o"></param>
-        /// <param name="xVel"></param>
-        /// <param name="yVel"></param>
-        /// <param name="layer"></param>
-        /// <returns></returns>
-        public static bool CollisionTile(this GameMap map, GameObject o, float xVel, float yVel, int layer = -1)
-        {
-            //int tx = MathUtil.Div(o.X + xVel, Globals.TILE);
-            //int ty = MathUtil.Div(o.Y + yVel, Globals.TILE);
-
-            int tl = MathUtil.Div(o.Left + xVel, Globals.T);
-            int tt = MathUtil.Div(o.Top + yVel, Globals.T);
-            int tr = MathUtil.Div(o.Right + xVel, Globals.T);
-            int tb = MathUtil.Div(o.Bottom + yVel, Globals.T);
-
-            if (layer == -1)
-                layer = map.LayerData.Count - 1;
-
-            Tile tile = null;
-
-            if (tile == null || !tile.TileOptions.Solid) tile = map.LayerData[layer].Get(tl, tt);
-            if (tile == null || !tile.TileOptions.Solid) tile = map.LayerData[layer].Get(tr, tt);
-            if (tile == null || !tile.TileOptions.Solid) tile = map.LayerData[layer].Get(tl, tb);
-            if (tile == null || !tile.TileOptions.Solid) tile = map.LayerData[layer].Get(tr, tb);
-
-            if (tile == null)
-                return false;
-
-            if (tile.TileOptions.Solid)
-                return true;
-
-            return false;
-        }
+        }        
     }
 
     /// <summary>
@@ -262,7 +184,85 @@ namespace SPG.Map
                 throw;
             }
         }
-        
+
+        /// <summary>
+        /// Checks if there is a solid & visible tile at positon x, y. 
+        /// If layer is specified, checks a certain map layer. default: the topmost layer of the map data.
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="layer"></param>
+        /// <returns></returns>
+        public T CollisionTile<T>(float x, float y, int layer = -1)
+        {
+            int tx = MathUtil.Div(x, Globals.T);
+            int ty = MathUtil.Div(y, Globals.T);
+
+            if (layer == -1)
+                layer = GameMap.FG_INDEX;
+
+            var tile = LayerData[layer].Get(tx, ty);
+
+            if (typeof(T) == typeof(bool))
+            {
+                if (tile != null && tile.TileOptions.Solid)
+                    return (T)(object)true;
+
+                return (T)(object)false;
+            }
+            else if (typeof(T) == typeof(Tile))
+            {
+                return (T)(object)tile;
+            }
+
+            return default(T);
+        }
+
+        public bool CollisionTile(float x, float y, int layer = -1)
+        {
+            return CollisionTile<bool>(x, y, layer);
+        }
+
+        /// <summary>
+        /// Checks if there is a solid & visible tile at within the bounds of the gameObject plus a velocity xVel, yVel. 
+        /// If layer is specified, checks a certain map layer. default: the topmost layer of the map data.
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="o"></param>
+        /// <param name="xVel"></param>
+        /// <param name="yVel"></param>
+        /// <param name="layer"></param>
+        /// <returns></returns>
+        public bool CollisionTile(GameObject o, float xVel, float yVel, int layer = -1)
+        {
+            //int tx = MathUtil.Div(o.X + xVel, Globals.TILE);
+            //int ty = MathUtil.Div(o.Y + yVel, Globals.TILE);
+
+            int tl = MathUtil.Div(o.Left + xVel, Globals.T);
+            int tt = MathUtil.Div(o.Top + yVel, Globals.T);
+            int tr = MathUtil.Div(o.Right + xVel, Globals.T);
+            int tb = MathUtil.Div(o.Bottom + yVel, Globals.T);
+
+            if (layer == -1)
+                layer = LayerData.Count - 1;
+
+            Tile tile = null;
+
+            if (tile == null || !tile.TileOptions.Solid) tile = LayerData[layer].Get(tl, tt);
+            if (tile == null || !tile.TileOptions.Solid) tile = LayerData[layer].Get(tr, tt);
+            if (tile == null || !tile.TileOptions.Solid) tile = LayerData[layer].Get(tl, tb);
+            if (tile == null || !tile.TileOptions.Solid) tile = LayerData[layer].Get(tr, tb);
+
+            if (tile == null)
+                return false;
+
+            if (tile.TileOptions.Solid)
+                return true;
+
+            return false;
+        }
+
         /// <summary>
         /// Draws parts of the map that are visible to the Game camera (within the camera view bounds).
         /// </summary>
