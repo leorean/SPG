@@ -10,6 +10,8 @@ using System;
 using System.Linq;
 using Leore.Objects.Effects.Weather;
 using System.Diagnostics;
+using Leore.Objects.Effects.Ambience;
+using Leore.Objects.Effects.Emitters;
 
 namespace Leore.Main
 {
@@ -319,26 +321,27 @@ namespace Leore.Main
                 curY = ty;
                 
                 OnRoomChange?.Invoke(this, new Tuple<Room,Room>(lastRoom, CurrentRoom));
+                
+                // change weather here
+                switch (CurrentRoom?.Weather)
+                {
+                    case 0: // no weather
+                            /*if (weather != null)
+                            {
+                                weather.Destroy();
+                                weather = null;
+                            }*/
+                        break;
+                    case 1: // 
+                        //new EmitterSpawner<FireFlyEmitter>(CurrentRoom.X, CurrentRoom.Y, CurrentRoom);
+                        break;
+                }
 
-                state = State.Default;                
+                state = State.Default;
             }
 
             // background interpolation
             backgroundAlpha = Math.Min(backgroundAlpha + .02f, 1);
-
-            switch (CurrentRoom?.Weather)
-            {
-                case 0:
-                    /*if (weather != null)
-                    {
-                        weather.Destroy();
-                        weather = null;
-                    }*/
-                    break;
-                case 1: // it's dark!                 
-                    break;
-            }
-
         }
 
         public void Reset()

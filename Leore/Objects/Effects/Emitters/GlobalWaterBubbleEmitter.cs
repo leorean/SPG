@@ -80,10 +80,13 @@ namespace Leore.Objects.Effects.Emitters
         private Room room;
         private int waterCount;
 
-        public GlobalWaterBubbleEmitter(float x, float y, GameObject parent) : base(x, y)
+        public GlobalWaterBubbleEmitter(float x, float y) : base(x, y)
         {
-            Parent = parent;            
         }
+        //public GlobalWaterBubbleEmitter(float x, float y, GameObject parent) : base(x, y)
+        //{
+        //    Parent = parent;            
+        //}
 
         public override void CreateParticle()
         {

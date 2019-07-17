@@ -289,6 +289,18 @@
 /processorParam:TextureFormat=Color
 /build:lava.png
 
+#begin littleStuff.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=False
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:littleStuff.png
+
 #begin messageBox.png
 /importer:TextureImporter
 /processor:TextureProcessor

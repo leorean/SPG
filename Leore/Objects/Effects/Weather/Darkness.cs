@@ -1,4 +1,5 @@
 ﻿using Leore.Main;
+using Leore.Objects.Effects.Emitters;
 using Leore.Objects.Level;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

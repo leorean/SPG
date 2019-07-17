@@ -379,6 +379,9 @@ namespace Leore.Main
                             case 913: // toggle laser (horizontal)
                                 new Laser(i * Globals.T, j * Globals.T, room, Laser.Orientation.Horizontal, true, defaultValue: false);
                                 break;
+                            case 1024: // AMBIENCE (firefly)
+                                new EmitterSpawner<FireFlyEmitter>(i * Globals.T, j * Globals.T, room);
+                                break;
                             default:
                                 var solid = new Solid(i * Globals.T, j * Globals.T, room);
                                 t.TileOptions.Visible = true;
@@ -427,6 +430,9 @@ namespace Leore.Main
                     }
                 }
             }
+
+            // doesn't matter which weather: always have bubbles in water
+            new EmitterSpawner<GlobalWaterBubbleEmitter>(room.X, room.Y, room);
 
             //Debug.WriteLine("Created " + solidCount + " solid objects.");
             GameManager.Current.LoadedRooms.Add(room);

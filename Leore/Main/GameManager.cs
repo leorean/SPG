@@ -13,6 +13,7 @@ using System.Linq;
 using Leore.Objects.Projectiles;
 using Leore.Objects.Level.Switches;
 using Leore.Objects.Effects.Weather;
+using Leore.Objects.Effects.Ambience;
 
 namespace Leore.Main
 {
@@ -32,7 +33,7 @@ namespace Leore.Main
         
         public Transition Transition { get; set; }
 
-        private GlobalWaterBubbleEmitter globalWaterEmitter;
+        //private GlobalWaterBubbleEmitter globalWaterEmitter;
 
         public float CoinsAfterDeath { get; set; }
         private Vector2 originalSpawnPosition;
@@ -80,7 +81,9 @@ namespace Leore.Main
             // load new room + neighbors
             var neighbors = newRoom.Neighbors();
             RoomObjectLoader.CreateRoomObjects(newRoom);
-            
+
+            //new EmitterSpawner<GlobalWaterBubbleEmitter>(newRoom.X, newRoom.Y, newRoom);
+
             // create room objects from object data for current room
             var objectData = GameManager.Current.Map.ObjectData.Where(o => !o.Values.Contains("room")).ToList();
             RoomObjectLoader.CreateRoomObjectsFromData(objectData, newRoom);
@@ -110,24 +113,9 @@ namespace Leore.Main
 
         public void UnloadRoomObjects(Room room)
         {
-            // gather all objects which are inside the specified room
-            //var aliveObjects = ObjectManager.Objects.Where(
-            //    o => o is RoomObject
-            //    && (o as RoomObject).Room == room)
-            //    .ToList();
-
-            //foreach (var o in aliveObjects)
-            //{
-            //    o.Destroy();
-            //}
-
-            // TODO: add all objects that are alive and should be killed
-
-            //var alive = ObjectManager.Objects.Where(o => !(o is Room)).ToList();
             var alive = ObjectManager.Objects.Where(
                 o => !(o is Room) 
                 && !(o is Player)
-                && !(o is Weather)
                 ).ToList();
             alive.ForEach(o => o.Destroy());
 
@@ -202,7 +190,8 @@ namespace Leore.Main
             Player.Direction = direction;
             Player.AnimationTexture = AssetManager.Player;
 
-            globalWaterEmitter = new GlobalWaterBubbleEmitter(spawnX, spawnY, Player);
+            //globalWaterEmitter = new GlobalWaterBubbleEmitter(spawnX, spawnY, Player);
+            //new EmitterSpawner<GlobalWaterBubbleEmitter>(spawnX, spawnY, CurrentRoom);
 
             RoomCamera.Current.SetTarget(Player);
             MainGame.Current.HUD.SetPlayer(Player);
@@ -262,7 +251,6 @@ namespace Leore.Main
             }
 
             return false;
-            //return (!string.IsNullOrEmpty(storyFlag) && Player.Stats.StoryFlags.Contains(storyFlag)) || string.IsNullOrEmpty(storyFlag);
         }
 
         /// <summary>
