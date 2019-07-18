@@ -298,14 +298,15 @@ namespace Leore.Main
                         offsetX = 0;
                         state = State.RoomTransition;
 
+                        lastBG = CurrentBG;
                         if (CurrentRoom.Background != -1)
                         {
-                            // switch backgrounds
-                            if (lastBG != CurrentBG)
-                                backgroundAlpha = 0;
-                            lastBG = CurrentBG;
+                            // switch backgrounds                                                        
                             CurrentBG = CurrentRoom.Background;
-                        }                            
+                        }
+
+                        if (lastBG != CurrentBG && lastBG != -1)
+                            backgroundAlpha = 0;
                     }
                 }
             }
