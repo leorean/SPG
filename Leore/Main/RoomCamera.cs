@@ -301,7 +301,8 @@ namespace Leore.Main
                         if (CurrentRoom.Background != -1)
                         {
                             // switch backgrounds
-                            backgroundAlpha = 0;
+                            if (lastBG != CurrentBG)
+                                backgroundAlpha = 0;
                             lastBG = CurrentBG;
                             CurrentBG = CurrentRoom.Background;
                         }                            
@@ -370,18 +371,31 @@ namespace Leore.Main
             var d = (Position.X * .8f) % 256;
 
             var bg = CurrentBG * 5;
+            var bgOld = lastBG * 5;
 
             if (_backgrounds != null)
             {
                 // TODO.
-                //if (lastRoom != null)
-                //{
-                //    if (backgroundAlpha < 1)
-                //    {
-                //        if (lastBG != -1)
-                //            sb.Draw(_backgrounds[lastBG], Position - new Vector2(ViewWidth * .5f, ViewHeight * .5f), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0.0001f);
-                //    }
-                //}
+                if (lastRoom != null)
+                {
+                    if (backgroundAlpha < 1)
+                    {
+                        if (lastBG != -1)
+                        {
+                            //sb.Draw(_backgrounds[lastBG], Position - new Vector2(ViewWidth * .5f, ViewHeight * .5f), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0.0001f);
+                            for (var i = -1; i < 2; i++)
+                            {
+                                var posX = Position.X - ViewWidth * .5f + i * ViewWidth;
+                                var posY = Position.Y - ViewHeight * .5f;
+
+                                sb.Draw(_backgrounds[bgOld + 0], new Vector2(posX - a, posY), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0.00010f);
+                                sb.Draw(_backgrounds[bgOld + 1], new Vector2(posX - b, posY), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0.00011f);
+                                sb.Draw(_backgrounds[bgOld + 2], new Vector2(posX - c, posY), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0.00012f);
+                                sb.Draw(_backgrounds[bgOld + 3], new Vector2(posX - d, posY), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0.00013f);
+                            }
+                        }
+                    }
+                }
                 if (CurrentRoom != null)
                 {
                     var color = new Color(Color.White, backgroundAlpha);
