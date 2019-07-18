@@ -383,7 +383,7 @@ namespace Leore.Main
                                 new EmitterSpawner<FireFlyEmitter>(i * Globals.T, j * Globals.T, room);
                                 break;
                             case 1025: // AMBIENCE (small bird)
-                                new SmallBird(i * Globals.T + 8, j * Globals.T, room);
+                                new LittleBirb(i * Globals.T + 8, j * Globals.T, room);
                                 break;
                             default:
                                 var solid = new Solid(i * Globals.T, j * Globals.T, room);

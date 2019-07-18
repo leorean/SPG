@@ -12,7 +12,7 @@ using Leore.Objects.Level;
 
 namespace Leore.Objects.Effects.Ambience
 {
-    public class SmallBird : RoomObject
+    public class LittleBirb : RoomObject
     {
         private enum State { PICK, HOP, FLY_AWAY }
 
@@ -27,7 +27,7 @@ namespace Leore.Objects.Effects.Ambience
         Vector2 origPosition;
         private Direction direction;
 
-        public SmallBird(float x, float y, Room room) : base(x, y, room)
+        public LittleBirb(float x, float y, Room room) : base(x, y, room)
         {
             type = RND.Choose(0, 1, 2);
 

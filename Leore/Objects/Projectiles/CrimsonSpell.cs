@@ -14,16 +14,9 @@ namespace Leore.Objects.Projectiles
 {
     public class CrimsonBurstEmitter :SaveBurstEmitter
     {
-        public static List<Color> CrimsonColors = new List<Color>()
-        {
-            Colors.FromHex("c80e1f"),
-            Colors.FromHex("df6f64"),
-            Colors.FromHex("900717")
-        };
-
         public CrimsonBurstEmitter(float x, float y) : base(x, y)
         {
-            ParticleColors = CrimsonColors;
+            ParticleColors = GameResources.CrimsonColors;
         }
     }
 
@@ -148,7 +141,7 @@ namespace Leore.Objects.Projectiles
                 if (rel * RND.Next * 10 > 8)
                 {
                     var emitter = new SingleParticleEmitter(X + recoil.X, Y + recoil.Y);
-                    var colors = CrimsonBurstEmitter.CrimsonColors;
+                    var colors = GameResources.CrimsonColors;
                     var colorIndex = RND.Int(colors.Count - 1);
                     emitter.Color = colors[colorIndex];
                     emitter.XVel = rel * -(float)MathUtil.LengthDirX(MathUtil.RadToDeg(Angle));

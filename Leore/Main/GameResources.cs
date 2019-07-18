@@ -146,6 +146,13 @@ namespace Leore.Resources
             new Color(79, 3, 243)
         };
 
+        public static List<Color> CrimsonColors = new List<Color>
+        {
+            Colors.FromHex("c80e1f"),            
+            Colors.FromHex("900717"),
+            Colors.FromHex("590210")
+        };
+
         public static readonly List<Color> FireColors = new List<Color>
         {
             Colors.FromHex("ffa100"),

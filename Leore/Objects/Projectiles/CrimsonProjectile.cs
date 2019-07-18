@@ -7,6 +7,7 @@ using Leore.Objects.Level;
 using SPG.Map;
 using SPG.Objects;
 using SPG.Util;
+using Leore.Resources;
 
 namespace Leore.Objects.Projectiles
 {
@@ -41,7 +42,7 @@ namespace Leore.Objects.Projectiles
             YVel += .06f;
 
             var emitter = new SingleParticleEmitter(X, Y);
-            var colors = CrimsonBurstEmitter.CrimsonColors;
+            var colors = GameResources.CrimsonColors;
             var colorIndex = RND.Int(colors.Count - 1);
             emitter.Color = colors[colorIndex];
             
