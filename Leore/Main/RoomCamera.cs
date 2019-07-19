@@ -367,12 +367,13 @@ namespace Leore.Main
         public void Draw(SpriteBatch sb, GameTime gameTime)
         {
             var a = (Position.X * .0f) % 256;
-            var b = (Position.X * .4f) % 256;
-            var c = (Position.X * .6f) % 256;
-            var d = (Position.X * .8f) % 256;
+            var b = (Position.X * .15f) % 256;
+            var c = (Position.X * .25f) % 256;
+            var d = (Position.X * .3f) % 256;
+            var e = (Position.X * .5f) % 256;
 
-            var bg = CurrentBG * 5;
-            var bgOld = lastBG * 5;
+            var bg = CurrentBG * 6;
+            var bgOld = lastBG * 6;
 
             if (_backgrounds != null)
             {
@@ -393,6 +394,7 @@ namespace Leore.Main
                                 sb.Draw(_backgrounds[bgOld + 1], new Vector2(posX - b, posY), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0.00011f);
                                 sb.Draw(_backgrounds[bgOld + 2], new Vector2(posX - c, posY), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0.00012f);
                                 sb.Draw(_backgrounds[bgOld + 3], new Vector2(posX - d, posY), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0.00013f);
+                                sb.Draw(_backgrounds[bgOld + 4], new Vector2(posX - e, posY), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0.00014f);
                             }
                         }
                     }
@@ -411,6 +413,7 @@ namespace Leore.Main
                             sb.Draw(_backgrounds[bg + 1], new Vector2(posX - b, posY), null, color, 0, Vector2.Zero, 1, SpriteEffects.None, 0.00021f);
                             sb.Draw(_backgrounds[bg + 2], new Vector2(posX - c, posY), null, color, 0, Vector2.Zero, 1, SpriteEffects.None, 0.00022f);
                             sb.Draw(_backgrounds[bg + 3], new Vector2(posX - d, posY), null, color, 0, Vector2.Zero, 1, SpriteEffects.None, 0.00023f);
+                            sb.Draw(_backgrounds[bg + 4], new Vector2(posX - e, posY), null, color, 0, Vector2.Zero, 1, SpriteEffects.None, 0.00024f);
                         }
 
                         //sb.Draw(_backgrounds[CurrentBG], Position - new Vector2(ViewWidth * .5f, ViewHeight * .5f), null, color, 0, Vector2.Zero, 1, SpriteEffects.None, 0.0002f);                        
