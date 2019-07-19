@@ -173,6 +173,17 @@ namespace Leore
                 Debug.WriteLine("Saved.");
             }
 
+            if (input.IsKeyPressed(Keys.D5, Input.State.Pressed))
+            {
+                RoomCamera.Current.Zoom -= .1f;
+                Debug.WriteLine(RoomCamera.Current.Zoom);
+            }
+            if (input.IsKeyPressed(Keys.D6, Input.State.Pressed))
+            {
+                RoomCamera.Current.Zoom += .1f;
+                Debug.WriteLine(RoomCamera.Current.Zoom);
+            }
+
             if (input.IsKeyPressed(Keys.C, Input.State.Pressed))
             {
                 var dialog = new MessageDialog("Delete save game?");
