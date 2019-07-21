@@ -282,7 +282,7 @@ namespace Leore.Main
 
                                 case SpellType.FIRE:
 
-                                    Cooldown = 5;
+                                    Cooldown = 30;
 
                                     player.MP += GameResources.MPCost[Type][Level];
 

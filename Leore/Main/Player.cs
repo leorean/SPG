@@ -727,7 +727,7 @@ namespace Leore.Main
                 }
 
                 if (k_attackReleased)
-                    attackDelay = 20;
+                    attackDelay = 5;
 
                 if (k_RPressed)
                 {

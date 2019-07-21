@@ -18,7 +18,7 @@ namespace Leore.Objects.Projectiles
 {
     public abstract class FireProjectile : PlayerProjectile
     {
-        public bool IsPrimary { get; set; }
+        public bool EffectOnDestroy { get; set; }
 
         protected bool dead;
 
@@ -46,7 +46,7 @@ namespace Leore.Objects.Projectiles
 
         public override void Destroy(bool callGC = false)
         {
-            if (IsPrimary)
+            if (EffectOnDestroy)
                 new SingularEffect(X, Y, 10) { Scale = Scale * .75f };
 
             FadeOutLight.Create(this, light.Scale);
@@ -68,14 +68,14 @@ namespace Leore.Objects.Projectiles
 
     // ++++ Level: 1 ++++
 
-    public class FireProjectile1 : FireProjectile
+    public class FireBallProjectile : FireProjectile
     {
         public int Bounce { get; set; } = 3;
         private List<Vector2> a;
         private int ind;
         private float d;
         
-        public FireProjectile1(float x, float y) : base(x, y, SpellLevel.ONE)
+        public FireBallProjectile(float x, float y) : base(x, y, SpellLevel.ONE)
         {
             Scale = new Vector2(.75f);
             Gravity = .13f;
@@ -87,7 +87,7 @@ namespace Leore.Objects.Projectiles
 
             Texture = AssetManager.Projectiles[10];
 
-            IsPrimary = true;
+            EffectOnDestroy = true;
         }
 
         public override void Update(GameTime gameTime)
@@ -167,9 +167,9 @@ namespace Leore.Objects.Projectiles
 
     // ++++ Level: 2 ++++
 
-    public class FireProjectile2 : FireProjectile
+    public class FireArcProjectile : FireProjectile
     {
-        private int lifeTime = 80;
+        private int lifeTime = 40;
         
         private Direction dir;
         private Direction lookDir;
@@ -181,8 +181,12 @@ namespace Leore.Objects.Projectiles
         private float maxSpd;
 
         private float tVel = .15f;
-        
-        public FireProjectile2(float x, float y, Direction dir, Direction lookDir, float amp, float spd, float t, float tVel) : base(x, y, SpellLevel.TWO)
+
+        private float pxVel, pyVel;
+
+        private Vector2 origin;
+
+        public FireArcProjectile(float x, float y, Direction dir, Direction lookDir, float amp, float spd, float t, float tVel) : base(x, y, SpellLevel.TWO)
         {
             Scale = new Vector2(.75f);
 
@@ -194,7 +198,12 @@ namespace Leore.Objects.Projectiles
             this.lookDir = lookDir;
 
             Damage = 2;
-            
+
+            pxVel = player.XVel;
+            pyVel = player.YVel;
+
+            origin = Position;
+
             Texture = AssetManager.Projectiles[11];
         }
 
@@ -226,9 +235,9 @@ namespace Leore.Objects.Projectiles
             spd = Math.Min(spd + .15f, maxSpd);
             if (spd == maxSpd)
             {
-                if (Math.Abs(spd) < .5f)
-                    lifeTime = 0;
-                maxSpd *= .9f;
+                //if (Math.Abs(spd) < .5f)
+                //    lifeTime = 0;
+                //maxSpd *= .9f;
             }
 
             var angle = 0;
@@ -252,9 +261,9 @@ namespace Leore.Objects.Projectiles
 
             var lx = Math.Sign((int)dir) * spd;
             var ly = Math.Sign((int)lookDir) * spd;
-            
-            XVel = xv + lx;
-            YVel = yv + ly;
+
+            XVel = xv + lx;// + .5f * pxVel;
+            YVel = yv + ly;// + .5f * pyVel;
 
             if (amp > 0)
                 Angle = (float)MathUtil.VectorToAngle(new Vector2(XVel, YVel), true);
@@ -265,7 +274,7 @@ namespace Leore.Objects.Projectiles
 
             Move(XVel, YVel);
             
-            if (lifeTime == 0)
+            if (lifeTime == 0 || MathUtil.Euclidean(Position, origin) > 5 * Globals.T)
                 Destroy();            
         }
 
@@ -277,16 +286,18 @@ namespace Leore.Objects.Projectiles
 
     // ++++ Level: 3 ++++
 
-    public class FireProjectile3 : FireProjectile
+    public class FlameThrowerProjectile : FireProjectile
     {
-        public FireProjectile3(float x, float y) : base(x, y, SpellLevel.THREE)
+        private float alpha = 1;
+
+        public FlameThrowerProjectile(float x, float y) : base(x, y, SpellLevel.THREE)
         {
             Scale = new Vector2(.4f);
             Texture = AssetManager.Projectiles[12];
 
-            Damage = 2;
-
-            IsPrimary = true;
+            Damage = 1;
+            
+            EffectOnDestroy = false;
         }
 
         public override void Update(GameTime gameTime)
@@ -331,7 +342,10 @@ namespace Leore.Objects.Projectiles
                 YVel = -YVel * .85f;
             }
 
-            if (Math.Max(Math.Abs(XVel), Math.Abs(YVel)) < .5f)
+            alpha = Math.Max(alpha - .02f, 0);
+            Color = new Color(Color, alpha);
+
+            if (Math.Max(Math.Abs(XVel), Math.Abs(YVel)) < .5f || alpha == 0)
                 Destroy();
         }        
     }

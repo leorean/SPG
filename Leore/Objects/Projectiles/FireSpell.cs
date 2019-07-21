@@ -39,13 +39,13 @@ namespace Leore.Objects.Projectiles
             switch (level)
             {
                 case SpellLevel.ONE:
-                    maxPower = 1 * 60;
+                    maxPower = .5f * 60;
                     break;
                 case SpellLevel.TWO:
-                    maxPower = 2 * 60;
+                    maxPower = 1 * 60;
                     break;
                 case SpellLevel.THREE:
-                    maxPower = 1 * 60;
+                    maxPower = 2 * 60;
                     break;
             }
 
@@ -82,7 +82,7 @@ namespace Leore.Objects.Projectiles
                 {
                     case SpellLevel.ONE:
                         {
-                            var proj = new FireProjectile1(X, Y);
+                            var proj = new FireBallProjectile(X, Y);
                             proj.XVel = Math.Sign((int)player.Direction) * (1.25f - Math.Abs(.25f * (int)player.LookDirection));
                             proj.YVel = Math.Max(-2f + 1f * (int)player.LookDirection, -2.5f);
                             
@@ -90,33 +90,44 @@ namespace Leore.Objects.Projectiles
                         }
                         break;
 
-                    case SpellLevel.TWO:
+                    case SpellLevel.THREE:
                         {
                             var tVel = .3f;
 
-                            new FireProjectile2(X, Y, player.Direction, player.LookDirection, 0, 3f, 0, tVel) { IsPrimary = true };
-                            
+                            new FireArcProjectile(X, Y, player.Direction, player.LookDirection, 0, 3f, 0, tVel) { EffectOnDestroy = true };
+
                             if (p > 0f)
                             {
-                                new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 2.5f, 1.5f * (float)Math.PI, tVel) { Scale = new Vector2(.4f), Damage = 1 };
-                                new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 2.5f, 0.5f * (float)Math.PI, tVel) { Scale = new Vector2(.4f), Damage = 1 };
+                                new FireArcProjectile(X, Y, player.Direction, player.LookDirection, 1f, 2.5f, 1.9f * (float)Math.PI, 0) { Scale = new Vector2(.4f), Damage = 1, EffectOnDestroy = true };
+                                new FireArcProjectile(X, Y, player.Direction, player.LookDirection, 1f, 2.5f, 0.1f * (float)Math.PI, 0) { Scale = new Vector2(.4f), Damage = 1, EffectOnDestroy = true };
                             }
                             if (p > .5f)
                             {
-                                new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 3.2f, 1f * (float)Math.PI, tVel) { Scale = new Vector2(.4f), Damage = 1 };
-                                new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 3.2f, 2f * (float)Math.PI, tVel) { Scale = new Vector2(.4f), Damage = 1 };
+                                new FireArcProjectile(X, Y, player.Direction, player.LookDirection, 1f, 3.2f, 1.95f * (float)Math.PI, 0) { Scale = new Vector2(.4f), Damage = 1, EffectOnDestroy = true };
+                                new FireArcProjectile(X, Y, player.Direction, player.LookDirection, 1f, 3.2f, 0.05f * (float)Math.PI, 0) { Scale = new Vector2(.4f), Damage = 1, EffectOnDestroy = true };
                             }
+
+                            //if (p > 0f)
+                            //{
+                            //    new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 2.5f, 1.5f * (float)Math.PI, tVel) { Scale = new Vector2(.4f), Damage = 1 };
+                            //    new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 2.5f, 0.5f * (float)Math.PI, tVel) { Scale = new Vector2(.4f), Damage = 1 };
+                            //}
+                            //if (p > .5f)
+                            //{
+                            //    new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 3.2f, 1f * (float)Math.PI, tVel) { Scale = new Vector2(.4f), Damage = 1 };
+                            //    new FireProjectile2(X, Y, player.Direction, player.LookDirection, 1f, 3.2f, 2f * (float)Math.PI, tVel) { Scale = new Vector2(.4f), Damage = 1 };
+                            //}
                             delay = 10 + (int)(15 * (1 - p));
                         }
                         break;
 
-                    case SpellLevel.THREE:
+                    case SpellLevel.TWO:
                         {
-                            var proj = new FireProjectile3(X, Y);
+                            var proj = new FlameThrowerProjectile(X, Y);
                             proj.XVel = Math.Sign((int)player.Direction) * (.75f + 2.5f * p) + player.XVel;
                             proj.YVel = -.3f * (float)Math.Sin(t) + player.YVel + 1f * (int)player.LookDirection;
 
-                            delay = (int)(maxDelay * (1 - .75f * p) * 3);
+                            delay = (int)(maxDelay * (.5f - .25f * p) * 3);
                         }
                         break;
                 }
@@ -136,8 +147,9 @@ namespace Leore.Objects.Projectiles
 
             //sb.Draw(AssetManager.FireBall, Position, null, Color, Angle, new Vector2(16), new Vector2(.5f + .5f * power / maxPower), SpriteEffects.None, Depth + .0001f);
 
-            if (power / maxPower > 0)
-                sb.DrawBar(player.Position + new Vector2(0, -16), 24, power / maxPower, Color.White, Color.Black, orb.Depth + .0001f, 2, false);
+            // draw bar
+            //if (power / maxPower > 0)
+            //    sb.DrawBar(player.Position + new Vector2(0, -16), 24, power / maxPower, Color.White, Color.Black, orb.Depth + .0001f, 2, false);
         }
         
         public override void Destroy(bool callGC = false)
