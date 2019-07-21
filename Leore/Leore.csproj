@@ -113,6 +113,7 @@
     <Compile Include="Objects\Level\Blocks\IceBlock.cs" />
     <Compile Include="Objects\Level\BossSpawn.cs" />
     <Compile Include="Objects\Level\Blocks\DestroyBlock.cs" />
+    <Compile Include="Objects\Level\CoinStatue.cs" />
     <Compile Include="Objects\Level\FallOutOfScreenObject.cs" />
     <Compile Include="Objects\Level\Flow.cs" />
     <Compile Include="Objects\Level\Blocks\OrbBlock.cs" />

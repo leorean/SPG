@@ -224,6 +224,14 @@ namespace SPG.Map
             return CollisionTile<bool>(x, y, layer);
         }
 
+        public Tile GetTileAtObjectPosition(GameObject o, int layer)
+        {
+            int tx = MathUtil.Div(o.Center.X, Globals.T);
+            int ty = MathUtil.Div(o.Center.Y, Globals.T);
+
+            return LayerData[layer].Get(tx, ty);            
+        }
+
         /// <summary>
         /// Checks if there is a solid & visible tile at within the bounds of the gameObject plus a velocity xVel, yVel. 
         /// If layer is specified, checks a certain map layer. default: the topmost layer of the map data.

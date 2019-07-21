@@ -11,23 +11,25 @@ namespace Leore.Objects.Level
 {
     public class NPC : RoomObject
     {
-        private string text;
-        private string yesText;
-        private string noText;
+        protected string text;
+        protected string yesText;
+        protected string noText;
 
-        private string appearCondition;
-        private string setCondition;
-        private string disappearCondition;
+        protected string appearCondition;
+        protected string setCondition;
+        protected string disappearCondition;
 
-        private int type;
+        protected int type;
 
-        private Direction direction;
+        protected Direction direction;
 
-        private Player player;
+        protected Player player;
 
-        private bool centerText;
-        private bool lookAtPlayer;
+        protected bool centerText;
+        protected bool lookAtPlayer;
 
+        // for coinStatues, to have a dialog but don't follow up with a text
+        protected bool forceDialog;
         protected bool decision;
 
         public bool Active { get; set; }
@@ -45,8 +47,8 @@ namespace Leore.Objects.Level
             this.disappearCondition = disappearCondition;
 
             AnimationTexture = AssetManager.NPCS;
-            
-            DrawOffset = new Vector2(8, 24);            
+
+            DrawOffset = new Vector2(8, 24);
             BoundingBox = new RectF(-8, -8, 16, 16);
             Depth = Globals.LAYER_PLAYER - 0.001f;
 
@@ -144,10 +146,9 @@ namespace Leore.Objects.Level
                 return;
 
             this.player = player;
-
             this.player.State = Player.PlayerState.BACKFACING;
 
-            if (string.IsNullOrEmpty(yesText))
+            if (string.IsNullOrEmpty(yesText) && !forceDialog)
             {
                 var msgBox = new MessageBox(text, centerText, "");
                 msgBox.OnCompleted = EndOfConversation;
@@ -158,18 +159,29 @@ namespace Leore.Objects.Level
                 dialog.YesAction = () =>
                 {
                     decision = true;
-                    var msgBox = new MessageBox(yesText, centerText, "");                    
-                    msgBox.OnCompleted = EndOfConversation;
-                };
-                if (!string.IsNullOrEmpty(noText))
-                {
-                    dialog.NoAction = () =>
+                    if (!string.IsNullOrEmpty(yesText))
                     {
-                        decision = false;
+                        var msgBox = new MessageBox(yesText, centerText, "");
+                        msgBox.OnCompleted = EndOfConversation;
+                    }
+                    else
+                    {
+                        EndOfConversation();
+                    }
+                };
+                
+                dialog.NoAction = () =>
+                {
+                    decision = false;
+                    if (!string.IsNullOrEmpty(noText))
+                    {
                         var msgBox = new MessageBox(noText, centerText, "");
                         msgBox.OnCompleted = EndOfConversation;
-                    };
-                }
+                    } else
+                    {
+                        EndOfConversation();
+                    }
+                };
             }
         }
 
@@ -181,7 +193,7 @@ namespace Leore.Objects.Level
             player = null;
         }
 
-        internal void ShowToolTip(Player player)
+        public void ShowToolTip(Player player)
         {
             var toolTip = new ToolTip(this, player, type: 0);
         }

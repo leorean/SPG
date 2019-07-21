@@ -9,7 +9,7 @@ namespace Leore.Main
     [Serializable]
     public class GameStats
     {
-        public int MaxHP { get; set; } = 5;
+        public int MaxHP { get; set; } = 3;
         public int MaxMP { get; set; } = 30;
         public float MPRegen { get; set; } = .1f;
 

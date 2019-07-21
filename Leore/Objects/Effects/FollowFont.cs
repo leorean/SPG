@@ -18,7 +18,7 @@ namespace Leore.Objects.Effects
 
         private float offX, offY;
         private GameObject target;
-        public GameObject Target { get => target; set { target = value; offX = (X - target.X); offY = (Y - target.Y); } }
+        public GameObject Target { get => target; set { target = value; offX = (X - target.Center.X); offY = (Y - target.Center.Y); } }
 
         public FollowFont(float x, float y, string text) : base(x, y)
         {
@@ -43,7 +43,7 @@ namespace Leore.Objects.Effects
             if (ObjectManager.Exists(Target))
             {
                 YVel = 0;
-                Position = new Vector2(Target.X + offX, Target.Y + offY);
+                Position = new Vector2(Target.Center.X + offX, Target.Center.Y + offY);
             }
             
             alpha = Math.Max(alpha - .03f, 0);

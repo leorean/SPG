@@ -58,6 +58,7 @@ namespace Leore.Main
         public static TextureSet Laser { get; private set; }
         public static TextureSet Lava { get; private set; }
         public static TextureSet WaterFall { get; private set; }
+        public static TextureSet CoinStatue { get; private set; }
 
         // ambience
 
@@ -127,6 +128,7 @@ namespace Leore.Main
             Laser = content.LoadTextureSet("laser", 32, 32);
             Lava = content.LoadTextureSet("lava");
             WaterFall = content.LoadTextureSet("waterFall", 16, 32);
+            CoinStatue = content.LoadTextureSet("coinStatue", 32, 32);
 
             WaterSurface = content.LoadTextureSet("waterSurface", 16, 16);
             LittleStuff = content.LoadTextureSet("littleStuff", 16, 16);

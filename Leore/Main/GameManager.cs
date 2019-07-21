@@ -78,6 +78,8 @@ namespace Leore.Main
             // do this, because else the GC would wait to clean huge resources and create a temporary lag
             GC.Collect();
 
+            OverwriteSwitchStateTo(false);
+
             // load new room + neighbors
             var neighbors = newRoom.Neighbors();
             RoomObjectLoader.CreateRoomObjects(newRoom);

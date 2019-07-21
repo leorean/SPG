@@ -8,6 +8,9 @@
  <objecttype name="chest" color="#ff5500">
   <property name="value" type="float" default="0"/>
  </objecttype>
+ <objecttype name="coinStatue" color="#ded4ff">
+  <property name="amount" type="int" default="0"/>
+ </objecttype>
  <objecttype name="door" color="#b9ff35">
   <property name="tx" type="int" default="0"/>
   <property name="ty" type="int" default="0"/>

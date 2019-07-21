@@ -1,4 +1,5 @@
 ﻿using Leore.Main;
+using SPG.Map;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,21 @@ namespace Leore.Objects.Effects.Ambience
         {
             Depth = Globals.LAYER_WATER;
             AnimationTexture = AssetManager.WaterSurface;
-            SetAnimation(6 * type, 6 * type + 5, .1f, true);            
+            SetAnimation(6 * type, 6 * type + 5, .1f, true);
+
+            var tile = GameManager.Current.Map.GetTileAtObjectPosition(this, GameMap.WATER_INDEX);
+
+            if (tile != null)
+                tile.TileOptions.Visible = false;            
+        }
+        public override void Destroy(bool callGC = false)
+        {
+            base.Destroy(callGC);
+
+            var tile = GameManager.Current.Map.GetTileAtObjectPosition(this, GameMap.WATER_INDEX);
+
+            if (tile != null)
+                tile.TileOptions.Visible = true;            
         }
     }
 }

@@ -571,7 +571,7 @@ namespace Leore.Main
                 onCeil = !hit && ObjectManager.CollisionPoints<Solid>(this, X, Y - BoundingBox.Height * .5f - 1)
                     .Where(o => o.Room == currentRoom && !(o is PushBlock)).Count() > 0;
             }
-            inWater = GameManager.Current.Map.CollisionTile(X, Y + 4, GameMap.WATER_INDEX);
+            inWater = GameManager.Current.Map.CollisionTile(X, Y + 4, GameMap.WATER_INDEX) && !GameManager.Current.Map.CollisionTile(X, Y);
 
             var tile = GameManager.Current.Map.CollisionTile<Tile>(X, Y + Globals.T + 4);
 

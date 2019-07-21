@@ -554,7 +554,12 @@ namespace Leore.Main
                         var npcDisappearCondition = data.ContainsKey("disappearCondition") ? data["disappearCondition"].ToString() : null;
 
                         var npc = new NPC(x + 8, y + 8, room, npcType, npcText, npcAppearCondition, npcSetCondition, npcDisappearCondition, npcCenterText, npcDirection, yesText:npcYesText, noText:npcNoText);                        
-                    }                    
+                    }
+                    if (type == "coinStatue")
+                    {
+                        var amount = data.ContainsKey("amount") ? (int)data["amount"] : 0;
+                        var coinStatue = new CoinStatue(x + 8, y + 8, room, amount);
+                    }
                     if (type == "shopItem")
                     {
                         var shopItemDisplayText = data.ContainsKey("displayText") ? data["displayText"].ToString() : "-unknown-";

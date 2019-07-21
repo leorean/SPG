@@ -55,7 +55,7 @@ namespace Leore.Objects.Items
             Save = true;
             Visible = false;
 
-            light = new LightSource(this);
+            light = new LightSource(this) { Scale = new Vector2(.75f) };
             
             this.setCondition = setCondition;
             this.appearCondition = appearCondition;

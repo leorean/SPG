@@ -93,7 +93,7 @@ namespace Leore.Objects.Items
                     var yv = .05f * (float)Math.Sin(t);
                     Move(0, yv);
                     
-                    if (player.HP > 0 && MathUtil.Euclidean(Center, player.Center) > 1 && MathUtil.Euclidean(Center, player.Center) < 5 * Globals.T)
+                    if (player.Stats.Abilities.HasFlag(PlayerAbility.ORB) && player.HP > 0 && MathUtil.Euclidean(Center, player.Center) > 1 && MathUtil.Euclidean(Center, player.Center) < 5 * Globals.T)
                     {
                         kinetic = false;
 
