@@ -97,7 +97,9 @@ namespace Leore.Objects.Enemies
             
             if (HP > 0)
             {
-                if (!(this is Boss) && this.CollisionBoundsFirstOrDefault<Lava>(X, Y) != null)
+                var obstacle = this.CollisionBoundsFirstOrDefault<Obstacle>(X, Y);
+
+                if (!(this is Boss) && (obstacle is Lava || obstacle is BigSpike))
                 {
                     Hit(999, 90);
                 }
