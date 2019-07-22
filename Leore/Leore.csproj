@@ -150,7 +150,7 @@
     <Compile Include="Objects\Projectiles\PlayerProjectile.cs" />
     <Compile Include="Objects\Projectiles\StarProjectile.cs" />
     <Compile Include="Objects\Effects\FollowFont.cs" />
-    <Compile Include="Objects\Enemies\Obstacles.cs" />
+    <Compile Include="Objects\Level\Obstacles\Obstacles.cs" />
     <Compile Include="Objects\Level\Blocks\PushBlock.cs" />
     <Compile Include="Main\GameResources.cs" />
     <Compile Include="Objects\Projectiles\VoidProjectile.cs" />

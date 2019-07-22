@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using SPG.Util;
 
-namespace Leore.Objects.Enemies
+namespace Leore.Objects.Level.Obstacles
 {
     public abstract class Obstacle : RoomObject
     {
@@ -20,7 +20,7 @@ namespace Leore.Objects.Enemies
     {
         public ObstacleBlock(float x, float y, Room room) : base(x, y, room)
         {
-            BoundingBox = new RectF(-.5f, -.5f, 17, 17);            
+            BoundingBox = new RectF(-1f, -1f, 18, 18);            
         }
     }
 
@@ -31,22 +31,22 @@ namespace Leore.Objects.Enemies
 
     public class SpikeBottom : Obstacle
     {
-        public SpikeBottom(float x, float y, Room room) : base(x, y, room) { BoundingBox = new RectF(2, 8, 12, 8); }
+        public SpikeBottom(float x, float y, Room room) : base(x, y, room) { BoundingBox = new RectF(2, 10, 12, 6); }
     }
 
     public class SpikeTop : Obstacle
     {
-        public SpikeTop(float x, float y, Room room) : base(x, y, room) { BoundingBox = new RectF(2, 0, 12, 8); }        
+        public SpikeTop(float x, float y, Room room) : base(x, y, room) { BoundingBox = new RectF(2, 0, 12, 6); }        
     }
 
     public class SpikeLeft : Obstacle
     {
-        public SpikeLeft(float x, float y, Room room) : base(x, y, room) { BoundingBox = new RectF(8, 2, 8, 12); }        
+        public SpikeLeft(float x, float y, Room room) : base(x, y, room) { BoundingBox = new RectF(10, 2, 6, 12); }        
     }
 
     public class SpikeRight : Obstacle
     {
-        public SpikeRight(float x, float y, Room room) : base(x, y, room) { BoundingBox = new RectF(0, 2, 8, 12); }
+        public SpikeRight(float x, float y, Room room) : base(x, y, room) { BoundingBox = new RectF(0, 2, 6, 12); }
     }
 
     public class BigSpike : SpikeBottom

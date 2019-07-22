@@ -2,6 +2,7 @@
 using Leore.Objects.Effects;
 using Leore.Objects.Effects.Emitters;
 using Leore.Objects.Enemies;
+using Leore.Objects.Level.Obstacles;
 using Leore.Objects.Projectiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -23,7 +24,6 @@ namespace Leore.Objects.Level.Blocks
         public FireBlock(float x, float y, Room room) : base(x, y, room, 1)
         {
             maxHp = HP;
-
             obstacle = new ObstacleBlock(x, y, room) { Parent = this };
         }
 

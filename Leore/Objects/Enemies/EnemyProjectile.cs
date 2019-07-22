@@ -9,6 +9,7 @@ using SPG.Map;
 using SPG.Objects;
 using Leore.Objects.Effects;
 using SPG.Util;
+using Leore.Objects.Level.Obstacles;
 
 namespace Leore.Objects.Enemies
 {

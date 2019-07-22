@@ -1,5 +1,6 @@
 ﻿using Leore.Main;
 using Leore.Objects.Level;
+using Leore.Objects.Level.Obstacles;
 using Leore.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
