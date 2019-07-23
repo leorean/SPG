@@ -124,7 +124,11 @@ namespace Leore.Main
                             // invisible fg tiles
                             case 1102:
                             case 1103:
+                            case 1166:
+                            case 1167:
                             case 1168:
+                            case 1230:
+                            case 1231:
                             case 1232:
                                 t.TileOptions.Visible = true;
                                 break;
