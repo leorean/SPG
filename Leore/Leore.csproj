@@ -68,6 +68,7 @@
     <Compile Include="Objects\Effects\Emitters\ObtainShineEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\OrbBlockEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\SingleParticleEmitter.cs" />
+    <Compile Include="Objects\Effects\Emitters\SnowEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\StarEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\PlayerLevitationEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\KeyBurstEmitter.cs" />

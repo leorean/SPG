@@ -49,9 +49,7 @@ namespace Leore.Main
         private TextureSet _backgrounds;
         private float backgroundAlpha = 1f;        
         private int lastBG = 0;
-
-        private Weather weather;
-
+        
         // transition
         
         private Vector2 newPosition;
@@ -329,21 +327,6 @@ namespace Leore.Main
                 
                 OnRoomChange?.Invoke(this, new Tuple<Room,Room>(lastRoom, CurrentRoom));
                 
-                // change weather here
-                switch (CurrentRoom?.Weather)
-                {
-                    case 0: // no weather
-                            /*if (weather != null)
-                            {
-                                weather.Destroy();
-                                weather = null;
-                            }*/
-                        break;
-                    case 1: // 
-                        //new EmitterSpawner<FireFlyEmitter>(CurrentRoom.X, CurrentRoom.Y, CurrentRoom);
-                        break;
-                }
-
                 state = State.Default;
             }
 

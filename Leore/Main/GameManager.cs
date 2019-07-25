@@ -25,16 +25,17 @@ namespace Leore.Main
         public GameMap Map;
         
         public SaveGame SaveGame;
-        
+
+        private Room lastRoom;
+        private int weather;
+
         private static GameManager instance;
         public static GameManager Current { get => instance; }
 
         public List<long> NonRespawnableIDs { get; private set; }
         
         public Transition Transition { get; set; }
-
-        //private GlobalWaterBubbleEmitter globalWaterEmitter;
-
+        
         public float CoinsAfterDeath { get; set; }
         private Vector2 originalSpawnPosition;
 
@@ -333,16 +334,34 @@ namespace Leore.Main
         {
 
             ObjectManager.Disable<GameObject>();
-                        
+
             var room = RoomCamera.Current.CurrentRoom;
             if (room != null)
             {
-                ObjectManager.SetRegionEnabled<Collider>(room.X - Globals.T, room.Y - Globals.T, room.BoundingBox.Width + 2 * Globals.T, room.BoundingBox.Height + 2 * Globals.T, true);
-            }
-            
-            if (RoomCamera.Current.CurrentRoom != null)
-            {
+                ObjectManager.SetRegionEnabled<Collider>(room.X - Globals.T, room.Y - Globals.T, room.BoundingBox.Width + 2 * Globals.T, room.BoundingBox.Height + 2 * Globals.T, true);            
                 ObjectManager.SetRegionEnabled<GameObject>(RoomCamera.Current.CurrentRoom.X, RoomCamera.Current.CurrentRoom.Y, RoomCamera.Current.CurrentRoom.BoundingBox.Width, RoomCamera.Current.CurrentRoom.BoundingBox.Height, true);
+
+                // weather
+
+                if (lastRoom != room)
+                {
+                    ObjectManager.DestroyAll<Weather>();
+
+                    if (room.Weather != -1)
+                        weather = room.Weather;
+
+                    // change weather here
+                    switch (weather)
+                    {
+                        case 0: // no weather                            
+                            break;
+                        case 1: // snow
+                            new SnowWeather(room.X, room.Y);
+                            break;
+                    }
+
+                    lastRoom = room;
+                }
 
                 // switch state
                 var switches = ObjectManager.FindAll<GroundSwitch>();

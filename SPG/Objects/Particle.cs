@@ -29,6 +29,9 @@ namespace SPG.Objects
         public float Alpha;
         public Vector2 DrawOffset;
 
+        public float X => Position.X;
+        public float Y => Position.Y;
+
         public int LifeTime;
         
         public Particle(ParticleEmitter emitter)
