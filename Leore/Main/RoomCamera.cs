@@ -242,10 +242,15 @@ namespace Leore.Main
                     // move faster during lock-mode
                     vel = new Vector2((tarX - Position.X) / 6f, (tarY - Position.Y) / 6f);
 
-                    if (MathUtil.Euclidean(Position, new Vector2(tarX, tarY)) < 2)
-                        vel = new Vector2((tarX - Position.X) / 2f, (tarY - Position.Y) / 2f);
+                    if (Math.Abs(Position.X - tarX) < 8)
+                        vel = new Vector2((tarX - Position.X) / 2f, vel.Y);
+                    if (Math.Abs(Position.Y - tarY) < 8)
+                        vel = new Vector2(vel.X, (tarY - Position.Y) / 2f);
+
+                    //if (MathUtil.Euclidean(Position, new Vector2(tarX, tarY)) < 16)
+                    //    vel = new Vector2((tarX - Position.X) / 2f, (tarY - Position.Y) / 2f);
                 }
-                
+
                 Position = new Vector2(Position.X + vel.X, Position.Y + vel.Y);
                 
                 if (lookLocked> 0)
