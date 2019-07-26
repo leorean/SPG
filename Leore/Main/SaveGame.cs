@@ -53,6 +53,7 @@ namespace Leore.Main
         //public List<int> items;
 
         public int currentBG = -1;
+        public int currentWeather = -1;
         
         // methods
 

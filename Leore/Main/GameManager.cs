@@ -27,7 +27,9 @@ namespace Leore.Main
         public SaveGame SaveGame;
 
         private Room lastRoom;
-        private int weather;
+        private int currentWeather = -1;
+
+        private GameObject weatherObject;
 
         private static GameManager instance;
         public static GameManager Current { get => instance; }
@@ -63,7 +65,8 @@ namespace Leore.Main
             SaveGame.playerPosition = new Vector2(posX, posY);
             SaveGame.playerDirection = Player.Direction;
             SaveGame.gameStats = Player.Stats;
-            SaveGame.currentBG = RoomCamera.Current.CurrentBG;            
+            SaveGame.currentBG = RoomCamera.Current.CurrentBG;
+            SaveGame.currentWeather = currentWeather;
             SaveGame.Save();
         }
 
@@ -119,6 +122,7 @@ namespace Leore.Main
             var alive = ObjectManager.Objects.Where(
                 o => !(o is Room) 
                 && !(o is Player)
+                && !(o is Weather)
                 ).ToList();
             alive.ForEach(o => o.Destroy());
 
@@ -161,7 +165,9 @@ namespace Leore.Main
                 }
                 direction = SaveGame.playerDirection;
             }
+
             RoomCamera.Current.CurrentBG = SaveGame.currentBG;
+            currentWeather = SaveGame.currentWeather;
 
             ObjectManager.Enable<Room>();
 
@@ -317,6 +323,14 @@ namespace Leore.Main
             Player = null;
             RoomCamera.Current.Reset();
 
+            // reset the weather 
+
+            if (weatherObject != null)
+                weatherObject.Destroy();
+            weatherObject = null;
+            currentWeather = -1;
+            lastRoom = null;
+
             OverwriteSwitchStateTo(false);
 
             // reset savegame (will be loaded and updates afterwards)
@@ -345,21 +359,31 @@ namespace Leore.Main
 
                 if (lastRoom != room)
                 {
-                    ObjectManager.DestroyAll<Weather>();
-
-                    if (room.Weather != -1)
-                        weather = room.Weather;
-
-                    // change weather here
-                    switch (weather)
+                    if (weatherObject == null || currentWeather != room.Weather)
                     {
-                        case 0: // no weather                            
-                            break;
-                        case 1: // snow
-                            new SnowWeather(room.X, room.Y);
-                            break;
-                    }
+                        if (room.Weather != -1)
+                        {
+                            currentWeather = room.Weather;
 
+                            if (weatherObject != null)
+                            {
+                                weatherObject.Destroy();
+                                weatherObject = null;
+                            }
+                        }
+                        
+                        if (weatherObject == null)
+                        {
+                            switch (currentWeather)
+                            {
+                                case 0: // no weather
+                                    break;
+                                case 1: // snow
+                                    weatherObject = new SnowWeather(room.X, room.Y);
+                                    break;
+                            }
+                        }
+                    }                    
                     lastRoom = room;
                 }
 
