@@ -56,6 +56,7 @@ namespace Leore.Main
         private bool invokeRoomChange;
 
         private int lookLocked;
+        float px, py;
 
         // target
 
@@ -255,7 +256,11 @@ namespace Leore.Main
                 {
                     if (moveDirection == TransitionDirection.Horizontal)
                     {
-                        var py = MathUtil.Div(Position.Y, ViewHeight) * ViewHeight + .5f * ViewHeight;
+                        py = Math.Max(Position.Y, Math.Max(CurrentRoom.Y, lastRoom.Y) + .5f * ViewHeight);
+                        py = Math.Min(py, Math.Min(CurrentRoom.Y + CurrentRoom.BoundingBox.Height, lastRoom.Y + lastRoom.BoundingBox.Height) - .5f * ViewHeight);
+
+                        //var py = MathUtil.Div(Position.Y, ViewHeight) * ViewHeight + .5f * ViewHeight;
+
                         Position = new Vector2(Position.X, py);
                         
                         if (Math.Abs(Position.X - tarX) < .5f)
@@ -267,7 +272,12 @@ namespace Leore.Main
 
                     if (moveDirection == TransitionDirection.Vertical)
                     {
-                        var px = MathUtil.Div(Position.X, ViewWidth) * ViewWidth + .5f * ViewWidth;
+
+                        px = Math.Max(Position.X, Math.Max(CurrentRoom.X, lastRoom.X) + .5f * ViewWidth);
+                        px = Math.Min(px, Math.Min(CurrentRoom.X + CurrentRoom.BoundingBox.Width, lastRoom.X + lastRoom.BoundingBox.Width) - .5f * ViewWidth);
+                        
+                        //px = MathUtil.Div(Position.X, ViewWidth) * ViewWidth + .5f * ViewWidth;
+                        
                         Position = new Vector2(px, Position.Y);
 
                         if (Math.Abs(Position.Y - tarY) < .5f)
