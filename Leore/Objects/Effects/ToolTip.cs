@@ -47,7 +47,7 @@ namespace Leore.Objects.Effects
             
             SetAnimation(cols * Type, cols * Type + 2, fSpd, true);
 
-            if (player.CollisionBounds(obj, player.X + collisionOffset.X, player.Y + collisionOffset.Y))
+            if (player.CollisionBounds(obj, player.Center.X + collisionOffset.X, player.Center.Y + collisionOffset.Y))
             {
                 alpha = Math.Min(alpha + .02f, .5f);
             } else

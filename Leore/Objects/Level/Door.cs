@@ -27,16 +27,18 @@ namespace Leore.Objects.Level
             Depth = Globals.LAYER_BG + .00001f;
             this.Type = type;
             Visible = false;
+
+            BoundingBox = new SPG.Util.RectF(4, 0, 8, 16);
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            if (door == null) {
-                door = this.CollisionBoundsFirstOrDefault<Door>(X, Y);
-                return;
-            }
+            //if (door == null) {
+            //    door = this.CollisionBoundsFirstOrDefault<Door>(X, Y);
+            //    return;
+            //}
 
             var open = false;
 
@@ -63,7 +65,7 @@ namespace Leore.Objects.Level
 
             Open = open;
             Visible = !Open;
-            door.Open = Open;
+            //door.Open = Open;
         }
 
         public void Unlock(float x, float y, bool useKeyFromInv)

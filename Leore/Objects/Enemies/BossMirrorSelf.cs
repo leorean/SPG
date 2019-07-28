@@ -47,8 +47,7 @@ namespace Leore.Objects.Enemies
             new FlashEmitter(X, Y);
 
             player.XVel = 0;
-            //new MessageBox("Foolish boy! You cannot stop the ~Void~!\nI won't let you!", hiColor: GameResources.VoidColor);
-            new MessageBox("You cannot stop the [973bba]~Void~!\nI won't let you!");
+            new MessageBox("You cannot stop the [973bba]~Void~!\nEverything will be consumed!");
         }
 
         public override void BeginUpdate(GameTime gameTime)

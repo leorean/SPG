@@ -47,9 +47,12 @@ namespace Leore.Objects.Level
             this.disappearCondition = disappearCondition;
 
             AnimationTexture = AssetManager.NPCS;
-
+            
             DrawOffset = new Vector2(8, 24);
             BoundingBox = new RectF(-8, -8, 16, 16);
+            //BoundingBox = new RectF(-12, -8, 24, 16);
+            //DebugEnabled = true;
+
             Depth = Globals.LAYER_PLAYER - 0.001f;
 
             if (dir == Direction.NONE)

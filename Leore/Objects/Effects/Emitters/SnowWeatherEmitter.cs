@@ -32,8 +32,10 @@ namespace Leore.Objects.Effects.Emitters
                 LifeTime = 0;
             else
             {
-                Position = new Vector2(RoomCamera.Current.CurrentRoom.X - RoomCamera.Current.ViewWidth + (float)RND.Next * (RoomCamera.Current.CurrentRoom.BoundingBox.Width + 2 * RoomCamera.Current.ViewWidth)
-                    , RoomCamera.Current.ViewY - (float)RND.Next * RoomCamera.Current.ViewHeight);
+                Position = new Vector2(
+                    RoomCamera.Current.CurrentRoom.X - RoomCamera.Current.ViewWidth + (float)RND.Next * (RoomCamera.Current.CurrentRoom.BoundingBox.Width + 2 * RoomCamera.Current.ViewWidth),
+                    RoomCamera.Current.ViewY - (float)RND.Next * RoomCamera.Current.ViewHeight
+                );
             }
         }
 
@@ -81,7 +83,14 @@ namespace Leore.Objects.Effects.Emitters
             if (Particles.Count > 1500)
                 return;
 
-            new SnowWeatherParticle(this);
+            var part = new SnowWeatherParticle(this);
+
+            if (Particles.Count < 500)
+            {
+                part.Position = new Vector2(part.X, part.Y  + RoomCamera.Current.ViewHeight);
+            }
+
+            
         }
 
         public override void Destroy(bool callGC = false)
