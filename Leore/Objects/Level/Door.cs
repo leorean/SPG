@@ -35,10 +35,11 @@ namespace Leore.Objects.Level
         {
             base.Update(gameTime);
 
-            //if (door == null) {
-            //    door = this.CollisionBoundsFirstOrDefault<Door>(X, Y);
-            //    return;
-            //}
+            if (door == null)
+            {
+                door = this.CollisionBoundsFirstOrDefault<Door>(X, Y);
+                return;
+            }
 
             var open = false;
 
@@ -65,7 +66,7 @@ namespace Leore.Objects.Level
 
             Open = open;
             Visible = !Open;
-            //door.Open = Open;
+            door.Open = Open;
         }
 
         public void Unlock(float x, float y, bool useKeyFromInv)
