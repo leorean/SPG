@@ -82,7 +82,8 @@ namespace Leore.Main
             Position = target != null ? target.Position : Vector2.Zero;            
         }
 
-        private void Transition_1()
+        // if type = 1, black transition. if type = 2, white transition + lie down
+        private void Transition_1(int transitionType, Direction direction)
         {
             // reset possible teleporter stuff
             player.Teleporter?.Reset();
@@ -95,7 +96,18 @@ namespace Leore.Main
             player.Teleporter = null;
             if (player.Orb != null) player.Orb.Visible = true;
 
-            player.State = Player.PlayerState.IDLE;
+            if (transitionType == 1)
+            {
+                player.LieDown(2 * 60);
+            }
+            else
+            {
+                player.State = Player.PlayerState.IDLE;
+            }
+
+            if (direction != Direction.NONE)
+                player.Direction = direction;
+
             player.OutOfScreen = false;
             player.Position = newPosition;
 
@@ -114,20 +126,22 @@ namespace Leore.Main
             player.Visible = true;
         }
 
-        private void Transition_2()
+        private void Transition_2(int type, Direction direction)
         {
             GameManager.Current.Transition.OnTransitionEnd = null;
             GameManager.Current.Transition = null;
             //player.Visible = true; <- done already at end of transition_1
         }
 
-        public void ChangeRoomsToPosition(Vector2 position, int type)
+        public void ChangeRoomsToPosition(Vector2 position, int type, Direction direction)
         {
-            //player.State = Player.PlayerState.BACKFACING;            
-            GameManager.Current.Transition = new Transition(type);
+            //player.State = Player.PlayerState.BACKFACING;
+            
+            GameManager.Current.Transition = new Transition(type, direction);
             GameManager.Current.Transition.FadeIn();
             newPosition = position;
-            GameManager.Current.Transition.OnTransitionEnd = Transition_1;
+            GameManager.Current.Transition.OnTransitionEnd = new Transition.TransitionEnd(Transition_1);
+
         }
 
         private Vector2 vel;

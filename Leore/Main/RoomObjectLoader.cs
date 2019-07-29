@@ -542,7 +542,12 @@ namespace Leore.Main
                         var tx = data.ContainsKey("tx") ? (int)data["tx"] : 0;
                         var ty = data.ContainsKey("ty") ? (int)data["ty"] : 0;
 
+                        var fadeType = data.ContainsKey("fadeType") ? (int)data["fadeType"] : 0;
+                        var direction = data.ContainsKey("direction") ? (Direction)(int)data["direction"] : Direction.NONE;
+
                         var door = new Door(x, y, room, tx, ty);
+                        door.FadeType = fadeType;
+                        door.Direction = direction;
                     }
                     if (type == "npc")
                     {

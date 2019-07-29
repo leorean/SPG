@@ -128,6 +128,13 @@ namespace Leore.Main
             input = null;
         }
 
+        public override void EndUpdate(GameTime gameTime)
+        {
+            base.EndUpdate(gameTime);
+
+            Position = new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY + offY);
+        }
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -158,7 +165,7 @@ namespace Leore.Main
                 kAny = input.IsAnyButtonPressed();
             }
 
-            Position = new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY + offY);
+            //Position = new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY + offY);
             
             //if (kPrevPressed)
             //{
@@ -243,7 +250,7 @@ namespace Leore.Main
                 sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 2 * T + z), new Rectangle(2 * T, 3 * T, T, T), Color, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
             }
         }
-
+        
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
             //base.Draw(sb, gameTime);

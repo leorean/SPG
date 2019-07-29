@@ -12,7 +12,7 @@ namespace Leore.Objects.Effects
             NONE = 0, IN = 1, OUT = -1
         }
         
-        public delegate void TransitionEnd();
+        public delegate void TransitionEnd(int type, Direction direction);
         public TransitionEnd OnTransitionEnd;
 
         //private Texture2D dark = AssetManager.Transition[0];
@@ -22,10 +22,12 @@ namespace Leore.Objects.Effects
         private double vel = .03;
 
         private int type;
+        private Direction direction;
 
-        public Transition(int type = 0)
+        public Transition(int type = 0, Direction direction = Direction.NONE)
         {
             this.type = type;
+            this.direction = direction;
         }
 
         public void FadeIn()
@@ -35,7 +37,7 @@ namespace Leore.Objects.Effects
         }
         public void FadeOut()
         {
-            alpha = 1.5;
+            alpha = type == 1 ? 3.5 : 1.5;
             fade = Fade.OUT;
         }
 
@@ -46,7 +48,7 @@ namespace Leore.Objects.Effects
                 if (alpha == 1)
                 {
                     fade = Fade.NONE;
-                    OnTransitionEnd?.Invoke();
+                    OnTransitionEnd?.Invoke(type, direction);
                 }
             }
 
@@ -56,7 +58,7 @@ namespace Leore.Objects.Effects
                 if (alpha == 0)
                 {
                     fade = Fade.NONE;
-                    OnTransitionEnd?.Invoke();
+                    OnTransitionEnd?.Invoke(type, direction);
                 }
             }
 

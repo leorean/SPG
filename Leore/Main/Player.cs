@@ -137,6 +137,13 @@ namespace Leore.Main
         Input input = new Input();
 
         bool k_leftPressed, k_leftHolding, k_leftReleased;
+
+        public void LieDown(int time)
+        {
+            State = PlayerState.LIE;
+            lieTimer = time;
+        }
+
         bool k_rightPressed, k_rightHolding, k_rightReleased;
         bool k_upPressed, k_upHolding;
         bool k_downPressed, k_downHolding;
@@ -897,7 +904,7 @@ namespace Leore.Main
 
                             var newPosition = Stats.Teleporters.ElementAt(index).Value.ToVector2();
 
-                            RoomCamera.Current.ChangeRoomsToPosition(newPosition, 1);
+                            RoomCamera.Current.ChangeRoomsToPosition(newPosition, 1, Direction.NONE);
                             Teleporter.OnFinishedAnimation = null;
 
                         };
@@ -967,7 +974,7 @@ namespace Leore.Main
                     if (outOfScreenTimer == 0 && !outOfScreenTransitionStarted)
                     {
                         outOfScreenTransitionStarted = true;
-                        RoomCamera.Current.ChangeRoomsToPosition(safePosition, 0);
+                        RoomCamera.Current.ChangeRoomsToPosition(safePosition, 0, Direction.NONE);
                     }
 
                     XVel = 0;
@@ -988,7 +995,7 @@ namespace Leore.Main
 
                         var pos = new Vector2(door.Center.X + door.Tx * Globals.T, door.Center.Y + door.Ty * Globals.T);
                         State = PlayerState.BACKFACING;
-                        RoomCamera.Current.ChangeRoomsToPosition(pos, 0);
+                        RoomCamera.Current.ChangeRoomsToPosition(pos, door.FadeType, door.Direction);
 
                     }
                 }
@@ -1120,7 +1127,7 @@ namespace Leore.Main
                     if (this.CollisionBoundsFirstOrDefault<PushBlock>(safePosition.X, safePosition.Y + 1) != null)
                     {
                         safePosition = GameManager.Current.SaveGame.playerPosition;
-                        RoomCamera.Current.ChangeRoomsToPosition(safePosition, 0);
+                        RoomCamera.Current.ChangeRoomsToPosition(safePosition, 0, Direction.NONE);
                     }
                     else
                     {

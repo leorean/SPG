@@ -104,6 +104,9 @@ namespace Leore.Objects.Level
 
         public bool Open { get; set; } = true;
 
+        public int FadeType { get; set; }
+        public Direction Direction { get; set; } = Direction.NONE;
+
         public Door(float x, float y, Room room, int tx, int ty, string name = null) : base(x, y, room, name)
         {
             Depth = Globals.LAYER_BG + .001f;

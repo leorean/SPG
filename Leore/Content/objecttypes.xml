@@ -12,6 +12,8 @@
   <property name="amount" type="int" default="0"/>
  </objecttype>
  <objecttype name="door" color="#b9ff35">
+  <property name="direction" type="int" default="0"/>
+  <property name="fadeType" type="int" default="0"/>
   <property name="tx" type="int" default="0"/>
   <property name="ty" type="int" default="0"/>
  </objecttype>
