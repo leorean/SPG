@@ -2,13 +2,15 @@
 using Leore.Main;
 using SPG.Objects;
 using System;
+using SPG.Util;
 
 namespace Leore.Objects.Effects.Emitters
 {
     public class ObtainShineParticle : Particle
     {
-        float s = .01f;
+        private float s = .01f;
         public float lightScale;
+        private Vector2 off;
 
         public ObtainShineParticle(ParticleEmitter emitter) : base(emitter)
         {
@@ -16,6 +18,8 @@ namespace Leore.Objects.Effects.Emitters
             Texture = AssetManager.WhiteCircle;
 
             LifeTime = 120;
+
+            off = - new Vector2(1) + new Vector2((float)RND.Next * 2, (float)RND.Next * 2);
 
             Scale = new Vector2(s);            
             Depth = emitter.Depth;
@@ -30,7 +34,7 @@ namespace Leore.Objects.Effects.Emitters
             Scale = new Vector2(s);
 
             Alpha = Math.Max(Alpha - .001f, 0);
-            Position = Emitter.Position;
+            Position = Emitter.Position + off;
         }
     }
 

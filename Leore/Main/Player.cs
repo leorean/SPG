@@ -657,7 +657,10 @@ namespace Leore.Main
                         }
                     }
                 }
-                
+
+                if (!GameManager.Current.Map.CollisionTile(X, Y - 12, GameMap.WATER_INDEX))
+                    Oxygen = Math.Min(Oxygen + 2, MaxOxygen);
+
                 if (HP > 0)
                 {
                     if (State != PlayerState.SWIM && State != PlayerState.SWIM_DIVE_IN && State != PlayerState.SWIM_TURN_AROUND && State != PlayerState.BACKFACING)
