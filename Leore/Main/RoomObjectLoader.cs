@@ -69,6 +69,7 @@ namespace Leore.Main
                             case 789:
                             case 794:
                             case 1041:
+                            case 1219:
                                 var platform = new Platform(i * Globals.T, j * Globals.T, room);
                                 t.TileOptions.Visible = true;
                                 if (t.ID == 646) t.TileOptions.Visible = false; // <- invisible platform
