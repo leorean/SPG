@@ -946,18 +946,28 @@ namespace Leore.Main
                 // ++++ npcs ++++
 
                 var t = Globals.T;
-                var npc = this.CollisionBoundsFirstOrDefault<NPC>(X, Y);
-                if (npc != null && npc.Active)
-                {
-                    if (!ObjectManager.Exists<MessageBox>())
-                        npc.ShowToolTip(this);
+                NPC npc = null;
+                var npcs = this.CollisionBounds<NPC>(X, Y);
 
-                    if (k_upPressed && !k_attackHolding)
+                foreach (var n in npcs)
+                {
+                    if (!n.Active)
+                        continue;
+                    else
                     {
-                        npc.Interact(this);
+                        npc = n;
+
+                        if (!ObjectManager.Exists<MessageBox>())
+                            npc.ShowToolTip(this);
+
+                        if (k_upPressed && !k_attackHolding)
+                        {
+                            npc.Interact(this);
+                        }
+                        break;
                     }
                 }
-
+                
                 // ++++ falling out of the screen ++++
 
                 if (OutOfScreen == false)
