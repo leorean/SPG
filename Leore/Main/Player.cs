@@ -659,7 +659,7 @@ namespace Leore.Main
                 }
 
                 if (!GameManager.Current.Map.CollisionTile(X, Y - 12, GameMap.WATER_INDEX))
-                    Oxygen = Math.Min(Oxygen + 2, MaxOxygen);
+                    Oxygen = Math.Min(Oxygen + 1, MaxOxygen);
 
                 if (HP > 0)
                 {
