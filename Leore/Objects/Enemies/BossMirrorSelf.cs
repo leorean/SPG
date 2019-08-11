@@ -47,7 +47,7 @@ namespace Leore.Objects.Enemies
             new FlashEmitter(X, Y);
 
             player.XVel = 0;
-            new MessageBox("You cannot stop the [973bba]~Void~!\nEverything will be consumed!");
+            new MessageBox("The [973bba]~Void~ shall consume this world!");
         }
 
         public override void BeginUpdate(GameTime gameTime)
