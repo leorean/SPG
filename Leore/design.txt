@@ -1,25 +1,24 @@
-~~ The Void Paradoxon ~~
-
 ~~~ The Orbs ~~~
 
-- Star Orb:
-	- Shoots stars in linear direction
+- Star Orb (DONE):
+	- shoots stars in linear direction
 	- Stars destroy blocks
 
-- Crimson Orb:
-	-
+- Crimson Orb (DONE):
+	- Bow
 
+- Fire Orb (DONE):
+	- breathes fire (very fast, low damage)
+
+- Void Orb (DONE):
+	- creates a black hole and sucks in all enemies
+	
 - Lightning Orb:
-	- Shoot lightning towards first enemy + 2 more as chain reaction
+	- shoot lightning towards first enemy + 2 more as chain reaction
 
 - Earth Orb:
 	- shoot balistic stones (strong but high cooldown?)
 
-- Fire Orb:
-	- Breathes fire (very fast, low damage)
-
-
-	
 - Fire:
 - Water:
 - Lightning:
@@ -44,3 +43,47 @@
 	- Enables ceiling climbing
 #7 - Levitating Cape
 	- Enables levitation
+
+~~~ Story ~~~
+
+~~~ Enemies ~~~
+
+- Bat (DONE)
+	- Flies or hangs on the wall and waits to fly
+	
+- Voidling (DONE)
+	- Humanoid enemies that walk and run towards player
+	- 1: No weapon
+	- 2: Shield
+	- 3: Sword
+	- 4: Flail
+	
+- Grassy (DONE)
+	- Hides in ground, jumps out, runs towards player
+	
+- Slurp (DONE)
+	- Idles on a wall and shoots projectiles periodically
+	
+- Slime (DONE)
+	- splits or merges to get bigger
+	
+- Pillbug
+	- Rotates around blocks on the wall
+	- 1: No attack
+	- 2: Shoot projectiles
+
+- Jumper
+	- Jumps back and forth
+
+- Mage
+	- Appears, shoots projectile towards player, dissapears
+	
+- Eye
+	- when it sees player without block inbetween -> shoot laser
+	
+- Bird
+	- Idles (sine-wave), when it sees player, lunges 2 tiles towards him, then idles again
+	
+- 
+	
+~~~ Bosses ~~~
