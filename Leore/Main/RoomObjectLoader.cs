@@ -172,9 +172,9 @@ namespace Leore.Main
                             case 582: // keyblock
                                 new KeyBlock(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
                                 break;
-                            case 647: // control disabler
-                                new JumpControlDisabler(i * Globals.T, j * Globals.T, room);
-                                break;
+                            //case 647: // control disabler
+                            //    new JumpControlDisabler(i * Globals.T, j * Globals.T, room);
+                            //    break;
                             // coins
                             case 704:
                             case 705:
