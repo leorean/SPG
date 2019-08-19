@@ -1470,6 +1470,12 @@ namespace Leore.Main
                 if (k_upHolding || k_downHolding)
                     State = PlayerState.WALL_CLIMB;
 
+                //if (!k_upHolding && !k_downHolding 
+                //    && (Direction == Direction.LEFT && !k_leftHolding || Direction == Direction.RIGHT && !k_rightHolding))
+                //{
+                //    State = PlayerState.JUMP_UP;
+                //}
+
                 var jumpOff = false;
 
                 if (Direction == Direction.LEFT)
@@ -1498,7 +1504,7 @@ namespace Leore.Main
                         jumpOff = true;
                     }
                 }
-
+                
                 if (jumpOff)
                 {
                     // switch back the ground Y
