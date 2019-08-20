@@ -122,7 +122,11 @@ namespace Leore.Main
                                 new SpikeCorner(i * Globals.T, j * Globals.T, room);
                                 t.TileOptions.Visible = true;
                                 break;
-                            // invisible fg tiles
+                            // non-blocking fg tiles
+                            case 1099:
+                            case 1100:
+                            case 1163:
+                            case 1164:
                             case 1102:
                             case 1103:
                             case 1166:
