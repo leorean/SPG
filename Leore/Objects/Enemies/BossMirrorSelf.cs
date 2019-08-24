@@ -47,7 +47,7 @@ namespace Leore.Objects.Enemies
             new FlashEmitter(X, Y);
 
             player.XVel = 0;
-            new MessageBox("The [973bba]~Void~ shall consume this world!");
+            new MessageBox("The [973bba]~Void~ will consume this world!");
         }
 
         public override void BeginUpdate(GameTime gameTime)
@@ -147,7 +147,8 @@ namespace Leore.Objects.Enemies
         public override void OnDeath()
         {
             new FlashEmitter(X, Y, 0);
-            new MessageBox("We.. will.. meet.. again...", textSpeed: TextSpeed.SLOW);
+            //new MessageBox("We.. will.. meet.. again...", textSpeed: TextSpeed.SLOW);
+            new MessageBox("You.. can't.. stop.. it...", textSpeed: TextSpeed.SLOW);
 
             base.OnDeath();            
         }
