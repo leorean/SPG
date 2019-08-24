@@ -5,6 +5,7 @@ using Leore.Objects.Enemies;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SPG.Objects;
+using static Leore.Objects.Effects.Transition;
 
 namespace Leore.Objects.Level
 {
@@ -104,7 +105,7 @@ namespace Leore.Objects.Level
 
         public bool Open { get; set; } = true;
 
-        public int FadeType { get; set; }
+        public TransitionType TransitionType { get; set; }
         public Direction Direction { get; set; } = Direction.NONE;
 
         public Door(float x, float y, Room room, int tx, int ty, string name = null) : base(x, y, room, name)

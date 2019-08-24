@@ -11,8 +11,15 @@ namespace Leore.Objects.Effects
         {
             NONE = 0, IN = 1, OUT = -1
         }
+
+        public enum TransitionType
+        {
+            DARK = 0,
+            LIGHT = 1,
+            LONG_LIGHT = 2
+        }
         
-        public delegate void TransitionEnd(int type, Direction direction);
+        public delegate void TransitionEnd(TransitionType type, Direction direction);
         public TransitionEnd OnTransitionEnd;
 
         //private Texture2D dark = AssetManager.Transition[0];
@@ -21,13 +28,29 @@ namespace Leore.Objects.Effects
         private Color color = new Color(Color.White, 0);
         private double vel = .03;
 
-        private int type;
+        private TransitionType type;
+        private int spriteIndex;
         private Direction direction;
 
-        public Transition(int type = 0, Direction direction = Direction.NONE)
+        public Transition(TransitionType type = TransitionType.DARK, Direction direction = Direction.NONE)
         {
             this.type = type;
             this.direction = direction;
+
+            switch (type)
+            {
+                case TransitionType.DARK:
+                    spriteIndex = 0;
+                    break;
+                case TransitionType.LIGHT:
+                    spriteIndex = 1;
+                    break;
+                case TransitionType.LONG_LIGHT:
+                    spriteIndex = 1;
+                    break;
+                default:
+                    break;
+            }
         }
 
         public void FadeIn()
@@ -37,7 +60,7 @@ namespace Leore.Objects.Effects
         }
         public void FadeOut()
         {
-            alpha = type == 1 ? 3.5 : 1.5;
+            alpha = type == TransitionType.LONG_LIGHT ? 3.5 : 1.5;
             fade = Fade.OUT;
         }
 
@@ -67,7 +90,7 @@ namespace Leore.Objects.Effects
 
         public void Draw(SpriteBatch sb, GameTime gameTime)
         {
-            sb.Draw(AssetManager.Transition[type], new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY), null, color, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, Globals.LAYER_UI + .001f);
+            sb.Draw(AssetManager.Transition[spriteIndex], new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY), null, color, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, Globals.LAYER_UI + .001f);
         }
     }    
 }

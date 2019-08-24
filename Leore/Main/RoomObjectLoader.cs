@@ -19,6 +19,7 @@ using Leore.Objects.Level.Obstacles;
 using Leore.Resources;
 using Leore.Objects.Effects.Ambience;
 using Leore.Objects.Obstacles;
+using static Leore.Objects.Effects.Transition;
 
 namespace Leore.Main
 {
@@ -557,7 +558,7 @@ namespace Leore.Main
                         var direction = data.ContainsKey("direction") ? (Direction)(int)data["direction"] : Direction.NONE;
 
                         var door = new Door(x, y, room, tx, ty);
-                        door.FadeType = fadeType;
+                        door.TransitionType = (TransitionType)fadeType;
                         door.Direction = direction;
                     }
                     if (type == "npc")

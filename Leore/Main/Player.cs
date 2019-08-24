@@ -22,6 +22,7 @@ using Leore.Objects.Level.Blocks;
 using Leore.Objects.Effects.Weather;
 using Leore.Objects.Level.Obstacles;
 using Leore.Objects.Obstacles;
+using static Leore.Objects.Effects.Transition;
 
 namespace Leore.Main
 {
@@ -911,7 +912,7 @@ namespace Leore.Main
 
                             var newPosition = Stats.Teleporters.ElementAt(index).Value.ToVector2();
 
-                            RoomCamera.Current.ChangeRoomsToPosition(newPosition, 1, Direction.NONE);
+                            RoomCamera.Current.ChangeRoomsToPosition(newPosition, TransitionType.LIGHT, Direction.NONE);
                             Teleporter.OnFinishedAnimation = null;
 
                         };
@@ -1012,7 +1013,7 @@ namespace Leore.Main
 
                         var pos = new Vector2(door.Center.X + door.Tx * Globals.T, door.Center.Y + door.Ty * Globals.T);
                         State = PlayerState.BACKFACING;
-                        RoomCamera.Current.ChangeRoomsToPosition(pos, door.FadeType, door.Direction);
+                        RoomCamera.Current.ChangeRoomsToPosition(pos, door.TransitionType, door.Direction);
 
                     }
                 }

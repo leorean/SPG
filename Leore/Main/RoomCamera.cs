@@ -12,6 +12,7 @@ using Leore.Objects.Effects.Weather;
 using System.Diagnostics;
 using Leore.Objects.Effects.Ambience;
 using Leore.Objects.Effects.Emitters;
+using static Leore.Objects.Effects.Transition;
 
 namespace Leore.Main
 {
@@ -82,8 +83,8 @@ namespace Leore.Main
             Position = target != null ? target.Position : Vector2.Zero;            
         }
 
-        // if type = 1, black transition. if type = 2, white transition + lie down
-        private void Transition_1(int transitionType, Direction direction)
+        // if type = 0, black transition. if type = 1, white transition, if type = 2, white transition + lie down
+        private void Transition_1(TransitionType transitionType, Direction direction)
         {
             // reset possible teleporter stuff
             player.Teleporter?.Reset();
@@ -96,7 +97,7 @@ namespace Leore.Main
             player.Teleporter = null;
             if (player.Orb != null) player.Orb.Visible = true;
 
-            if (transitionType == 1)
+            if (transitionType == TransitionType.LONG_LIGHT)
             {
                 player.LieDown(2 * 60);
             }
@@ -126,14 +127,14 @@ namespace Leore.Main
             player.Visible = true;
         }
 
-        private void Transition_2(int type, Direction direction)
+        private void Transition_2(TransitionType type, Direction direction)
         {
             GameManager.Current.Transition.OnTransitionEnd = null;
             GameManager.Current.Transition = null;
             //player.Visible = true; <- done already at end of transition_1
         }
 
-        public void ChangeRoomsToPosition(Vector2 position, int type, Direction direction)
+        public void ChangeRoomsToPosition(Vector2 position, TransitionType type, Direction direction)
         {
             //player.State = Player.PlayerState.BACKFACING;
             
