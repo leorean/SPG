@@ -94,8 +94,7 @@ namespace Leore.Objects.Enemies
 
                     if (onGround && MathUtil.Euclidean(Center, player.Center) < 1.5f * Globals.T)
                     {
-                        XVel *= .9f;//-.25f* Math.Sign((int)Direction);
-                        //YVel = -2.2f;
+                        XVel *= .97f;
                     }
 
                     if (Math.Abs(player.X - X) > 8)

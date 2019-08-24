@@ -21,6 +21,7 @@ using Leore.Resources;
 using Leore.Objects.Level.Blocks;
 using Leore.Objects.Effects.Weather;
 using Leore.Objects.Level.Obstacles;
+using Leore.Objects.Obstacles;
 
 namespace Leore.Main
 {
@@ -528,6 +529,9 @@ namespace Leore.Main
             {
                 (obstacle as EnemyProjectile).Kill();
             }
+
+            if (obstacle is ITrapSpike && !(obstacle as ITrapSpike).IsOut)
+                obstacle = null;
 
             if (obstacle is Lava)
             {

@@ -10,6 +10,7 @@ using Leore.Objects.Enemies;
 using Leore.Objects.Items;
 using Leore.Objects.Level;
 using Leore.Objects.Level.Blocks;
+using Leore.Objects.Obstacles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SPG.Objects;

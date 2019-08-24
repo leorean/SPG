@@ -18,6 +18,7 @@ using Leore.Objects.Effects.Weather;
 using Leore.Objects.Level.Obstacles;
 using Leore.Resources;
 using Leore.Objects.Effects.Ambience;
+using Leore.Objects.Obstacles;
 
 namespace Leore.Main
 {
@@ -122,6 +123,15 @@ namespace Leore.Main
                                 new SpikeCorner(i * Globals.T, j * Globals.T, room);
                                 t.TileOptions.Visible = true;
                                 break;
+                            case 844: // trap spike (default)
+                                new TrapSpike(i * Globals.T, j * Globals.T, room, false, 120) { Texture = GameManager.Current.Map.TileSet[844] };
+                                break;
+                            case 845: // trap spike (inverted)
+                                new TrapSpike(i * Globals.T, j * Globals.T, room, true, 120) { Texture = GameManager.Current.Map.TileSet[844] };
+                                break;
+                            case 846: // trap spike (speed ++)
+                                new TrapSpike(i * Globals.T, j * Globals.T, room, false, 60) { Texture = GameManager.Current.Map.TileSet[844] };
+                                break;
                             // non-blocking fg tiles
                             case 1099:
                             case 1100:
@@ -176,10 +186,6 @@ namespace Leore.Main
                             case 582: // keyblock
                                 new KeyBlock(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
                                 break;
-                            //case 647: // control disabler
-                            //    new JumpControlDisabler(i * Globals.T, j * Globals.T, room);
-                            //    break;
-                            // coins
                             case 704:
                             case 705:
                             case 706:

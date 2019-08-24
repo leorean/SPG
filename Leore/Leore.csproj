@@ -99,7 +99,7 @@
     <Compile Include="Objects\Enemies\EnemySlime.cs" />
     <Compile Include="Objects\Enemies\EnemySlurp.cs" />
     <Compile Include="Objects\Enemies\EnemyVoidling.cs" />
-    <Compile Include="Objects\Enemies\Laser.cs" />
+    <Compile Include="Objects\Level\Obstacles\Laser.cs" />
     <Compile Include="Objects\IMovable.cs" />
     <Compile Include="Objects\Items\AbilityItem.cs" />
     <Compile Include="Objects\Items\Coin.cs" />
@@ -124,6 +124,7 @@
     <Compile Include="Objects\Level\Door.cs" />
     <Compile Include="Objects\Level\LightSource.cs" />
     <Compile Include="Objects\Level\Obstacles\Lava.cs" />
+    <Compile Include="Objects\Level\Obstacles\TrapSpikes.cs" />
     <Compile Include="Objects\Level\Switches\GroundSwitch.cs" />
     <Compile Include="Objects\Level\Key.cs" />
     <Compile Include="Objects\Level\Blocks\KeyBlock.cs" />
