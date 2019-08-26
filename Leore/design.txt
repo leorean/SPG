@@ -35,13 +35,17 @@
 	- Activates spell casting
 #3 - Feather Shoes
 	- Prevent fall damage
-#4 - Fish Scale
-	- Enables breathing underwater
+#4 - Seraph Cape
+	- Double jump
 #5 - Essence of Leon (1)
 	- Enables wall climbing
 #6 - Essence of Leon (2)
 	- Enables ceiling climbing
-#7 - Levitating Cape
+#7 - Fish Scale
+	- Enables breathing underwater
+#8 - Stone Totem
+	- Enables rolling
+#9 - Leaf Totem
 	- Enables levitation
 
 ~~~ Story ~~~
@@ -50,16 +54,16 @@
 
 - Get off the island
 - Get the Orb
-- Get all abilities
+- Get all 9 Abilities (in order)
 - Activate 4 Towers (in any order)
-- Beat Marx
+- Beat the end boss
 
 ~~~ Enemies ~~~
 
 - Bat (DONE)
 	- Flies or hangs on the wall and waits to fly
 	
-- Voidling (DONE)
+- Voidling (partly done)
 	- Humanoid enemies that walk and run towards player
 	- 1: No weapon
 	- 2: Shield
@@ -74,6 +78,9 @@
 	
 - Slime (DONE)
 	- splits or merges to get bigger
+	- 1: lava
+	- 2: water
+	- 3: ??
 	
 - Pillbug
 	- Rotates around blocks on the wall
@@ -81,10 +88,10 @@
 	- 2: Shoot projectiles
 
 - Jumper
-	- Jumps back and forth
+	- Jumps (if knocked back, will start jumping in a direction)
 
 - Mage
-	- Appears, shoots projectile towards player, dissapears
+	- Appears at random position, shoots projectile towards player, dissapears
 	
 - Eye
 	- when it sees player without block inbetween -> shoot laser
