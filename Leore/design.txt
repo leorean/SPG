@@ -37,14 +37,22 @@
 	- Prevent fall damage
 #4 - Fish Scale
 	- Enables breathing underwater
-#5 - Diamond Ring
+#5 - Essence of Leon (1)
 	- Enables wall climbing
-#6 - Ruby Ring
+#6 - Essence of Leon (2)
 	- Enables ceiling climbing
 #7 - Levitating Cape
 	- Enables levitation
 
 ~~~ Story ~~~
+
+~~~ Objective ~~~
+
+- Get off the island
+- Get the Orb
+- Get all abilities
+- Activate 4 Towers (in any order)
+- Beat Marx
 
 ~~~ Enemies ~~~
 
