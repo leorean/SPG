@@ -912,7 +912,9 @@ namespace Leore.Main
 
                             var newPosition = Stats.Teleporters.ElementAt(index).Value.ToVector2();
 
-                            RoomCamera.Current.ChangeRoomsToPosition(newPosition, TransitionType.LIGHT, Direction.NONE);
+                            // TODO: Target Level Names for Teleporters!!
+
+                            RoomCamera.Current.ChangeRoomsToPosition(newPosition, TransitionType.LIGHT, Direction.NONE, null);
                             Teleporter.OnFinishedAnimation = null;
 
                         };
@@ -992,7 +994,7 @@ namespace Leore.Main
                     if (outOfScreenTimer == 0 && !outOfScreenTransitionStarted)
                     {
                         outOfScreenTransitionStarted = true;
-                        RoomCamera.Current.ChangeRoomsToPosition(safePosition, 0, Direction.NONE);
+                        RoomCamera.Current.ChangeRoomsToPosition(safePosition, 0, Direction.NONE, null);
                     }
 
                     XVel = 0;
@@ -1012,8 +1014,15 @@ namespace Leore.Main
                         YVel = -Gravity;
 
                         var pos = new Vector2(door.Center.X + door.Tx * Globals.T, door.Center.Y + door.Ty * Globals.T);
+
+                        // position is absolute, not relative when changing rooms
+                        if (door.LevelName != null)
+                        {
+                            pos = new Vector2(.5f * Globals.T + door.Tx * Globals.T, .5f * Globals.T + door.Ty * Globals.T);
+                        }
+
                         State = PlayerState.BACKFACING;
-                        RoomCamera.Current.ChangeRoomsToPosition(pos, door.TransitionType, door.Direction);
+                        RoomCamera.Current.ChangeRoomsToPosition(pos, door.TransitionType, door.Direction, door.LevelName);
 
                     }
                 }
@@ -1145,7 +1154,7 @@ namespace Leore.Main
                     if (this.CollisionBoundsFirstOrDefault<PushBlock>(safePosition.X, safePosition.Y + 1) != null)
                     {
                         safePosition = GameManager.Current.SaveGame.playerPosition;
-                        RoomCamera.Current.ChangeRoomsToPosition(safePosition, 0, Direction.NONE);
+                        RoomCamera.Current.ChangeRoomsToPosition(safePosition, 0, Direction.NONE, null);
                     }
                     else
                     {

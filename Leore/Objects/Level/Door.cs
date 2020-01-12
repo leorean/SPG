@@ -22,7 +22,7 @@ namespace Leore.Objects.Level
         public TriggerType Type { get; private set; }
 
         public bool Unlocked { get; private set; } // <- just for key type
-
+        
         public DoorDisabler(float x, float y, Room room, TriggerType type) : base(x, y, room)
         {
             Depth = Globals.LAYER_BG + .00001f;
@@ -108,7 +108,9 @@ namespace Leore.Objects.Level
         public TransitionType TransitionType { get; set; }
         public Direction Direction { get; set; } = Direction.NONE;
 
-        public Door(float x, float y, Room room, int tx, int ty, string name = null) : base(x, y, room, name)
+        public string LevelName { get; private set; }
+
+        public Door(float x, float y, Room room, int tx, int ty, string levelName, string name = null) : base(x, y, room, name)
         {
             Depth = Globals.LAYER_BG + .001f;
             
@@ -117,6 +119,8 @@ namespace Leore.Objects.Level
 
             Tx = tx;
             Ty = ty;
+
+            LevelName = levelName;
         }
     }
 }

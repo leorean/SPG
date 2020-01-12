@@ -50,7 +50,7 @@ namespace SPG.Objects
         /// <summary>
         /// If not overridden, the ID will be created based on the coordinates of the object.
         /// </summary>
-        public long ID { get; set; }
+        public virtual long ID { get; set; }
 
         //private bool _enabled;
         //public bool Enabled
@@ -124,7 +124,7 @@ namespace SPG.Objects
         
         public float X { get => Position.X; }
         public float Y { get => Position.Y; }
-
+        
         public float Left { get => Position.X + BoundingBox.X; }
         public float Right { get => Left + BoundingBox.Width; }
         public float Top { get => Position.Y + BoundingBox.Y; }

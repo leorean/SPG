@@ -556,8 +556,9 @@ namespace Leore.Main
 
                         var fadeType = data.ContainsKey("fadeType") ? (int)data["fadeType"] : 0;
                         var direction = data.ContainsKey("direction") ? (Direction)(int)data["direction"] : Direction.NONE;
+                        var levelName = data.ContainsKey("levelName") ? data["levelName"].ToString() : null;
 
-                        var door = new Door(x, y, room, tx, ty);
+                        var door = new Door(x, y, room, tx, ty, levelName);
                         door.TransitionType = (TransitionType)fadeType;
                         door.Direction = direction;
                     }

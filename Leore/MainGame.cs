@@ -102,19 +102,12 @@ namespace Leore
 
             AssetManager.InitializeContent(Content);
 
-            // load map
+            // load maps
 
-            XmlDocument xml = Xml.Load("worldMap.tmx");
-            
-            var map = new GameMap(xml);
+            GameManager.Current.AddGameMap("worldMap");
+            GameManager.Current.AddGameMap("tutorial");
 
-            map.TileSet = AssetManager.TileSet;
-            map.LayerDepth["FG"] = Globals.LAYER_FG;
-            map.LayerDepth["WATER"] = Globals.LAYER_WATER;
-            map.LayerDepth["BG"] = Globals.LAYER_BG;
-            map.LayerDepth["BG2"] = Globals.LAYER_BG2;
-
-            GameManager.Current.Map = map;
+            GameManager.Current.SetMap("worldMap");
 
             HUD = new HUD();
             HUD.Texture = AssetManager.HUD;

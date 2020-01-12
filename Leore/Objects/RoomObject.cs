@@ -1,4 +1,5 @@
-﻿using SPG.Objects;
+﻿using Leore.Main;
+using SPG.Objects;
 
 namespace Leore.Objects
 {
@@ -11,6 +12,18 @@ namespace Leore.Objects
             Room = room;
             Position = new Microsoft.Xna.Framework.Vector2(x, y);
             Depth = Globals.LAYER_BG + .001f;            
+        }
+        
+        public override long ID
+        {
+            get => base.ID + RoomID();
+            //set => id = value + RoomID();
+        }
+
+        long RoomID()
+        {
+            var hc = GameManager.Current.Map.Name.GetHashCode();
+            return hc;
         }
     }    
 }

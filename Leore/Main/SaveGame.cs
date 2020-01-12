@@ -46,6 +46,7 @@ namespace Leore.Main
         // public, but no getter/setter since it's serializable
 
         public Vector2 playerPosition;
+        public string levelName;
         public Direction playerDirection;
 
         public GameStats gameStats;

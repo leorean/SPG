@@ -43,7 +43,7 @@ namespace SPG.Objects
         {
             string strX = MathUtil.Div(o.X >= 0 ? o.X : o.X + 10000000, Globals.T).ToString();
             string strY = MathUtil.Div(o.Y >= 0 ? o.Y : o.Y + 10000000, Globals.T).ToString();
-
+            
             long id = long.Parse(strX + strY + $"0000");
 
             o.ID = id;

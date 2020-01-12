@@ -14,6 +14,8 @@ using Leore.Objects.Projectiles;
 using Leore.Objects.Level.Switches;
 using Leore.Objects.Effects.Weather;
 using Leore.Objects.Effects.Ambience;
+using System.Xml;
+using SPG.Util;
 
 namespace Leore.Main
 {
@@ -21,9 +23,11 @@ namespace Leore.Main
     {
         public List<Room> LoadedRooms { get; private set; }
         
-        public Player Player;
-        public GameMap Map;
-        
+        public Player Player { get; set; }
+        public GameMap Map { get; private set; }
+
+        private List<GameMap> maps = new List<GameMap>();
+
         public SaveGame SaveGame;
 
         private Room lastRoom;
@@ -56,7 +60,42 @@ namespace Leore.Main
             // game setup
             SaveGame = new SaveGame("save.dat");
         }
-        
+
+        public void AddGameMap(string assetName)
+        {
+            if (!assetName.EndsWith(".tmx"))
+                assetName = assetName + ".tmx";
+
+            XmlDocument xml = Xml.Load(assetName);
+
+            var map = new GameMap(xml, assetName.Replace(".tmx", ""));
+
+            map.TileSet = AssetManager.TileSet;
+            map.LayerDepth["FG"] = Globals.LAYER_FG;
+            map.LayerDepth["WATER"] = Globals.LAYER_WATER;
+            map.LayerDepth["BG"] = Globals.LAYER_BG;
+            map.LayerDepth["BG2"] = Globals.LAYER_BG2;
+
+            maps.Add(map);
+        }
+
+        public void SetMap(string mapName)
+        {
+            if (mapName == null)
+                return;
+
+            var obj = maps.Where(x => x.Name == mapName.Replace(".tmx", "")).FirstOrDefault();
+
+            if (obj != null)
+            {
+                Map = obj;                
+            }
+            else
+            {
+                throw new ArgumentException($"Map '{mapName}' could not be found. Is the map loaded & added correctly?");
+            }
+        }
+
         /// <summary>
         /// The main Save method.
         /// </summary>
@@ -99,7 +138,59 @@ namespace Leore.Main
 
             RoomObjectLoader.CleanObjectsExceptRoom(newRoom);
         }
-        
+
+        internal void LoadMap(string levelName)
+        {
+            Room[] roomList = new Room[LoadedRooms.Count];
+            LoadedRooms.CopyTo(roomList);
+
+            foreach (var room in roomList)
+            {
+                UnloadRoomObjects(room);
+            }
+            
+            OverwriteSwitchStateTo(false);
+            
+            SetMap(levelName);
+            
+            ObjectManager.Enable<Room>();
+
+            // load room data for the camera
+            var roomData = Map.ObjectData.FindDataByTypeName("room");
+            RoomObjectLoader.CreateRoom(roomData);
+
+            LoadedRooms = new List<Room>();
+            
+            // find starting room
+            var startRoom = ObjectManager.CollisionPoints<Room>(Player.X, Player.Y).FirstOrDefault();
+
+            if (startRoom == null)
+            {
+                throw new Exception($"No room detected at position {Player.X}x{Player.Y}!");
+            }
+
+            var neighbours = startRoom.Neighbors();
+            RoomObjectLoader.CreateRoomObjects(startRoom);
+
+            // create room objects from object data for current room
+            var objectData = GameManager.Current.Map.ObjectData.Where(o => !o.Values.Contains("room")).ToList();
+            RoomObjectLoader.CreateRoomObjectsFromData(objectData, startRoom);
+
+            foreach (var n in neighbours)
+            {
+                RoomObjectLoader.CreateRoomObjects(n);
+            }
+
+            RoomObjectLoader.CleanObjectsExceptRoom(startRoom);
+
+            // create player at start position and set camera target
+            
+            //globalWaterEmitter = new GlobalWaterBubbleEmitter(spawnX, spawnY, Player);
+            //new EmitterSpawner<GlobalWaterBubbleEmitter>(spawnX, spawnY, CurrentRoom);
+
+            MainGame.Current.HUD.SetBoss(null);            
+        }
+
         public void Initialize()
         {
             // handle room changing <-> object loading/unloading
@@ -143,14 +234,24 @@ namespace Leore.Main
         /// </summary>
         public void LoadLevel()
         {
-            var playerData = Map.ObjectData.FindFirstDataByTypeName("player");
-            var spawnX = (float)(int)playerData["x"] + 8;
-            var spawnY = (float)(int)playerData["y"] + 7.9f;
-            var dir = (int)playerData["direction"];
-            var direction = (dir == 1) ? Direction.RIGHT : Direction.LEFT;
+            var spawnX = 0f;
+            var spawnY = 0f;
+            Direction direction = Direction.RIGHT;
 
             bool success = SaveManager.Load(ref SaveGame);
 
+            if (success)
+            {
+                SetMap(SaveGame.levelName);
+            }
+
+            var playerData = Map.ObjectData.FindFirstDataByTypeName("player");
+
+            spawnX = (float)(int)playerData["x"] + 8;
+            spawnY = (float)(int)playerData["y"] + 7.9f;
+            var dir = (int)playerData["direction"];
+            direction = (dir == 1) ? Direction.RIGHT : Direction.LEFT;
+            
             originalSpawnPosition = new Vector2(spawnX, spawnY);
 
             if (success)
@@ -158,17 +259,18 @@ namespace Leore.Main
                 spawnX = SaveGame.playerPosition.X;
                 spawnY = SaveGame.playerPosition.Y;
 
-                if (spawnX == 0 && spawnY == 0)
-                {
-                    spawnX = originalSpawnPosition.X;
-                    spawnY = originalSpawnPosition.Y;
-                }
                 direction = SaveGame.playerDirection;
+
+                RoomCamera.Current.CurrentBG = SaveGame.currentBG;
+                currentWeather = SaveGame.currentWeather;
             }
 
-            RoomCamera.Current.CurrentBG = SaveGame.currentBG;
-            currentWeather = SaveGame.currentWeather;
-
+            if (spawnX == 0 && spawnY == 0)
+            {
+                spawnX = originalSpawnPosition.X;
+                spawnY = originalSpawnPosition.Y;
+            }
+            
             ObjectManager.Enable<Room>();
 
             // find starting room
@@ -212,7 +314,7 @@ namespace Leore.Main
 
             Transition = new Transition();
             Transition.FadeOut();
-            Transition.OnTransitionEnd = (t, u) => { Transition = null; };
+            Transition.OnTransitionEnd = (t, u, v) => { Transition = null; };
 
             // death penalty
             if (CoinsAfterDeath > 0)

@@ -84,7 +84,7 @@ namespace Leore.Main
         }
 
         // if type = 0, black transition. if type = 1, white transition, if type = 2, white transition + lie down
-        private void Transition_1(TransitionType transitionType, Direction direction)
+        private void Transition_1(TransitionType transitionType, Direction direction, string levelName)
         {
             // reset possible teleporter stuff
             player.Teleporter?.Reset();
@@ -121,25 +121,33 @@ namespace Leore.Main
             curY = newPosition.Y;
             invokeRoomChange = true;
             DisableBounds();
+
+            if (levelName != GameManager.Current.Map.Name)
+            {
+                GameManager.Current.LoadMap(levelName);
+            }
+            GameManager.Current.Transition.FadeOut();
+
             GameManager.Current.Transition.FadeOut();
 
             GameManager.Current.Transition.OnTransitionEnd = Transition_2;
             player.Visible = true;
         }
 
-        private void Transition_2(TransitionType type, Direction direction)
+        private void Transition_2(TransitionType type, Direction direction, string levelName)
         {
             GameManager.Current.Transition.OnTransitionEnd = null;
             GameManager.Current.Transition = null;
             //player.Visible = true; <- done already at end of transition_1
         }
 
-        public void ChangeRoomsToPosition(Vector2 position, TransitionType type, Direction direction)
+        public void ChangeRoomsToPosition(Vector2 position, TransitionType type, Direction direction, string levelName)
         {
             //player.State = Player.PlayerState.BACKFACING;
             
-            GameManager.Current.Transition = new Transition(type, direction);
+            GameManager.Current.Transition = new Transition(type, direction, levelName);
             GameManager.Current.Transition.FadeIn();
+            
             newPosition = position;
             GameManager.Current.Transition.OnTransitionEnd = new Transition.TransitionEnd(Transition_1);
 
@@ -167,7 +175,7 @@ namespace Leore.Main
 
                 if (CurrentRoom != targetRoom)
                     GameManager.Current.ChangeRoom(CurrentRoom, targetRoom);
-
+                
                 Position = newPosition;
                 CurrentRoom = null;
                 state = State.Default;

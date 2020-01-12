@@ -19,7 +19,7 @@ namespace Leore.Objects.Effects
             LONG_LIGHT = 2
         }
         
-        public delegate void TransitionEnd(TransitionType type, Direction direction);
+        public delegate void TransitionEnd(TransitionType type, Direction direction, string levelName);
         public TransitionEnd OnTransitionEnd;
 
         //private Texture2D dark = AssetManager.Transition[0];
@@ -31,11 +31,13 @@ namespace Leore.Objects.Effects
         private TransitionType type;
         private int spriteIndex;
         private Direction direction;
+        private string levelName;
 
-        public Transition(TransitionType type = TransitionType.DARK, Direction direction = Direction.NONE)
+        public Transition(TransitionType type = TransitionType.DARK, Direction direction = Direction.NONE, string levelName = null)
         {
             this.type = type;
             this.direction = direction;
+            this.levelName = levelName;
 
             switch (type)
             {
@@ -71,7 +73,7 @@ namespace Leore.Objects.Effects
                 if (alpha == 1)
                 {
                     fade = Fade.NONE;
-                    OnTransitionEnd?.Invoke(type, direction);
+                    OnTransitionEnd?.Invoke(type, direction, levelName);
                 }
             }
 
@@ -81,7 +83,7 @@ namespace Leore.Objects.Effects
                 if (alpha == 0)
                 {
                     fade = Fade.NONE;
-                    OnTransitionEnd?.Invoke(type, direction);
+                    OnTransitionEnd?.Invoke(type, direction, levelName);
                 }
             }
 

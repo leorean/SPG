@@ -67,7 +67,7 @@ namespace SPG.Map
         public static readonly int BG_INDEX = 1;
         public static readonly int WATER_INDEX = 2;
         public static readonly int FG_INDEX = 3;
-
+        
         public List<Grid<Tile>> LayerData { get; set; } //BG2, BG, WATER, FG
 
         public Dictionary<string, float> LayerDepth { get; set; }
@@ -79,12 +79,16 @@ namespace SPG.Map
         /// </summary>
         public List<Dictionary<string, object>> ObjectData { get; set; }
 
+        public string Name { get; private set; }
+
         /// <summary>
         /// Creates a new map from an XML document. Format by TileD Version 2018.06.27
         /// </summary>
         /// <param name="xml"></param>
-        public GameMap(XmlDocument xml)
+        public GameMap(XmlDocument xml, string mapName)
         {
+            Name = mapName;
+
             try
             {
                 var mapElement = xml.GetElementsByTagName("map")[0];

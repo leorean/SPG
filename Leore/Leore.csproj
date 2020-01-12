@@ -47,6 +47,7 @@
     <Compile Include="Main\AssetManager.cs" />
     <Compile Include="Main\GameManager.cs" />
     <Compile Include="Main\HUD.cs" />
+    <Compile Include="Main\ID.cs" />
     <Compile Include="Main\MessageBox.cs" />
     <Compile Include="Main\MessageDialog.cs" />
     <Compile Include="Main\Player.cs" />
@@ -229,6 +230,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\worldMap.tmx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tutorial.tmx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
