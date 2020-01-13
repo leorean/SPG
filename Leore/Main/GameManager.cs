@@ -265,7 +265,7 @@ namespace Leore.Main
             }
 
             ObjectManager.Enable<Room>();
-
+            
             // load room data for the camera
             var roomData = Map.ObjectData.FindDataByTypeName("room");
             RoomObjectLoader.CreateRoom(roomData);
@@ -413,6 +413,7 @@ namespace Leore.Main
             foreach (var room in roomList)
             {
                 UnloadRoomObjects(room);
+                room.Destroy(); //
             }
 
             if (Player.Orb != null)

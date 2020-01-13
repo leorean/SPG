@@ -1,6 +1,7 @@
 ﻿using Leore.Main;
 using SPG.Objects;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Leore.Objects
@@ -32,6 +33,7 @@ namespace Leore.Objects
                     foreach (var c in candidates)
                         if (!neighbours.Contains(c))
                         {
+                            //Debug.WriteLine($"({room.ID}) ID: {c.ID}");
                             //Debug.WriteLine($"{c.X}, {c.Y}, ... {c.BoundingBox}");
                             neighbours.Add(c);
                         }
