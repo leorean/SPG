@@ -70,7 +70,9 @@ namespace Leore.Main
 
             XmlDocument xml = Xml.Load(assetName);
 
-            var map = new GameMap(xml, assetName.Replace(".tmx", ""));
+            var id = maps.Count;
+
+            var map = new GameMap(xml, assetName.Replace(".tmx", ""), id);
 
             map.TileSet = AssetManager.TileSet;
             map.LayerDepth["FG"] = Globals.LAYER_FG;
@@ -286,6 +288,7 @@ namespace Leore.Main
             RoomObjectLoader.CreateRoomObjectsFromData(objectData, startRoom);
 
             foreach (var n in neighbours)
+
             {
                 RoomObjectLoader.CreateRoomObjects(n);
             }

@@ -115,21 +115,20 @@ namespace Leore.Main
             if (player.Orb != null)
                 player.Orb.Position = player.Position;
 
+            if (levelName != GameManager.Current.Map.Name)
+            {
+                GameManager.Current.LoadLevel(levelName);
+            }
+
             tx = newPosition.X;
             ty = newPosition.Y;
             curX = newPosition.X;
             curY = newPosition.Y;
             invokeRoomChange = true;
             DisableBounds();
-
-            if (levelName != GameManager.Current.Map.Name)
-            {
-                GameManager.Current.LoadLevel(levelName);
-            }
+            
             GameManager.Current.Transition.FadeOut();
-
-            GameManager.Current.Transition.FadeOut();
-
+            
             GameManager.Current.Transition.OnTransitionEnd = Transition_2;
             player.Visible = true;
         }

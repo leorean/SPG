@@ -8,12 +8,8 @@ namespace Leore.Objects
     {
         public static long GetUniqueIDForCurrentMap(long myID)
         {
-            return long.Parse($"{myID}" + $"{RoomID()}");
-        }
-
-        static long RoomID()
-        {
-            return GameManager.Current.Map.Name.GetUniqueHashCode();            
+            var val = long.Parse($"{myID}" + GameManager.Current.Map.ID.ToString("D4"));
+            return val;
         }
     }
 
