@@ -1750,19 +1750,20 @@
  <objectgroup id="93" name="ROOM">
   <object id="875" type="room" x="0" y="0" width="256" height="144">
    <properties>
-    <property name="bg" type="int" value="0"/>
+    <property name="bg" type="int" value="1"/>
+    <property name="dark" type="bool" value="true"/>
    </properties>
   </object>
   <object id="883" type="room" x="256" y="0" width="512" height="144">
    <properties>
-    <property name="bg" type="int" value="0"/>
+    <property name="bg" type="int" value="1"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup id="94" name="OBJ">
   <object id="1419" type="door" x="224" y="96" width="16" height="16">
    <properties>
-    <property name="levelName" value="worldMap"/>
+    <property name="levelName" value="tutorial2"/>
     <property name="tx" type="int" value="5"/>
     <property name="ty" type="int" value="5"/>
    </properties>

@@ -106,9 +106,8 @@ namespace Leore
 
             GameManager.Current.AddGameMap("worldMap");
             GameManager.Current.AddGameMap("tutorial");
-
-            GameManager.Current.SetMap("worldMap");
-
+            GameManager.Current.AddGameMap("tutorial2");
+            
             HUD = new HUD();
             HUD.Texture = AssetManager.HUD;
 
@@ -128,7 +127,7 @@ namespace Leore
             new RoomCamera(resolutionRenderer) { MaxZoom = 2f, MinZoom = .5f, Zoom = 1f };
             
             GameManager.Current.Initialize();
-            GameManager.Current.LoadLevel();
+            GameManager.Current.CreateLevel();
         }
 
         /// <summary>

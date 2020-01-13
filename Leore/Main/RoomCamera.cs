@@ -124,7 +124,7 @@ namespace Leore.Main
 
             if (levelName != GameManager.Current.Map.Name)
             {
-                GameManager.Current.LoadMap(levelName);
+                GameManager.Current.LoadLevel(levelName);
             }
             GameManager.Current.Transition.FadeOut();
 

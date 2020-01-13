@@ -1,8 +1,22 @@
 ﻿using Leore.Main;
 using SPG.Objects;
+using SPG.Util;
 
 namespace Leore.Objects
 {
+    public static class IDHelper
+    {
+        public static long GetUniqueIDForCurrentMap(long myID)
+        {
+            return long.Parse($"{myID}" + $"{RoomID()}");
+        }
+
+        static long RoomID()
+        {
+            return GameManager.Current.Map.Name.GetUniqueHashCode();            
+        }
+    }
+
     public abstract class RoomObject : GameObject
     {
         public Room Room { get; set; }
@@ -16,14 +30,7 @@ namespace Leore.Objects
         
         public override long ID
         {
-            get => base.ID + RoomID();
-            //set => id = value + RoomID();
-        }
-
-        long RoomID()
-        {
-            var hc = GameManager.Current.Map.Name.GetHashCode();
-            return hc;
-        }
+            get => IDHelper.GetUniqueIDForCurrentMap(base.ID);
+        }        
     }    
 }

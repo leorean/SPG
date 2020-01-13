@@ -21,6 +21,8 @@ namespace Leore.Main
 {
     public class GameManager
     {
+        public static readonly string DEFAULT_MAP_NAME = "tutorial2";
+
         public List<Room> LoadedRooms { get; private set; }
         
         public Player Player { get; set; }
@@ -79,7 +81,7 @@ namespace Leore.Main
             maps.Add(map);
         }
 
-        public void SetMap(string mapName)
+        public void SetCurrentGameMap(string mapName)
         {
             if (mapName == null)
                 return;
@@ -106,6 +108,7 @@ namespace Leore.Main
             SaveGame.gameStats = Player.Stats;
             SaveGame.currentBG = RoomCamera.Current.CurrentBG;
             SaveGame.currentWeather = currentWeather;
+            SaveGame.levelName = Map.Name;
             SaveGame.Save();
         }
 
@@ -139,7 +142,7 @@ namespace Leore.Main
             RoomObjectLoader.CleanObjectsExceptRoom(newRoom);
         }
 
-        internal void LoadMap(string levelName)
+        public void LoadLevel(string levelName)
         {
             Room[] roomList = new Room[LoadedRooms.Count];
             LoadedRooms.CopyTo(roomList);
@@ -147,11 +150,12 @@ namespace Leore.Main
             foreach (var room in roomList)
             {
                 UnloadRoomObjects(room);
+                room.Destroy(); // TODO: verify
             }
             
             OverwriteSwitchStateTo(false);
             
-            SetMap(levelName);
+            SetCurrentGameMap(levelName);
             
             ObjectManager.Enable<Room>();
 
@@ -181,13 +185,7 @@ namespace Leore.Main
                 RoomObjectLoader.CreateRoomObjects(n);
             }
 
-            RoomObjectLoader.CleanObjectsExceptRoom(startRoom);
-
-            // create player at start position and set camera target
-            
-            //globalWaterEmitter = new GlobalWaterBubbleEmitter(spawnX, spawnY, Player);
-            //new EmitterSpawner<GlobalWaterBubbleEmitter>(spawnX, spawnY, CurrentRoom);
-
+            RoomObjectLoader.CleanObjectsExceptRoom(startRoom);            
             MainGame.Current.HUD.SetBoss(null);            
         }
 
@@ -198,14 +196,7 @@ namespace Leore.Main
             {
                 ChangeRoom(rooms.Item1, rooms.Item2);
             };
-
-            // load room data for the camera
-            var roomData = Map.ObjectData.FindDataByTypeName("room");
-            RoomObjectLoader.CreateRoom(roomData);
-
-            LoadedRooms = new List<Room>();
-
-            RoomCamera.Current.SetBackgrounds(AssetManager.Backgrounds);            
+            RoomCamera.Current.SetBackgrounds(AssetManager.Backgrounds);
         }
 
         public void UnloadRoomObjects(Room room)
@@ -221,18 +212,15 @@ namespace Leore.Main
         }
 
         /// <summary>
-        /// Reloads the whole level.
+        /// Reloads the level.
         /// </summary>
         public void ReloadLevel()
         {
             UnloadLevel();
-            LoadLevel();
+            CreateLevel();
         }
 
-        /// <summary>
-        /// Loads the whole level.
-        /// </summary>
-        public void LoadLevel()
+        public void CreateLevel()
         {
             var spawnX = 0f;
             var spawnY = 0f;
@@ -242,7 +230,10 @@ namespace Leore.Main
 
             if (success)
             {
-                SetMap(SaveGame.levelName);
+                SetCurrentGameMap(SaveGame.levelName);
+            } else
+            {
+                SetCurrentGameMap(DEFAULT_MAP_NAME);
             }
 
             var playerData = Map.ObjectData.FindFirstDataByTypeName("player");
@@ -270,8 +261,14 @@ namespace Leore.Main
                 spawnX = originalSpawnPosition.X;
                 spawnY = originalSpawnPosition.Y;
             }
-            
+
             ObjectManager.Enable<Room>();
+
+            // load room data for the camera
+            var roomData = Map.ObjectData.FindDataByTypeName("room");
+            RoomObjectLoader.CreateRoom(roomData);
+
+            LoadedRooms = new List<Room>();
 
             // find starting room
             var startRoom = ObjectManager.CollisionPoints<Room>(spawnX, spawnY).FirstOrDefault();
@@ -439,6 +436,8 @@ namespace Leore.Main
             SaveGame = new SaveGame(SaveGame.FileName);
 
             NonRespawnableIDs.Clear();
+
+            SetCurrentGameMap(DEFAULT_MAP_NAME);
         }
 
         public void OverwriteSwitchStateTo(bool enabled)
