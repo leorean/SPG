@@ -562,10 +562,10 @@
    <tile/>
    <tile gid="197"/>
    <tile gid="197"/>
+   <tile gid="577"/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="577"/>
    <tile gid="65"/>
    <tile gid="66"/>
    <tile gid="67"/>

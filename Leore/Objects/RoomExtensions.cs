@@ -31,13 +31,16 @@ namespace Leore.Objects
 
                     var candidates = ObjectManager.CollisionPoints<Room>(room, i, j).Where(o => !neighbours.Contains(o));
                     foreach (var c in candidates)
+                    {
                         if (!neighbours.Contains(c))
                         {
-                            //Debug.WriteLine($"({room.ID}) ID: {c.ID}");
-                            //Debug.WriteLine($"{c.X}, {c.Y}, ... {c.BoundingBox}");
+                            Debug.WriteLine($"({room.ID}) ID: {c.ID}");
+                            //Debug.WriteLine($"ID {room.ID} - ({c.X}, {c.Y}), ... {c.BoundingBox}");
                             neighbours.Add(c);
                         }
+                    }                    
                 }
+                Debug.WriteLine("------");
             }
             return neighbours;
         }

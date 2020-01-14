@@ -65,7 +65,8 @@ namespace Leore.Objects.Level
             
             if (GameManager.Current.SaveGame != null)
             {
-                var saveStatue = ObjectManager.CollisionPointFirstOrDefault<SaveStatue>(GameManager.Current.SaveGame.playerPosition.X, GameManager.Current.SaveGame.playerPosition.Y);
+                var saveStatues = ObjectManager.CollisionPoints<SaveStatue>(GameManager.Current.SaveGame.playerPosition.X, GameManager.Current.SaveGame.playerPosition.Y);
+                var saveStatue = saveStatues.FirstOrDefault();
 
                 if (saveStatue == this)
                     Active = true;

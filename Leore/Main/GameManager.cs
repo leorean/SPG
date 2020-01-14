@@ -209,7 +209,7 @@ namespace Leore.Main
                 && !(o is Weather)
                 ).ToList();
             alive.ForEach(o => o.Destroy());
-
+            
             LoadedRooms.Remove(room);
         }
 
@@ -263,8 +263,6 @@ namespace Leore.Main
                 spawnX = originalSpawnPosition.X;
                 spawnY = originalSpawnPosition.Y;
             }
-
-            ObjectManager.Enable<Room>();
             
             // load room data for the camera
             var roomData = Map.ObjectData.FindDataByTypeName("room");

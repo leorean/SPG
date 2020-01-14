@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using SPG.Exceptions;
 using SPG.Util;
 
 namespace SPG.Objects
@@ -35,18 +36,21 @@ namespace SPG.Objects
                 GlobalIDCounter++;
             } else
             {                
-                throw new Exception("Object already registered!");
+                throw new ObjectException(o, "Object already registered!");
             }
         }
 
         public static void CreateID(this GameObject o)
         {
-            string strX = MathUtil.Div(o.X >= 0 ? o.X : o.X + 10000000, Globals.T).ToString();
-            string strY = MathUtil.Div(o.Y >= 0 ? o.Y : o.Y + 10000000, Globals.T).ToString();
-            
-            long id = long.Parse(strX + strY + $"0000");
-
+            long id = (int)o.X << 32 + (int)o.Y;
             o.ID = id;
+
+            //string strX = MathUtil.Div(o.X >= 0 ? o.X : o.X + 10000000, Globals.T).ToString();
+            //string strY = MathUtil.Div(o.Y >= 0 ? o.Y : o.Y + 10000000, Globals.T).ToString();
+            
+            //long id = long.Parse(strX + strY + $"0000");
+
+            //o.ID = id;
             
             //if (uniqueIds.Contains(id))
             //{

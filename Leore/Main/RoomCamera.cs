@@ -115,7 +115,7 @@ namespace Leore.Main
             if (player.Orb != null)
                 player.Orb.Position = player.Position;
 
-            if (levelName != GameManager.Current.Map.Name)
+            if (levelName != null && levelName != GameManager.Current.Map.Name)
             {
                 GameManager.Current.LoadLevel(levelName);
             }

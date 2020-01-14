@@ -20,6 +20,7 @@ using Leore.Resources;
 using Leore.Objects.Effects.Ambience;
 using Leore.Objects.Obstacles;
 using static Leore.Objects.Effects.Transition;
+using SPG.Exceptions;
 
 namespace Leore.Main
 {
@@ -689,10 +690,16 @@ namespace Leore.Main
                     {
                         if (ObjectManager.CollisionPoints<Room>(i + Globals.T, j + Globals.T).Count == 0)
                         {
-                            var room = new Room(i, j, camera.ViewWidth, camera.ViewHeight);                            
+                            var room = new Room(i, j, camera.ViewWidth, camera.ViewHeight);
+                            Debug.WriteLine(room.ID);
                         }
                     }
                 }
+            }
+            catch (ObjectException e)
+            {
+                Debug.WriteLine("Unable to initialize room from data: " + e.Message);
+                throw;
             }
             catch (Exception e)
             {

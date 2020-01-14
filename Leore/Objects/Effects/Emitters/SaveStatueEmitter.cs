@@ -3,6 +3,7 @@ using SPG.Objects;
 using SPG.Util;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Leore.Objects.Effects.Emitters
 {
@@ -62,6 +63,8 @@ namespace Leore.Objects.Effects.Emitters
 
         public override void Update(GameTime gameTime)
         {
+            //if (this.GetType() == typeof(SaveStatueEmitter) && Active)
+            //Debug.WriteLine($"{ID}");
             base.Update(gameTime);
         }
 

@@ -280,6 +280,12 @@ namespace SPG.Objects
                 sb.DrawRectangle(rect, Enabled ? Color.Black : Color.Gray, false);
                 sb.DrawPixel(Center.X, Center.Y, Color.Red);
             }
-        }        
+        }
+
+        public override bool Equals(object obj)
+        {
+            var o = obj as GameObject;
+            return o != null && this.ID == o.ID;
+        }
     }
 }
