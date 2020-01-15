@@ -179,7 +179,7 @@ namespace Leore.Objects.Level
                 }
 
                 player.KeyObject = null;
-                player.KeyObjectID = -1;
+                player.KeyObjectID = ID.Unknown;
                 Parent = null;
             }            
         }
@@ -220,8 +220,8 @@ namespace Leore.Objects.Level
                 stuck = true;
 
             player.KeyObject = null;
-            
-            player.KeyObjectID = -1;
+
+            player.KeyObjectID = ID.Unknown;
             Parent = null;
         }        
     }

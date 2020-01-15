@@ -75,7 +75,7 @@ namespace Leore.Main
         public int HP { get; set; }
         public float MP { get; set; }
 
-        public long KeyObjectID { get; set; } = -1;
+        public ID KeyObjectID { get; set; } = ID.Unknown;
 
         public Direction Direction { get; set; } = Direction.RIGHT;
 

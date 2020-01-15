@@ -31,7 +31,7 @@ namespace Leore.Objects.Enemies
         private int walkTimer = 60;
         private int idleTimer = 60;
 
-        private long originalID;
+        private ID originalID;
 
         private float scale;
         private int invincible = 30;
@@ -49,7 +49,7 @@ namespace Leore.Objects.Enemies
 
         private bool top, bottom, left, right, free;
 
-        private List<long> saveIDs = new List<long>();
+        private List<ID> saveIDs = new List<ID>();
         
         public EnemySlime(float x, float y, Room room, int type) : base(x, y, room)
         {
@@ -127,7 +127,11 @@ namespace Leore.Objects.Enemies
             slime.XVel = 1 * (int)dir;
             slime.YVel = -1.5f;
             slime.Direction = dir;
-            slime.ID = ID + ObjectManager.GlobalIDCounter;
+
+            // TODO: FIND SOLUTION FOR THIS!!!
+
+            //slime.ID = ID + ObjectManager.GlobalIDCounter;
+
             var newHp = (int)Math.Ceiling(HP * .75f);
             slime.MaxHP = newHp;
             slime.HP = newHp;

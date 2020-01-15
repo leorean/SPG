@@ -40,7 +40,7 @@ namespace Leore.Main
         private static GameManager instance;
         public static GameManager Current { get => instance; }
 
-        public List<long> NonRespawnableIDs { get; private set; }
+        public List<ID> NonRespawnableIDs { get; private set; }
         
         public Transition Transition { get; set; }
         
@@ -146,10 +146,7 @@ namespace Leore.Main
 
         public void LoadLevel(string levelName)
         {
-            Room[] roomList = new Room[LoadedRooms.Count];
-            LoadedRooms.CopyTo(roomList);
-
-            foreach (var room in roomList)
+            foreach (var room in LoadedRooms.ToList())
             {
                 UnloadRoomObjects(room);
                 room.Destroy(); // TODO: verify
@@ -162,8 +159,9 @@ namespace Leore.Main
             ObjectManager.Enable<Room>();
 
             // load room data for the camera
+            var mapIndex = Map.MapIndex;
             var roomData = Map.ObjectData.FindDataByTypeName("room");
-            RoomObjectLoader.CreateRoom(roomData);
+            RoomObjectLoader.CreateRoom(roomData, mapIndex);
 
             LoadedRooms = new List<Room>();
             
@@ -264,11 +262,10 @@ namespace Leore.Main
                 spawnY = originalSpawnPosition.Y;
             }
 
-            ObjectManager.DestroyAll<Room>();
-            
             // load room data for the camera
+            var mapIndex = Map.MapIndex;
             var roomData = Map.ObjectData.FindDataByTypeName("room");
-            RoomObjectLoader.CreateRoom(roomData);
+            RoomObjectLoader.CreateRoom(roomData, mapIndex);
 
             LoadedRooms = new List<Room>();
 
@@ -308,7 +305,7 @@ namespace Leore.Main
             MainGame.Current.HUD.SetPlayer(Player);
             MainGame.Current.HUD.SetBoss(null);
 
-            NonRespawnableIDs = new List<long>();
+            NonRespawnableIDs = new List<ID>();
 
             // fade-in
 

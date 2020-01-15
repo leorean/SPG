@@ -1,10 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Leore.Main;
+using Microsoft.Xna.Framework;
 using SPG.Objects;
 using SPG.Util;
 
 namespace Leore.Objects
 {
-    public class Room : GameObject
+    public class Room : MapCoherentGameObject
     {
         public int Background { get; set; } = -1;
         public int Weather { get; set; } = -1;
@@ -12,7 +13,7 @@ namespace Leore.Objects
 
         public bool SwitchState { get; set; }
         
-        public Room(int x, int y, int width, int height) : base(x, y, "room")
+        public Room(int x, int y, int width, int height, int mapIndex) : base(x, y, mapIndex, "room")
         {
             BoundingBox = new RectF(0, 0, width, height);            
             Visible = false;            
@@ -20,12 +21,7 @@ namespace Leore.Objects
 
         public override void Update(GameTime gameTime)
         {
-            base.Update(gameTime);
+            base.Update(gameTime);            
         }
-
-        //public override long ID
-        //{
-        //    get => IDHelper.GetUniqueIDForCurrentMap(base.ID);
-        //}
     }
 }

@@ -15,6 +15,11 @@ using SPG.Util;
 
 namespace SPG.Objects
 {
+    public interface IID
+    {
+        bool IDEquals(IID other);
+    }
+
     public interface ICollidable
     {
         Vector2 Position { get; set; }
@@ -39,7 +44,7 @@ namespace SPG.Objects
         bool Enabled { get; }
     }
 
-    public abstract class GameObject : ICollidable
+    public abstract class GameObject : ICollidable, IID
     {
         // general props
 
@@ -47,18 +52,8 @@ namespace SPG.Objects
 
         public GameObject Parent { get; set; } = null;
 
-        /// <summary>
-        /// If not overridden, the ID will be created based on the coordinates of the object.
-        /// </summary>
-        public virtual long ID { get; set; }
-
-        //private bool _enabled;
-        //public bool Enabled
-        //{
-        //    get => _enabled;
-        //    set => _enabled = value;
-        //}
-
+        //public long ID { get; set; }
+        
         public bool Enabled { get; internal set; } = true;
 
         public bool Visible { get; set; } = true;
@@ -143,8 +138,7 @@ namespace SPG.Objects
         public GameObject(float x, float y, string name = null) : this()
         {
             Position = new Vector2(x, y);
-            Name = name ?? GetType().Name;
-            this.CreateID();
+            Name = name ?? GetType().Name;            
             ObjectManager.Add(this);
         }
         
@@ -196,10 +190,7 @@ namespace SPG.Objects
 
             List<GameObject> children = ObjectManager.Objects.Where(o => o.Parent == this).ToList();
             
-            GameObject[] copy = new GameObject[children.Count];
-            children.CopyTo(copy);
-
-            foreach(var c in copy)
+            foreach(var c in children.ToList())
             {
                 c.RemoveAndCallGC(callGC);                
             }
@@ -284,15 +275,20 @@ namespace SPG.Objects
             }
         }
 
-        public override bool Equals(object obj)
+        public virtual bool IDEquals(IID other)
         {
-            var o = obj as GameObject;
-            var val = o != null && this.ID == o.ID;
-            if (val && GetType() == obj.GetType())
-            {
-                return true;
-            }
-            return false;
+            throw new NotImplementedException("You have to override this method!");
         }
+
+        //public override bool Equals(object obj)
+        //{
+        //    var o = obj as GameObject;
+        //    var val = o != null && this.ID == o.ID;
+        //    if (val && GetType() == obj.GetType())
+        //    {
+        //        return true;
+        //    }
+        //    return false;
+        //}
     }
 }

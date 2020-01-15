@@ -651,7 +651,7 @@ namespace Leore.Main
         /// Creates a room object and adds it to the camera room list.
         /// </summary>
         /// <param name="roomData"></param>
-        public static void CreateRoom(List<Dictionary<string, object>> roomData)
+        public static void CreateRoom(List<Dictionary<string, object>> roomData, int mapIndex)
         {
             var camera = RoomCamera.Current;
 
@@ -677,8 +677,8 @@ namespace Leore.Main
                     if (remX != 0 || remY != 0 || remW != 0 || remH != 0)
                         throw new ArgumentException($"The room at ({x},{y}) has an incorrect size or position!");
 
-                    Debug.WriteLine($"{x} {y})");
-                    var room = new Room(x, y, w, h);
+                    Debug.WriteLine($"{x} {y}");
+                    var room = new Room(x, y, w, h, mapIndex);
                     Debug.WriteLine($"{x} {y} ({room.ID})");
 
                     room.Background = bg;
@@ -691,11 +691,10 @@ namespace Leore.Main
                 {
                     for (var j = 0; j < GameManager.Current.Map.Height * Globals.T; j += camera.ViewHeight)
                     {
-                        var c = ObjectManager.CollisionPoints<Room>(i, j).Count;
+                        var c = ObjectManager.CollisionPoints<Room>(i + Globals.T, j + Globals.T).Count;
                         if (c == 0)
                         {
-                            Debug.WriteLine($"searching at ({i}, {j}) : {c}");
-                            var room = new Room(i, j, camera.ViewWidth, camera.ViewHeight);
+                            var room = new Room(i, j, camera.ViewWidth, camera.ViewHeight, mapIndex);
                         }
                     }
                 }

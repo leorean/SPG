@@ -130,7 +130,11 @@ namespace Leore.Objects.Enemies
                                 };
                                 SpellEXP.Spawn(X, Y, 5);
                                 minion.EXP = 18;
-                                minion.ID = minion.ID + totalMinionsSpawned + 1;
+
+                                // TODO: FIND SOLUTION FOR THIS!!
+
+                                //minion.ID = minion.ID + totalMinionsSpawned + 1;
+
                                 minion.Depth = Depth + .0001f;
                                 Minions.Add(minion);
                                 minionsSpawned++;

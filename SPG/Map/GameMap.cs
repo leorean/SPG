@@ -80,7 +80,7 @@ namespace SPG.Map
         public List<Dictionary<string, object>> ObjectData { get; private set; }
 
         public string Name { get; private set; }
-        public long ID { get; private set; }
+        public int MapIndex { get; private set; }
 
         private GameMap() { }
 
@@ -88,10 +88,10 @@ namespace SPG.Map
         /// Creates a new map from an XML document. Format by TileD Version 2018.06.27
         /// </summary>
         /// <param name="xml"></param>
-        public GameMap(XmlDocument xml, string mapName, long id)
+        public GameMap(XmlDocument xml, string mapName, int id)
         {
             Name = mapName;
-            ID = id;
+            MapIndex = id;
 
             try
             {

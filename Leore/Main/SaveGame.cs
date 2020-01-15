@@ -22,13 +22,13 @@ namespace Leore.Main
         public int SpellIndex;
 
         // ID, Typename
-        public Dictionary<long, string> Items { get; set; } = new Dictionary<long, string>();
-        public List<long> KeysAndKeyblocks { get; set; } = new List<long>();
+        public Dictionary<ID, string> Items { get; set; } = new Dictionary<ID, string>();
+        public List<ID> KeysAndKeyblocks { get; set; } = new List<ID>();
 
         // ID, x, y
-        public Dictionary<long, Point> Teleporters { get; set; } = new Dictionary<long, Point>();
+        public Dictionary<ID, Point> Teleporters { get; set; } = new Dictionary<ID, Point>();
 
-        public List<long> Bosses { get; set; } = new List<long>();
+        public List<ID> Bosses { get; set; } = new List<ID>();
 
         public List<string> StoryFlags { get; set; } = new List<string>();
 

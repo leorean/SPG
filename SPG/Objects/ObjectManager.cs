@@ -15,7 +15,7 @@ namespace SPG.Objects
 {
     public static class ObjectManager
     {
-        public static List<GameObject> Objects { get; private set; } = new List<GameObject>();
+        public static List<GameObject> Objects { get; set; } = new List<GameObject>();
 
         public static List<GameObject> ActiveObjects { get; private set; } = new List<GameObject>();
         
@@ -36,41 +36,10 @@ namespace SPG.Objects
                 GlobalIDCounter++;
             } else
             {
-                foreach(var ob in Objects)
-                {
-                    Debug.WriteLine($"- {ob.X}, {ob.Y}, {ob.GetType().Name} - {ob.ID}");
-                }
                 throw new ObjectException(o, "Object already registered!");
             }
         }
-
-        public static void CreateID(this GameObject o)
-        {
-            var x = ((long)o.X) << 32;
-            var y = ((long)o.Y);
-
-            long id = x + y;
-            o.ID = id;
-
-            //string strX = MathUtil.Div(o.X >= 0 ? o.X : o.X + 10000000, Globals.T).ToString();
-            //string strY = MathUtil.Div(o.Y >= 0 ? o.Y : o.Y + 10000000, Globals.T).ToString();
-            
-            //long id = long.Parse(strX + strY + $"0000");
-
-            //o.ID = id;
-            
-            //if (uniqueIds.Contains(id))
-            //{
-            //    counter = (counter + 1) % long.MaxValue;
-            //    CreateID(o);
-            //}
-            //else
-            //{
-            //    uniqueIds.Add(id);
-            //    o.ID = id;
-            //}
-        }
-
+        
         public static bool Exists<T>() where T:GameObject
         {
             return Objects.Find(x => x is T) != null;
@@ -89,7 +58,7 @@ namespace SPG.Objects
         {
             if (Objects.Contains(o))
             {
-                Objects.Remove(o);
+                Objects.Remove(o);                
                 //UpdateActiveObjectList();
             }
             if (ActiveObjects.Contains(o))
@@ -101,7 +70,7 @@ namespace SPG.Objects
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="specificID"></param>
-        public static void DestroyAll<T>(int specificID = -1) where T : GameObject
+        public static void DestroyAll<T>(IID specificID = null) where T : GameObject
         {
             for (var i = 0; i < Objects.Count; i++)
             {
@@ -109,43 +78,43 @@ namespace SPG.Objects
 
                 if (!(o is T))
                     continue;
-                if (specificID == -1 || o.ID == specificID)
+                if (specificID == null || o.IDEquals(specificID))
                     o.Destroy();
             }
         }
 
-        [Obsolete]
-        public static void SortByID()
-        {
-            Objects.Sort(
-                delegate (GameObject o1, GameObject o2)
-                {
-                    if (o1.ID < o2.ID) return -1;
-                    if (o1.ID > o2.ID) return 1;
-                    return 0;
-                }
-            );
-        }
-        [Obsolete]
-        public static void SortByX(this List<GameObject> objects)
-        {
-            objects.Sort(delegate (GameObject o1, GameObject o2)
-            {
-                if (o1.X < o2.X) return -1;
-                if (o1.X > o2.X) return 1;
-                return 0;
-            });
-        }
-        [Obsolete]
-        public static void SortByY(this List<GameObject> objects)
-        {
-            objects.Sort(delegate (GameObject o1, GameObject o2)
-            {
-                if (o1.Y < o2.Y) return -1;
-                if (o1.Y > o2.Y) return 1;
-                return 0;
-            });
-        }
+        //[Obsolete]
+        //public static void SortByID()
+        //{
+        //    Objects.Sort(
+        //        delegate (GameObject o1, GameObject o2)
+        //        {
+        //            if (o1.ID < o2.ID) return -1;
+        //            if (o1.ID > o2.ID) return 1;
+        //            return 0;
+        //        }
+        //    );
+        //}
+        //[Obsolete]
+        //public static void SortByX(this List<GameObject> objects)
+        //{
+        //    objects.Sort(delegate (GameObject o1, GameObject o2)
+        //    {
+        //        if (o1.X < o2.X) return -1;
+        //        if (o1.X > o2.X) return 1;
+        //        return 0;
+        //    });
+        //}
+        //[Obsolete]
+        //public static void SortByY(this List<GameObject> objects)
+        //{
+        //    objects.Sort(delegate (GameObject o1, GameObject o2)
+        //    {
+        //        if (o1.Y < o2.Y) return -1;
+        //        if (o1.Y > o2.Y) return 1;
+        //        return 0;
+        //    });
+        //}
 
         /// <summary>
         /// Returns the number of alive objects of a given type.
@@ -414,7 +383,7 @@ namespace SPG.Objects
         /// <param name="enabled"></param>
         public static void SetRegionEnabled<T>(float x, float y, float width, float height, bool enabled) where T : GameObject
         {
-            foreach (var o in Objects)
+            foreach (var o in Objects.ToList())
             {
                 if (o is T)
                 {
@@ -427,7 +396,7 @@ namespace SPG.Objects
 
         private static void UpdateActiveObjectList()
         {
-            ActiveObjects = Objects.Where(o => o.Enabled).ToList();
+            ActiveObjects = Objects.ToList().Where(o => o != null && o.Enabled).ToList();
         }
 
         /// <summary>
