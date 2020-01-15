@@ -77,7 +77,7 @@ namespace SPG.Map
         /// <summary>
         /// Contains a list of each object including their properties (name, x, y, ...)
         /// </summary>
-        public List<Dictionary<string, object>> ObjectData { get; set; }
+        public List<Dictionary<string, object>> ObjectData { get; private set; }
 
         public string Name { get; private set; }
         public long ID { get; private set; }

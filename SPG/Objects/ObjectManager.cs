@@ -35,14 +35,21 @@ namespace SPG.Objects
 
                 GlobalIDCounter++;
             } else
-            {                
+            {
+                foreach(var ob in Objects)
+                {
+                    Debug.WriteLine($"- {ob.X}, {ob.Y}, {ob.GetType().Name} - {ob.ID}");
+                }
                 throw new ObjectException(o, "Object already registered!");
             }
         }
 
         public static void CreateID(this GameObject o)
         {
-            long id = (int)o.X << 32 + (int)o.Y;
+            var x = ((long)o.X) << 32;
+            var y = ((long)o.Y);
+
+            long id = x + y;
             o.ID = id;
 
             //string strX = MathUtil.Div(o.X >= 0 ? o.X : o.X + 10000000, Globals.T).ToString();

@@ -263,6 +263,8 @@ namespace Leore.Main
                 spawnX = originalSpawnPosition.X;
                 spawnY = originalSpawnPosition.Y;
             }
+
+            ObjectManager.DestroyAll<Room>();
             
             // load room data for the camera
             var roomData = Map.ObjectData.FindDataByTypeName("room");

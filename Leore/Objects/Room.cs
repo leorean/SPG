@@ -23,9 +23,9 @@ namespace Leore.Objects
             base.Update(gameTime);
         }
 
-        public override long ID
-        {
-            get => IDHelper.GetUniqueIDForCurrentMap(base.ID);
-        }
+        //public override long ID
+        //{
+        //    get => IDHelper.GetUniqueIDForCurrentMap(base.ID);
+        //}
     }
 }

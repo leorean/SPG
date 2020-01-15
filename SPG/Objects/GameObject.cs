@@ -144,12 +144,14 @@ namespace SPG.Objects
         {
             Position = new Vector2(x, y);
             Name = name ?? GetType().Name;
-            this.CreateID();            
+            this.CreateID();
+            ObjectManager.Add(this);
         }
         
         private GameObject()
         {
-            ObjectManager.Add(this);            
+            // THIS should be only called when the ID is already created!!
+            //ObjectManager.Add(this);
         }
         
         ~GameObject()
@@ -285,7 +287,12 @@ namespace SPG.Objects
         public override bool Equals(object obj)
         {
             var o = obj as GameObject;
-            return o != null && this.ID == o.ID;
+            var val = o != null && this.ID == o.ID;
+            if (val && GetType() == obj.GetType())
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

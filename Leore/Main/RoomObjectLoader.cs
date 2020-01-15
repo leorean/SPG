@@ -677,7 +677,10 @@ namespace Leore.Main
                     if (remX != 0 || remY != 0 || remW != 0 || remH != 0)
                         throw new ArgumentException($"The room at ({x},{y}) has an incorrect size or position!");
 
+                    Debug.WriteLine($"{x} {y})");
                     var room = new Room(x, y, w, h);
+                    Debug.WriteLine($"{x} {y} ({room.ID})");
+
                     room.Background = bg;
                     room.Weather = weather;
                     room.IsDark = isDark;
@@ -688,10 +691,11 @@ namespace Leore.Main
                 {
                     for (var j = 0; j < GameManager.Current.Map.Height * Globals.T; j += camera.ViewHeight)
                     {
-                        if (ObjectManager.CollisionPoints<Room>(i + Globals.T, j + Globals.T).Count == 0)
+                        var c = ObjectManager.CollisionPoints<Room>(i, j).Count;
+                        if (c == 0)
                         {
+                            Debug.WriteLine($"searching at ({i}, {j}) : {c}");
                             var room = new Room(i, j, camera.ViewWidth, camera.ViewHeight);
-                            Debug.WriteLine(room.ID);
                         }
                     }
                 }
