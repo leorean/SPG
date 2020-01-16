@@ -47,7 +47,7 @@ namespace Leore.Main
 
         // input
 
-        public Input Input { get; private set; }
+        public Input Input { get; private set; } = new Input();
         
         private static MainGame instance;
         public static MainGame Current { get => instance; }
@@ -64,8 +64,6 @@ namespace Leore.Main
 
             graphics = new GraphicsDeviceManager(this);
             
-            Input = new Input();
-
             // window & screen setup
 
             viewSize = new Size(256, 144);
@@ -187,6 +185,14 @@ namespace Leore.Main
                 TitleMenu.Update(gameTime);
             }
 
+            if (Input.IsKeyPressed(Keys.P, Input.State.Pressed))
+            {
+                if (State == GameState.Running)
+                    State = GameState.Paused;
+                else if (State == GameState.Paused)
+                    State = GameState.Running;
+            }
+
             if (State == GameState.Running)
             {
 
@@ -224,7 +230,7 @@ namespace Leore.Main
                 }
 
                 // debug keys
-
+                
                 if (GameManager.Current.Player != null)
                 {
 
@@ -334,15 +340,20 @@ namespace Leore.Main
 
             // ++++ HANDLES ALL OBJECTS ++++
 
-            GameManager.Current.Update(gameTime);
-
+            if (State != GameState.Paused)
+            {
+                GameManager.Current.Update(gameTime);
+            }
+            
             // ++++ update HUD ++++
 
             HUD.Update(gameTime);
 
             // ++++ update transition ++++
-
-            GameManager.Current.Transition?.Update(gameTime);
+            if (State != GameState.Paused)
+            {
+                GameManager.Current.Transition?.Update(gameTime);
+            }
         }
         
         /// <summary>

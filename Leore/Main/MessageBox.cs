@@ -144,10 +144,8 @@ namespace Leore.Main
             if (hiColor != null)
                 font.HighlightColor = (Color)hiColor;
             
-            //kPrevPressed = input.IsKeyPressed(Keys.Up, Input.State.Pressed) || input.IsKeyPressed(Keys.S, Input.State.Pressed);
-            //kNextPressed = input.IsKeyPressed(Keys.Down, Input.State.Pressed) || input.IsKeyPressed(Keys.A, Input.State.Pressed);
             kPrevPressed = input.IsKeyPressed(Keys.S, Input.State.Pressed);
-            kNextPressed = input.IsKeyPressed(Keys.A, Input.State.Pressed);
+            kNextPressed = input.IsKeyPressed(Keys.A, Input.State.Pressed) || input.IsKeyPressed(Keys.Enter, Input.State.Pressed);
 
             kLeftPressed = input.IsKeyPressed(Keys.Left, Input.State.Pressed) || input.DirectionPressedFromStick(Input.Direction.LEFT, Input.Stick.LeftStick, Input.State.Pressed);
             kRightPressed = input.IsKeyPressed(Keys.Right, Input.State.Pressed) || input.DirectionPressedFromStick(Input.Direction.RIGHT, Input.Stick.LeftStick, Input.State.Pressed);
@@ -161,7 +159,7 @@ namespace Leore.Main
                 //kNextPressed = input.DirectionPressedFromStick(Input.Direction.DOWN, Input.Stick.LeftStick, Input.State.Pressed)
                 //    || input.IsButtonPressed(Buttons.A);
                 kPrevPressed = input.IsButtonPressed(Buttons.X) || input.IsButtonPressed(Buttons.Y);
-                kNextPressed = input.IsButtonPressed(Buttons.B) || input.IsButtonPressed(Buttons.A);
+                kNextPressed = input.IsButtonPressed(Buttons.B) || input.IsButtonPressed(Buttons.A) || input.IsButtonPressed(Buttons.Start);
                 kAny = input.IsAnyButtonPressed();
             }
 

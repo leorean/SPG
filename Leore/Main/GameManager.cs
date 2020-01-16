@@ -50,6 +50,9 @@ namespace Leore.Main
 
         private bool manualStateEnabled;
 
+        private long playTime = 0;
+        private TimeSpan prevTime = DateTime.Now.TimeOfDay;
+
         public static void Create()
         {
             if(instance == null)
@@ -106,12 +109,13 @@ namespace Leore.Main
         /// </summary>
         public void Save(float posX, float posY)
         {
+            SaveGame.playTime = playTime;
             SaveGame.playerPosition = new Vector2(posX, posY);
             SaveGame.playerDirection = Player.Direction;
             SaveGame.gameStats = Player.Stats;
             SaveGame.currentBG = RoomCamera.Current.CurrentBG;
             SaveGame.currentWeather = currentWeather;
-            SaveGame.levelName = Map.Name;
+            SaveGame.levelName = Map.Name;            
             SaveGame.Save();
         }
 
@@ -231,7 +235,8 @@ namespace Leore.Main
 
             if (success)
             {
-                levelName = SaveGame.levelName;                
+                levelName = SaveGame.levelName;
+                playTime = SaveGame.playTime;
             }
 
             SetCurrentGameMap(SaveGame.levelName);
@@ -427,9 +432,16 @@ namespace Leore.Main
         {
             manualStateEnabled = enabled;
         }
-
+        
         public void Update(GameTime gameTime)
         {
+            if (MainGame.Current.State == MainGame.GameState.Running)
+            {
+                DateTime elapsedTime = DateTime.Now - prevTime;
+                prevTime = DateTime.Now.TimeOfDay;
+                playTime += elapsedTime.Millisecond;
+                Debug.WriteLine("Time elapsed: " + TimeSpan.FromMilliseconds(playTime));
+            }            
 
             ObjectManager.Disable<GameObject>();
 
@@ -544,7 +556,7 @@ namespace Leore.Main
             ObjectManager.Enable(RoomCamera.Current.CurrentRoom);
             
             // ++++ update objects ++++
-
+            
             ObjectManager.UpdateObjects(gameTime);
 
         }

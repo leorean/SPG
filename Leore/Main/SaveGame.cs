@@ -50,8 +50,8 @@ namespace Leore.Main
         public Direction playerDirection;
 
         public GameStats gameStats;
-        
-        //public List<int> items;
+
+        public long playTime;
 
         public int currentBG = -1;
         public int currentWeather = -1;
