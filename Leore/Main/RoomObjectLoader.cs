@@ -677,10 +677,8 @@ namespace Leore.Main
                     if (remX != 0 || remY != 0 || remW != 0 || remH != 0)
                         throw new ArgumentException($"The room at ({x},{y}) has an incorrect size or position!");
 
-                    Debug.WriteLine($"{x} {y}");
                     var room = new Room(x, y, w, h, mapIndex);
-                    Debug.WriteLine($"{x} {y} ({room.ID})");
-
+                    
                     room.Background = bg;
                     room.Weather = weather;
                     room.IsDark = isDark;

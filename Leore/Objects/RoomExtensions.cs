@@ -34,13 +34,13 @@ namespace Leore.Objects
                     {
                         if (!neighbours.Contains(c))
                         {
-                            Debug.WriteLine($"({room.ID}) ID: {c.ID}");
+                            //Debug.WriteLine($"({room.ID}) ID: {c.ID}");
                             //Debug.WriteLine($"ID {room.ID} - ({c.X}, {c.Y}), ... {c.BoundingBox}");
                             neighbours.Add(c);
                         }
                     }                    
                 }
-                Debug.WriteLine("------");
+                //Debug.WriteLine("------");
             }
             return neighbours;
         }

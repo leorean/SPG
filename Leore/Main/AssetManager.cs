@@ -9,7 +9,9 @@ namespace Leore.Main
     public static class AssetManager
     {
         // common textures & objects
-        
+
+        public static Texture2D TitleMenu { get; private set; }
+
         public static TextureSet TileSet { get; private set; }
 
         public static TextureSet Backgrounds { get; private set; }
@@ -89,6 +91,8 @@ namespace Leore.Main
         
         public static void InitializeContent(ContentManager content)
         {
+            TitleMenu = content.Load<Texture2D>("titleMenu");
+
             // tileset
 
             TileSet = content.LoadTextureSet("tiles");

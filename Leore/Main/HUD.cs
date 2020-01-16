@@ -59,6 +59,9 @@ namespace Leore.Main
 
         public void Draw(SpriteBatch sb, GameTime gameTime)
         {
+            if (player == null)
+                return;
+
             var x = RoomCamera.Current.ViewX;
             var y = RoomCamera.Current.ViewY;
             

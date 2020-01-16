@@ -19,6 +19,11 @@ namespace Leore.Main
             this.mapIndex = mapIndex;
         }
 
+        public override string ToString()
+        {
+            return $"[{x}, {y}, {mapIndex}]";
+        }
+
         public static bool operator ==(ID obj1, ID obj2) => obj1.IDEquals(obj2);
         public static bool operator !=(ID obj1, ID obj2) => !obj1.IDEquals(obj2);
 

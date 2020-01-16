@@ -16,6 +16,7 @@ using Leore.Objects.Effects.Weather;
 using Leore.Objects.Effects.Ambience;
 using System.Xml;
 using SPG.Util;
+using System.Diagnostics;
 
 namespace Leore.Main
 {
@@ -23,7 +24,7 @@ namespace Leore.Main
     {
         public static readonly string DEFAULT_MAP_NAME = "tutorial2";
 
-        public List<Room> LoadedRooms { get; private set; }
+        public List<Room> LoadedRooms { get; private set; } = new List<Room>();
         
         public Player Player { get; set; }
         public GameMap Map { get; private set; }
@@ -40,7 +41,7 @@ namespace Leore.Main
         private static GameManager instance;
         public static GameManager Current { get => instance; }
 
-        public List<ID> NonRespawnableIDs { get; private set; }
+        public List<ID> NonRespawnableIDs { get; private set; } = new List<ID>();
         
         public Transition Transition { get; set; }
         
@@ -146,12 +147,16 @@ namespace Leore.Main
 
         public void LoadLevel(string levelName)
         {
+            // clear rooms
+
             foreach (var room in LoadedRooms.ToList())
             {
                 UnloadRoomObjects(room);
-                room.Destroy(); // TODO: verify
+                room.Destroy();
             }
-            
+            if (LoadedRooms.Count > 0)
+                throw new Exception("Loaded rooms should be empty!");
+
             OverwriteSwitchStateTo(false);
             
             SetCurrentGameMap(levelName);
@@ -162,8 +167,6 @@ namespace Leore.Main
             var mapIndex = Map.MapIndex;
             var roomData = Map.ObjectData.FindDataByTypeName("room");
             RoomObjectLoader.CreateRoom(roomData, mapIndex);
-
-            LoadedRooms = new List<Room>();
             
             // find starting room
             var startRoom = ObjectManager.CollisionPoints<Room>(Player.X, Player.Y).FirstOrDefault();
@@ -189,15 +192,11 @@ namespace Leore.Main
             MainGame.Current.HUD.SetBoss(null);            
         }
 
-        public void Initialize()
-        {
-            // handle room changing <-> object loading/unloading
-            RoomCamera.Current.OnRoomChange += (sender, rooms) =>
-            {
-                ChangeRoom(rooms.Item1, rooms.Item2);
-            };
-            RoomCamera.Current.SetBackgrounds(AssetManager.Backgrounds);
-        }
+        //public void Initialize()
+        //{
+        //    // handle room changing <-> object loading/unloading
+            
+        //}
 
         public void UnloadRoomObjects(Room room)
         {
@@ -228,13 +227,14 @@ namespace Leore.Main
 
             bool success = SaveManager.Load(ref SaveGame);
 
+            string levelName = DEFAULT_MAP_NAME;
+
             if (success)
             {
-                SetCurrentGameMap(SaveGame.levelName);
-            } else
-            {
-                SetCurrentGameMap(DEFAULT_MAP_NAME);
+                levelName = SaveGame.levelName;                
             }
+
+            SetCurrentGameMap(SaveGame.levelName);
 
             var playerData = Map.ObjectData.FindFirstDataByTypeName("player");
 
@@ -262,42 +262,14 @@ namespace Leore.Main
                 spawnY = originalSpawnPosition.Y;
             }
 
-            // load room data for the camera
-            var mapIndex = Map.MapIndex;
-            var roomData = Map.ObjectData.FindDataByTypeName("room");
-            RoomObjectLoader.CreateRoom(roomData, mapIndex);
-
-            LoadedRooms = new List<Room>();
-
-            // find starting room
-            var startRoom = ObjectManager.CollisionPoints<Room>(spawnX, spawnY).FirstOrDefault();
-
-            if (startRoom == null)
-            {
-                throw new Exception($"No room detected at position {spawnX}x{spawnY}!");
-            }
-
-            var neighbours = startRoom.Neighbors();
-            RoomObjectLoader.CreateRoomObjects(startRoom);
-
-            // create room objects from object data for current room
-            var objectData = GameManager.Current.Map.ObjectData.Where(o => !o.Values.Contains("room")).ToList();
-            RoomObjectLoader.CreateRoomObjectsFromData(objectData, startRoom);
-
-            foreach (var n in neighbours)
-
-            {
-                RoomObjectLoader.CreateRoomObjects(n);
-            }
-
-            RoomObjectLoader.CleanObjectsExceptRoom(startRoom);
-
             // create player at start position and set camera target
 
             Player = new Player(spawnX, spawnY);
             Player.Direction = direction;
             Player.AnimationTexture = AssetManager.Player;
 
+            LoadLevel(levelName);
+            
             //globalWaterEmitter = new GlobalWaterBubbleEmitter(spawnX, spawnY, Player);
             //new EmitterSpawner<GlobalWaterBubbleEmitter>(spawnX, spawnY, CurrentRoom);
 
@@ -305,7 +277,7 @@ namespace Leore.Main
             MainGame.Current.HUD.SetPlayer(Player);
             MainGame.Current.HUD.SetBoss(null);
 
-            NonRespawnableIDs = new List<ID>();
+            NonRespawnableIDs.Clear();
 
             // fade-in
 
@@ -404,22 +376,21 @@ namespace Leore.Main
         /// </summary>
         public void UnloadLevel()
         {
-            Room[] roomList = new Room[LoadedRooms.Count];
-            LoadedRooms.CopyTo(roomList);
+            Debug.WriteLine("Objects: " + ObjectManager.Objects.Count);
 
-            foreach (var room in roomList)
+            foreach (var room in LoadedRooms.ToList())
             {
                 UnloadRoomObjects(room);
                 room.Destroy(); //
             }
 
-            if (Player.Orb != null)
+            if (Player?.Orb != null)
             {
                 Player.Orb.Parent = null;
                 Player.Orb.Destroy();
             }
 
-            Player.Destroy();
+            Player?.Destroy();
             Player = null;
             RoomCamera.Current.Reset();
 
@@ -439,6 +410,17 @@ namespace Leore.Main
             NonRespawnableIDs.Clear();
 
             SetCurrentGameMap(DEFAULT_MAP_NAME);
+
+            Debug.WriteLine("Objects: " + ObjectManager.Objects.Count);
+            Debug.WriteLine("killing all...");
+
+            foreach(var obj in ObjectManager.Objects.ToList())
+            {
+                obj.Destroy();
+            }
+            Debug.WriteLine("Objects: " + ObjectManager.Objects.Count);
+            Debug.WriteLine("-----");
+
         }
 
         public void OverwriteSwitchStateTo(bool enabled)
