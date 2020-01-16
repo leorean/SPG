@@ -22,6 +22,9 @@ namespace Leore.Main
 
         double t = 0;
         float z = 0;
+        float y = 0;
+        float yMax = -AssetManager.TitleMenu.Height + 144;
+        float a = 0;
 
         int cursor = 0;
 
@@ -44,81 +47,106 @@ namespace Leore.Main
         {
             base.Update(gameTime);
 
+            var kActionPressed = MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Enter, SPG.Input.State.Pressed)
+                    || MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.A, SPG.Input.State.Pressed)
+                    || MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.S, SPG.Input.State.Pressed);
+
             position = new Vector2(camera.ViewX, camera.ViewY);
+
             t = (t + .025f);
             z = (float)(2 * Math.Sin(t));
 
+            var spd = (float) Math.Max(.2f, 2 * Math.Sin((Math.Abs(y) / Math.Abs(AssetManager.TitleMenu.Height)) * Math.PI));
+
+            if (Math.Abs(y) >= .1f * AssetManager.TitleMenu.Height)
+            {
+                a = Math.Min(a + .003f, 1);
+            }
+
+            y = Math.Max(y - spd, yMax);
+
             // TODO: doesn't work with gamepad
 
-            if (MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Down, SPG.Input.State.Pressed))
+            if (y != yMax)
             {
-                cursor = (cursor + 1) % 2;
-            }
-            if (MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Up, SPG.Input.State.Pressed))
-            {
-                cursor = (cursor + 3) % 2;
-            }
-
-            if (!isShowingDialog) {
-                if (MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Enter, SPG.Input.State.Pressed)
-                    || MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.A, SPG.Input.State.Pressed)
-                    || MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.S, SPG.Input.State.Pressed))
+                if (kActionPressed)
                 {
-                    if (cursor == 0)
+                    a = 1;
+                    y = yMax;
+                }
+            }
+            else
+            {
+
+                if (MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Down, SPG.Input.State.Pressed))
+                {
+                    cursor = (cursor + 1) % 2;
+                }
+                if (MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Up, SPG.Input.State.Pressed))
+                {
+                    cursor = (cursor + 3) % 2;
+                }
+
+                if (!isShowingDialog)
+                {
+                    if (kActionPressed)
                     {
-                        isShowingDialog = true;
-                        if (saveExists)
+                        if (cursor == 0)
                         {
                             isShowingDialog = true;
-                            var dialog = new MessageDialog("Load game?");
+                            if (saveExists)
+                            {
+                                isShowingDialog = true;
+                                var dialog = new MessageDialog("Load game?");
+                                dialog.NoAction = () =>
+                                {
+                                    isShowingDialog = false;
+                                };
+                                dialog.YesAction = () =>
+                                {
+                                    isShowingDialog = false;
+                                    GameManager.Current.ReloadLevel();
+                                    MainGame.Current.State = MainGame.GameState.Running;
+                                };
+                            }
+                            else
+                            {
+                                isShowingDialog = true;
+                                var dialog = new MessageDialog("Start new game?");
+                                dialog.NoAction = () =>
+                                {
+                                    isShowingDialog = false;
+                                };
+                                dialog.YesAction = () =>
+                                {
+                                    isShowingDialog = false;
+                                    GameManager.Current.ReloadLevel();
+                                    MainGame.Current.State = MainGame.GameState.Running;
+                                };
+                            }
+                        }
+                        if (cursor == 1)
+                        {
+                            isShowingDialog = true;
+                            var dialog = new MessageDialog("Delete save game?");
                             dialog.NoAction = () =>
                             {
                                 isShowingDialog = false;
                             };
                             dialog.YesAction = () =>
                             {
-                                isShowingDialog = false;
-                                GameManager.Current.ReloadLevel();
-                                MainGame.Current.State = MainGame.GameState.Running;
+                                GameManager.Current.SaveGame.Delete();
+                                Debug.WriteLine("Deleted save game.");
+
+                                var message = new MessageBox("Save game deleted.");
+                                message.OnCompleted = () =>
+                                {
+                                    isShowingDialog = false;
+
+                                };
+                                saveExists = checkSaveFileExists();
                             };
                         }
-                        else
-                        {
-                            isShowingDialog = true;
-                            var dialog = new MessageDialog("Start new game?");
-                            dialog.NoAction = () =>
-                            {
-                                isShowingDialog = false;
-                            };
-                            dialog.YesAction = () =>
-                            {
-                                isShowingDialog = false;
-                                GameManager.Current.ReloadLevel();
-                                MainGame.Current.State = MainGame.GameState.Running;
-                            };
-                        }
-                    }
-                    if (cursor == 1)
-                    {
-                        isShowingDialog = true;
-                        var dialog = new MessageDialog("Delete save game?");
-                        dialog.NoAction = () =>
-                        {
-                            isShowingDialog = false;
-                        };
-                        dialog.YesAction = () =>
-                        {
-                            GameManager.Current.SaveGame.Delete();
-                            Debug.WriteLine("Deleted save game.");
-
-                            var message = new MessageBox("Save game deleted.");
-                            message.OnCompleted = () =>
-                            {
-                                isShowingDialog = false;
-
-                            };
-                            saveExists = checkSaveFileExists();
-                        };                        
                     }
                 }
             }
@@ -131,25 +159,29 @@ namespace Leore.Main
             base.Draw(sb, gameTime);
 
             // BG
-            sb.Draw(AssetManager.TitleMenu, position, new Rectangle(256, 0, 256, 144), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0000f);
+            sb.Draw(AssetManager.TitleMenu, position + new Vector2(0, y), new Rectangle(256, 0, 256, AssetManager.TitleMenu.Height), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0000f);
 
-            // floaty thing
-            sb.Draw(AssetManager.TitleMenu, position + new Vector2(0, z), new Rectangle(0, 0, 256, 144), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0001f);
+            // title
+            sb.Draw(AssetManager.TitleMenu, position + new Vector2(0, z), new Rectangle(0, 0, 256, 144), new Color(Color.White, a), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0001f);
 
-            // font
-            font.Halign = Font.HorizontalAlignment.Left;
-            font.Valign = Font.VerticalAlignment.Top;
-            font.Draw(sb, position.X + 32, position.Y + camera.ViewHeight - 32, saveExists ? $"Load Game" : "New Game", depth: .00003f);
-            font.Draw(sb, position.X + 32, position.Y + camera.ViewHeight - 16, "Delete Game", depth: .00003f);
-
-            // cursor
-            font.Draw(sb, position.X + 24, position.Y + camera.ViewHeight - 32 + cursor * 16, ((char)129).ToString(), depth: .00003f);
-
-            font.Halign = Font.HorizontalAlignment.Right;
-            if (saveExists)
+            if (y == yMax)
             {
-                font.Draw(sb, position.X + camera.ViewWidth - 16, position.Y + camera.ViewHeight - 2 * Globals.T, $"Playtime: " + TimeUtil.TimeStringFromMilliseconds(saveGame.playTime), depth: .00003f);
-            }            
+
+                // font
+                font.Halign = Font.HorizontalAlignment.Left;
+                font.Valign = Font.VerticalAlignment.Top;
+                font.Draw(sb, position.X + 32, position.Y + camera.ViewHeight - 32, saveExists ? $"Load Game" : "New Game", depth: .00003f);
+                font.Draw(sb, position.X + 32, position.Y + camera.ViewHeight - 16, "Delete Game", depth: .00003f);
+
+                // cursor
+                font.Draw(sb, position.X + 24, position.Y + camera.ViewHeight - 32 + cursor * 16, ((char)129).ToString(), depth: .00003f);
+
+                font.Halign = Font.HorizontalAlignment.Right;
+                if (saveExists)
+                {
+                    font.Draw(sb, position.X + camera.ViewWidth - 16, position.Y + camera.ViewHeight - 2 * Globals.T, $"Playtime: " + TimeUtil.TimeStringFromMilliseconds(saveGame.playTime), depth: .00003f);
+                }
+            }
         }
     }
 }
