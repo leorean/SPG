@@ -47,7 +47,7 @@ namespace Leore.Main
 
         // input
 
-        Input input;
+        public Input Input { get; private set; }
         
         private static MainGame instance;
         public static MainGame Current { get => instance; }
@@ -64,7 +64,7 @@ namespace Leore.Main
 
             graphics = new GraphicsDeviceManager(this);
             
-            input = new Input();
+            Input = new Input();
 
             // window & screen setup
 
@@ -146,7 +146,7 @@ namespace Leore.Main
             RoomCamera.Current.SetBackgrounds(AssetManager.Backgrounds);
 
             //GameManager.Current.CreateLevel();
-            TitleMenu = new TitleMenu();
+            TitleMenu = new TitleMenu(0, 0);
             State = GameState.InTitleMenu;
         }
 
@@ -169,13 +169,13 @@ namespace Leore.Main
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            input.Update(gameTime);
+            Input.Update(gameTime);
             MouseState mouse = Mouse.GetState();
 
 
             // STATE-independent logic here:
 
-            if (input.IsKeyPressed(Keys.R, Input.State.Pressed))
+            if (Input.IsKeyPressed(Keys.R, Input.State.Pressed))
             {
                 GameManager.Current.ReloadLevel();
             }
@@ -185,14 +185,6 @@ namespace Leore.Main
             if (State == GameState.InTitleMenu)
             {
                 TitleMenu.Update(gameTime);
-
-                if (input.IsAnyKeyPressed())
-                {
-                    // TODO: not reload
-                    GameManager.Current.ReloadLevel();
-
-                    State = GameState.Running;
-                }
             }
 
             if (State == GameState.Running)
@@ -200,7 +192,7 @@ namespace Leore.Main
 
                 // ++++ debug input ++++
 
-                if (input.IsKeyPressed(Keys.D0, Input.State.Pressed))
+                if (Input.IsKeyPressed(Keys.D0, Input.State.Pressed))
                 {
                     var posX = MathUtil.Div(GameManager.Current.Player.Position.X, Globals.T) * Globals.T + 8;
                     var posY = MathUtil.Div(GameManager.Current.Player.Position.Y, Globals.T) * Globals.T + 8;
@@ -210,18 +202,18 @@ namespace Leore.Main
                     Debug.WriteLine("Saved.");
                 }
 
-                if (input.IsKeyPressed(Keys.D5, Input.State.Pressed))
+                if (Input.IsKeyPressed(Keys.D5, Input.State.Pressed))
                 {
                     RoomCamera.Current.Zoom -= .1f;
                     Debug.WriteLine(RoomCamera.Current.Zoom);
                 }
-                if (input.IsKeyPressed(Keys.D6, Input.State.Pressed))
+                if (Input.IsKeyPressed(Keys.D6, Input.State.Pressed))
                 {
                     RoomCamera.Current.Zoom += .1f;
                     Debug.WriteLine(RoomCamera.Current.Zoom);
                 }
 
-                if (input.IsKeyPressed(Keys.C, Input.State.Pressed))
+                if (Input.IsKeyPressed(Keys.C, Input.State.Pressed))
                 {
                     var dialog = new MessageDialog("Delete save game?");
                     dialog.YesAction = () =>
@@ -237,13 +229,13 @@ namespace Leore.Main
                 {
 
 
-                    if (input.IsKeyPressed(Keys.H, Input.State.Pressed))
+                    if (Input.IsKeyPressed(Keys.H, Input.State.Pressed))
                     {
                         GameManager.Current.Player.Hit(1);
                         GameManager.Current.Player.HP++;
                     }
 
-                    if (input.IsKeyPressed(Keys.D9, Input.State.Pressed))
+                    if (Input.IsKeyPressed(Keys.D9, Input.State.Pressed))
                     {
                         //stats.Abilities = PlayerAbility.NONE;
 
@@ -283,7 +275,7 @@ namespace Leore.Main
                         //GameManager.Current.Player.Stats.MPRegen = .4f;
                     }
 
-                    if (input.IsKeyPressed(Keys.O, Input.State.Pressed))
+                    if (Input.IsKeyPressed(Keys.O, Input.State.Pressed))
                     {
                         Coin.Spawn(GameManager.Current.Player.X, GameManager.Current.Player.Y, RoomCamera.Current.CurrentRoom, 2000);
                         Debug.WriteLine($"{ObjectManager.Count<Coin>()} coins exist. (Blocks: {ObjectManager.Count<Solid>()}, active: {ObjectManager.ActiveObjects.Count}, overall: {ObjectManager.Count<GameObject>()})");
@@ -299,7 +291,7 @@ namespace Leore.Main
                         Debug.WriteLine("cleared saved lists!");
                     }
 
-                    if (input.IsKeyPressed(Keys.M, Input.State.Pressed))
+                    if (Input.IsKeyPressed(Keys.M, Input.State.Pressed))
                     {
                         var dialog = new MessageDialog("Do you like message dialogs?");
 
@@ -322,7 +314,7 @@ namespace Leore.Main
                         }
                     }
 
-                    if (input.IsKeyPressed(Keys.Space, Input.State.Holding))
+                    if (Input.IsKeyPressed(Keys.Space, Input.State.Holding))
                     {
                         ObjectManager.GameDelay = 120;
                     }
@@ -338,20 +330,19 @@ namespace Leore.Main
                         GameManager.Current.Player.YVel = 0;
                     }
                 }
-
-                // ++++ HANDLES ALL OBJECTS ++++
-                
-                GameManager.Current.Update(gameTime);
-
-                // ++++ update HUD ++++
-
-                HUD.Update(gameTime);
-                
-                // ++++ update transition ++++
-
-                GameManager.Current.Transition?.Update(gameTime);
-
             }
+
+            // ++++ HANDLES ALL OBJECTS ++++
+
+            GameManager.Current.Update(gameTime);
+
+            // ++++ update HUD ++++
+
+            HUD.Update(gameTime);
+
+            // ++++ update transition ++++
+
+            GameManager.Current.Transition?.Update(gameTime);
         }
         
         /// <summary>
