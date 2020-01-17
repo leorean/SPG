@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Text;
 using SPG.Util;
 using SPG.View;
+using System.Linq;
 
 namespace SPG.Objects
 {
@@ -138,10 +139,7 @@ namespace SPG.Objects
                 }
             }
             
-            Particle[] copy = new Particle[Particles.Count];
-            Particles.CopyTo(copy);
-
-            foreach (var p in copy)
+            foreach (var p in Particles.ToList())
             {
                 p.Update(gameTime);
 

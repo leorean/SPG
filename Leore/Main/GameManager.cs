@@ -17,6 +17,7 @@ using Leore.Objects.Effects.Ambience;
 using System.Xml;
 using SPG.Util;
 using System.Diagnostics;
+using Leore.Util;
 
 namespace Leore.Main
 {
@@ -52,6 +53,12 @@ namespace Leore.Main
 
         private long playTime = 0;
         private TimeSpan prevTime = DateTime.Now.TimeOfDay;
+        private long playTimeBeforeDeath = 0;
+
+        public void SavePlayTimeBeforeDeath()
+        {
+            playTimeBeforeDeath = playTime;
+        }
 
         public static void Create()
         {
@@ -267,6 +274,12 @@ namespace Leore.Main
                 spawnY = originalSpawnPosition.Y;
             }
 
+            if (playTimeBeforeDeath != 0)
+            {
+                playTime = playTimeBeforeDeath;
+            }
+            playTimeBeforeDeath = 0;
+
             // create player at start position and set camera target
 
             Player = new Player(spawnX, spawnY);
@@ -408,7 +421,7 @@ namespace Leore.Main
             lastRoom = null;
 
             OverwriteSwitchStateTo(false);
-
+            
             // reset savegame (will be loaded and updates afterwards)
             SaveGame = new SaveGame(SaveGame.FileName);
 
@@ -440,7 +453,7 @@ namespace Leore.Main
                 DateTime elapsedTime = DateTime.Now - prevTime;
                 prevTime = DateTime.Now.TimeOfDay;
                 playTime += elapsedTime.Millisecond;
-                Debug.WriteLine("Time elapsed: " + TimeSpan.FromMilliseconds(playTime));
+                //Debug.WriteLine("Time elapsed: " + TimeUtil.TimeStringFromMilliseconds(playTime));
             }            
 
             ObjectManager.Disable<GameObject>();

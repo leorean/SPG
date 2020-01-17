@@ -1,4 +1,5 @@
-﻿using Leore.Util;
+﻿using Leore.Objects.Effects.Emitters;
+using Leore.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SPG.Draw;
@@ -25,13 +26,16 @@ namespace Leore.Main
         float y = 0;
         float yMax = -AssetManager.TitleMenu.Height + 144;
         float a = 0;
-
+        float spd = .2f;
         int cursor = 0;
 
         bool saveExists;
         private SaveGame saveGame;
         bool isShowingDialog;
-        
+
+        bool hasFlashed = false;
+        float flash = 0;
+
         public TitleMenu(float x, float y, string name = null) : base(x, y, name)
         {
             saveExists = checkSaveFileExists();
@@ -41,6 +45,15 @@ namespace Leore.Main
         {
             saveGame = new SaveGame("save.dat");
             return SaveManager.Load(ref saveGame);
+        }
+
+        private void Flash()
+        {
+            if (hasFlashed)
+                return;
+
+            flash = 2;
+            hasFlashed = true;
         }
 
         public override void Update(GameTime gameTime)
@@ -56,27 +69,41 @@ namespace Leore.Main
             t = (t + .025f);
             z = (float)(2 * Math.Sin(t));
 
-            var spd = (float) Math.Max(.2f, 2 * Math.Sin((Math.Abs(y) / Math.Abs(AssetManager.TitleMenu.Height)) * Math.PI));
+
+            //var spd = (float) Math.Max(.2f, 2 * Math.Sin((Math.Abs(y) / Math.Abs(AssetManager.TitleMenu.Height)) * Math.PI));
 
             if (Math.Abs(y) >= .1f * AssetManager.TitleMenu.Height)
             {
-                a = Math.Min(a + .003f, 1);
+                a = Math.Min(a + .005f, 1);
             }
 
             y = Math.Max(y - spd, yMax);
 
-            // TODO: doesn't work with gamepad
+            if (y == yMax)
+            {
+                Flash();
+            }
 
+            flash = Math.Max(flash - .08f, 0);
+
+            // TODO: doesn't work with gamepad
+            
             if (y != yMax)
             {
+                if (Math.Abs(y - yMax) > 144)
+                    spd = spd * 1.01f;// + .05f;
+                    else
+                    spd = spd * .965f;// + .05f;
                 if (kActionPressed)
                 {
                     a = 1;
                     y = yMax;
+                    Flash();
                 }
             }
             else
             {
+                spd = 0;
 
                 if (MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Down, SPG.Input.State.Pressed))
                 {
@@ -182,6 +209,9 @@ namespace Leore.Main
                     font.Draw(sb, position.X + camera.ViewWidth - 16, position.Y + camera.ViewHeight - 2 * Globals.T, $"Playtime: " + TimeUtil.TimeStringFromMilliseconds(saveGame.playTime), depth: .00003f);
                 }
             }
+
+            // flash
+            sb.Draw(AssetManager.Flash, position, null, new Color(Color.White, flash), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0005f);            
         }
     }
 }

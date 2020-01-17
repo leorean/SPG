@@ -45,6 +45,7 @@ namespace Leore.Main
                     //GameManager.Current.Transition
                     Parent = null;
                     Destroy();
+                    GameManager.Current.SavePlayTimeBeforeDeath();
                     GameManager.Current.ReloadLevel();
                 }
             }
