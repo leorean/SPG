@@ -52,7 +52,7 @@ namespace Leore.Main
             if (hasFlashed)
                 return;
 
-            flash = 2;
+            flash = 3;
             hasFlashed = true;
         }
 
@@ -72,10 +72,10 @@ namespace Leore.Main
 
             //var spd = (float) Math.Max(.2f, 2 * Math.Sin((Math.Abs(y) / Math.Abs(AssetManager.TitleMenu.Height)) * Math.PI));
 
-            if (Math.Abs(y) >= .1f * AssetManager.TitleMenu.Height)
-            {
-                a = Math.Min(a + .005f, 1);
-            }
+            //if (Math.Abs(y) >= .3f * AssetManager.TitleMenu.Height)
+            //{
+            //    a = Math.Min(a + .005f, 1);
+            //}
 
             y = Math.Max(y - spd, yMax);
 
@@ -90,10 +90,17 @@ namespace Leore.Main
             
             if (y != yMax)
             {
-                if (Math.Abs(y - yMax) > 144)
-                    spd = spd * 1.01f;// + .05f;
-                    else
-                    spd = spd * .965f;// + .05f;
+                if (Math.Abs(y - yMax) > 288)
+                {
+                    //spd = spd * 1.01f;
+                    spd = spd * 1.01f;
+                }
+                else
+                {
+                    //spd = spd * .965f;
+                    spd = Math.Max(spd * .97f, .1f);
+                    //a = Math.Min(a + .01f, 1);
+                }
                 if (kActionPressed)
                 {
                     a = 1;
@@ -103,6 +110,7 @@ namespace Leore.Main
             }
             else
             {
+                a = Math.Min(a + .05f, 1);
                 spd = 0;
 
                 if (MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Down, SPG.Input.State.Pressed))
@@ -184,6 +192,11 @@ namespace Leore.Main
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
             base.Draw(sb, gameTime);
+
+            // presents..
+            font.Halign = Font.HorizontalAlignment.Center;
+            font.Valign = Font.VerticalAlignment.Top;
+            font.Draw(sb, position.X + camera.ViewWidth * .5f, position.Y + camera.ViewHeight * .5f + y * .5f, "Shinypixelgames presents...", depth: .00003f);
 
             // BG
             sb.Draw(AssetManager.TitleMenu, position + new Vector2(0, y), new Rectangle(256, 0, 256, AssetManager.TitleMenu.Height), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0000f);
