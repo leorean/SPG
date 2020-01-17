@@ -21,13 +21,14 @@ namespace Leore.Main
 
         private Font font = AssetManager.DefaultFont;
 
-        double t = 0;
-        float z = 0;
-        float y = 0;
-        float yMax = -AssetManager.TitleMenu.Height + 144;
-        float a = 0;
-        float spd = .2f;
-        int cursor = 0;
+        double t;
+        float z;
+        float y;
+        float yMax;
+        float a;
+        float spd;
+        int cursor;
+        float py;
 
         bool saveExists;
         private SaveGame saveGame;
@@ -39,6 +40,7 @@ namespace Leore.Main
         public TitleMenu(float x, float y, string name = null) : base(x, y, name)
         {
             saveExists = checkSaveFileExists();
+            Reset();
         }
 
         public bool checkSaveFileExists()
@@ -47,12 +49,25 @@ namespace Leore.Main
             return SaveManager.Load(ref saveGame);
         }
 
+        private void Reset()
+        {
+            hasFlashed = false;
+            y = 0;
+            t = 0;
+            z = 0;
+            yMax = -AssetManager.TitleMenu.Height + 144;
+            a = 0;
+            cursor = 0;
+            spd = .2f;
+            py = 144;
+        }
+
         private void Flash()
         {
             if (hasFlashed)
                 return;
 
-            flash = 3;
+            flash = 2;
             hasFlashed = true;
         }
 
@@ -60,9 +75,14 @@ namespace Leore.Main
         {
             base.Update(gameTime);
 
+            if (MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Q, SPG.Input.State.Pressed))
+            {
+                Reset();
+            }
+
             var kActionPressed = MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Enter, SPG.Input.State.Pressed)
-                    || MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.A, SPG.Input.State.Pressed)
-                    || MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.S, SPG.Input.State.Pressed);
+                || MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.A, SPG.Input.State.Pressed)
+                || MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.S, SPG.Input.State.Pressed);
 
             position = new Vector2(camera.ViewX, camera.ViewY);
 
@@ -79,26 +99,30 @@ namespace Leore.Main
 
             y = Math.Max(y - spd, yMax);
 
-            if (y == yMax)
+            //if (Math.Abs(y - yMax) < 2)
+            if (py == 0)
             {
                 Flash();
             }
 
-            flash = Math.Max(flash - .08f, 0);
+            flash = Math.Max(flash - .02f, 0);
 
             // TODO: doesn't work with gamepad
-            
+
+            if (Math.Abs(y - yMax) < 144)
+                py = Math.Max(0, py - 1);
+
             if (y != yMax)
             {
                 if (Math.Abs(y - yMax) > 288)
                 {
-                    //spd = spd * 1.01f;
-                    spd = spd * 1.01f;
+                    //spd = spd * 1.01f;                    
+                    spd = Math.Min(spd * 1.01f, 7);
                 }
                 else
                 {
                     //spd = spd * .965f;
-                    spd = Math.Max(spd * .97f, .1f);
+                    spd = Math.Max(spd * .977f, .2f);
                     //a = Math.Min(a + .01f, 1);
                 }
                 if (kActionPressed)
@@ -110,7 +134,8 @@ namespace Leore.Main
             }
             else
             {
-                a = Math.Min(a + .05f, 1);
+                //py = Math.Max(py - 1, 0);
+                a = Math.Min(a + .0035f, 1);
                 spd = 0;
 
                 if (MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Down, SPG.Input.State.Pressed))
@@ -202,24 +227,35 @@ namespace Leore.Main
             sb.Draw(AssetManager.TitleMenu, position + new Vector2(0, y), new Rectangle(256, 0, 256, AssetManager.TitleMenu.Height), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0000f);
 
             // title
-            sb.Draw(AssetManager.TitleMenu, position + new Vector2(0, z), new Rectangle(0, 0, 256, 144), new Color(Color.White, a), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0001f);
+            if (py == 0)
+            {
+                sb.Draw(AssetManager.TitleMenu, position + new Vector2(0, z), new Rectangle(0, 0, 256, 144), new Color(Color.White, a), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0001f);
+            }
+
+            // cliff
+            sb.Draw(AssetManager.TitleMenu, position + new Vector2(0, py), new Rectangle(0, 288, 256, 144), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0002f);
+
+            // title orb
+            sb.Draw(AssetManager.TitleMenu, position + new Vector2(0, z + py), new Rectangle(0, 144, 256, 144), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0001f);
 
             if (y == yMax)
             {
-
-                // font
-                font.Halign = Font.HorizontalAlignment.Left;
-                font.Valign = Font.VerticalAlignment.Top;
-                font.Draw(sb, position.X + 32, position.Y + camera.ViewHeight - 32, saveExists ? $"Load Game" : "New Game", depth: .00003f);
-                font.Draw(sb, position.X + 32, position.Y + camera.ViewHeight - 16, "Delete Game", depth: .00003f);
-
-                // cursor
-                font.Draw(sb, position.X + 24, position.Y + camera.ViewHeight - 32 + cursor * 16, ((char)129).ToString(), depth: .00003f);
-
-                font.Halign = Font.HorizontalAlignment.Right;
-                if (saveExists)
+                if (py == 0)
                 {
-                    font.Draw(sb, position.X + camera.ViewWidth - 16, position.Y + camera.ViewHeight - 2 * Globals.T, $"Playtime: " + TimeUtil.TimeStringFromMilliseconds(saveGame.playTime), depth: .00003f);
+                    // font
+                    font.Halign = Font.HorizontalAlignment.Left;
+                    font.Valign = Font.VerticalAlignment.Top;
+                    font.Draw(sb, position.X + 32, position.Y + camera.ViewHeight - 32, saveExists ? $"Load Game" : "New Game", depth: .0003f);
+                    font.Draw(sb, position.X + 32, position.Y + camera.ViewHeight - 16, "Delete Game", depth: .0003f);
+
+                    // cursor
+                    font.Draw(sb, position.X + 24, position.Y + camera.ViewHeight - 32 + cursor * 16, ((char)129).ToString(), depth: .0003f);
+
+                    font.Halign = Font.HorizontalAlignment.Right;
+                    if (saveExists)
+                    {
+                        font.Draw(sb, position.X + camera.ViewWidth - 16, position.Y + camera.ViewHeight - 2 * Globals.T, $"Playtime: " + TimeUtil.TimeStringFromMilliseconds(saveGame.playTime), depth: .0003f);
+                    }
                 }
             }
 
