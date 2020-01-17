@@ -100,9 +100,9 @@ namespace Leore.Main
             y = Math.Max(y - spd, yMax);
 
             //if (Math.Abs(y - yMax) < 2)
-            if (py == 0)
+            if (y == yMax && py == 0)
             {
-                Flash();
+                //Flash();
             }
 
             flash = Math.Max(flash - .02f, 0);
@@ -127,7 +127,7 @@ namespace Leore.Main
                 }
                 if (kActionPressed)
                 {
-                    a = 1;
+                    //a = 1;
                     y = yMax;
                     Flash();
                 }
