@@ -43,7 +43,7 @@ namespace Leore.Main
             //texts.Add("Then, the ~sun, source of all energy~, came to be and created life.\n" +
             //    "Every creature is born from the sun, holding part of it's energy within.");
             //texts.Add("Nonetheless, the world was an unforgiving place. As the sun gave more and more of it's source, it became colder and weaker, until eventually, the void would consume the world once again.");
-            texts.Add("In time, some creatures learned to harness this energy.\nThey called it ~magic~ and developed outstanding powers." +
+            texts.Add("In time, some creatures learned to harness this energy.|They called it ~magic~ and developed outstanding powers." +
                 "|There were those, who wanted to make these powerse accessible for everyone." +
                 "\nThe most powerful spell was cast and it created the most remarkable event in history: ~The proclamation of magic~.");
 

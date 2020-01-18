@@ -170,26 +170,24 @@ namespace Leore.Main
 
             maxWidth = RoomCamera.Current.ViewWidth - Globals.T - 4;
 
-            var textLines = text.Split(new[] { '\n', '|'});
-
-            List<string> temporaryTexts = new List<string>();
-
-            foreach (var textLine in textLines)
+            foreach (var txt in text.Split('|'))
             {
-                var subTextLines = PrepareMessageStrings(textLine);
+                var textLines = txt.Split(new[] { '\n' });
 
-                foreach (var subTextLine in subTextLines)
+                List<string> temporaryTexts = new List<string>();
+
+                foreach (var textLine in textLines)
                 {
-                    var line = subTextLine.Replace(" \n", "\n").Replace("\n ", "\n");
-
-                    line = line.StartsWith(" ") ? line.Substring(1) : line;
-                    line = line.EndsWith(" ") ? line.Substring(0, line.Length - 1) : line;
-
+                    var line = PrepareMessageString(textLine);
                     temporaryTexts.Add(line);
                 }
-            }
 
-            texts = GroupTextLinesToMessage(temporaryTexts);
+                foreach(var groupedTextLines in GroupTextLinesToMessage(temporaryTexts))
+                {
+                    texts.Add(groupedTextLines);
+                }                
+            }
+            //texts = GroupTextLinesToMessage(temporaryTexts);
             
             Depth = Globals.LAYER_FONT - .001f;
 
@@ -251,34 +249,19 @@ namespace Leore.Main
                 {
                     res += g + "\n";
                 }
-                result.Add(res.Substring(0, res.Length - 1));
+
+                var cleanedLine = res.Substring(0, res.Length - 1).Replace(" \n", "\n").Replace("\n ", "\n");
+
+                cleanedLine = cleanedLine.StartsWith(" ") ? cleanedLine.Substring(1) : cleanedLine;
+                cleanedLine = cleanedLine.EndsWith(" ") ? cleanedLine.Substring(0, cleanedLine.Length - 1) : cleanedLine;
+
+                result.Add(cleanedLine);
             }
-
-            //var finalResult = new List<string>();
-            //foreach(var resultLine in result)
-            //{
-            //    if(resultLine.Count(x => x == '\n') > 3)
-            //    {
-            //        var splitResult = GroupTextLinesToMessage(resultLine.Split('\n').ToList());
-            //        foreach(var s in splitResult)
-            //        {
-            //            var groupedSplitResult = GroupTextLinesToMessage(s.Split('\n').ToList());
-            //            foreach (var g in groupedSplitResult)
-            //            {
-            //                finalResult.Add(g);
-            //            }
-            //        }
-            //    }
-            //    else
-            //    {
-            //        finalResult.Add(resultLine);
-            //    }
-            //}
-
+            
             return result;
         }
 
-        private string[] PrepareMessageStrings(string text)
+        private string PrepareMessageString(string text)
         {
             var tmp = CutString(text, maxWidth);
             
@@ -294,9 +277,7 @@ namespace Leore.Main
                 wholeString = wholeString.Substring(0, wholeString.Length - 1);
             }
 
-            var strings = wholeString.Split(new[] { '|' });
-
-            return strings;
+            return wholeString;            
         }
 
         ~MessageBox()
