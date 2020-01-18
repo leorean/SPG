@@ -77,7 +77,11 @@ namespace Leore.Main
             base.Update(gameTime);
 
             // TODO: remove
-            new StoryScene(0, 0);
+            new StoryScene(0, 1).OnCompleted = () =>
+            {
+                GameManager.Current.ReloadLevel();
+            };
+
             Destroy();
             return;
 

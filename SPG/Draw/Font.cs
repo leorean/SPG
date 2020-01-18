@@ -127,6 +127,50 @@ namespace SPG.Draw
             texts.RemoveAll(t => t.DecreaseAliveCounter());
         }
 
+        public int GetWidth(string text)
+        {
+            var lines = text.ToString().Split('\n');
+
+            for (var l = 0; l < lines.Length; l++)
+            {
+                var txt = lines[l];
+
+                int totalLineWidth = 0;
+
+                bool cont = false;
+
+                // necessary pre-calc
+
+                for (var i = 0; i < txt.Length; i++)
+                {
+                    var c = txt[i];
+                    var tex = glyphs.Where(o => o.Key == c).FirstOrDefault().Value;
+
+                    if (c == ']' && cont)
+                    {
+                        cont = false;
+                    }
+
+                    if (c == '~' || cont)
+                        continue;
+
+                    if (c == '[')
+                    {
+                        cont = true;
+                    }
+
+                    // draw first texture when glyph is not found in set.
+                    if (c != '\n' && tex == null)
+                        tex = glyphs.FirstOrDefault().Value;
+
+                    totalLineWidth += tex.Width + (int)Spacing;
+                }
+                return totalLineWidth;
+            }
+            
+            return 0;
+        }
+
         /// <summary>
         /// Draw text at a position, optionally limiting to a maxWidth in pixels.
         /// Special chars:

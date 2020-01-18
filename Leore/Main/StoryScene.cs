@@ -28,14 +28,30 @@ namespace Leore.Main
 
         StoryState state = StoryState.FadeIn;
 
-        public StoryScene(float x, float y, string name = null) : base(x, y, name)
+        private int startFrame;
+        private int endFrame;
+
+        public Action OnCompleted;
+
+        public StoryScene(int startFrame, int endFrame) : base(0, 0, null)
         {
             position = new Vector2(camera.ViewX, camera.ViewY);
             camera.SetTarget(this);
 
-            texts.Add("Once upon a time, there was a world called \n~Leore~.");
-            texts.Add("1.");
+            //texts.Add("Once upon a time, there was a world called \n~Leore~.");
+            texts.Add("The world was once a dark and cold place, drifting through the void.");
+            texts.Add("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAA");
+            texts.Add("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
             texts.Add("2.");
+
+
+            if (startFrame > endFrame) throw new ArgumentOutOfRangeException("startFrame");
+            if (endFrame > texts.Count) throw new ArgumentOutOfRangeException("endFrame");
+
+            this.startFrame = startFrame;
+            this.endFrame = endFrame;
+
+            cursor = startFrame;
         }
 
         public override void Update(GameTime gameTime)
@@ -62,6 +78,12 @@ namespace Leore.Main
                     if (alpha == 0)
                     {
                         cursor += 1;
+
+                        if (cursor > endFrame)
+                        {
+                            OnCompleted?.Invoke();
+                            Destroy();
+                        }
                         state = StoryState.Hiding;
                     }
                     break;

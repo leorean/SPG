@@ -18,6 +18,8 @@ namespace Leore.Main
             SLOW = 10
         }
 
+        //private readonly int maxTextWidthPerLine = 224;
+
         private TextSpeed textSpeed;
 
         public Action OnCompleted;
@@ -42,6 +44,67 @@ namespace Leore.Main
 
         public enum MessageState { FADE_IN, SHOW, FADE_OUT }
         protected MessageState state;
+
+        private List<string> CutString(string str, int maxWidth)
+        {
+            List<string> list = new List<string>();
+
+            str = str.Replace("\n", " ");
+
+            var words = str.Split(' ');
+
+            var line = "";
+
+            foreach(var word in words)
+            {
+                var lineWidth = font.GetWidth(line);
+                var wordWidth = font.GetWidth(" " + word);
+                
+                if (wordWidth > maxWidth)
+                {
+                    throw new ArgumentException($"The text {word} exceeds the maximum pixel width! Max. allowed width is {maxWidth} - the text was {wordWidth} pixels wide!", "text");
+                }
+
+                if (lineWidth + wordWidth > maxWidth)
+                {
+                    list.Add(line);
+                    line = word;                    
+                }
+                else
+                {
+                    line += " " + word;
+                }
+            }
+            list.Add(line);
+
+            // cleans "~" highlights
+
+            int i = 0;
+            bool hadHighlight = false;
+            foreach(var l in list.ToList())
+            {
+                if (hadHighlight)
+                {
+                    list[i] = "~" + l;
+
+                    if (list[i].Count(f => f == '~') == 2)
+                    {
+                        hadHighlight = false;
+                    }
+                }
+                else
+                {
+                    if (l.Count(f => f == '~') % 2 == 1)
+                    {
+                        list[i] = l + "~";
+                        hadHighlight = true;
+                    }
+                }
+                i++;
+            }
+            
+            return list;
+        }
 
         /// <summary>
         /// Creates a new message box.
@@ -76,6 +139,10 @@ namespace Leore.Main
         /// <param name="name"></param>
         public MessageBox(string text, bool centerText = false, string name = null, Color? hiColor = null, TextSpeed textSpeed = TextSpeed.NORMAL) : base(0, 0, name)
         {
+            font = AssetManager.DefaultFont.Copy();
+            halign = centerText ? Font.HorizontalAlignment.Center : Font.HorizontalAlignment.Left;
+            valign = Font.VerticalAlignment.Top;
+
             texts = new List<string>();
 
             text = text.Replace("#lu", ((char)138).ToString());
@@ -96,28 +163,56 @@ namespace Leore.Main
             text = text.Replace("#A", ((char)136).ToString());
             text = text.Replace("#S", ((char)137).ToString());
 
-            var split = text.Split('|');
+            text = text.Replace("\r\n", "\n");
+            text = text.Replace("\n", " ");
+            text = text.Replace("  ", " ");
 
-            foreach (var t in split)
-                texts.Add(t);
+            maxWidth = RoomCamera.Current.ViewWidth - Globals.T - 4;
             
+            texts = PrepareMessageString(text).ToList();
+
             Depth = Globals.LAYER_FONT - .001f;
 
             Texture = AssetManager.MessageBox;
-            
+
             this.hiColor = hiColor;
 
             this.textSpeed = textSpeed;
 
-            font = AssetManager.DefaultFont.Copy();
-            halign = centerText ? Font.HorizontalAlignment.Center : Font.HorizontalAlignment.Left;
-            valign = Font.VerticalAlignment.Top;
-
             Visible = true;
-
-            maxWidth = RoomCamera.Current.ViewWidth - Globals.T - 4;
-
+            
             state = MessageState.FADE_IN;
+        }
+
+        private string[] PrepareMessageString(string text)
+        {
+            var tmp = CutString(text, 224);
+
+            int curLine = 0;
+            int maxLines = 2;
+
+            string wholeString = "";
+
+            foreach (var t in tmp)
+            {
+                wholeString += t;
+                if (curLine == maxLines)
+                {
+                    wholeString += "|";
+                    curLine = -1;
+                }
+                else
+                {
+                    wholeString += "\n";
+                }
+                curLine++;
+            }
+            if (wholeString.EndsWith("|") || wholeString.EndsWith("\n"))
+            {
+                wholeString = wholeString.Substring(0, wholeString.Length - 1);
+            }
+
+            return wholeString.Split('|');
         }
 
         ~MessageBox()
