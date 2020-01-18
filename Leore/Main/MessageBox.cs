@@ -164,13 +164,33 @@ namespace Leore.Main
             text = text.Replace("#S", ((char)137).ToString());
 
             text = text.Replace("\r\n", "\n");
-            text = text.Replace("\n", " ");
+            text = text.Replace("|\n", "|");
+            text = text.Replace("\n|", "|");
             text = text.Replace("  ", " ");
 
             maxWidth = RoomCamera.Current.ViewWidth - Globals.T - 4;
-            
-            texts = PrepareMessageString(text).ToList();
 
+            var textLines = text.Split(new[] { '\n', '|'});
+
+            List<string> temporaryTexts = new List<string>();
+
+            foreach (var textLine in textLines)
+            {
+                var subTextLines = PrepareMessageStrings(textLine);
+
+                foreach (var subTextLine in subTextLines)
+                {
+                    var line = subTextLine.Replace(" \n", "\n").Replace("\n ", "\n");
+
+                    line = line.StartsWith(" ") ? line.Substring(1) : line;
+                    line = line.EndsWith(" ") ? line.Substring(0, line.Length - 1) : line;
+
+                    temporaryTexts.Add(line);
+                }
+            }
+
+            texts = GroupTextLinesToMessage(temporaryTexts);
+            
             Depth = Globals.LAYER_FONT - .001f;
 
             Texture = AssetManager.MessageBox;
@@ -184,35 +204,99 @@ namespace Leore.Main
             state = MessageState.FADE_IN;
         }
 
-        private string[] PrepareMessageString(string text)
+        private List<string> GroupTextLinesToMessage(List<string> texts)
         {
-            var tmp = CutString(text, 224);
+            List<string> result = new List<string>();
 
-            int curLine = 0;
-            int maxLines = 2;
+            int lineCount = 0;
+            var line = "";
+            for (var i = 0; i < texts.Count; i++)
+            {                
+                if (lineCount < 3)
+                {
+                    line += texts[i] + ((lineCount < 2) ? "\n" : "");
+                    lineCount++;
+                }
+                else
+                {
+                    result.Add(line);
+                    line = texts[i] + "\n";
+                    lineCount = 0;
+                }
+            }
+            if (line != "")
+            {
+                result.Add(line.EndsWith("\n")? line.Substring(0, line.Length - 1) : line);
+            }
 
+            List<string> flat = new List<string>();
+
+            foreach(var res in result)
+            {
+                foreach(var s in res.Split('\n'))
+                {
+                    flat.Add(s);
+                }
+            }
+            
+            var index = 0;
+            var grpOf3s = flat.GroupBy(x => index++ / 3).ToList();
+
+            result = new List<string>();
+            var last = grpOf3s.Last();
+            foreach(var group in grpOf3s)
+            {
+                var res = "";
+                foreach (var g in group)
+                {
+                    res += g + "\n";
+                }
+                result.Add(res.Substring(0, res.Length - 1));
+            }
+
+            //var finalResult = new List<string>();
+            //foreach(var resultLine in result)
+            //{
+            //    if(resultLine.Count(x => x == '\n') > 3)
+            //    {
+            //        var splitResult = GroupTextLinesToMessage(resultLine.Split('\n').ToList());
+            //        foreach(var s in splitResult)
+            //        {
+            //            var groupedSplitResult = GroupTextLinesToMessage(s.Split('\n').ToList());
+            //            foreach (var g in groupedSplitResult)
+            //            {
+            //                finalResult.Add(g);
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        finalResult.Add(resultLine);
+            //    }
+            //}
+
+            return result;
+        }
+
+        private string[] PrepareMessageStrings(string text)
+        {
+            var tmp = CutString(text, maxWidth);
+            
             string wholeString = "";
 
             foreach (var t in tmp)
             {
                 wholeString += t;
-                if (curLine == maxLines)
-                {
-                    wholeString += "|";
-                    curLine = -1;
-                }
-                else
-                {
-                    wholeString += "\n";
-                }
-                curLine++;
+                wholeString += "\n";            
             }
-            if (wholeString.EndsWith("|") || wholeString.EndsWith("\n"))
+            if (wholeString.EndsWith("\n"))
             {
                 wholeString = wholeString.Substring(0, wholeString.Length - 1);
             }
 
-            return wholeString.Split('|');
+            var strings = wholeString.Split(new[] { '|' });
+
+            return strings;
         }
 
         ~MessageBox()

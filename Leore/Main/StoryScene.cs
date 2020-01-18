@@ -39,10 +39,25 @@ namespace Leore.Main
             camera.SetTarget(this);
 
             //texts.Add("Once upon a time, there was a world called \n~Leore~.");
-            texts.Add("The world was once a dark and cold place, drifting through the void.");
-            texts.Add("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAA");
-            texts.Add("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-            texts.Add("2.");
+            //texts.Add("In the beginning, ~Leore~ was a dark and cold place, drifting through the void.");
+            //texts.Add("Then, the ~sun, source of all energy~, came to be and created life.\n" +
+            //    "Every creature is born from the sun, holding part of it's energy within.");
+            //texts.Add("Nonetheless, the world was an unforgiving place. As the sun gave more and more of it's source, it became colder and weaker, until eventually, the void would consume the world once again.");
+            texts.Add("In time, some creatures learned to harness this energy.\nThey called it ~magic~ and developed outstanding powers." +
+                "|There were those, who wanted to make these powerse accessible for everyone." +
+                "\nThe most powerful spell was cast and it created the most remarkable event in history: ~The proclamation of magic~.");
+
+            //texts.Add("Civilizations flourished and life was at the peak of prosperity." +
+            //    "|But this came with an enormous price...");
+
+            texts.Add("There were the protectors of the world, called ~Ancients~, who defied the apocalypse and created a solution that should prevent the inevitable destiny of ~Leore~.");
+            texts.Add("The ~Ancients~ created ~six towers~ placed across the world that would form a powerful magic barrier, holding together the fabric of the world.");
+            texts.Add("asdf");
+            texts.Add("asdf");
+            texts.Add("asdf");
+            texts.Add("asdf");
+            texts.Add("asdf");
+            texts.Add("asdf");
 
 
             if (startFrame > endFrame) throw new ArgumentOutOfRangeException("startFrame");
