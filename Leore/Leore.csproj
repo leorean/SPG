@@ -43,6 +43,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Main\InputMapping.cs" />
     <Compile Include="Main\MainGame.cs" />
     <Compile Include="Main\AssetManager.cs" />
     <Compile Include="Main\GameManager.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Main\RoomCamera.cs" />
     <Compile Include="Main\RoomObjectLoader.cs" />
     <Compile Include="Main\SaveGame.cs" />
+    <Compile Include="Main\StoryScene.cs" />
     <Compile Include="Main\TitleMenu.cs" />
     <Compile Include="Objects\SpatialGameObject.cs" />
     <Compile Include="Objects\Common.cs" />

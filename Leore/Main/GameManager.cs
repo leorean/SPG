@@ -309,6 +309,8 @@ namespace Leore.Main
                 Player.Stats.Coins = CoinsAfterDeath;
                 CoinsAfterDeath = 0;
             }
+
+            MainGame.Current.State = MainGame.GameState.Running;
         }
 
         public int GetStatUpItemCount(string key)
@@ -550,7 +552,9 @@ namespace Leore.Main
             ObjectManager.Enable<Orb>();
             ObjectManager.Enable<Player>();
             ObjectManager.Enable<PlayerProjectile>();
-            
+            ObjectManager.Enable<TitleMenu>();
+            ObjectManager.Enable<StoryScene>();
+
             // todo: instead of those, let them inherit from spell and activate spell
             ObjectManager.Enable<FireSpell>();
             ObjectManager.Enable<CrimsonSpell>();

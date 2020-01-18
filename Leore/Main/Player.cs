@@ -135,9 +135,7 @@ namespace Leore.Main
         private int maxMpRegenTimeout = 60;
         
         // input vars
-
-        Input input = new Input();
-
+        
         bool k_leftPressed, k_leftHolding, k_leftReleased;
 
         public void LieDown(int time)
@@ -410,46 +408,42 @@ namespace Leore.Main
 
             // ++++ input ++++
 
-            if (ObjectManager.Exists<MessageBox>() 
-                || GameManager.Current.Transition != null
-                || Teleporter != null)
-            {
-                input.Enabled = false;
-            }
-            else
-            {
-                input.Enabled = inputEnabled;
-            }
+            var ctrl = !ObjectManager.Exists<MessageBox>()
+                && GameManager.Current.Transition == null
+                && Teleporter == null
+                && inputEnabled;
 
-            input.Update(gameTime);
+            k_leftPressed = ctrl && InputMapping.KeyPressed(InputMapping.Left, Input.State.Pressed);
+            k_leftHolding = ctrl && InputMapping.KeyPressed(InputMapping.Left, Input.State.Holding);
+            k_leftReleased = ctrl && InputMapping.KeyPressed(InputMapping.Left, Input.State.Released);
 
-            k_leftPressed = input.IsKeyPressed(Keys.Left, Input.State.Pressed);
-            k_leftHolding = input.IsKeyPressed(Keys.Left, Input.State.Holding);
-            k_leftReleased = input.IsKeyPressed(Keys.Left, Input.State.Released);
+            k_rightPressed = ctrl && InputMapping.KeyPressed(InputMapping.Right, Input.State.Pressed);
+            k_rightHolding = ctrl && InputMapping.KeyPressed(InputMapping.Right, Input.State.Holding);
+            k_rightReleased = ctrl && InputMapping.KeyPressed(InputMapping.Right, Input.State.Released);
 
-            k_rightPressed = input.IsKeyPressed(Keys.Right, Input.State.Pressed);
-            k_rightHolding = input.IsKeyPressed(Keys.Right, Input.State.Holding);
-            k_rightReleased = input.IsKeyPressed(Keys.Right, Input.State.Released);
+            k_upPressed = ctrl && InputMapping.KeyPressed(InputMapping.Up, Input.State.Pressed);
+            k_upHolding = ctrl && InputMapping.KeyPressed(InputMapping.Up, Input.State.Holding);
 
-            k_upPressed = input.IsKeyPressed(Keys.Up, Input.State.Pressed);
-            k_upHolding = input.IsKeyPressed(Keys.Up, Input.State.Holding);
+            k_downPressed = ctrl && InputMapping.KeyPressed(InputMapping.Down, Input.State.Pressed);
+            k_downHolding = ctrl && InputMapping.KeyPressed(InputMapping.Down, Input.State.Holding);
 
-            k_downPressed = input.IsKeyPressed(Keys.Down, Input.State.Pressed);
-            k_downHolding = input.IsKeyPressed(Keys.Down, Input.State.Holding);
+            k_jumpPressed = ctrl && InputMapping.KeyPressed(InputMapping.Jump, Input.State.Pressed);
+            k_jumpHolding = ctrl && InputMapping.KeyPressed(InputMapping.Jump, Input.State.Holding);
 
-            k_jumpPressed = input.IsKeyPressed(Keys.A, Input.State.Pressed);
-            k_jumpHolding = input.IsKeyPressed(Keys.A, Input.State.Holding);
+            k_attackPressed = ctrl && InputMapping.KeyPressed(InputMapping.Attack, Input.State.Pressed);
+            k_attackHolding = ctrl && InputMapping.KeyPressed(InputMapping.Attack, Input.State.Holding);
+            k_attackReleased = ctrl && InputMapping.KeyPressed(InputMapping.Attack, Input.State.Released);
 
-            k_attackPressed = input.IsKeyPressed(Keys.S, Input.State.Pressed);
-            k_attackHolding = input.IsKeyPressed(Keys.S, Input.State.Holding);
-            k_attackReleased = input.IsKeyPressed(Keys.S, Input.State.Released);
+            k_LPressed = ctrl && InputMapping.KeyPressed(InputMapping.L, Input.State.Pressed);
+            k_RPressed = ctrl && InputMapping.KeyPressed(InputMapping.R, Input.State.Pressed);
 
-            k_LPressed = input.IsKeyPressed(Keys.Q, Input.State.Pressed);
-            k_RPressed = input.IsKeyPressed(Keys.E, Input.State.Pressed);
+            // TODO: overwrite when gamepad is used
+            gamePadLeftXFactor = 1f;
+            gamePadLeftYFactor = 1f;
 
             // ++++ debug ++++
 
-            if (input.IsKeyPressed(Keys.LeftShift, Input.State.Holding) || input.IsKeyPressed(Keys.RightShift, Input.State.Holding))
+            if (InputMapping.KeyPressed(Keys.LeftShift, Input.State.Holding) || InputMapping.KeyPressed(Keys.RightShift, Input.State.Holding))
             {
                 if (k_leftPressed)
                     Position = new Vector2(Position.X - 16 * Globals.T, Position.Y);
@@ -461,39 +455,38 @@ namespace Leore.Main
                     Position = new Vector2(Position.X, Position.Y + 9 * Globals.T);
             }
 
-            gamePadLeftXFactor = 1f;
-            gamePadLeftYFactor = 1f;
-
             // gamepad overrides keyboard input if possible
-            if (input.GamePadEnabled)
-            {
-                k_leftPressed = input.DirectionPressedFromStick(Input.Direction.LEFT, Input.Stick.LeftStick, Input.State.Pressed);
-                k_leftHolding = input.DirectionPressedFromStick(Input.Direction.LEFT, Input.Stick.LeftStick, Input.State.Holding);
-                k_leftReleased = input.DirectionPressedFromStick(Input.Direction.LEFT, Input.Stick.LeftStick, Input.State.Released);
+            // TODO: MAPPING
+            
+            //if (input.GamePadEnabled)
+            //{
+            //    k_leftPressed = input.DirectionPressedFromStick(Input.Direction.LEFT, Input.Stick.LeftStick, Input.State.Pressed);
+            //    k_leftHolding = input.DirectionPressedFromStick(Input.Direction.LEFT, Input.Stick.LeftStick, Input.State.Holding);
+            //    k_leftReleased = input.DirectionPressedFromStick(Input.Direction.LEFT, Input.Stick.LeftStick, Input.State.Released);
 
-                k_rightPressed = input.DirectionPressedFromStick(Input.Direction.RIGHT, Input.Stick.LeftStick, Input.State.Pressed);
-                k_rightHolding = input.DirectionPressedFromStick(Input.Direction.RIGHT, Input.Stick.LeftStick, Input.State.Holding);
-                k_rightReleased = input.DirectionPressedFromStick(Input.Direction.RIGHT, Input.Stick.LeftStick, Input.State.Released);
+            //    k_rightPressed = input.DirectionPressedFromStick(Input.Direction.RIGHT, Input.Stick.LeftStick, Input.State.Pressed);
+            //    k_rightHolding = input.DirectionPressedFromStick(Input.Direction.RIGHT, Input.Stick.LeftStick, Input.State.Holding);
+            //    k_rightReleased = input.DirectionPressedFromStick(Input.Direction.RIGHT, Input.Stick.LeftStick, Input.State.Released);
 
-                k_upHolding = input.DirectionPressedFromStick(Input.Direction.UP, Input.Stick.LeftStick, Input.State.Holding);
-                k_upPressed = input.DirectionPressedFromStick(Input.Direction.UP, Input.Stick.LeftStick, Input.State.Pressed);
+            //    k_upHolding = input.DirectionPressedFromStick(Input.Direction.UP, Input.Stick.LeftStick, Input.State.Holding);
+            //    k_upPressed = input.DirectionPressedFromStick(Input.Direction.UP, Input.Stick.LeftStick, Input.State.Pressed);
 
-                k_downHolding = input.DirectionPressedFromStick(Input.Direction.DOWN, Input.Stick.LeftStick, Input.State.Holding);
-                k_downPressed = input.DirectionPressedFromStick(Input.Direction.DOWN, Input.Stick.LeftStick, Input.State.Pressed);
+            //    k_downHolding = input.DirectionPressedFromStick(Input.Direction.DOWN, Input.Stick.LeftStick, Input.State.Holding);
+            //    k_downPressed = input.DirectionPressedFromStick(Input.Direction.DOWN, Input.Stick.LeftStick, Input.State.Pressed);
 
-                k_jumpPressed = input.IsButtonPressed(Buttons.A, Input.State.Pressed);
-                k_jumpHolding = input.IsButtonPressed(Buttons.A, Input.State.Holding);
+            //    k_jumpPressed = input.IsButtonPressed(Buttons.A, Input.State.Pressed);
+            //    k_jumpHolding = input.IsButtonPressed(Buttons.A, Input.State.Holding);
 
-                k_attackPressed= input.IsButtonPressed(Buttons.X, Input.State.Pressed);
-                k_attackHolding = input.IsButtonPressed(Buttons.X, Input.State.Holding);
-                k_attackReleased = input.IsButtonPressed(Buttons.X, Input.State.Released);
+            //    k_attackPressed= input.IsButtonPressed(Buttons.X, Input.State.Pressed);
+            //    k_attackHolding = input.IsButtonPressed(Buttons.X, Input.State.Holding);
+            //    k_attackReleased = input.IsButtonPressed(Buttons.X, Input.State.Released);
 
-                k_LPressed = input.IsButtonPressed(Buttons.LeftShoulder, Input.State.Released);
-                k_RPressed = input.IsButtonPressed(Buttons.RightShoulder, Input.State.Released);
+            //    k_LPressed = input.IsButtonPressed(Buttons.LeftShoulder, Input.State.Released);
+            //    k_RPressed = input.IsButtonPressed(Buttons.RightShoulder, Input.State.Released);
 
-                gamePadLeftXFactor = Math.Abs(input.LeftStick().X);
-                gamePadLeftYFactor = Math.Abs(input.LeftStick().Y);
-            }
+            //    gamePadLeftXFactor = Math.Abs(input.LeftStick().X);
+            //    gamePadLeftYFactor = Math.Abs(input.LeftStick().Y);
+            //}
 
             var tk_leftPressed = k_leftPressed && (k_rightPressed == false);
             var tk_rightPressed = k_rightPressed && (k_leftPressed == false);

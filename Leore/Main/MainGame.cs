@@ -43,8 +43,7 @@ namespace Leore.Main
 
         // visual unique objects belong to the MainGame
         public HUD HUD { get; private set; }
-        public TitleMenu TitleMenu { get; private set; }
-
+        
         // input
 
         public Input Input { get; private set; } = new Input();
@@ -142,9 +141,8 @@ namespace Leore.Main
                 GameManager.Current.ChangeRoom(rooms.Item1, rooms.Item2);
             };
             RoomCamera.Current.SetBackgrounds(AssetManager.Backgrounds);
-
-            //GameManager.Current.CreateLevel();
-            TitleMenu = new TitleMenu(0, 0);
+            
+            new TitleMenu(0, 0);
             State = GameState.InTitleMenu;
         }
 
@@ -173,25 +171,20 @@ namespace Leore.Main
 
             // STATE-independent logic here:
 
-            if (Input.IsKeyPressed(Keys.R, Input.State.Pressed))
+            if (InputMapping.KeyPressed(InputMapping.ResetLevel))
             {
                 GameManager.Current.ReloadLevel();
             }
 
-            // STATE-dependent logic here:
-
-            if (State == GameState.InTitleMenu)
-            {
-                TitleMenu.Update(gameTime);
-            }
-
-            if (Input.IsKeyPressed(Keys.P, Input.State.Pressed))
+            if (InputMapping.KeyPressed(InputMapping.Pause))
             {
                 if (State == GameState.Running)
                     State = GameState.Paused;
                 else if (State == GameState.Paused)
                     State = GameState.Running;
             }
+
+            // STATE-dependent logic here:
 
             if (State == GameState.Running)
             {
@@ -390,12 +383,8 @@ namespace Leore.Main
             HUD.Draw(spriteBatch, gameTime);
             
             GameManager.Current.Transition?.Draw(spriteBatch, gameTime);
-
-            // title menu
-
-            TitleMenu.Draw(spriteBatch, gameTime);
-
-            spriteBatch.End();            
+            
+            spriteBatch.End();
         }
     }
 }

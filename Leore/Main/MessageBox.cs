@@ -30,8 +30,7 @@ namespace Leore.Main
         protected int page = 0;
         protected string curText = "";
         protected float sin = 0;
-
-        protected Input input;
+        
         private int timeOut;
         private Color? hiColor;
         protected Font.HorizontalAlignment halign;
@@ -77,8 +76,6 @@ namespace Leore.Main
         /// <param name="name"></param>
         public MessageBox(string text, bool centerText = false, string name = null, Color? hiColor = null, TextSpeed textSpeed = TextSpeed.NORMAL) : base(0, 0, name)
         {
-            input = new Input();
-
             texts = new List<string>();
 
             text = text.Replace("#lu", ((char)138).ToString());
@@ -125,7 +122,6 @@ namespace Leore.Main
 
         ~MessageBox()
         {
-            input = null;
         }
 
         public override void EndUpdate(GameTime gameTime)
@@ -138,40 +134,26 @@ namespace Leore.Main
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            input.Update(gameTime);
-
+            
             if (hiColor != null)
                 font.HighlightColor = (Color)hiColor;
-            
-            kPrevPressed = input.IsKeyPressed(Keys.S, Input.State.Pressed);
-            kNextPressed = input.IsKeyPressed(Keys.A, Input.State.Pressed) || input.IsKeyPressed(Keys.Enter, Input.State.Pressed);
 
-            kLeftPressed = input.IsKeyPressed(Keys.Left, Input.State.Pressed) || input.DirectionPressedFromStick(Input.Direction.LEFT, Input.Stick.LeftStick, Input.State.Pressed);
-            kRightPressed = input.IsKeyPressed(Keys.Right, Input.State.Pressed) || input.DirectionPressedFromStick(Input.Direction.RIGHT, Input.Stick.LeftStick, Input.State.Pressed);
+            kPrevPressed = InputMapping.KeyPressed(InputMapping.MessagePrev);
+            kNextPressed = InputMapping.KeyPressed(InputMapping.MessageNext);
 
-            var kAny = input.IsAnyKeyPressed();
+            kLeftPressed = InputMapping.KeyPressed(InputMapping.Left);
+            kRightPressed = InputMapping.KeyPressed(InputMapping.Right);
 
-            if (input.GamePadEnabled)
-            {
-                //kPrevPressed = input.DirectionPressedFromStick(Input.Direction.UP, Input.Stick.LeftStick, Input.State.Pressed)
-                //    || input.IsButtonPressed(Buttons.B);
-                //kNextPressed = input.DirectionPressedFromStick(Input.Direction.DOWN, Input.Stick.LeftStick, Input.State.Pressed)
-                //    || input.IsButtonPressed(Buttons.A);
-                kPrevPressed = input.IsButtonPressed(Buttons.X) || input.IsButtonPressed(Buttons.Y);
-                kNextPressed = input.IsButtonPressed(Buttons.B) || input.IsButtonPressed(Buttons.A) || input.IsButtonPressed(Buttons.Start);
-                kAny = input.IsAnyButtonPressed();
-            }
+            var kAny = InputMapping.IsAnyKeyPressed();
 
-            //Position = new Vector2(RoomCamera.Current.ViewX, RoomCamera.Current.ViewY + offY);
-            
-            //if (kPrevPressed)
+            // TODO: GAMEPAD
+            //if (input.GamePadEnabled)
             //{
-            //    if (page != 0)
-            //        curText = "";
-
-            //    page = Math.Max(page - 1, 0);
+            //    kPrevPressed = input.IsButtonPressed(Buttons.X) || input.IsButtonPressed(Buttons.Y);
+            //    kNextPressed = input.IsButtonPressed(Buttons.B) || input.IsButtonPressed(Buttons.A) || input.IsButtonPressed(Buttons.Start);
+            //    kAny = input.IsAnyButtonPressed();
             //}
+            
             if (kNextPressed)
             {
                 if (page == texts.Count - 1)
@@ -190,10 +172,6 @@ namespace Leore.Main
                         curText = texts[page];
 
                     page = Math.Min(page + 1, texts.Count - 1);
-                } else
-                {
-                    //curText = texts[page];
-                    //timeOut = 0;
                 }
             } else if (kAny)
             {
@@ -240,7 +218,6 @@ namespace Leore.Main
             }
             else if (page < texts.Count - 1)
             {
-                //sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 0 * T - z), new Rectangle(0 * T, 3 * T, T, T), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
                 sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 2 * T + z), new Rectangle(1 * T, 3 * T, T, T), Color, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
             }
             else

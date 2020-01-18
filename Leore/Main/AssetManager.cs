@@ -11,6 +11,7 @@ namespace Leore.Main
         // common textures & objects
 
         public static Texture2D TitleMenu { get; private set; }
+        public static TextureSet Scenes { get; private set; }
 
         public static TextureSet TileSet { get; private set; }
 
@@ -92,6 +93,7 @@ namespace Leore.Main
         public static void InitializeContent(ContentManager content)
         {
             TitleMenu = content.Load<Texture2D>("titleMenu");
+            Scenes = content.LoadTextureSet("scenes", 256, 144);
 
             // tileset
 

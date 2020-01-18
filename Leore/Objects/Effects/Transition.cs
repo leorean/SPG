@@ -21,8 +21,7 @@ namespace Leore.Objects.Effects
         
         public delegate void TransitionEnd(TransitionType type, Direction direction, string levelName);
         public TransitionEnd OnTransitionEnd;
-
-        //private Texture2D dark = AssetManager.Transition[0];
+        
         private double alpha = 0f;
         private Fade fade;
         private Color color = new Color(Color.White, 0);

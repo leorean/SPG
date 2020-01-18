@@ -1,4 +1,5 @@
-﻿using Leore.Objects.Effects.Emitters;
+﻿using Leore.Objects.Effects;
+using Leore.Objects.Effects.Emitters;
 using Leore.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,7 +18,7 @@ namespace Leore.Main
     public class TitleMenu : GameObject
     {
         private RoomCamera camera => RoomCamera.Current;
-        Vector2 position;
+        Vector2 pos;
 
         private Font font = AssetManager.DefaultFont;
 
@@ -56,7 +57,7 @@ namespace Leore.Main
             t = 0;
             z = 0;
             yMax = -AssetManager.TitleMenu.Height + 144;
-            a = 0;
+            a = -2;
             cursor = 0;
             spd = .2f;
             py = 144;
@@ -67,7 +68,7 @@ namespace Leore.Main
             if (hasFlashed)
                 return;
 
-            flash = 2;
+            flash = 1.5f;
             hasFlashed = true;
         }
 
@@ -75,28 +76,21 @@ namespace Leore.Main
         {
             base.Update(gameTime);
 
-            if (MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Q, SPG.Input.State.Pressed))
+            // TODO: remove
+            new StoryScene(0, 0);
+            Destroy();
+            return;
+
+            if (InputMapping.KeyPressed(InputMapping.ResetMenu))
             {
                 Reset();
             }
-
-            var kActionPressed = MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Enter, SPG.Input.State.Pressed)
-                || MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.A, SPG.Input.State.Pressed)
-                || MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.S, SPG.Input.State.Pressed);
-
-            position = new Vector2(camera.ViewX, camera.ViewY);
+            
+            pos = new Vector2(camera.ViewX, camera.ViewY);
 
             t = (t + .025f);
             z = (float)(2 * Math.Sin(t));
-
-
-            //var spd = (float) Math.Max(.2f, 2 * Math.Sin((Math.Abs(y) / Math.Abs(AssetManager.TitleMenu.Height)) * Math.PI));
-
-            //if (Math.Abs(y) >= .3f * AssetManager.TitleMenu.Height)
-            //{
-            //    a = Math.Min(a + .005f, 1);
-            //}
-
+            
             y = Math.Max(y - spd, yMax);
 
             //if (Math.Abs(y - yMax) < 2)
@@ -116,26 +110,22 @@ namespace Leore.Main
             {
                 if (Math.Abs(y - yMax) > 288)
                 {
-                    //spd = spd * 1.01f;                    
                     spd = Math.Min(spd * 1.01f, 7);
                 }
                 else
                 {
-                    //spd = spd * .965f;
-                    spd = Math.Max(spd * .977f, .2f);
-                    //a = Math.Min(a + .01f, 1);
+                    spd = Math.Max(spd * .977f, .2f);                    
                 }
-                if (kActionPressed)
+                if (InputMapping.KeyPressed(InputMapping.MessageNext))
                 {
-                    //a = 1;
                     y = yMax;
                     Flash();
                 }
             }
             else
             {
-                //py = Math.Max(py - 1, 0);
-                a = Math.Min(a + .0035f, 1);
+                //a = Math.Min(a + .0035f, 1);
+                a = Math.Min(a + .01f, 1);
                 spd = 0;
 
                 if (MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Down, SPG.Input.State.Pressed))
@@ -149,7 +139,7 @@ namespace Leore.Main
 
                 if (!isShowingDialog)
                 {
-                    if (kActionPressed)
+                    if (InputMapping.KeyPressed(InputMapping.MessageNext))
                     {
                         if (cursor == 0)
                         {
@@ -179,9 +169,11 @@ namespace Leore.Main
                                 };
                                 dialog.YesAction = () =>
                                 {
-                                    isShowingDialog = false;
-                                    GameManager.Current.ReloadLevel();
-                                    MainGame.Current.State = MainGame.GameState.Running;
+                                    //isShowingDialog = false;
+                                    //GameManager.Current.ReloadLevel();
+                                    //MainGame.Current.State = MainGame.GameState.Running;
+                                    new StoryScene(0, 0);
+                                    Destroy();
                                 };
                             }
                         }
@@ -221,22 +213,22 @@ namespace Leore.Main
             // presents..
             font.Halign = Font.HorizontalAlignment.Center;
             font.Valign = Font.VerticalAlignment.Top;
-            font.Draw(sb, position.X + camera.ViewWidth * .5f, position.Y + camera.ViewHeight * .5f + y * .5f, "Shinypixelgames presents...", depth: .00003f);
+            font.Draw(sb, pos.X + camera.ViewWidth * .5f, pos.Y + camera.ViewHeight * .5f + y * .5f, "Shinypixelgames presents...", depth: .00003f);
 
             // BG
-            sb.Draw(AssetManager.TitleMenu, position + new Vector2(0, y), new Rectangle(256, 0, 256, AssetManager.TitleMenu.Height), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0000f);
+            sb.Draw(AssetManager.TitleMenu, pos + new Vector2(0, y), new Rectangle(256, 0, 256, AssetManager.TitleMenu.Height), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0000f);
 
             // title
             if (py == 0)
             {
-                sb.Draw(AssetManager.TitleMenu, position + new Vector2(0, z), new Rectangle(0, 0, 256, 144), new Color(Color.White, a), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0001f);
+                sb.Draw(AssetManager.TitleMenu, pos + new Vector2(0, z), new Rectangle(0, 0, 256, 144), new Color(Color.White, a), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0001f);
             }
 
             // cliff
-            sb.Draw(AssetManager.TitleMenu, position + new Vector2(0, py), new Rectangle(0, 288, 256, 144), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0002f);
+            sb.Draw(AssetManager.TitleMenu, pos + new Vector2(0, py), new Rectangle(0, 288, 256, 144), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0002f);
 
             // title orb
-            sb.Draw(AssetManager.TitleMenu, position + new Vector2(0, z + py), new Rectangle(0, 144, 256, 144), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0001f);
+            sb.Draw(AssetManager.TitleMenu, pos + new Vector2(0, z + py), new Rectangle(0, 144, 256, 144), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0001f);
 
             if (y == yMax)
             {
@@ -245,22 +237,22 @@ namespace Leore.Main
                     // font
                     font.Halign = Font.HorizontalAlignment.Left;
                     font.Valign = Font.VerticalAlignment.Top;
-                    font.Draw(sb, position.X + 32, position.Y + camera.ViewHeight - 32, saveExists ? $"Load Game" : "New Game", depth: .0003f);
-                    font.Draw(sb, position.X + 32, position.Y + camera.ViewHeight - 16, "Delete Game", depth: .0003f);
+                    font.Draw(sb, pos.X + 32, pos.Y + camera.ViewHeight - 32, saveExists ? $"Load Game" : "New Game", depth: .0003f);
+                    font.Draw(sb, pos.X + 32, pos.Y + camera.ViewHeight - 16, "Delete Game", depth: .0003f);
 
                     // cursor
-                    font.Draw(sb, position.X + 24, position.Y + camera.ViewHeight - 32 + cursor * 16, ((char)129).ToString(), depth: .0003f);
+                    font.Draw(sb, pos.X + 24, pos.Y + camera.ViewHeight - 32 + cursor * 16, ((char)129).ToString(), depth: .0003f);
 
                     font.Halign = Font.HorizontalAlignment.Right;
                     if (saveExists)
                     {
-                        font.Draw(sb, position.X + camera.ViewWidth - 16, position.Y + camera.ViewHeight - 2 * Globals.T, $"Playtime: " + TimeUtil.TimeStringFromMilliseconds(saveGame.playTime), depth: .0003f);
+                        font.Draw(sb, pos.X + camera.ViewWidth - 16, pos.Y + camera.ViewHeight - 2 * Globals.T, $"Playtime: " + TimeUtil.TimeStringFromMilliseconds(saveGame.playTime), depth: .0003f);
                     }
                 }
             }
 
             // flash
-            sb.Draw(AssetManager.Flash, position, null, new Color(Color.White, flash), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0005f);            
+            sb.Draw(AssetManager.Flash, pos, null, new Color(Color.White, flash), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0005f);
         }
     }
 }
