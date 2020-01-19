@@ -202,6 +202,8 @@ namespace SPG.Draw
                 bool cont = false;
 
                 // necessary pre-calc
+
+                // TODO: use the getWidth method above.. duplicate code!
                 
                 for (var i = 0; i < txt.Length; i++)
                 {

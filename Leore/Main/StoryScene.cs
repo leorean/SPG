@@ -1,4 +1,5 @@
 ﻿using Leore.Objects.Effects.Emitters;
+using Leore.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SPG.Draw;
@@ -37,21 +38,33 @@ namespace Leore.Main
         {
             position = new Vector2(camera.ViewX, camera.ViewY);
             camera.SetTarget(this);
-
-            //texts.Add("Once upon a time, there was a world called \n~Leore~.");
-            //texts.Add("In the beginning, ~Leore~ was a dark and cold place, drifting through the void.");
-            //texts.Add("Then, the ~sun, source of all energy~, came to be and created life.\n" +
-            //    "Every creature is born from the sun, holding part of it's energy within.");
-            //texts.Add("Nonetheless, the world was an unforgiving place. As the sun gave more and more of it's source, it became colder and weaker, until eventually, the void would consume the world once again.");
-            texts.Add("In time, some creatures learned to harness this energy.|They called it ~magic~ and developed outstanding powers." +
-                "|There were those, who wanted to make these powerse accessible for everyone." +
-                "\nThe most powerful spell was cast and it created the most remarkable event in history: ~The proclamation of magic~.");
+            
+            // 0:
+            texts.Add("In the beginning, ~Leore~ was a dark and cold place, drifting through the void.");
+            // 1:
+            texts.Add("Then, the [f6c048]~sun, source of all energy~, came to be and created life.|" +
+                "Every living being is born as a child of the sun, holding part of it's energy within." +
+                "|And so, in time, civilizations formed and thrived.");
+            // 2:
+            texts.Add("Eons passed and life was flourishing on ~Leore~." +
+                "|But eventually, it's peak was reached and the uninevitable started:" +
+                "\nThe sun became weaker, drifting slowly away and the world would eventually face a cold dark death.");
+            // 3:
+            texts.Add("There were the protectors of the world, called ~Ancients~, who defied the apocalypse." +
+                "|They found a solution that should prevent the inevitable destiny of ~Leore~.");
+            // 4:
+            texts.Add("The ~Ancients~ created ~towers~ placed across the world that would form a powerful magic barrier, " +
+                "holding together the fabric of the world and maintaining balance.");
+            // 5:
+            texts.Add("But the [973bba]~Void~ has started to breach the barrier, corrupting the towers and letting darkness enter the world.");
+            
+            //texts.Add("In time, some creatures learned to harness this energy.|They called it ~magic~ and developed outstanding powers." +
+            //    "|There were those, who wanted to make these powerse accessible for everyone." +
+            //    "\nThe most powerful spell was cast and it created the most remarkable event in history: ~The proclamation of magic~.");
 
             //texts.Add("Civilizations flourished and life was at the peak of prosperity." +
             //    "|But this came with an enormous price...");
 
-            texts.Add("There were the protectors of the world, called ~Ancients~, who defied the apocalypse and created a solution that should prevent the inevitable destiny of ~Leore~.");
-            texts.Add("The ~Ancients~ created ~six towers~ placed across the world that would form a powerful magic barrier, holding together the fabric of the world.");
             texts.Add("asdf");
             texts.Add("asdf");
             texts.Add("asdf");
