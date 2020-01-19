@@ -24,10 +24,14 @@ namespace Leore.Main
         private List<string> texts = new List<string>();
 
         float alpha = 0;
-        
+        float minAlpha = -.5f;
+        float maxAlpha = 2;
+
         enum StoryState { FadeIn, Showing, FadeOut, Hiding }
 
         StoryState state = StoryState.FadeIn;
+
+        bool messageShown;
 
         private int startFrame;
         private int endFrame;
@@ -38,7 +42,11 @@ namespace Leore.Main
         {
             position = new Vector2(camera.ViewX, camera.ViewY);
             camera.SetTarget(this);
+
+            alpha = minAlpha;
             
+            // ---- INTRO ----
+
             // 0:
             texts.Add("In the beginning, ~Leore~ was a dark and cold place, drifting through the void.");
             // 1:
@@ -54,26 +62,20 @@ namespace Leore.Main
             texts.Add("There were the protectors of the world called ~Ancients~, who defied the apocalypse." +
                 "|They found a solution that should prevent the inevitable destiny of ~Leore~.");
             // 5:
-            texts.Add("The ~Ancients~ created ~towers~ placed across the world that would form a powerful magic barrier, " +
-                "holding together the fabric of the world and maintaining balance.");
+            texts.Add("The ~Ancients~ created ~towers~ placed across the world that would form a powerful magic barrier." +
+                "|This would hold together the fabric of the world and maintain [5fcde4]~balance~." +
+                "|Exhausting their energy, the ~Ancients~ had to retreat from the face of the world.");
             // 6:
-            texts.Add("But the [973bba]~Void~ has started to breach the barrier, corrupting the towers and letting darkness enter the world.");
+            texts.Add("Eventually, the [973bba]~Void~ could breach the barrier, corrupting the towers and letting darkness enter the world.");
+
+            // 7:
+            texts.Add("~Leore~ is once more threatened to fall into an era of eternal darkness..");
+
+            // ---- ENDING 1 ----
+
+            // 8:
+            texts.Add("");
             
-            //texts.Add("In time, some creatures learned to harness this energy.|They called it ~magic~ and developed outstanding powers." +
-            //    "|There were those, who wanted to make these powerse accessible for everyone." +
-            //    "\nThe most powerful spell was cast and it created the most remarkable event in history: ~The proclamation of magic~.");
-
-            //texts.Add("Civilizations flourished and life was at the peak of prosperity." +
-            //    "|But this came with an enormous price...");
-
-            texts.Add("asdf");
-            texts.Add("asdf");
-            texts.Add("asdf");
-            texts.Add("asdf");
-            texts.Add("asdf");
-            texts.Add("asdf");
-
-
             if (startFrame > endFrame) throw new ArgumentOutOfRangeException("startFrame");
             if (endFrame > texts.Count) throw new ArgumentOutOfRangeException("endFrame");
 
@@ -90,21 +92,33 @@ namespace Leore.Main
             switch (state)
             {
                 case StoryState.FadeIn:
-                    alpha = Math.Min(alpha + .02f, 1);
-                    if (alpha == 1)
+                    alpha = Math.Min(alpha + .02f, maxAlpha);
+                    if (!messageShown)
                     {
-                        new MessageBox(texts[cursor]).OnCompleted = () =>
+                        if (alpha >= 0)
                         {
-                            state = StoryState.FadeOut;
-                        };
-                        state = StoryState.Showing;
+                            new MessageBox(texts[cursor]).OnCompleted = () =>
+                            {
+                                state = StoryState.FadeOut;
+                            };
+                            messageShown = true;
+                        }                        
                     }
+                    else
+                    {
+                        if (alpha == maxAlpha)
+                        {
+                            state = StoryState.Showing;
+                            messageShown = false;
+                        }
+                    }
+                    
                     break;
                 case StoryState.Showing:
                     break;
                 case StoryState.FadeOut:
-                    alpha = Math.Max(alpha - .02f, 0);
-                    if (alpha == 0)
+                    alpha = Math.Max(alpha - .02f, minAlpha);
+                    if (alpha == minAlpha)
                     {
                         cursor += 1;
 
@@ -129,8 +143,8 @@ namespace Leore.Main
             // draw darkness
             sb.Draw(AssetManager.Transition[0], position, null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0f);
 
-            // draw scene background            
-            sb.Draw(image[cursor], position, null, new Color(Color.White, alpha), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.00001f);
+            // draw scene background
+            sb.Draw(image[cursor], position, null, new Color(Color.White, alpha *.5f), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.00001f);
             
             // text
             //font.Halign = Font.HorizontalAlignment.Center;
