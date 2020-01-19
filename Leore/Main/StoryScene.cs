@@ -44,18 +44,19 @@ namespace Leore.Main
             // 1:
             texts.Add("Then, the [f6c048]~sun, source of all energy~, came to be and created life.|" +
                 "Every living being is born as a child of the sun, holding part of it's energy within." +
-                "|And so, in time, civilizations formed and thrived.");
+                "|This energy is called [5fcde4]~magic~.");
             // 2:
-            texts.Add("Eons passed and life was flourishing on ~Leore~." +
-                "|But eventually, it's peak was reached and the uninevitable started:" +
-                "\nThe sun became weaker, drifting slowly away and the world would eventually face a cold dark death.");
+            texts.Add("Eons passed and life was flourishing on ~Leore~. And so, in time, civilizations formed and thrived. " +
+                "|But eventually, it's peak was reached.");
             // 3:
-            texts.Add("There were the protectors of the world, called ~Ancients~, who defied the apocalypse." +
-                "|They found a solution that should prevent the inevitable destiny of ~Leore~.");
+            texts.Add("The sun became weaker, drifting slowly away and the world would eventually face a cold dark death.");
             // 4:
+            texts.Add("There were the protectors of the world called ~Ancients~, who defied the apocalypse." +
+                "|They found a solution that should prevent the inevitable destiny of ~Leore~.");
+            // 5:
             texts.Add("The ~Ancients~ created ~towers~ placed across the world that would form a powerful magic barrier, " +
                 "holding together the fabric of the world and maintaining balance.");
-            // 5:
+            // 6:
             texts.Add("But the [973bba]~Void~ has started to breach the barrier, corrupting the towers and letting darkness enter the world.");
             
             //texts.Add("In time, some creatures learned to harness this energy.|They called it ~magic~ and developed outstanding powers." +
