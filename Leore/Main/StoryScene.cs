@@ -47,7 +47,7 @@ namespace Leore.Main
             // ---- INTRO ----
 
             // 0:
-            texts.Add("In the beginning, ~Leore~ was a dark and cold place, drifting through the void.");
+            texts.Add("In the beginning, ~Leore~ was a lifeless place, drifting through the void.");
             // 1:
             texts.Add("Then, the [f6c048]~sun, source of all energy~, came to be and created life.|" +
                 "Every living being is born as a child of the sun, holding part of it's energy within." +
@@ -61,15 +61,14 @@ namespace Leore.Main
             texts.Add("There were the protectors of the world called ~Ancients~, who defied the apocalypse." +
                 "|They found a solution that should prevent the inevitable destiny of ~Leore~.");
             // 5:
-            texts.Add("The ~Ancients~ created ~towers~ placed across the world that would form a [5fcde4]~magic barrier~." +
-                "|This would hold together the fabric of the world and maintain [5fcde4]~balance~." +
-                "|Drained of their [5fcde4]~magic~, the ~Ancients~ had to retreat from the face of the world.");
+            texts.Add("The ~Ancients~ built ~towers~ across the world that would create a [5fcde4]~magic barrier~." +
+                "|This would hold together the fabric of the world and maintain [5fcde4]~balance~ for centuries.");
             // 6:
-            texts.Add("Without them, the [973bba]~Void~ could breach the barrier." +
-                "|The towers became corrupt and darkness started to enter the world.");
-
+            texts.Add("Somehow, the [973bba]~Void~ still found a way to breach the barrier." +
+                "|The towers were corrupted and the ~Ancients~ sealed away, unable tofight back.");
+            
             // 7:
-            texts.Add("~Leore~ is threatened to fall into an era of eternal darkness..");
+            texts.Add("~Leore~ is under the threat of falling back into an era of eternal darkness..");
 
             // ---- ENDING 1 ----
 
