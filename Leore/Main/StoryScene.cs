@@ -41,8 +41,7 @@ namespace Leore.Main
         public StoryScene(int startFrame, int endFrame) : base(0, 0, null)
         {
             position = new Vector2(camera.ViewX, camera.ViewY);
-            camera.SetTarget(this);
-
+            
             alpha = minAlpha;
             
             // ---- INTRO ----
@@ -62,14 +61,15 @@ namespace Leore.Main
             texts.Add("There were the protectors of the world called ~Ancients~, who defied the apocalypse." +
                 "|They found a solution that should prevent the inevitable destiny of ~Leore~.");
             // 5:
-            texts.Add("The ~Ancients~ created ~towers~ placed across the world that would form a powerful magic barrier." +
+            texts.Add("The ~Ancients~ created ~towers~ placed across the world that would form a [5fcde4]~magic barrier~." +
                 "|This would hold together the fabric of the world and maintain [5fcde4]~balance~." +
-                "|Exhausting their energy, the ~Ancients~ had to retreat from the face of the world.");
+                "|Drained of their [5fcde4]~magic~, the ~Ancients~ had to retreat from the face of the world.");
             // 6:
-            texts.Add("Eventually, the [973bba]~Void~ could breach the barrier, corrupting the towers and letting darkness enter the world.");
+            texts.Add("Without them, the [973bba]~Void~ could breach the barrier." +
+                "|The towers became corrupt and darkness started to enter the world.");
 
             // 7:
-            texts.Add("~Leore~ is once more threatened to fall into an era of eternal darkness..");
+            texts.Add("~Leore~ is threatened to fall into an era of eternal darkness..");
 
             // ---- ENDING 1 ----
 
@@ -134,6 +134,9 @@ namespace Leore.Main
                     state = StoryState.FadeIn;
                     break;
             }
+
+            // so window resizing happens properly
+            camera.SetTarget(this);
         }
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)

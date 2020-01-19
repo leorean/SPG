@@ -207,6 +207,7 @@ namespace Leore.Main
                 }
             }
 
+            // so window resizing happens properly
             camera.SetTarget(this);
         }
 
