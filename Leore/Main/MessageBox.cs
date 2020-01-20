@@ -6,6 +6,7 @@ using SPG.Draw;
 using SPG.Objects;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Leore.Main
@@ -44,6 +45,8 @@ namespace Leore.Main
 
         public enum MessageState { FADE_IN, SHOW, FADE_OUT }
         protected MessageState state;
+
+        float cursorAlpha = 0;
 
         private List<string> CutString(string str, int maxWidth)
         {
@@ -294,7 +297,7 @@ namespace Leore.Main
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            
+
             if (hiColor != null)
                 font.HighlightColor = (Color)hiColor;
 
@@ -313,7 +316,7 @@ namespace Leore.Main
             //    kNextPressed = input.IsButtonPressed(Buttons.B) || input.IsButtonPressed(Buttons.A) || input.IsButtonPressed(Buttons.Start);
             //    kAny = input.IsAnyButtonPressed();
             //}
-            
+
             if (kNextPressed)
             {
                 if (page == texts.Count - 1)
@@ -333,15 +336,16 @@ namespace Leore.Main
 
                     page = Math.Min(page + 1, texts.Count - 1);
                 }
-            } else if (kAny)
+            }
+            else if (kAny)
             {
                 if (textSpeed == TextSpeed.NORMAL)
                     timeOut = 0;
                 else
                 {
                     if (timeOut > 0)
-                        timeOut --;
-                }                
+                        timeOut--;
+                }
             }
 
             timeOut = Math.Max(timeOut - 1, 0);
@@ -361,10 +365,12 @@ namespace Leore.Main
                     }
                 }
 
-                timeOut = (int)textSpeed;                
+                timeOut = (int)textSpeed;
             }
-            
-            sin = (float)((sin + .1) % (2 * Math.PI));            
+
+            sin = (float)((sin + .1) % (2 * Math.PI));
+
+            cursorAlpha = (curText.Length == texts[page].Length) ? Math.Min(cursorAlpha + .02f, 1) : 0;
         }
 
         public virtual void DrawActionIcons(SpriteBatch sb)
@@ -372,17 +378,21 @@ namespace Leore.Main
             var T = Globals.T;
             var z = (float)Math.Sin(sin);
 
+            int ca = (int)(((float)Color.A) * cursorAlpha);
+
+            var cursorColor = new Color(Color, ca);
+            
             if (page == 0 && texts.Count > 1)
             {
-                sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 2 * T + z), new Rectangle(1 * T, 3 * T, T, T), Color, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
+                sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 2 * T + z), new Rectangle(1 * T, 3 * T, T, T), cursorColor, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
             }
             else if (page < texts.Count - 1)
             {
-                sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 2 * T + z), new Rectangle(1 * T, 3 * T, T, T), Color, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
+                sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 2 * T + z), new Rectangle(1 * T, 3 * T, T, T), cursorColor, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
             }
             else
             {
-                sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 2 * T + z), new Rectangle(2 * T, 3 * T, T, T), Color, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
+                sb.Draw(Texture, Position + new Vector2(RoomCamera.Current.ViewWidth - 2 * T, 2 * T + z), new Rectangle(2 * T, 3 * T, T, T), cursorColor, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .001f);
             }
         }
         

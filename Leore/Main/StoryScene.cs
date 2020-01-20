@@ -47,7 +47,7 @@ namespace Leore.Main
             // ---- INTRO ----
 
             // 0:
-            texts.Add("In the beginning, ~Leore~ was a lifeless place, drifting through the void.");
+            texts.Add("In the beginning, ~Leore~ was a lifeless place, drifting through the [973bba]~Void~.");
             // 1:
             texts.Add("Then, the [f6c048]~sun, source of all energy~, came to be and created life.|" +
                 "Every living being is born as a child of the sun, holding part of it's energy within." +
@@ -56,20 +56,27 @@ namespace Leore.Main
             texts.Add("Eons passed and life was flourishing on ~Leore~. And so, in time, civilizations formed and thrived. " +
                 "|But eventually, it's peak was reached.");
             // 3:
-            texts.Add("The sun became weaker, drifting slowly away and the world would eventually face a cold dark death.");
+            texts.Add("The sun became weaker, drifting slowly away and ~Leore~ would eventually face a cold dark death.");
             // 4:
             texts.Add("There were the protectors of the world called ~Ancients~, who defied the apocalypse." +
                 "|They found a solution that should prevent the inevitable destiny of ~Leore~.");
             // 5:
-            texts.Add("The ~Ancients~ built ~towers~ across the world that would create a [5fcde4]~magic barrier~." +
-                "|This would hold together the fabric of the world and maintain [5fcde4]~balance~ for centuries.");
-            // 6:
-            texts.Add("Somehow, the [973bba]~Void~ still found a way to breach the barrier." +
-                "|The towers were corrupted and the ~Ancients~ sealed away, unable tofight back.");
-            
-            // 7:
-            texts.Add("~Leore~ is under the threat of falling back into an era of eternal darkness..");
+            texts.Add("The ~Ancients~ built ~towers~ across the world that would create a vast magic barrier.");
 
+            // 6:
+            texts.Add("For centuries, this barrier would hold together the fabric of the world, protecting it from the [973bba]~Void~.");
+            // 7:
+            texts.Add("Eventually, the [973bba]~Void~ found a way to break through..");
+            
+            // 8:
+            texts.Add("Corrupted by the [973bba]~Void~, the ~towers~ turned from sacret sites into pinnacles of darkness.");
+
+            // 9
+            //texts.Add("If the corruption is not stopped, the barrier will give in and ~Leore~ will live to see the era of eternal darkness..");
+            texts.Add("...|" +
+                ".....|" +
+                "...wake up.");
+            
             // ---- ENDING 1 ----
 
             // 8:
@@ -87,6 +94,9 @@ namespace Leore.Main
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            // so window resizing happens properly
+            camera.SetTarget(this);
 
             switch (state)
             {
@@ -132,10 +142,7 @@ namespace Leore.Main
                 case StoryState.Hiding:
                     state = StoryState.FadeIn;
                     break;
-            }
-
-            // so window resizing happens properly
-            camera.SetTarget(this);
+            }            
         }
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)
