@@ -77,13 +77,13 @@ namespace Leore.Main
             base.Update(gameTime);
 
             // TODO: remove
-            new StoryScene(0, 9).OnCompleted = () =>
-            {
-                GameManager.Current.ReloadLevel();
-            };
+            //new StoryScene(0, 9).OnCompleted = () =>
+            //{
+            //    GameManager.Current.ReloadLevel();
+            //};
 
-            Destroy();
-            return;
+            //Destroy();
+            //return;
 
             if (InputMapping.KeyPressed(InputMapping.ResetMenu))
             {
@@ -129,7 +129,7 @@ namespace Leore.Main
             else
             {
                 //a = Math.Min(a + .0035f, 1);
-                a = Math.Min(a + .01f, 1);
+                a = Math.Min(a + .015f, 1);
                 spd = 0;
 
                 if (MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Down, SPG.Input.State.Pressed))
@@ -176,7 +176,11 @@ namespace Leore.Main
                                     //isShowingDialog = false;
                                     //GameManager.Current.ReloadLevel();
                                     //MainGame.Current.State = MainGame.GameState.Running;
-                                    new StoryScene(0, 0);
+
+                                    new StoryScene(0, 9).OnCompleted = () =>
+                                    {
+                                        GameManager.Current.ReloadLevel();
+                                    };
                                     Destroy();
                                 };
                             }

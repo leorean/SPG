@@ -24,15 +24,11 @@ namespace Leore.Main
         private List<string> texts = new List<string>();
 
         float alpha = 0;
-        float minAlpha = -.5f;
-        float maxAlpha = 2;
-
+        
         enum StoryState { FadeIn, Showing, FadeOut, Hiding }
 
         StoryState state = StoryState.FadeIn;
-
-        bool messageShown;
-
+        
         private int startFrame;
         private int endFrame;
 
@@ -41,8 +37,6 @@ namespace Leore.Main
         public StoryScene(int startFrame, int endFrame) : base(0, 0, null)
         {
             position = new Vector2(camera.ViewX, camera.ViewY);
-            
-            alpha = minAlpha;
             
             // ---- INTRO ----
 
@@ -101,33 +95,23 @@ namespace Leore.Main
             switch (state)
             {
                 case StoryState.FadeIn:
-                    alpha = Math.Min(alpha + .02f, maxAlpha);
-                    if (!messageShown)
+                    alpha = Math.Min(alpha + .02f, 1);
+                    
+                    if (alpha == 1)
                     {
-                        if (alpha >= 0)
+                        new MessageBox(texts[cursor]).OnCompleted = () =>
                         {
-                            new MessageBox(texts[cursor]).OnCompleted = () =>
-                            {
-                                state = StoryState.FadeOut;
-                            };
-                            messageShown = true;
-                        }                        
-                    }
-                    else
-                    {
-                        if (alpha == maxAlpha)
-                        {
-                            state = StoryState.Showing;
-                            messageShown = false;
-                        }
+                            state = StoryState.FadeOut;
+                        };
+                        state = StoryState.Showing;
                     }
                     
                     break;
                 case StoryState.Showing:
                     break;
                 case StoryState.FadeOut:
-                    alpha = Math.Max(alpha - .02f, minAlpha);
-                    if (alpha == minAlpha)
+                    alpha = Math.Max(alpha - .02f, 0);
+                    if (alpha == 0)
                     {
                         cursor += 1;
 
@@ -153,7 +137,7 @@ namespace Leore.Main
             sb.Draw(AssetManager.Transition[0], position, null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0f);
 
             // draw scene background
-            sb.Draw(image[cursor], position, null, new Color(Color.White, alpha *.5f), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.00001f);
+            sb.Draw(image[cursor], position, null, new Color(Color.White, alpha), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.00001f);
             
             // text
             //font.Halign = Font.HorizontalAlignment.Center;
