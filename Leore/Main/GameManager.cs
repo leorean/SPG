@@ -23,7 +23,7 @@ namespace Leore.Main
 {
     public class GameManager
     {
-        public static readonly string DEFAULT_MAP_NAME = "tutorial2";
+        public string DEFAULT_MAP_NAME => maps.First().Name;
 
         public List<Room> LoadedRooms { get; private set; } = new List<Room>();
         

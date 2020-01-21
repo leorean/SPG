@@ -109,8 +109,11 @@ namespace Leore.Main
 
             AssetManager.InitializeContent(Content);
 
-            // load maps
+            // ++++ Maps +++++
+            
+            GameManager.Current.AddGameMap("sanctuary");
 
+            // debug maps:
             GameManager.Current.AddGameMap("worldMap");
             GameManager.Current.AddGameMap("tutorial");
             GameManager.Current.AddGameMap("tutorial2");

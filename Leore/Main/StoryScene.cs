@@ -63,7 +63,7 @@ namespace Leore.Main
             texts.Add("Eventually, the [973bba]~Void~ found a way to break through..");
             
             // 8:
-            texts.Add("Corrupted by the [973bba]~Void~, the ~towers~ turned from sacret sites into pinnacles of darkness.");
+            texts.Add("It corrupted the ~towers~ turning them from sacret sites into pinnacles of darkness.");
 
             // 9
             //texts.Add("If the corruption is not stopped, the barrier will give in and ~Leore~ will live to see the era of eternal darkness..");
