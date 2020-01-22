@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace Leore.Main
 {
+    [Serializable]
     public struct ID : IID {
         float x;
         float y;
         float mapIndex;
-
+        
         public ID(float x, float y, float mapIndex)
         {
             this.x = x;
