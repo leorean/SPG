@@ -173,11 +173,7 @@ namespace Leore.Main
                                 };
                                 dialog.YesAction = () =>
                                 {
-                                    //isShowingDialog = false;
-                                    //GameManager.Current.ReloadLevel();
-                                    //MainGame.Current.State = MainGame.GameState.Running;
-
-                                    new StoryScene(0, 9).OnCompleted = () =>
+                                    new StoryScene(0, 10).OnCompleted = () =>
                                     {
                                         GameManager.Current.ReloadLevel();
                                     };

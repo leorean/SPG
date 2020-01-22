@@ -32,7 +32,14 @@ namespace Leore.Main
         private int startFrame;
         private int endFrame;
 
+        private int timer = 0;
+        private MessageBox messageBox;
+
         public Action OnCompleted;
+
+        private readonly string sunColor = "f6c048";
+        private readonly string voidColor = "973bba";
+        private readonly string magicColor = "5fcde4";
 
         public StoryScene(int startFrame, int endFrame) : base(0, 0, null)
         {
@@ -41,35 +48,40 @@ namespace Leore.Main
             // ---- INTRO ----
 
             // 0:
-            texts.Add("In the beginning, ~Leore~ was a lifeless place, drifting through the [973bba]~Void~.");
+            texts.Add($"In the beginning, there was a dull, but vast celestial body, drifting through the [{voidColor}]~Void~." +
+                $"|It was given the name ~Leore~.");
             // 1:
-            texts.Add("Then, the [f6c048]~sun, source of all energy~, came to be and created life.|" +
-                "Every living being is born as a child of the sun, holding part of it's energy within." +
-                "|This energy is called [5fcde4]~magic~.");
+            texts.Add($"When the [{sunColor}]~sun, source of all energy~, came to be, life was created." +
+                $"|Every living being is born as a child of the [{sunColor}]~sun~, holding part of it's energy within." +
+                $"|This energy is called [{magicColor}]~magic~.");
             // 2:
-            texts.Add("Eons passed and life was flourishing on ~Leore~. And so, in time, civilizations formed and thrived. " +
-                "|But eventually, it's peak was reached.");
+            texts.Add($"Eons passed and life was flourishing on ~Leore~. And so, in time, civilizations formed and thrived. " +
+                $"|But eventually, the apex of life was reached.");
             // 3:
-            texts.Add("The sun became weaker, drifting slowly away and ~Leore~ would eventually face a cold dark death.");
+            texts.Add($"The [{sunColor}]~sun~ became weaker, drifting slowly away and ~Leore~ would eventually face a cold dark death.");
             // 4:
-            texts.Add("There were the protectors of the world called ~Ancients~, who defied the apocalypse." +
-                "|They found a solution that should prevent the inevitable destiny of ~Leore~.");
+            texts.Add($"There were the protectors of the world called ~Ancients~, who defied the apocalypse." +
+                $"|They found a solution that should prevent the inevitable destiny of ~Leore~.");
             // 5:
-            texts.Add("The ~Ancients~ built ~towers~ across the world that would create a vast magic barrier.");
+            texts.Add($"The ~Ancients~ built towers across the world that would create a vast [{magicColor}]~magic barrier~.");
 
             // 6:
-            texts.Add("For centuries, this barrier would hold together the fabric of the world, protecting it from the [973bba]~Void~.");
+            texts.Add($"This barrier would maintain equilibrium between [{sunColor}]~light~ and [{voidColor}]~darkness~." +
+                $"|For centuries, this has been proven true and life was protected, not knowing the actual truth.");
             // 7:
-            texts.Add("Eventually, the [973bba]~Void~ found a way to break through..");
-            
-            // 8:
-            texts.Add("It corrupted the ~towers~ turning them from sacret sites into pinnacles of darkness.");
+            texts.Add($"Eventually, the [{voidColor}]~Void~ found a way to break through..");
 
-            // 9
-            //texts.Add("If the corruption is not stopped, the barrier will give in and ~Leore~ will live to see the era of eternal darkness..");
-            texts.Add("...|" +
-                ".....|" +
-                "...wake up.");
+            // 8:
+            texts.Add($"It corrupted the towers turning them from [{sunColor}]~sacred sites~ into [{voidColor}]~structures of darkness~." +
+                $"|The ~Ancients~ were forced cut a deal with fate, ~leaving the physical world in order to seal the towers~.");
+
+            // 9:
+            texts.Add($"In their final act, they emplaced their power into an ~Orb~ that would awaken and call out the rightful heir.");
+
+            // 10
+            texts.Add($"...|" +
+                $".....|" +
+                $"...wake up.");
             
             // ---- ENDING 1 ----
 
@@ -92,25 +104,37 @@ namespace Leore.Main
             // so window resizing happens properly
             camera.SetTarget(this);
 
+            timer = Math.Max(timer - 1, 0);
+
             switch (state)
             {
                 case StoryState.FadeIn:
-                    alpha = Math.Min(alpha + .02f, 1);
-                    
+                    alpha = Math.Min(alpha + .01f, 1);
+
                     if (alpha == 1)
                     {
-                        new MessageBox(texts[cursor]).OnCompleted = () =>
+                        if (messageBox == null)
                         {
-                            state = StoryState.FadeOut;
-                        };
-                        state = StoryState.Showing;
+                            messageBox = new MessageBox(texts[cursor]);
+                            messageBox.OnCompleted = () =>
+                            {
+                                state = StoryState.Showing;
+                                messageBox = null;
+                            };
+                        }
+                        timer = 30;
+                        //state = StoryState.Showing;
                     }
                     
                     break;
-                case StoryState.Showing:
+                case StoryState.Showing:                    
+                    if (timer == 0)
+                    {
+                        state = StoryState.FadeOut;
+                    }
                     break;
                 case StoryState.FadeOut:
-                    alpha = Math.Max(alpha - .02f, 0);
+                    alpha = Math.Max(alpha - .01f, 0);
                     if (alpha == 0)
                     {
                         cursor += 1;
@@ -120,11 +144,15 @@ namespace Leore.Main
                             OnCompleted?.Invoke();
                             Destroy();
                         }
+                        timer = 60;
                         state = StoryState.Hiding;
                     }
                     break;
-                case StoryState.Hiding:
-                    state = StoryState.FadeIn;
+                case StoryState.Hiding:                    
+                    if (timer == 0)
+                    {
+                        state = StoryState.FadeIn;
+                    }
                     break;
             }            
         }
