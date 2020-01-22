@@ -396,7 +396,7 @@ namespace Leore.Main
         /// </summary>
         public void UnloadLevel()
         {
-            Debug.WriteLine("Objects: " + ObjectManager.Objects.Count);
+            //Debug.WriteLine("Objects: " + ObjectManager.Objects.Count);
 
             foreach (var room in LoadedRooms.ToList())
             {
@@ -431,15 +431,15 @@ namespace Leore.Main
 
             SetCurrentGameMap(DEFAULT_MAP_NAME);
 
-            Debug.WriteLine("Objects: " + ObjectManager.Objects.Count);
-            Debug.WriteLine("killing all...");
+            //Debug.WriteLine("Objects: " + ObjectManager.Objects.Count);
+            //Debug.WriteLine("killing all...");
 
             foreach(var obj in ObjectManager.Objects.ToList())
             {
                 obj.Destroy();
             }
-            Debug.WriteLine("Objects: " + ObjectManager.Objects.Count);
-            Debug.WriteLine("-----");
+            //Debug.WriteLine("Objects: " + ObjectManager.Objects.Count);
+            //Debug.WriteLine("-----");
 
         }
 
