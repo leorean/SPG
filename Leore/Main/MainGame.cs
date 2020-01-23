@@ -111,7 +111,7 @@ namespace Leore.Main
 
             // ++++ Maps +++++
             
-            GameManager.Current.AddGameMap("sanctuary");
+            GameManager.Current.AddGameMap("outset_island");
 
             // debug maps:
             GameManager.Current.AddGameMap("worldMap");
