@@ -112,10 +112,10 @@ namespace Leore.Main
             // ++++ Maps +++++
             
             GameManager.Current.AddGameMap("sanctuary");
+            GameManager.Current.AddGameMap("lybianna");
 
             // debug maps:
-            GameManager.Current.AddGameMap("worldMap");
-            GameManager.Current.AddGameMap("tutorial");
+            GameManager.Current.AddGameMap("worldMap");            
             GameManager.Current.AddGameMap("tutorial2");
             
             HUD = new HUD();

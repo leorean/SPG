@@ -45,7 +45,7 @@ namespace SPG.Map
 
         public static Dictionary<string, object> FindFirstDataByTypeName(this List<Dictionary<string, object>> list, string name)
         {
-            return list.Where(x => x.Values.Contains(name)).First();
+            return list.Where(x => x.Values.Contains(name)).FirstOrDefault();
         }        
     }
 

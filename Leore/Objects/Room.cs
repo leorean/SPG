@@ -5,7 +5,7 @@ using SPG.Util;
 
 namespace Leore.Objects
 {
-    public class Room : MapCoherentGameObject
+    public class Room : SpatialGameObject
     {
         public int Background { get; set; } = -1;
         public int Weather { get; set; } = -1;

@@ -24,6 +24,8 @@ using Leore.Objects.Level.Obstacles;
 using Leore.Objects.Obstacles;
 using static Leore.Objects.Effects.Transition;
 
+using System.Reflection;
+
 namespace Leore.Main
 {
     public static class PlayerExtensions
@@ -52,7 +54,6 @@ namespace Leore.Main
     
     public class Player : GameObject, IMovable
     {
-
         // public
         
         public enum PlayerState
@@ -208,6 +209,7 @@ namespace Leore.Main
 
         public Key KeyObject { get; set; }
         public Collider MovingPlatform { get; set; }
+        
         public Orb Orb { get; set; }
 
         public Teleporter Teleporter { get; set; }
@@ -2166,6 +2168,21 @@ namespace Leore.Main
 
             // draws safe-rect for debug
             //sb.DrawRectangle(new RectF(safePosition.X - 8, safePosition.Y - 8, 16, 16), Color.Red, false, 1);
+        }
+
+        public Player Clone()
+        {
+            var player = new Player(X, Y);
+            
+            foreach(var property in GetType().GetProperties())
+            {
+                var val = property.GetValue(this);
+                if (property.GetSetMethod() != null)
+                {
+                    property.SetValue(player, val);
+                }
+            }
+            return player;
         }
     }
 }

@@ -117,7 +117,12 @@ namespace Leore.Main
 
             if (levelName != null && levelName != GameManager.Current.Map.Name)
             {
-                GameManager.Current.LoadLevel(levelName);
+                GameManager.Current.UnloadLevel(true);
+                GameManager.Current.SetCurrentGameMap(levelName);
+                GameManager.Current.LoadLevelObjects();
+
+                DisableBounds();
+                SetTarget(GameManager.Current.Player);                
             }
 
             tx = newPosition.X;
@@ -369,7 +374,7 @@ namespace Leore.Main
         public void Reset()
         {
             SetTarget(null);
-
+            
             state = State.Default;
             CurrentRoom = null;
             lastRoom = null;

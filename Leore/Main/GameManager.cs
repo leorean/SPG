@@ -128,12 +128,7 @@ namespace Leore.Main
 
         public void ChangeRoom(Room oldRoom, Room newRoom)
         {
-            // unload all rooms that exist
-            Room[] tmp = new Room[LoadedRooms.Count];
-            LoadedRooms.CopyTo(tmp);
-
-            foreach (var room in tmp)
-                UnloadRoomObjects(room);
+            UnloadLevelObjects();
 
             // do this, because else the GC would wait to clean huge resources and create a temporary lag
             GC.Collect();
@@ -156,28 +151,49 @@ namespace Leore.Main
             RoomObjectLoader.CleanObjectsExceptRoom(newRoom);
         }
 
-        public void LoadLevel(string levelName)
+        public void UnloadLevelObjects()
         {
-            // clear rooms
-
+            // unload all rooms that exist
+            // DO NOT delete rooms itself here!!
             foreach (var room in LoadedRooms.ToList())
             {
-                UnloadRoomObjects(room);
-                room.Destroy();
+                UnloadRoomObjects(room);                
             }
+        }
+
+        public void LoadLevelObjects()
+        {
+            UnloadLevelObjects();
+
+            LoadedRooms.Clear();
+
             if (LoadedRooms.Count > 0)
                 throw new Exception("Loaded rooms should be empty!");
 
             OverwriteSwitchStateTo(false);
-            
-            SetCurrentGameMap(levelName);
             
             ObjectManager.Enable<Room>();
 
             // load room data for the camera
             var mapIndex = Map.MapIndex;
             var roomData = Map.ObjectData.FindDataByTypeName("room");
+
             RoomObjectLoader.CreateRoom(roomData, mapIndex);
+
+            // Exchange player object for the cloned object
+            if(tempPlayer != null)
+            {   
+                Player = tempPlayer;
+                tempPlayer = null;
+
+                if (Player.Orb != null)
+                {
+                    var orb = new Orb(Player);
+                    Player.Orb.Parent = null;
+                    Player.Orb.Destroy();
+                    Player.Orb = orb;
+                }                
+            }
             
             // find starting room
             var startRoom = ObjectManager.CollisionPoints<Room>(Player.X, Player.Y).FirstOrDefault();
@@ -200,14 +216,7 @@ namespace Leore.Main
             }
 
             RoomObjectLoader.CleanObjectsExceptRoom(startRoom);            
-            MainGame.Current.HUD.SetBoss(null);            
         }
-
-        //public void Initialize()
-        //{
-        //    // handle room changing <-> object loading/unloading
-            
-        //}
 
         public void UnloadRoomObjects(Room room)
         {
@@ -228,89 +237,6 @@ namespace Leore.Main
         {
             UnloadLevel();
             CreateLevel();
-        }
-
-        public void CreateLevel()
-        {
-            var spawnX = 0f;
-            var spawnY = 0f;
-            Direction direction = Direction.RIGHT;
-
-            bool success = SaveManager.Load(ref SaveGame);
-
-            string levelName = DEFAULT_MAP_NAME;
-
-            if (success)
-            {
-                levelName = SaveGame.levelName;
-                playTime = SaveGame.playTime;
-            }
-
-            SetCurrentGameMap(SaveGame.levelName);
-
-            var playerData = Map.ObjectData.FindFirstDataByTypeName("player");
-
-            spawnX = (float)(int)playerData["x"] + 8;
-            spawnY = (float)(int)playerData["y"] + 7.9f;
-            var dir = (int)playerData["direction"];
-            direction = (dir == 1) ? Direction.RIGHT : Direction.LEFT;
-            
-            originalSpawnPosition = new Vector2(spawnX, spawnY);
-
-            if (success)
-            {
-                spawnX = SaveGame.playerPosition.X;
-                spawnY = SaveGame.playerPosition.Y;
-
-                direction = SaveGame.playerDirection;
-
-                RoomCamera.Current.CurrentBG = SaveGame.currentBG;
-                currentWeather = SaveGame.currentWeather;
-            }
-
-            if (spawnX == 0 && spawnY == 0)
-            {
-                spawnX = originalSpawnPosition.X;
-                spawnY = originalSpawnPosition.Y;
-            }
-
-            if (playTimeBeforeDeath != 0)
-            {
-                playTime = playTimeBeforeDeath;
-            }
-            playTimeBeforeDeath = 0;
-
-            // create player at start position and set camera target
-
-            Player = new Player(spawnX, spawnY);
-            Player.Direction = direction;
-            Player.AnimationTexture = AssetManager.Player;
-
-            LoadLevel(levelName);
-            
-            //globalWaterEmitter = new GlobalWaterBubbleEmitter(spawnX, spawnY, Player);
-            //new EmitterSpawner<GlobalWaterBubbleEmitter>(spawnX, spawnY, CurrentRoom);
-
-            RoomCamera.Current.SetTarget(Player);
-            MainGame.Current.HUD.SetPlayer(Player);
-            MainGame.Current.HUD.SetBoss(null);
-
-            NonRespawnableIDs.Clear();
-
-            // fade-in
-
-            Transition = new Transition();
-            Transition.FadeOut();
-            Transition.OnTransitionEnd = (t, u, v) => { Transition = null; };
-
-            // death penalty
-            if (CoinsAfterDeath > 0)
-            {
-                Player.Stats.Coins = CoinsAfterDeath;
-                CoinsAfterDeath = 0;
-            }
-
-            MainGame.Current.State = MainGame.GameState.Running;
         }
 
         public int GetStatUpItemCount(string key)
@@ -391,17 +317,32 @@ namespace Leore.Main
             }
         }
 
+        Player tempPlayer;
+
         /// <summary>
         /// Unloads the whole level.
         /// </summary>
-        public void UnloadLevel()
+        public void UnloadLevel(bool keepPlayer = false)
         {
-            //Debug.WriteLine("Objects: " + ObjectManager.Objects.Count);
+            OverwriteSwitchStateTo(false);
+            
+            LoadedRooms.Clear();
 
-            foreach (var room in LoadedRooms.ToList())
+            if (keepPlayer)
             {
-                UnloadRoomObjects(room);
-                room.Destroy(); //
+                tempPlayer = Player.Clone();
+            }
+
+            foreach (var obj in ObjectManager.Objects.ToList())
+            {
+                if (keepPlayer)
+                {
+                    if (obj is Player || obj is Orb)
+                        continue;
+                }
+
+                obj.Parent = null;
+                obj.Destroy();
             }
 
             if (Player?.Orb != null)
@@ -414,34 +355,117 @@ namespace Leore.Main
             Player = null;
             RoomCamera.Current.Reset();
 
-            // reset the weather 
-
-            if (weatherObject != null)
-                weatherObject.Destroy();
-            weatherObject = null;
-            currentWeather = -1;
-            lastRoom = null;
-
-            OverwriteSwitchStateTo(false);
-            
-            // reset savegame (will be loaded and updates afterwards)
-            SaveGame = new SaveGame(SaveGame.FileName);
-
-            NonRespawnableIDs.Clear();
-
-            SetCurrentGameMap(DEFAULT_MAP_NAME);
-
-            //Debug.WriteLine("Objects: " + ObjectManager.Objects.Count);
-            //Debug.WriteLine("killing all...");
-
-            foreach(var obj in ObjectManager.Objects.ToList())
+            if (!keepPlayer)
             {
-                obj.Destroy();
+                // reset savegame (will be loaded and updates afterwards)
+                SaveGame = new SaveGame(SaveGame.FileName);
+
+                // reset the weather 
+
+                weatherObject = null;
+                currentWeather = -1;
+                lastRoom = null;
+
+                NonRespawnableIDs.Clear();
+
+                SetCurrentGameMap(DEFAULT_MAP_NAME);
             }
-            //Debug.WriteLine("Objects: " + ObjectManager.Objects.Count);
-            //Debug.WriteLine("-----");
+        }
+        
+        /// <summary>
+        /// Creates the whole level.
+        /// </summary>
+        /// <param name="createNewPlayer"></param>
+        public void CreateLevel(bool createNewPlayer = true)
+        {
+            var spawnX = 0f;
+            var spawnY = 0f;
+            Direction direction = Direction.RIGHT;
+            
+            if (createNewPlayer)
+            {
+                bool success = SaveManager.Load(ref SaveGame);
+
+                string levelName = DEFAULT_MAP_NAME;
+
+                if (success)
+                {
+                    levelName = SaveGame.levelName;
+                    playTime = SaveGame.playTime;
+                }
+
+                SetCurrentGameMap(SaveGame.levelName);
+
+                var playerData = Map.ObjectData.FindFirstDataByTypeName("player");
+
+                if (playerData != null)
+                {
+                    spawnX = (float)(int)playerData["x"] + 8;
+                    spawnY = (float)(int)playerData["y"] + 7.9f;
+                    var dir = (int)playerData["direction"];
+                    direction = (dir == 1) ? Direction.RIGHT : Direction.LEFT;
+                }
+                originalSpawnPosition = new Vector2(spawnX, spawnY);
+
+                if (success)
+                {
+                    spawnX = SaveGame.playerPosition.X;
+                    spawnY = SaveGame.playerPosition.Y;
+
+                    direction = SaveGame.playerDirection;
+
+                    RoomCamera.Current.CurrentBG = SaveGame.currentBG;
+                    currentWeather = SaveGame.currentWeather;
+                }
+
+                if (spawnX == 0 && spawnY == 0)
+                {
+                    spawnX = originalSpawnPosition.X;
+                    spawnY = originalSpawnPosition.Y;
+                }
+
+                if (playTimeBeforeDeath != 0)
+                {
+                    playTime = playTimeBeforeDeath;
+                }
+                playTimeBeforeDeath = 0;
+
+                // create player at start position and set camera target
+
+                Player = new Player(spawnX, spawnY);
+                Player.Direction = direction;
+                Player.AnimationTexture = AssetManager.Player;
+                
+                NonRespawnableIDs.Clear();
+
+                // creates fade-in
+
+                Transition = new Transition();
+                Transition.FadeOut();
+                Transition.OnTransitionEnd = (t, u, v) => { Transition = null; };
+
+                // death penalty
+                if (CoinsAfterDeath > 0)
+                {
+                    Player.Stats.Coins = CoinsAfterDeath;
+                    CoinsAfterDeath = 0;
+                }
+
+                MainGame.Current.State = MainGame.GameState.Running;
+            }
+            else
+            {
+                Player = tempPlayer;
+            }
+            
+            LoadLevelObjects();
+
+            RoomCamera.Current.SetTarget(Player);
+            MainGame.Current.HUD.SetPlayer(Player);
+            MainGame.Current.HUD.SetBoss(null);
 
         }
+
 
         public void OverwriteSwitchStateTo(bool enabled)
         {

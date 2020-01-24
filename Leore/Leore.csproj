@@ -169,6 +169,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Objects\CollisionExtensions.cs" />
     <Compile Include="Util\DrawExtensions.cs" />
+    <Compile Include="Util\ObjectUtil.cs" />
     <Compile Include="Util\TimeUtil.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -236,7 +237,7 @@
     <Content Include="Content\worldMap.tmx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\tutorial.tmx">
+    <Content Include="Content\lybianna.tmx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\tutorial2.tmx">

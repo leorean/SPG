@@ -52,7 +52,7 @@ namespace Leore.Main
         TWO = 2,
         THREE = 3
     }
-
+    
     public class Orb : GameObject
     {
         public Direction Direction => player.Direction;
@@ -356,6 +356,6 @@ namespace Leore.Main
 
             alphaTimeout = 20;
             alpha = 0;
-        }
+        }        
     }
 }

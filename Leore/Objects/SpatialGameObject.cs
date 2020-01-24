@@ -40,12 +40,12 @@ namespace Leore.Main
 
         public static ID Unknown { get; } = new ID(-1, -1, -1);
     }
-
-    public class MapCoherentGameObject : GameObject
+    
+    public class SpatialGameObject : GameObject
     {
         public ID ID { get; set; }
 
-        public MapCoherentGameObject(float x, float y, int mapIndex, string name = null) : base(x, y, name)
+        public SpatialGameObject(float x, float y, int mapIndex, string name = null) : base(x, y, name)
         {
             ID = new ID(x, y, mapIndex);
         }

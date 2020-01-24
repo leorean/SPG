@@ -43,7 +43,7 @@ namespace SPG.Objects
 
         bool Enabled { get; }
     }
-
+    
     public abstract class GameObject : ICollidable, IID
     {
         // general props

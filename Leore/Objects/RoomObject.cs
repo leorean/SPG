@@ -4,7 +4,7 @@ using SPG.Util;
 
 namespace Leore.Objects
 {
-    public abstract class RoomObject : MapCoherentGameObject
+    public abstract class RoomObject : SpatialGameObject
     {
         public Room Room { get; set; }
 
