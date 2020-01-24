@@ -103,7 +103,7 @@ namespace Leore.Main
 
             if (obj != null)
             {
-                Map = obj;                
+                Map = obj;
             }
             else
             {
