@@ -78628,7 +78628,7 @@
    <tile gid="75"/>
    <tile/>
    <tile/>
-   <tile gid="708"/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -86757,7 +86757,7 @@ We're decendants of them, if you will.</property>
     <property name="disappearCondition" value="offIsland"/>
     <property name="npcType" type="int" value="1"/>
     <property name="setCondition" value=""/>
-    <property name="text" value="This island was once part of the main land.|It has been separated from the world in order to ~protect the Ancients' legacy~."/>
+    <property name="text" value="This island was once part of the main land.|It has been separated from the world ages ago."/>
    </properties>
   </object>
   <object id="1483" type="movingPlatform" x="3376" y="448" width="32" height="16">
@@ -86918,20 +86918,21 @@ An eternal bond has been established.</property>
     <property name="text" value="It seems like the ~Ancients~ have chosen you.|Even though that ~Orb~ is very powerful, it is of little use if you don't know how to ~cast spells~."/>
    </properties>
   </object>
-  <object id="1511" type="npc" x="2096" y="944" width="16" height="16">
+  <object id="1511" type="npc" x="2080" y="944" width="16" height="16">
    <properties>
     <property name="disappearCondition" value="offIsland,leavingIslandDialog"/>
     <property name="noText" value="Speak to me whenever you feel ready."/>
     <property name="npcType" type="int" value="1"/>
     <property name="setCondition" value="leavingIslandDialog"/>
-    <property name="text" value="You passed the trials, now the true challenge begins.|Leave this island and find someone who will help you.|Are you ready?"/>
-    <property name="yesText" value="Very well.|You won't be able to return once you leave.|Take care."/>
+    <property name="text" value="You've passed the trials, now the true challenge begins.|You won't be able to return once you leave.|Are you ready?"/>
+    <property name="yesText" value="Very well.|Then leave this island and fulfill your destiny.|We pray for your success. Take care now."/>
    </properties>
   </object>
   <object id="1512" type="door" x="2080" y="944" width="16" height="16">
    <properties>
+    <property name="direction" type="int" value="-1"/>
     <property name="levelName" value="lybianna"/>
-    <property name="tx" type="int" value="29"/>
+    <property name="tx" type="int" value="61"/>
     <property name="ty" type="int" value="3"/>
    </properties>
   </object>

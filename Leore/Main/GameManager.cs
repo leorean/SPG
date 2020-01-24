@@ -178,7 +178,7 @@ namespace Leore.Main
             var mapIndex = Map.MapIndex;
             var roomData = Map.ObjectData.FindDataByTypeName("room");
 
-            RoomObjectLoader.CreateRoom(roomData, mapIndex);
+            RoomObjectLoader.CreateAllRooms(roomData, mapIndex);
 
             // Exchange player object for the cloned object
             if(tempPlayer != null)

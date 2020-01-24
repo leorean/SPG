@@ -651,7 +651,7 @@ namespace Leore.Main
         /// Creates a room object and adds it to the camera room list.
         /// </summary>
         /// <param name="roomData"></param>
-        public static void CreateRoom(List<Dictionary<string, object>> roomData, int mapIndex)
+        public static void CreateAllRooms(List<Dictionary<string, object>> roomData, int mapIndex)
         {
             var camera = RoomCamera.Current;
 
