@@ -207,7 +207,7 @@ namespace Leore.Main
             RoomObjectLoader.CreateRoomObjects(startRoom);
 
             // create room objects from object data for current room
-            var objectData = GameManager.Current.Map.ObjectData.Where(o => !o.Values.Contains("room")).ToList();
+            var objectData = Map.ObjectData.Where(o => !o.Values.Contains("room")).ToList();
             RoomObjectLoader.CreateRoomObjectsFromData(objectData, startRoom);
 
             foreach (var n in neighbours)

@@ -29,9 +29,7 @@ namespace Leore.Main
         private GameObject target;
         
         // room <-> view calculation vars
-
-        //public List<Room> Rooms { get; private set; } = new List<Room>();
-
+        
         private Room lastRoom;
         public Room CurrentRoom { get; private set; }
         public int CurrentBG { get; set; } = 0;
