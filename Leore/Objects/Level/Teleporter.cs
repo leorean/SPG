@@ -65,7 +65,7 @@ namespace Leore.Objects.Level
 
             angle += angSpd;
 
-            if (!GameManager.Current.Player.Stats.Teleporters.ContainsKey(ID))
+            if (!GameManager.Current.Player.Stats.Teleporters.Contains(ID))
             {
                 //segAlpha = .25f;
                 segAlpha = 0;

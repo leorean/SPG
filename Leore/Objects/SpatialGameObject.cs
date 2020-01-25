@@ -9,11 +9,11 @@ namespace Leore.Main
 {
     [Serializable]
     public struct ID : IID {
-        float x;
-        float y;
-        float mapIndex;
+        public float x;
+        public float y;
+        public int mapIndex;
         
-        public ID(float x, float y, float mapIndex)
+        public ID(float x, float y, int mapIndex)
         {
             this.x = x;
             this.y = y;

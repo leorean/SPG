@@ -621,5 +621,18 @@ namespace Leore.Main
                 Player.Stats.SpellIndex = 0;
             }
         }
+
+        /// <summary>
+        /// Gets the GameMap from a given index.
+        /// </summary>
+        /// <param name="mapIndex"></param>
+        /// <returns></returns>
+        public GameMap GetMapNameFromIndex(int mapIndex)
+        {
+            if (mapIndex >= maps.Count)
+                return null;
+
+            return maps[mapIndex];
+        }
     }
 }

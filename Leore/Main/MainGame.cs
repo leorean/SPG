@@ -113,10 +113,10 @@ namespace Leore.Main
             
             GameManager.Current.AddGameMap("sanctuary");
             GameManager.Current.AddGameMap("lybianna");
+            GameManager.Current.AddGameMap("tealglade_woods");
 
             // debug maps:
             GameManager.Current.AddGameMap("worldMap");            
-            GameManager.Current.AddGameMap("tutorial2");
             
             HUD = new HUD();
             HUD.Texture = AssetManager.HUD;

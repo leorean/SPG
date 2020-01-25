@@ -884,8 +884,8 @@ namespace Leore.Main
                 {
                     var toolTip = new ToolTip(tel, this, new Vector2(0, 8), 0);
 
-                    if (!Stats.Teleporters.ContainsKey(tel.ID))
-                        Stats.Teleporters.Add(tel.ID, tel.Position.ToPoint());
+                    if (!Stats.Teleporters.Contains(tel.ID))
+                        Stats.Teleporters.Add(tel.ID);
 
                     if (k_upPressed && !k_attackHolding && onGround)
                     {
@@ -898,18 +898,18 @@ namespace Leore.Main
                         Teleporter.Active = true;
                         Teleporter.OnFinishedAnimation = () => {
 
-                            var index = Stats.Teleporters.ToList().IndexOf(Stats.Teleporters.Where(o => o.Key == Teleporter.ID).FirstOrDefault());
+                            var index = Stats.Teleporters.ToList().IndexOf(Stats.Teleporters.Where(o => o == Teleporter.ID).FirstOrDefault());
 
                             if (index == Stats.Teleporters.Count - 1)
                                 index = 0;
                             else
                                 index++;
 
-                            var newPosition = Stats.Teleporters.ElementAt(index).Value.ToVector2();
+                            ID newTeleID = Stats.Teleporters.ElementAt(index);
 
-                            // TODO: Target Level Names for Teleporters!!
-
-                            RoomCamera.Current.ChangeRoomsToPosition(newPosition, TransitionType.LIGHT, Direction.NONE, null);
+                            var newPosition = new Vector2(newTeleID.x, newTeleID.y);
+                            
+                            RoomCamera.Current.ChangeRoomsToPosition(newPosition, TransitionType.LIGHT, Direction.NONE, GameManager.Current.GetMapNameFromIndex(newTeleID.mapIndex).Name);
                             Teleporter.OnFinishedAnimation = null;
 
                         };

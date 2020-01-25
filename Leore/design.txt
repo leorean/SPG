@@ -48,6 +48,17 @@
 #9 - Leaf Totem
 	- Enables levitation
 
+~~~ Playthrough ~~~
+
+- Get push ability
+- Get orb
+- Get off island
+- Get first spell
+- Activate first tower
+- 
+
+trial dungeon -> ability -> tower dungeon -> spell -> fragment
+	
 ~~~ Story ~~~
 
 ~~~ Objective ~~~
