@@ -114,6 +114,7 @@ namespace Leore.Main
             GameManager.Current.AddGameMap("sanctuary");
             GameManager.Current.AddGameMap("lybianna");
             GameManager.Current.AddGameMap("tealglade_woods");
+            GameManager.Current.AddGameMap("forest_temple");
 
             // debug maps:
             GameManager.Current.AddGameMap("worldMap");            

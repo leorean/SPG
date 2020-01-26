@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="90" tilewidth="16" tileheight="16" infinite="0" nextlayerid="125" nextobjectid="1514">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="90" tilewidth="16" tileheight="16" infinite="0" nextlayerid="125" nextobjectid="1515">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="2048" columns="64">
   <image source="tiles.png" width="1024" height="512"/>
  </tileset>
@@ -86915,17 +86915,7 @@ An eternal bond has been established.</property>
     <property name="disappearCondition" value="offIsland,hasOrbDialog"/>
     <property name="npcType" type="int" value="1"/>
     <property name="setCondition" value="hasOrbDialog"/>
-    <property name="text" value="It seems like the ~Ancients~ have chosen you.|Even though that ~Orb~ is very powerful, it is of little use if you don't know how to ~cast spells~."/>
-   </properties>
-  </object>
-  <object id="1511" type="npc" x="2080" y="944" width="16" height="16">
-   <properties>
-    <property name="disappearCondition" value="offIsland,leavingIslandDialog"/>
-    <property name="noText" value="Speak to me whenever you feel ready."/>
-    <property name="npcType" type="int" value="1"/>
-    <property name="setCondition" value="leavingIslandDialog"/>
-    <property name="text" value="You've passed the trials, now the true challenge begins.|You won't be able to return once you leave.|Are you ready?"/>
-    <property name="yesText" value="Very well.|Then leave this island and fulfill your destiny.|We pray for your success. Take care now."/>
+    <property name="text" value="It seems like the ~Ancients~ have chosen you.|Even though that ~Orb~ is very powerful, it is of little use if you don't hold any ~spells~."/>
    </properties>
   </object>
   <object id="1512" type="door" x="2080" y="944" width="16" height="16">
@@ -86934,6 +86924,16 @@ An eternal bond has been established.</property>
     <property name="levelName" value="lybianna"/>
     <property name="tx" type="int" value="61"/>
     <property name="ty" type="int" value="3"/>
+   </properties>
+  </object>
+  <object id="1514" type="npc" x="2080" y="944" width="16" height="16">
+   <properties>
+    <property name="disappearCondition" value="offIsland,leavingIslandDialog"/>
+    <property name="noText" value="Speak to me whenever you feel ready."/>
+    <property name="npcType" type="int" value="1"/>
+    <property name="setCondition" value="leavingIslandDialog"/>
+    <property name="text" value="You've passed the trials, now the true challenge begins.|You won't be able to return once you leave.|Are you ready?"/>
+    <property name="yesText" value="Very well.|Then leave this island and fulfill your destiny.|We pray for your success. Take care now."/>
    </properties>
   </object>
  </objectgroup>

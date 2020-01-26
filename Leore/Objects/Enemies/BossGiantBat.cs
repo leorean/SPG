@@ -74,7 +74,7 @@ namespace Leore.Objects.Enemies
                     Direction = (Direction)Math.Sign(player.X - X);
 
                     XVel += Math.Sign(player.X - X) * .01f;
-                    YVel += Math.Sign(player.Y - Y) * .01f;
+                    YVel += Math.Sign(player.Y - 16 - Y) * .01f;
 
                     if (damageTaken > 15)
                     {
@@ -188,7 +188,7 @@ namespace Leore.Objects.Enemies
 
             Move(XVel, YVel);
             var tx = 48;
-            var ty = 32;
+            var ty = 48;
             Position = new Vector2(MathUtil.Clamp(X, Room.X + tx, Room.X + Room.BoundingBox.Width - tx), MathUtil.Clamp(Y, Room.Y + ty, Room.Y + Room.BoundingBox.Height - ty));
 
             Scale = new Vector2((int)Direction, 1);

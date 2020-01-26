@@ -73,7 +73,7 @@ namespace Leore.Main
 
             // 8:
             texts.Add($"It corrupted the towers turning them from [{sunColor}]~sacred sites~ into [{voidColor}]~structures of darkness~." +
-                $"|The ~Ancients~ were forced cut a deal with fate, ~leaving the physical world in order to seal the towers~.");
+                $"|The ~Ancients~ were forced cut a deal with fate, ~removing the towers from the physical world in order to seal them~.");
 
             // 9:
             texts.Add($"In their final act, they emplaced their power into an ~Orb~ that would awaken and call out the rightful heir.");
