@@ -57871,7 +57871,7 @@
     <property name="yVel" type="float" value="0"/>
    </properties>
   </object>
-  <object id="1465" type="boss" x="688" y="160" width="48" height="96">
+  <object id="1465" type="boss" x="688" y="176" width="48" height="80">
    <properties>
     <property name="bossType" type="int" value="1"/>
     <property name="setCondition" value="giantBatDead"/>

@@ -29,7 +29,7 @@ namespace Leore.Main
             this.boss = boss;
         }
 
-        private Player player;
+        private Player player => GameManager.Current.Player;
         
         public HUD()
         {
@@ -37,12 +37,7 @@ namespace Leore.Main
             font = AssetManager.DamageFont;
             hudFont = AssetManager.HUDFont;
         }
-
-        internal void SetPlayer(Player player)
-        {
-            this.player = player;
-        }
-
+        
         public void Update(GameTime gameTime)
         {
             if (player == null)

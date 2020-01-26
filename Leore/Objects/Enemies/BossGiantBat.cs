@@ -12,6 +12,7 @@ using Leore.Objects.Items;
 using System.Diagnostics;
 using Leore.Objects.Effects;
 using Microsoft.Xna.Framework.Graphics;
+using SPG.Objects;
 
 namespace Leore.Objects.Enemies
 {
@@ -131,10 +132,11 @@ namespace Leore.Objects.Enemies
                                 SpellEXP.Spawn(X, Y, 5);
                                 minion.EXP = 18;
 
-                                // TODO: FIND SOLUTION FOR THIS!!
-
-                                //minion.ID = minion.ID + totalMinionsSpawned + 1;
-
+                                while(GameManager.Current.Map.CollisionTile(minion, 0, 0))
+                                {
+                                    minion.Position = new Vector2(minion.X, minion.Y - 1);
+                                }
+                                
                                 minion.Depth = Depth + .0001f;
                                 Minions.Add(minion);
                                 minionsSpawned++;

@@ -455,13 +455,13 @@ namespace Leore.Main
             }
             else
             {
-                Player = tempPlayer;
+                throw new NotImplementedException("!!!");
+                //Player = tempPlayer;
             }
             
             LoadLevelObjects();
 
-            RoomCamera.Current.SetTarget(Player);
-            MainGame.Current.HUD.SetPlayer(Player);
+            RoomCamera.Current.SetTarget(Player);            
             MainGame.Current.HUD.SetBoss(null);
 
         }
