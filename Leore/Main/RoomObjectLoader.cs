@@ -486,6 +486,10 @@ namespace Leore.Main
                         var itemSetCondition = data.ContainsKey("setCondition") ? data["setCondition"].ToString() : null;
                         var itemAppearCondition = data.ContainsKey("appearCondition") ? data["appearCondition"].ToString() : null;
 
+                        // warp after obtain (story item only)
+                        var tx = data.ContainsKey("tx") ? (int)data["tx"] : -1;
+                        var ty = data.ContainsKey("ty") ? (int)data["ty"] : -1;
+
                         AbilityItem item = null;
 
                         switch (itemType)
@@ -543,6 +547,13 @@ namespace Leore.Main
                                 item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
                                 item.Texture = AssetManager.Items[11];
                                 item.OnObtain = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_CEIL; };
+                                item.Text = itemText;
+                                break;
+                            case 8: // sunstone
+                                item = new StoryItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
+                                item.Texture = AssetManager.Items[12];
+                                item.Tx = tx;
+                                item.Ty = ty;                                
                                 item.Text = itemText;
                                 break;
                             // TODO: add other item types, collectables etc.

@@ -24,8 +24,6 @@ using Leore.Objects.Level.Obstacles;
 using Leore.Objects.Obstacles;
 using static Leore.Objects.Effects.Transition;
 
-using System.Reflection;
-
 namespace Leore.Main
 {
     public static class PlayerExtensions

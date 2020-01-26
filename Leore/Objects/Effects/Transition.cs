@@ -16,7 +16,8 @@ namespace Leore.Objects.Effects
         {
             DARK = 0,
             LIGHT = 1,
-            LONG_LIGHT = 2
+            LONG_LIGHT = 2,
+            VERY_LONG_LIGHT = 3
         }
         
         public delegate void TransitionEnd(TransitionType type, Direction direction, string levelName);
@@ -41,27 +42,56 @@ namespace Leore.Objects.Effects
             switch (type)
             {
                 case TransitionType.DARK:
+                    vel = .03;
                     spriteIndex = 0;
                     break;
                 case TransitionType.LIGHT:
+                    vel = .03;
                     spriteIndex = 1;
                     break;
                 case TransitionType.LONG_LIGHT:
+                    vel = .03;
                     spriteIndex = 1;
                     break;
-                default:
-                    break;
+                case TransitionType.VERY_LONG_LIGHT:
+                    vel = .01;
+                    spriteIndex = 1;
+                    break;                
             }
         }
 
         public void FadeIn()
         {
-            alpha = 0;
+            switch (type)
+            {
+                case TransitionType.VERY_LONG_LIGHT:
+                    alpha = 1;
+                    break;
+                default:
+                    alpha = 0;
+                    break;
+            }            
             fade = Fade.IN;
         }
         public void FadeOut()
         {
-            alpha = type == TransitionType.LONG_LIGHT ? 3.5 : 1.5;
+            switch (type)
+            {
+                case TransitionType.DARK:
+                    alpha = 1.5;
+                    break;
+                case TransitionType.LIGHT:
+                    alpha = 1.5;
+                    break;
+                case TransitionType.LONG_LIGHT:
+                    alpha = 3.5;
+                    break;
+                case TransitionType.VERY_LONG_LIGHT:
+                    alpha = 3;
+                    break;
+                default:
+                    break;
+            }            
             fade = Fade.OUT;
         }
 

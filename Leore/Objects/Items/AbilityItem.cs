@@ -3,6 +3,7 @@ using Leore.Main;
 using Leore.Objects.Effects.Emitters;
 using System;
 using Leore.Objects.Level;
+using static Leore.Objects.Effects.Transition;
 
 namespace Leore.Objects.Items
 {
@@ -21,15 +22,19 @@ namespace Leore.Objects.Items
 
         protected State state = State.IDLE;
 
-        protected Player player;
+        protected Player player => GameManager.Current.Player;
         protected float maxYDist = Globals.T;
 
         protected bool flashOnTaken = true;
+        protected bool idleOnTaken = true;
 
         private float yDist = -3;
-        private float sin = 0;
+        protected float sin = 0;
         
         public ObtainShineEmitter ObtainShineEmitter { get; private set; }
+        public int Tx { get; set; }
+        public int Ty { get; set; }
+
         protected ObtainParticleEmitter obtainParticleEmitter;
 
         private string setCondition;
@@ -59,8 +64,9 @@ namespace Leore.Objects.Items
             
             this.setCondition = setCondition;
             this.appearCondition = appearCondition;
-        }
 
+        }
+        
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -118,13 +124,21 @@ namespace Leore.Objects.Items
 
                 if (yDist == -maxYDist)
                 {
-                    //ObjectManager.DestroyAll<MessageBox>();
-                    var msgBox = new MessageBox(Text, name:Name, hiColor:HighlightColor);
-                    msgBox.OnCompleted = () => {                        
-                        state = State.TAKEN;
-                    };
+                    if (Text != null)
+                    {
 
-                    state = State.RISEN;
+                        var msgBox = new MessageBox(Text, name: Name, hiColor: HighlightColor);
+                        msgBox.OnCompleted = () =>
+                        {
+                            state = State.TAKEN;
+                        };
+
+                        state = State.RISEN;
+                    }
+                    else
+                    {
+                        state = State.TAKEN;
+                    }
                 }
             }
             if (state == State.RISEN)
@@ -147,10 +161,13 @@ namespace Leore.Objects.Items
                 
                 if (Math.Abs(X - player.X) < 2 && Math.Abs(Y - ty) < 2)
                 {
-                    if (!player.InWater)
-                        player.State = Player.PlayerState.IDLE;
-                    else
-                        player.State = Player.PlayerState.SWIM;
+                    if (idleOnTaken)
+                    {
+                        if (!player.InWater)
+                            player.State = Player.PlayerState.IDLE;
+                        else
+                            player.State = Player.PlayerState.SWIM;
+                    }
 
                     if (flashOnTaken)
                     {
@@ -181,7 +198,6 @@ namespace Leore.Objects.Items
             if (state == State.IDLE)
             {
                 state = State.TAKING;
-                this.player = player;
             }
         }        
     }

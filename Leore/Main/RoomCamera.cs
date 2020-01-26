@@ -95,15 +95,19 @@ namespace Leore.Main
             player.Teleporter = null;
             if (player.Orb != null) player.Orb.Visible = true;
 
-            if (transitionType == TransitionType.LONG_LIGHT)
+            switch (transitionType)
             {
-                player.LieDown(2 * 60);
+                case TransitionType.LONG_LIGHT:
+                    player.LieDown(2 * 60);
+                    break;
+                case TransitionType.VERY_LONG_LIGHT:
+                    player.LieDown(4 * 60);
+                    break;
+                default:
+                    player.State = Player.PlayerState.IDLE;
+                    break;
             }
-            else
-            {
-                player.State = Player.PlayerState.IDLE;
-            }
-
+            
             if (direction != Direction.NONE)
                 player.Direction = direction;
 
