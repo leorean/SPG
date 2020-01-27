@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Leore.Main;
+using Leore.Objects.Effects.Emitters;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SPG.Objects;
@@ -26,9 +27,11 @@ namespace Leore.Objects.Level
 
         float warpY;
 
+        private StoryWarpEmitter emitter;
+
         public StoryWarp(float x, float y, Room room, string setCondition, int tx, int ty, string text) : base(x, y, room)
         {
-            BoundingBox = new RectF(-2, -8, 4, 16);
+            BoundingBox = new RectF(-1, -32, 2, 32);
             DebugEnabled = true;
 
             this.setCondition = setCondition;
@@ -37,6 +40,8 @@ namespace Leore.Objects.Level
             this.text = text;
 
             warpY = Y;
+
+            emitter = new StoryWarpEmitter(X, Y + 8);
         }
 
         public override void Update(GameTime gameTime)
@@ -50,7 +55,8 @@ namespace Leore.Objects.Level
             {
                 if (this.CollisionBounds(player, X, Y))
                 {
-                    touched = true;                    
+                    warpY = player.Y;
+                    touched = true;
                     player.SetControlsEnabled(false);
                     MainGame.Current.HUD.SetVisible(false);
                 }
@@ -62,12 +68,6 @@ namespace Leore.Objects.Level
                 player.YVel = (warpY - player.Y) / 60f;
 
                 warpY = Math.Max(warpY - .5f, Y - 48);
-
-                //if (player.Y > Y - 16)
-                //{
-                //    player.YVel = -player.Gravity - .1f;
-                //}
-                //player.Position = new Vector2(player.X, Center.Y - 1);
 
                 alpha = Math.Min(alpha + .005f, maxAlpha);
                 if (alpha == maxAlpha)

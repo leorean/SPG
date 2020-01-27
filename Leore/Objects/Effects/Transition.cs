@@ -54,7 +54,7 @@ namespace Leore.Objects.Effects
                     spriteIndex = 1;
                     break;
                 case TransitionType.LIGHT_FLASH_LONG_FADE:
-                    vel = .005f;
+                    vel = .02;
                     spriteIndex = 1;
                     break;                
             }
