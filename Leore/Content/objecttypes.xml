@@ -66,6 +66,8 @@
   <property name="setCondition" type="string"/>
  </objecttype>
  <objecttype name="storyWarp" color="#ddedff">
+  <property name="direction" type="int" default="0"/>
+  <property name="levelName" type="string"/>
   <property name="setCondition" type="string"/>
   <property name="text" type="string"/>
   <property name="tx" type="int" default="0"/>

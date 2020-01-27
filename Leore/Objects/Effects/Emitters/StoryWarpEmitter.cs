@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Leore.Main;
+using Leore.Objects.Level;
+using Microsoft.Xna.Framework;
 using SPG.Objects;
 using SPG.Util;
 using System;
@@ -13,23 +15,28 @@ namespace Leore.Objects.Effects.Emitters
     {
         public StoryWarpParticle(ParticleEmitter emitter) : base(emitter)
         {
-            Position = new Vector2(emitter.X - 8 + (float)RND.Next * 16, emitter.Y);
-            YVel = -.5f - (float)RND.Next * 1;
+            var s = 1 + (float)RND.Next * 1;
+            Scale = new Vector2(s);
+
+            Angle = (float)(RND.Next * 2 * Math.PI);
+
+            Position = new Vector2(emitter.X - 8 + (float)RND.Next * 16, emitter.Y - s);
+            YVel = -.25f - (float)RND.Next * .5f;
 
             LifeTime = 60;
-
-            var s =  1 + (float)RND.Next * 1;
-
-            Scale = new Vector2(s);
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            Alpha = LifeTime / 60f;
+            Alpha = Math.Max(Alpha - .02f, 0);
+            if (Alpha == 0)
+            {
+                LifeTime = 0;
+            }
 
-            Scale = new Vector2(Math.Max(Scale.X - .02f, .5f));
+            Scale = new Vector2(Math.Max(Scale.X - .01f, .5f));
         }
     }
 

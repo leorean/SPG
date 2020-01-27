@@ -18,7 +18,12 @@ namespace Leore.Objects.Level
             light = new LightSource(this);
             light.State = LightSource.LightState.Default;
             light.Active = true;
-        }        
+        }
+
+        //public void SetScale(Vector2 scale)
+        //{
+        //    light.Scale = scale;
+        //}
     }
 
     public class AmbientLightSource : RoomObject

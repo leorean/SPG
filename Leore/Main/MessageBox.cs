@@ -25,6 +25,8 @@ namespace Leore.Main
 
         public Action OnCompleted;
 
+        public int CompleteActionDelay;
+
         protected List<string> texts;
         protected Font font;
         protected int maxWidth;
@@ -413,9 +415,13 @@ namespace Leore.Main
                 alpha = Math.Max(alpha - .1f, 0);
                 if (alpha == 0)
                 {
-                    OnCompleted?.Invoke();
-                    OnCompleted = null;
-                    Destroy();
+                    CompleteActionDelay = Math.Max(CompleteActionDelay - 1, 0);
+                    if (CompleteActionDelay == 0)
+                    {
+                        OnCompleted?.Invoke();
+                        OnCompleted = null;
+                        Destroy();
+                    }
                 }
             }
 

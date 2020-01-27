@@ -87,7 +87,7 @@ namespace Leore.Objects.Effects
                     alpha = 3.5;
                     break;
                 case TransitionType.LIGHT_FLASH_LONG_FADE:
-                    alpha = 1;
+                    alpha = 3;
                     break;
                 default:
                     break;

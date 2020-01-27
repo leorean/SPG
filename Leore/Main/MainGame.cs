@@ -200,7 +200,7 @@ namespace Leore.Main
                     var posX = MathUtil.Div(GameManager.Current.Player.Position.X, Globals.T) * Globals.T + 8;
                     var posY = MathUtil.Div(GameManager.Current.Player.Position.Y, Globals.T) * Globals.T + 8;
 
-                    GameManager.Current.Save(posX, posY);
+                    GameManager.Current.Save(posX, posY, GameManager.Current.Map.Name);
 
                     Debug.WriteLine("Saved.");
                 }

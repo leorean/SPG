@@ -481,6 +481,18 @@
 /processorParam:TextureFormat=Color
 /build:spellexp.png
 
+#begin storyWarp.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=False
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:storyWarp.png
+
 #begin teleporter.png
 /importer:TextureImporter
 /processor:TextureProcessor

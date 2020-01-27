@@ -26,7 +26,7 @@ namespace Leore.Main
         public static TextureSet NPCS { get; private set; }
         public static TextureSet SaveStatue { get; private set; }
         public static Texture2D Teleporter { get; private set; }
-
+        
         // items etc.
 
         public static TextureSet Items { get; private set; }
@@ -43,6 +43,7 @@ namespace Leore.Main
 
         // misc
 
+        public static TextureSet StoryWarp { get; private set; }
         public static Texture2D FireBall { get; private set; }
         public static Texture2D Door { get; private set; }
         public static TextureSet Torch { get; private set; }
@@ -124,6 +125,7 @@ namespace Leore.Main
             TimeSwitch = content.LoadTextureSet("timeSwitch");
             ToggleSwitch = content.LoadTextureSet("toggleSwitch");
             ToolTip = content.LoadTextureSet("toolTip", 32, 32);
+            StoryWarp = content.LoadTextureSet("storyWarp", 16, 144);
 
             MirrorBossBG = content.Load<Texture2D>("mirrorBossBg");
 

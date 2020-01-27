@@ -53,7 +53,7 @@ namespace Leore.Objects.Level
             var burst = new SaveBurstEmitter(emitter.Position.X, emitter.Position.Y);
             
             alreadyActivated = true;
-            GameManager.Current.Save(posX, posY);
+            GameManager.Current.Save(posX, posY, GameManager.Current.Map.Name);
             Debug.WriteLine("Saved.");            
         }
 

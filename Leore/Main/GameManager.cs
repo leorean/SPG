@@ -114,7 +114,7 @@ namespace Leore.Main
         /// <summary>
         /// The main Save method.
         /// </summary>
-        public void Save(float posX, float posY)
+        public void Save(float posX, float posY, string mapName)
         {
             SaveGame.playTime = playTime;
             SaveGame.playerPosition = new Vector2(posX, posY);
@@ -122,7 +122,7 @@ namespace Leore.Main
             SaveGame.gameStats = Player.Stats;
             SaveGame.currentBG = RoomCamera.Current.CurrentBG;
             SaveGame.currentWeather = currentWeather;
-            SaveGame.levelName = Map.Name;            
+            SaveGame.levelName = mapName;
             SaveGame.Save();
         }
 
@@ -360,18 +360,17 @@ namespace Leore.Main
                 // reset savegame (will be loaded and updates afterwards)
                 SaveGame = new SaveGame(SaveGame.FileName);
 
-                // reset the weather 
-
-                weatherObject = null;
-                currentWeather = -1;
                 lastRoom = null;
-
                 NonRespawnableIDs.Clear();
 
                 SetCurrentGameMap(DEFAULT_MAP_NAME);
             }
+
+            // reset the weather 
+            weatherObject = null;
+            currentWeather = -1;
         }
-        
+
         /// <summary>
         /// Creates the whole level.
         /// </summary>
