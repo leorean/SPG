@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="160" height="90" tilewidth="16" tileheight="16" infinite="0" nextlayerid="131" nextobjectid="1473">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="160" height="90" tilewidth="16" tileheight="16" infinite="0" nextlayerid="131" nextobjectid="1474">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="2048" columns="64">
   <image source="tiles.png" width="1024" height="512"/>
  </tileset>
@@ -45464,7 +45464,7 @@
    <tile gid="333"/>
    <tile/>
    <tile/>
-   <tile gid="713"/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -57889,25 +57889,11 @@
     <property name="ty" type="int" value="0"/>
    </properties>
   </object>
-  <object id="1471" name="Seraph Cape" type="item" x="160" y="224" width="16" height="16">
+  <object id="1473" name="Warp" type="storyWarp" x="48" y="208" width="16" height="16">
    <properties>
-    <property name="appearCondition" value=""/>
-    <property name="itemName" value="Seraph Cape"/>
-    <property name="itemType" type="int" value="4"/>
-    <property name="setCondition" value="hasDoubleJump"/>
-    <property name="text">You found the ~Seraph Cape~.
-There are some words inscribed:
-|&quot;~As gravity makes a fool out of a falling man,~
-~may you fool it back once.~&quot;
-|Now you can perform a jump in mid-air!</property>
-   </properties>
-  </object>
-  <object id="1472" name="STORY ITEM" type="item" x="48" y="192" width="16" height="16">
-   <properties>
-    <property name="itemName" value="Crystal #1"/>
-    <property name="itemType" type="int" value="8"/>
-    <property name="text" value="Hello World!"/>
-    <property name="tx" type="int" value="18"/>
+    <property name="setCondition" value="dungeon1complete"/>
+    <property name="text" value="...A great cavern... below..."/>
+    <property name="tx" type="int" value="74"/>
     <property name="ty" type="int" value="3"/>
    </properties>
   </object>

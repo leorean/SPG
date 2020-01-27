@@ -57,7 +57,7 @@
     <Compile Include="Main\SaveGame.cs" />
     <Compile Include="Main\StoryScene.cs" />
     <Compile Include="Main\TitleMenu.cs" />
-    <Compile Include="Objects\Items\StoryItem.cs" />
+    <Compile Include="Objects\Level\StoryWarp.cs" />
     <Compile Include="Objects\SpatialGameObject.cs" />
     <Compile Include="Objects\Common.cs" />
     <Compile Include="Objects\Effects\Ambience\AnimatedWaterSurface.cs" />

@@ -65,5 +65,11 @@
  <objecttype name="storyTrigger" color="#ffffff">
   <property name="setCondition" type="string"/>
  </objecttype>
+ <objecttype name="storyWarp" color="#ddedff">
+  <property name="setCondition" type="string"/>
+  <property name="text" type="string"/>
+  <property name="tx" type="int" default="0"/>
+  <property name="ty" type="int" default="0"/>
+ </objecttype>
  <objecttype name="waterMill" color="#a0a0a4"/>
 </objecttypes>

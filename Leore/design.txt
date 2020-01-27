@@ -53,12 +53,13 @@
 - Get push ability
 - Get orb
 - Get off island
-- Get first spell
-- Activate first tower
-- 
+- Get first spell (D1)
 
-trial dungeon -> ability -> tower dungeon -> spell -> fragment
-	
+-> tutorial
+-> 7 dungeons
+-> 5 trials
+-> end game
+
 ~~~ Story ~~~
 
 ~~~ Objective ~~~

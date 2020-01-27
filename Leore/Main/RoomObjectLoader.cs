@@ -549,13 +549,6 @@ namespace Leore.Main
                                 item.OnObtain = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_CEIL; };
                                 item.Text = itemText;
                                 break;
-                            case 8: // sunstone
-                                item = new StoryItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
-                                item.Texture = AssetManager.Items[12];
-                                item.Tx = tx;
-                                item.Ty = ty;                                
-                                item.Text = itemText;
-                                break;
                             // TODO: add other item types, collectables etc.
                             default:
                                 throw new NotImplementedException("Item type not implemented!");
@@ -573,7 +566,7 @@ namespace Leore.Main
                         var door = new Door(x, y, room, tx, ty, levelName);
                         door.TransitionType = (TransitionType)fadeType;
                         door.Direction = direction;
-                    }
+                    }                    
                     if (type == "npc")
                     {
                         var npcText = data.ContainsKey("text") ? data["text"].ToString() : "-unknown-";
@@ -642,6 +635,15 @@ namespace Leore.Main
                         var storyTriggerSetCondition = data.ContainsKey("setCondition") ? data["setCondition"].ToString() : null;
                         var storyTrigger = new StoryTrigger(x, y, room, storyTriggerSetCondition);
                         storyTrigger.BoundingBox = new RectF(0, 0, width, height);
+                    }
+                    if (type == "storyWarp")
+                    {
+                        var tx = data.ContainsKey("tx") ? (int)data["tx"] : 0;
+                        var ty = data.ContainsKey("ty") ? (int)data["ty"] : 0;
+                        var setCondition = data.ContainsKey("setCondition") ? data["setCondition"].ToString() : null;
+                        var text = data.ContainsKey("text") ? data["text"].ToString() : null;
+
+                        var warp = new StoryWarp(x + 8, y + 8, room, setCondition, tx, ty, text);                        
                     }
                     if (type == "jumpDisabler")
                     {

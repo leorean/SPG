@@ -100,7 +100,7 @@ namespace Leore.Main
                 case TransitionType.LONG_LIGHT:
                     player.LieDown(2 * 60);
                     break;
-                case TransitionType.VERY_LONG_LIGHT:
+                case TransitionType.LIGHT_FLASH_LONG_FADE:
                     player.LieDown(4 * 60);
                     break;
                 default:
@@ -144,7 +144,8 @@ namespace Leore.Main
         {
             GameManager.Current.Transition.OnTransitionEnd = null;
             GameManager.Current.Transition = null;
-            //player.Visible = true; <- done already at end of transition_1
+            //player.Visible = true; <- done already at end of transition_1            
+            MainGame.Current.HUD.SetVisible(true);
         }
 
         public void ChangeRoomsToPosition(Vector2 position, TransitionType type, Direction direction, string levelName)

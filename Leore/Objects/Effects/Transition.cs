@@ -17,7 +17,7 @@ namespace Leore.Objects.Effects
             DARK = 0,
             LIGHT = 1,
             LONG_LIGHT = 2,
-            VERY_LONG_LIGHT = 3
+            LIGHT_FLASH_LONG_FADE = 3
         }
         
         public delegate void TransitionEnd(TransitionType type, Direction direction, string levelName);
@@ -53,8 +53,8 @@ namespace Leore.Objects.Effects
                     vel = .03;
                     spriteIndex = 1;
                     break;
-                case TransitionType.VERY_LONG_LIGHT:
-                    vel = .01;
+                case TransitionType.LIGHT_FLASH_LONG_FADE:
+                    vel = .005f;
                     spriteIndex = 1;
                     break;                
             }
@@ -64,7 +64,7 @@ namespace Leore.Objects.Effects
         {
             switch (type)
             {
-                case TransitionType.VERY_LONG_LIGHT:
+                case TransitionType.LIGHT_FLASH_LONG_FADE:
                     alpha = 1;
                     break;
                 default:
@@ -86,8 +86,8 @@ namespace Leore.Objects.Effects
                 case TransitionType.LONG_LIGHT:
                     alpha = 3.5;
                     break;
-                case TransitionType.VERY_LONG_LIGHT:
-                    alpha = 3;
+                case TransitionType.LIGHT_FLASH_LONG_FADE:
+                    alpha = 1;
                     break;
                 default:
                     break;

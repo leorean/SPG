@@ -19,6 +19,7 @@ namespace Leore.Main
 
         public Texture2D Texture { get; set; }
 
+        private bool visible;
 
         private Font font;
         private Font hudFont;
@@ -36,6 +37,8 @@ namespace Leore.Main
             //font = AssetManager.HUDFontSmall;
             font = AssetManager.DamageFont;
             hudFont = AssetManager.HUDFont;
+
+            visible = true;
         }
         
         public void Update(GameTime gameTime)
@@ -54,6 +57,9 @@ namespace Leore.Main
 
         public void Draw(SpriteBatch sb, GameTime gameTime)
         {
+            if (!visible)
+                return;
+
             if (player == null)
                 return;
 
@@ -134,6 +140,11 @@ namespace Leore.Main
                 sb.Draw(AssetManager.HUD, new Vector2(x + 64, y + 128), new Rectangle(128, 0, 128, 16), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Globals.LAYER_UI + .00001f);
                 sb.Draw(AssetManager.HUD, new Vector2(x + 64 + 4, y + 128), new Rectangle(128 + 4, 16, (int)((128 - 8) * boss.HP / (float)boss.MaxHP), 16), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Globals.LAYER_UI + .00002f);
             }
+        }
+
+        public void SetVisible(bool visible)
+        {
+            this.visible = visible;
         }
     }
 }
