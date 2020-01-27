@@ -125,7 +125,7 @@ namespace Leore.Main
             TimeSwitch = content.LoadTextureSet("timeSwitch");
             ToggleSwitch = content.LoadTextureSet("toggleSwitch");
             ToolTip = content.LoadTextureSet("toolTip", 32, 32);
-            StoryWarp = content.LoadTextureSet("storyWarp", 16, 144);
+            StoryWarp = content.LoadTextureSet("storyWarp", 32, 144);
 
             MirrorBossBG = content.Load<Texture2D>("mirrorBossBg");
 

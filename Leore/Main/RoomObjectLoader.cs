@@ -645,7 +645,7 @@ namespace Leore.Main
                         var levelName = data.ContainsKey("levelName") ? data["levelName"].ToString() : null;
                         var direction = data.ContainsKey("direction") ? (Direction)(int)data["direction"] : Direction.NONE;
 
-                        var warp = new StoryWarp(x + 8, y + 8, room, setCondition, tx, ty, text, direction, levelName);                        
+                        var warp = new StoryWarp(x + 16, y + 8, room, setCondition, tx, ty, text, direction, levelName);
                     }
                     if (type == "jumpDisabler")
                     {

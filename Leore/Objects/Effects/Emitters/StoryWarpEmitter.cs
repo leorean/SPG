@@ -5,6 +5,7 @@ using SPG.Objects;
 using SPG.Util;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,9 @@ namespace Leore.Objects.Effects.Emitters
 
             Angle = (float)(RND.Next * 2 * Math.PI);
 
-            Position = new Vector2(emitter.X - 8 + (float)RND.Next * 16, emitter.Y - s);
+            var gauss = RND.RandomGauss(0, 2);
+            
+            Position = new Vector2(emitter.X + 16 * (float)gauss, emitter.Y - s);
             YVel = -.25f - (float)RND.Next * .5f;
 
             LifeTime = 60;
