@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="90" tilewidth="16" tileheight="16" infinite="0" nextlayerid="125" nextobjectid="1516">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="90" tilewidth="16" tileheight="16" infinite="0" nextlayerid="133" nextobjectid="1516">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="2048" columns="64">
   <image source="tiles.png" width="1024" height="512"/>
  </tileset>
- <layer id="121" name="BG2" width="240" height="90">
+ <layer id="129" name="BG2" width="240" height="90">
   <data>
    <tile/>
    <tile/>
@@ -21607,7 +21607,7 @@
    <tile/>
   </data>
  </layer>
- <layer id="122" name="BG" width="240" height="90">
+ <layer id="130" name="BG" width="240" height="90">
   <data>
    <tile/>
    <tile/>
@@ -43211,7 +43211,7 @@
    <tile/>
   </data>
  </layer>
- <layer id="123" name="WATER" width="240" height="90" opacity="0.69">
+ <layer id="131" name="WATER" width="240" height="90" opacity="0.69">
   <data>
    <tile/>
    <tile/>
@@ -64815,7 +64815,7 @@
    <tile/>
   </data>
  </layer>
- <layer id="124" name="FG" width="240" height="90">
+ <layer id="132" name="FG" width="240" height="90">
   <data>
    <tile gid="646"/>
    <tile gid="646"/>
@@ -86675,7 +86675,7 @@ Cave of Trials #r</property>
    <properties>
     <property name="centerText" type="bool" value="false"/>
     <property name="npcType" type="int" value="0"/>
-    <property name="text" value="&quot;~Outset Island~&quot;"/>
+    <property name="text" value="&quot;~The Sanctuary~&quot;"/>
    </properties>
   </object>
   <object id="1462" type="npc" x="1328" y="528" width="16" height="16">
@@ -86691,7 +86691,7 @@ Cave of Trials #r</property>
     <property name="disappearCondition" value="offIsland"/>
     <property name="npcType" type="int" value="1"/>
     <property name="setCondition" value=""/>
-    <property name="text">You're on an island called ~The Sanctuary~.|..hm?|We're not the ~Ancients~, but I get the confusion...
+    <property name="text">You're on an island what we call ~The Sanctuary~.|..hm?|We're not the ~Ancients~, but I get the confusion...
 We're decendants of them, if you will.</property>
    </properties>
   </object>

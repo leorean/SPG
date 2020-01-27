@@ -73,6 +73,7 @@ namespace Leore.Objects.Level
             {
                 if (this.CollisionBounds(player, X, Y))
                 {
+                    player.YVel = 0;
                     warpY = player.Y;
                     touched = true;
                     if (player.Orb != null)
@@ -97,7 +98,7 @@ namespace Leore.Objects.Level
                     player.SetControlsEnabled(true);
                     GameManager.Current.AddStoryFlag(setCondition);
 
-                    var msg = new MessageBox(text);
+                    var msg = new MessageBox(text, textSpeed: MessageBox.TextSpeed.SLOW);
                     //msg.CompleteActionDelay = 3 * 60;
                     msg.OnCompleted = Complete;
 

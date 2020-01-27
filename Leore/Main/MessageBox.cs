@@ -50,6 +50,8 @@ namespace Leore.Main
 
         float cursorAlpha = 0;
 
+        public int AppearDelay { get; set; }
+
         private List<string> CutString(string str, int maxWidth)
         {
             List<string> list = new List<string>();
@@ -300,6 +302,12 @@ namespace Leore.Main
         {
             base.Update(gameTime);
 
+            AppearDelay = Math.Max(AppearDelay - 1, 0);
+            if (AppearDelay > 0)
+            {
+                return;
+            }
+
             if (hiColor != null)
                 font.HighlightColor = (Color)hiColor;
 
@@ -402,6 +410,11 @@ namespace Leore.Main
         {
             //base.Draw(sb, gameTime);
             
+            if (AppearDelay > 0)
+            {
+                return;
+            }
+
             if (state == MessageState.FADE_IN)
             {
                 alpha = Math.Min(alpha + .1f, 1);

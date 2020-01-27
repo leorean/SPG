@@ -148,6 +148,8 @@ namespace Leore.Objects.Enemies
         {
             new FlashEmitter(X, Y, 0);
             //new MessageBox("You.. can't.. stop.. it...", textSpeed: TextSpeed.SLOW);
+            var msg = new MessageBox("...what just happened?");
+            msg.AppearDelay = 3 * 60;
 
             base.OnDeath();            
         }
