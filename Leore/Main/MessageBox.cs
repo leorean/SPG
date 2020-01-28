@@ -453,8 +453,8 @@ namespace Leore.Main
             if (hiColor != null)
                 font.HighlightColor = new Color((Color)hiColor, alpha);
 
-            if (!string.IsNullOrEmpty(curText))
-                font.Draw(sb, X + 8 + 2 + offX, Y + 8 + 2, curText, maxWidth);
+            if (!string.IsNullOrEmpty(curText) && alpha > .5f)
+                font.Draw(sb, X + 8 + 2 + offX, Y + 8 + 2, curText, maxWidth);            
         }
     }
 }

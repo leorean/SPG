@@ -50,7 +50,7 @@ namespace Leore.Objects.Enemies
             new FlashEmitter(X, Y, longFlash: true);
 
             player.XVel = 0;
-            new MessageBox("[973bba]~The Void shall consume all light!~").AppearDelay = 4 * 60;
+            new MessageBox("\n[973bba]~The Void shall consume this world!~", true).AppearDelay = 4 * 60;
             //new MessageBox("Where there is light, [973bba]~darkness~ shall take over.").AppearDelay = 2 * 60;
         }
 
@@ -114,7 +114,7 @@ namespace Leore.Objects.Enemies
 
                             GameManager.Current.RemoveSpell(SpellType.NONE);
 
-                            var item = new AbilityItem(Room.X + .5f * Room.BoundingBox.Width - 1.5f * Globals.T, Room.Y + Room.BoundingBox.Height - 3 * Globals.T, Room, "Void Orb");
+                            var item = new AbilityItem(Room.X + .5f * Room.BoundingBox.Width - 1.5f * Globals.T, Room.Y + Room.BoundingBox.Height - 3 * Globals.T, Room, "Spell: Vortex");
                             item.Texture = AssetManager.Orbs[3];
                             item.DrawOffset = new Vector2(8);
                             item.OnObtain = () =>
@@ -123,7 +123,7 @@ namespace Leore.Objects.Enemies
                                 GameManager.Current.AddSpell(SpellType.VOID);
                                 GameManager.Current.AddStoryFlag("hasVoidOrb"); // maybe important for later...
                             };
-                            item.Text = ".....";
+                            item.Text = "Learned spell: [973bba]~Vortex~";
                         }
                     }
                 }

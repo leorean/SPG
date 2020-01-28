@@ -131,7 +131,7 @@ namespace Leore.Objects.Items
                             featherItem.ID = ID;
                             break;
                         case 1: // spell: crimson
-                            var crimsonItem = new AbilityItem(X, Y - Globals.T, Room, Name);
+                            var crimsonItem = new AbilityItem(X, Y - Globals.T, Room, "Crimson Arc");
                             crimsonItem.Texture = AssetManager.Items[6];
                             crimsonItem.OnObtain = () =>
                             {

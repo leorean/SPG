@@ -34765,7 +34765,7 @@
   </object>
   <object id="1452" name="Spell: Star" type="item" x="1392" y="784" width="16" height="16">
    <properties>
-    <property name="itemName" value="Spell: Star"/>
+    <property name="itemName" value="Shooting Star"/>
     <property name="itemType" type="int" value="2"/>
     <property name="setCondition" value="hasSpell"/>
     <property name="text" value="Learned spell: ~Shooting Star~!"/>

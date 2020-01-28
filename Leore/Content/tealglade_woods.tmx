@@ -40512,7 +40512,7 @@
   <object id="1444" name="Spell: Snatch" type="item" x="672" y="944" width="16" height="16">
    <properties>
     <property name="appearCondition" value=""/>
-    <property name="itemName" value="Spell: Snatch"/>
+    <property name="itemName" value="Snatch"/>
     <property name="itemType" type="int" value="3"/>
     <property name="setCondition" value="hasSnatch"/>
     <property name="text">Learned spell: ~Snatch~!
