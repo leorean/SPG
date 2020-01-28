@@ -89,7 +89,7 @@ namespace Leore.Main
         public static Font DamageFont { get; private set; }
         public static Font HUDFont { get; private set; }
         public static Font HUDFontSmall { get; private set; }
-        public static Texture2D MirrorBossBG { get; private set; }
+        public static TextureSet MirrorBossBG { get; private set; }
         
         public static void InitializeContent(ContentManager content)
         {
@@ -127,7 +127,7 @@ namespace Leore.Main
             ToolTip = content.LoadTextureSet("toolTip", 32, 32);
             StoryWarp = content.LoadTextureSet("storyWarp", 32, 144);
 
-            MirrorBossBG = content.Load<Texture2D>("mirrorBossBg");
+            MirrorBossBG = content.LoadTextureSet("mirrorBossBg", 256, 144);
 
             var waterMillSheet = content.Load<Texture2D>("watermill");
             WaterMill = waterMillSheet.Crop(new Rectangle(0, 0, 128, 128));
