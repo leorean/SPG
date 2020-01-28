@@ -65931,9 +65931,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="813"/>
+   <tile gid="940"/>
    <tile/>
-   <tile/>
+   <tile gid="940"/>
    <tile/>
    <tile/>
    <tile/>
@@ -66171,9 +66171,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="877"/>
-   <tile gid="813"/>
+   <tile gid="940"/>
    <tile/>
+   <tile gid="940"/>
    <tile gid="940"/>
    <tile/>
    <tile gid="940"/>
@@ -66412,8 +66412,8 @@
    <tile/>
    <tile gid="677"/>
    <tile gid="940"/>
-   <tile gid="877"/>
-   <tile gid="813"/>
+   <tile/>
+   <tile gid="940"/>
    <tile gid="940"/>
    <tile/>
    <tile gid="940"/>
@@ -152339,9 +152339,9 @@
    <tile gid="733"/>
    <tile gid="733"/>
    <tile gid="734"/>
-   <tile/>
    <tile gid="613"/>
    <tile/>
+   <tile gid="613"/>
    <tile gid="732"/>
    <tile gid="733"/>
    <tile gid="734"/>
@@ -152579,9 +152579,9 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="613"/>
    <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="613"/>
    <tile/>
    <tile/>
    <tile/>
@@ -152819,9 +152819,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="613"/>
    <tile gid="722"/>
-   <tile/>
+   <tile gid="613"/>
    <tile gid="722"/>
    <tile gid="722"/>
    <tile/>
@@ -172986,8 +172986,7 @@ Lybianna #r</property>
    <properties>
     <property name="acquireText">Got the ~Feather Boots~!
 Prevents fall damage.</property>
-    <property name="displayText">Magic boots with embedded feathers
-from a rare creature.
+    <property name="displayText">Magic boots with embedded feathers from a rare creature.
 It will prevent ~fall damage~.</property>
     <property name="itemName" value="Feather Boots"/>
     <property name="price" type="int" value="1000"/>
@@ -173008,8 +173007,7 @@ It will prevent ~fall damage~.</property>
    <properties>
     <property name="acquireText" value="Learned spell: ~Crimson Arc~."/>
     <property name="appearCondition" value="hasSpell"/>
-    <property name="displayText">A dark, powerful aura surrounds the
-pages of this book..</property>
+    <property name="displayText" value="A dark, powerful aura surrounds the pages of this book.."/>
     <property name="itemName" value="Crimson Book"/>
     <property name="itemType" type="int" value="1"/>
     <property name="price" type="int" value="3500"/>

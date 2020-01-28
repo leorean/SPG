@@ -15,6 +15,7 @@ using SPG.Draw;
 using Leore.Util;
 using SPG.Util;
 using Leore.Objects.Items;
+using System.Diagnostics;
 
 namespace Leore.Objects.Enemies
 {
@@ -25,13 +26,15 @@ namespace Leore.Objects.Enemies
         private MirrorSelfWallEmitter wallEmitter;
         private EvilEyeEmitter eyeEmitter;
 
-        private float bgAlpha;
-        private float xoff;
+        private float bgAlpha;        
         private int invincible;
 
         private bool hasOrb = true;
 
-        private int orbGauge = 1 * 60;
+        private int orbTimer = 2 * 60;
+
+        private int aliveTimer;
+        private bool touching;
 
         public BossMirrorSelf(float x, float y, Room room, string setCondition) : base(x, y, room, setCondition)
         {
@@ -47,7 +50,8 @@ namespace Leore.Objects.Enemies
             new FlashEmitter(X, Y);
 
             player.XVel = 0;
-            //new MessageBox("The [973bba]~Void~ will consume this world!");
+            //new MessageBox("The [973bba]~Void~ will consume this world!").AppearDelay = 2 * 60;
+            //new MessageBox("Where there is light, [973bba]~darkness~ shall take over.").AppearDelay = 2 * 60;
         }
 
         public override void BeginUpdate(GameTime gameTime)
@@ -60,10 +64,6 @@ namespace Leore.Objects.Enemies
             Depth = player.Depth;
             Texture = player.Texture;
             Color = Color.Black;
-            
-            //var blocks = ObjectManager.FindAll<EnemyBlock>();
-            //foreach (var block in blocks)
-            //    block.Visible = false;
         }
 
         public override void Update(GameTime gameTime)
@@ -78,15 +78,12 @@ namespace Leore.Objects.Enemies
             Direction = player.Direction.Reverse();
 
             // limit player
-            player.Position = new Vector2(Math.Max(player.X, Room.X + player.BoundingBox.Width), player.Y);
-            if (player.Direction == Direction.RIGHT && player.X > Room.X + .5f * Room.BoundingBox.Width - 3 * Globals.T)
+            player.Position = new Vector2(Math.Min(Math.Max(player.X, Room.X + player.BoundingBox.Width), X - BoundingBox.Width + 4), player.Y);
+            if (player.Direction == Direction.RIGHT)
             {
-                //player.Position = new Vector2(player.Position.X - XVel, player.Y);
-                player.XVel = Math.Min(player.XVel, .5f);
-                if (player.X > Room.X + .5f * Room.BoundingBox.Width - 2 * Globals.T)
-                    player.XVel *= .5f;// Math.Min(player.XVel, 0f);
-                if (player.X > Room.X + .5f * Room.BoundingBox.Width - 1 * Globals.T)
-                    player.XVel *= .2f;// Math.Min(player.XVel, -.1f);
+                var dst = ((.5f * Room.BoundingBox.Width) - (player.X - Room.X + 1 * Globals.T));
+                var spd = dst / (.5f * Room.BoundingBox.Width);
+                player.XVel = Math.Min(player.XVel, spd);
 
                 if (hasOrb)
                 {
@@ -96,8 +93,8 @@ namespace Leore.Objects.Enemies
                     {
                         player.Position = new Vector2(Room.X + .5f * Room.BoundingBox.Width - 12, player.Y);
 
-                        orbGauge = Math.Max(orbGauge - 1, 0);
-                        if (orbGauge == 0)
+                        orbTimer = Math.Max(orbTimer - 1, 0);
+                        if (orbTimer == 0)
                         {
                             new FlashEmitter(X, Y);
                             hasOrb = false;
@@ -129,27 +126,50 @@ namespace Leore.Objects.Enemies
                     }
                 }
             }
-            
+
+            // limit orb
+            if (player.Direction == Direction.LEFT && hasOrb)
+            {
+                player.Orb.Position = new Vector2(Math.Min(player.Orb.X, Room.X + .5f * Room.BoundingBox.Width - 8), player.Orb.Y);
+            }
+
             var px = (player.X - Room.X);
             Position = new Vector2(Room.X + Room.BoundingBox.Width - px, player.Y);
             
             if (!this.CollisionBounds(player, X, Y))
             {
                 HP = Math.Max(player.HP, 1);
+                touching = false;                
             }
             else
             {
-                HP = 0;
+                touching = true;                
             }
             
+            if (!touching)
+            {
+                aliveTimer = 2 * 60;
+            }
+            else
+            {
+                aliveTimer = Math.Max(aliveTimer - 1, 0);
+                if (aliveTimer == 0)
+                {
+                    HP = 0;                    
+                }
+            }            
         }
 
         public override void OnDeath()
         {
             new FlashEmitter(X, Y, 0);
+            //player.Move(-1 * Globals.T, 0);
+            player.XVel = -1;
+            player.YVel = -1f;
+            player.State = Player.PlayerState.HIT_AIR;
+
             //new MessageBox("You.. can't.. stop.. it...", textSpeed: TextSpeed.SLOW);
-            var msg = new MessageBox("...what just happened?");
-            msg.AppearDelay = 3 * 60;
+            new MessageBox("...you feel strange.").AppearDelay = 2 * 60;
 
             base.OnDeath();            
         }
@@ -199,8 +219,23 @@ namespace Leore.Objects.Enemies
                 }
             }
 
+            //if (touching)
+            //{
+            //    for (int i = 0; i < 3; i++)
+            //    {
+            //        var ang1 = (float)RND.Next * 2 * Math.PI;
+            //        var ang2 = (float)RND.Next * 2 * Math.PI;
+            //        var rp = new Vector2(Room.X + .5f * Room.BoundingBox.Width, Y);
+            //        var pos1 = rp + new Vector2(32 * (float)MathUtil.LengthDirX(MathUtil.RadToDeg(ang1)), 48 * (float)MathUtil.LengthDirY(MathUtil.RadToDeg(ang1)));
+            //        var pos2 = rp + new Vector2(32 * (float)MathUtil.LengthDirX(MathUtil.RadToDeg(ang2)), 48 * (float)MathUtil.LengthDirY(MathUtil.RadToDeg(ang2)));
+                    
+            //        sb.DrawLightning(rp, pos1, Color.White, Depth + .0001f);
+            //        sb.DrawLightning(rp, pos2, Color.Black, Depth + .0001f);
+            //    }
+            //}
+
             // bg
-            sb.Draw(AssetManager.MirrorBossBG, new Vector2(Room.X + xoff, Room.Y), null, new Color(Color.White, bgAlpha), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Globals.LAYER_FG + .0002f);            
+            sb.Draw(AssetManager.MirrorBossBG, new Vector2(Room.X, Room.Y), null, new Color(Color.White, bgAlpha), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Globals.LAYER_FG + .0002f);            
         }
     }
 }
