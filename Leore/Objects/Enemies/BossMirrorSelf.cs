@@ -46,11 +46,9 @@ namespace Leore.Objects.Enemies
             HP = GameResources.BossMirrorSelf.HP;
             Damage = GameResources.BossMirrorSelf.Damage;
             EXP = GameResources.BossMirrorSelf.EXP;
-
-            new FlashEmitter(X, Y, longFlash: true);
-
+            
             player.XVel = 0;
-            new MessageBox("\n[973bba]~The Void shall consume this world!~", true).AppearDelay = 4 * 60;
+            //new MessageBox("[973bba]~Consume...~", textSpeed:TextSpeed.SLOW).AppearDelay = 4 * 60;
             //new MessageBox("Where there is light, [973bba]~darkness~ shall take over.").AppearDelay = 2 * 60;
         }
 

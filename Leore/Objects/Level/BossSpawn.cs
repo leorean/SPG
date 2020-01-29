@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Leore.Main;
+using Leore.Objects.Effects;
+using Leore.Objects.Effects.Emitters;
 using Leore.Objects.Enemies;
 using Microsoft.Xna.Framework;
 using SPG.Objects;
@@ -15,7 +17,7 @@ namespace Leore.Objects.Level
         private int type;
         private string appearCondition;
         private string setCondition;
-
+        
         public BossSpawn(float x, float y, Room room, int type, string appearCondition, string setCondition) : base(x, y, room)
         {
             this.type = type;
@@ -37,20 +39,29 @@ namespace Leore.Objects.Level
 
             if (this.CollisionBounds(player, X, Y) && GameManager.Current.HasStoryFlag(appearCondition))
             {
-                Boss boss;
+                player.SetControlsEnabled(false);
 
-                switch (type)
-                {
-                    case 0:
-                        boss = new BossMirrorSelf(Room.X + Room.BoundingBox.Width - (player.X - Room.X), player.Y, Room, setCondition);
-                        boss.ID = ID;
-                        break;
-                    case 1:
-                        boss = new BossGiantBat(Room.X + 5 * Globals.T, Room.Y + 5 * Globals.T, Room, setCondition);
-                        boss.ID = ID;
-                        break;
-                }                
-                Destroy();
+                RoomCamera.Current.Shake(2 * 60, () =>
+                  {
+                      player.SetControlsEnabled(true);
+
+                      Boss boss;
+
+                      switch (type)
+                      {
+                          case 0:
+                              new FlashEmitter(player.X, player.Y, longFlash: true);
+                              boss = new BossMirrorSelf(Room.X + Room.BoundingBox.Width - (player.X - Room.X), player.Y, Room, setCondition);
+                              boss.ID = ID;
+                              break;
+                          case 1:
+                              new FlashEmitter(player.X, player.Y);
+                              boss = new BossGiantBat(Room.X + 5 * Globals.T, Room.Y + 5 * Globals.T, Room, setCondition);
+                              boss.ID = ID;
+                              break;
+                      }
+                      Destroy();
+                  });
             }
         }
     }

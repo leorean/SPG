@@ -60,7 +60,7 @@ namespace Leore.Main
         // target
 
         private Player player { get => target as Player; }
-
+        
         // events
 
         /// <summary>
@@ -165,7 +165,24 @@ namespace Leore.Main
         private enum TransitionDirection { Horizontal, Vertical }
 
         private TransitionDirection moveDirection;
-                
+
+        private int shakeTimer;
+        private Action onShakeCompleteAction;
+        private Rectangle boundsBeforeShake;
+        public void Shake(int time, Action onComplete)
+        {
+            if (shakeTimer > 0 || onShakeCompleteAction != null)
+                return;
+
+            if (CurrentRoom != null && (CurrentRoom.BoundingBox.Width == ViewWidth || CurrentRoom.BoundingBox.Height == ViewHeight))
+                DisableBounds();
+
+            boundsBeforeShake = bounds;
+
+            shakeTimer = time;
+            onShakeCompleteAction = onComplete;
+        }
+
         public override void Update(GameTime gt)
         {
             base.Update(gt);
@@ -282,6 +299,24 @@ namespace Leore.Main
 
                 Position = new Vector2(Position.X + vel.X, Position.Y + vel.Y);
                 
+                if (shakeTimer > 0)
+                {
+                    shakeTimer = Math.Max(shakeTimer - 1, 0);
+
+                    var shakeX = -1f + RND.Next * 2;
+                    var shakeY = -1f + RND.Next * 2;
+                    
+                    Position += new Vector2((float)shakeX, (float)shakeY);
+
+                    if (shakeTimer == 0)
+                    {
+                        EnableBounds(boundsBeforeShake);
+                        onShakeCompleteAction?.Invoke();
+                        onShakeCompleteAction = null;
+                    }
+                }
+
+
                 if (lookLocked> 0)
                 {
                     if (moveDirection == TransitionDirection.Horizontal)

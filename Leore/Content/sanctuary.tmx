@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="90" tilewidth="16" tileheight="16" infinite="0" nextlayerid="133" nextobjectid="1516">
+<map version="1.0" tiledversion="2018.06.27" orientation="orthogonal" renderorder="right-down" width="240" height="90" tilewidth="16" tileheight="16" infinite="0" nextlayerid="133" nextobjectid="1516">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="2048" columns="64">
   <image source="tiles.png" width="1024" height="512"/>
  </tileset>
@@ -86757,7 +86757,7 @@ We're decendants of them, if you will.</property>
     <property name="disappearCondition" value="offIsland"/>
     <property name="npcType" type="int" value="1"/>
     <property name="setCondition" value=""/>
-    <property name="text" value="This island was once part of the main land.|It has been separated from the world ages ago."/>
+    <property name="text" value="This island was once part of the main land.|It has been separated from the rest of the world. Anyone that leaves, cannot return."/>
    </properties>
   </object>
   <object id="1483" type="movingPlatform" x="3376" y="448" width="32" height="16">
@@ -86932,8 +86932,8 @@ An eternal bond has been established.</property>
     <property name="noText" value="Speak to me whenever you feel ready."/>
     <property name="npcType" type="int" value="1"/>
     <property name="setCondition" value="leavingIslandDialog"/>
-    <property name="text" value="You've passed the trials, now the true challenge begins.|You won't be able to return once you leave.|Are you ready?"/>
-    <property name="yesText" value="Very well.|Then leave this island and fulfill your destiny.|We pray for your success. Take care now."/>
+    <property name="text" value="You've passed the first trial, now the true challenge begins.|You won't be able to return once you leave.|Are you ready?"/>
+    <property name="yesText" value="Very well.|May fate guide you.|We pray for your success."/>
    </properties>
   </object>
   <object id="1515" type="movingPlatform" x="2464" y="1088" width="32" height="16">

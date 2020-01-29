@@ -76,7 +76,7 @@ namespace Leore.Main
                 $"|The ~Ancients~ were forced to seal the towers, ~removing them from the physical world~.");
 
             // 9:
-            texts.Add($"In their final act, they emplaced their power into an ~Orb~ that would awaken and call out the rightful heir.");
+            texts.Add($"In their final act, they emplaced their power into an ~Orb~ that would awaken the rightful heir.");
 
             // 10
             texts.Add($"...|" +

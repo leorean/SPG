@@ -141,6 +141,9 @@ namespace Leore.Main
                     cursor = (cursor + 3) % 2;
                 }
 
+                if (!saveExists)
+                    cursor = 0;
+
                 if (!isShowingDialog)
                 {
                     if (InputMapping.KeyPressed(InputMapping.MessageNext))
@@ -243,7 +246,8 @@ namespace Leore.Main
                     font.Halign = Font.HorizontalAlignment.Left;
                     font.Valign = Font.VerticalAlignment.Top;
                     font.Draw(sb, pos.X + 32, pos.Y + camera.ViewHeight - 32, saveExists ? $"Load Game" : "New Game", depth: .0003f);
-                    font.Draw(sb, pos.X + 32, pos.Y + camera.ViewHeight - 16, "Delete Game", depth: .0003f);
+                    if (saveExists)
+                        font.Draw(sb, pos.X + 32, pos.Y + camera.ViewHeight - 16, "Delete Game", depth: .0003f);
 
                     // cursor
                     font.Draw(sb, pos.X + 24, pos.Y + camera.ViewHeight - 32 + cursor * 16, ((char)129).ToString(), depth: .0003f);

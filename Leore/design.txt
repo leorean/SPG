@@ -55,10 +55,10 @@
 - Get off island
 - Get first spell (D1)
 
--> tutorial
--> 7 dungeons
--> 5 trials
--> end game
+-> tutorial (objective: get off island)
+-> 7 dungeons (objective: altar blessings)
+-> x trials (objective: cleanse towers)
+-> end game (objective: defeat the void)
 
 ~~~ Story ~~~
 

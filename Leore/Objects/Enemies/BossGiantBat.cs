@@ -83,8 +83,7 @@ namespace Leore.Objects.Enemies
 
                         maxMinionsSpawned = (int)((.5f - (HP / (float)MaxHP)) * 15);
                         maxMinionsSpawned = (int)MathUtil.Clamp(maxMinionsSpawned, 3, 15);
-                        Debug.WriteLine(maxMinionsSpawned);
-
+                        
                         state = State.SPAWN_MINIONS;
                     }
 

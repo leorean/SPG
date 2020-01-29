@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="160" height="63" tilewidth="16" tileheight="16" infinite="0" nextlayerid="127" nextobjectid="1471">
+<map version="1.0" tiledversion="2018.06.27" orientation="orthogonal" renderorder="right-down" width="160" height="63" tilewidth="16" tileheight="16" infinite="0" nextlayerid="127" nextobjectid="1472">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="2048" columns="64">
   <image source="tiles.png" width="1024" height="512"/>
  </tileset>
@@ -18236,7 +18236,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="658"/>
+   <tile gid="661"/>
    <tile/>
    <tile/>
    <tile/>
@@ -19821,7 +19821,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="658"/>
+   <tile gid="661"/>
    <tile/>
    <tile/>
    <tile/>
@@ -40575,11 +40575,8 @@ Why don't you try it out?</property>
 The thing is, the last mages were seen centuries ago..
 |Anyhow.
 |You're looking to learn magic, are ya?
-Well.. you're on the right path.
-|There's an ancient temple ahead.
-It used to be the school of mages.
+Well.. you're on the right path - There's an ancient temple ahead.
 |There should be a ~spell book~ inside somewhere.
-It also used to be a library, afterall...
 |Visit me once you've found what you're looking for!</property>
    </properties>
   </object>
@@ -40625,6 +40622,14 @@ It also used to be a library, afterall...
     <property name="levelName" value="forest_temple"/>
     <property name="tx" type="int" value="77"/>
     <property name="ty" type="int" value="16"/>
+   </properties>
+  </object>
+  <object id="1471" type="npc" x="1232" y="464" width="16" height="16">
+   <properties>
+    <property name="disappearCondition" value="D000"/>
+    <property name="npcType" type="int" value="1"/>
+    <property name="setCondition" value="D000"/>
+    <property name="text" value="&quot;Blessed by the ~altars of light~, the path shall be revealed to the ~aspirant of the Ancients~.&quot;"/>
    </properties>
   </object>
  </objectgroup>
