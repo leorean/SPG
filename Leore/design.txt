@@ -1,9 +1,18 @@
+~~~ Scope ~~~
+
+- 5 hours of average gameplay
+- 7 Orb Spells
+
+
 ~~~ The Orbs ~~~
 
 - Star Orb (DONE):
 	- shoots stars in linear direction
 	- Stars destroy blocks
 
+- Key Orb (DONE):
+	- Snatches keys
+	
 - Crimson Orb (DONE):
 	- Bow
 
@@ -18,6 +27,11 @@
 
 - Earth Orb:
 	- shoot balistic stones (strong but high cooldown?)
+
+- ???? Orb:
+	- ???
+
+(Elements)
 
 - Fire:
 - Water:
@@ -48,27 +62,43 @@
 #9 - Leaf Totem
 	- Enables levitation
 
-~~~ Playthrough ~~~
+~~~ Playthrough / Objectives ~~~
+
+1. Sanctuary:
+1.1 Push Ability
+2. Tealglade Woods
+2.1 Forest Temple
+2.1.1 Star Spell
+2.2 Key Spell
+3. Caves
+3.1 Double Jump
+....
 
 - Get push ability
 - Get orb
 - Get off island
-- Get first spell (D1)
+- Get first spell
 
 -> tutorial (objective: get off island)
 -> 7 dungeons (objective: altar blessings)
 -> x trials (objective: cleanse towers)
 -> end game (objective: defeat the void)
 
+~~~ Dungeons ~~~
+
+[Dungeon : Ability]
+
+- Cave of Trials (#0) : Orb
+- Forest Temple (#1) : Spell
+- Temple of Nethervault (#2) : Double Jump
+- Temple of Leon Part 1 (#3) : Climb
+- Temple of Leon Part 2 (#4) : Ceil Climb
+- Ocean Temple (#5) : Breathe underwater
+- (#6) : 
+- (#7) : 
+.....
+
 ~~~ Story ~~~
-
-~~~ Objective ~~~
-
-- Get off the island
-- Get the Orb
-- Get all 9 Abilities (in order)
-- Activate 4 Towers (in any order)
-- Beat the end boss
 
 ~~~ Enemies ~~~
 
