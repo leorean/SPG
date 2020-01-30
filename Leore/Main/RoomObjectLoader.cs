@@ -251,6 +251,9 @@ namespace Leore.Main
                             case 726: // door disabler (key)
                                 new DoorDisabler(i * Globals.T, j * Globals.T, room, DoorDisabler.TriggerType.Key) { Texture = GameManager.Current.Map.TileSet[t.ID] };
                                 break;
+                            case 727: // door disabler (switch - reversed)
+                                new DoorDisabler(i * Globals.T, j * Globals.T, room, DoorDisabler.TriggerType.SwitchReversed) { Texture = GameManager.Current.Map.TileSet[t.ID] };
+                                break;
                             case 768: // enemy Bat
                                 new EnemyBat(i * Globals.T + 8, j * Globals.T + 8, room);
                                 break;

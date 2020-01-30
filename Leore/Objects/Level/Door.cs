@@ -14,7 +14,7 @@ namespace Leore.Objects.Level
 
         public enum TriggerType
         {
-            Switch, Key, Enemy
+            Switch, Key, Enemy, SwitchReversed
         }
 
         public bool Open { get; set; }
@@ -54,6 +54,9 @@ namespace Leore.Objects.Level
                     break;
                 case TriggerType.Key:
                     open = GameManager.Current.Player.Stats.KeysAndKeyblocks.Contains(ID);
+                    break;
+                case TriggerType.SwitchReversed:
+                    open = !Room.SwitchState;
                     break;
             }
 

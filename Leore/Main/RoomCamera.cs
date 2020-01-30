@@ -303,10 +303,11 @@ namespace Leore.Main
                 {
                     shakeTimer = Math.Max(shakeTimer - 1, 0);
 
-                    var shakeX = -1f + RND.Next * 2;
-                    var shakeY = -1f + RND.Next * 2;
-                    
-                    Position += new Vector2((float)shakeX, (float)shakeY);
+                    var shakeX = RND.Choose(0, 0.5, 1);
+                    var shakeY = RND.Choose(0, 0.5, 1);
+
+                    var shakeSign = (shakeTimer % 2 == 0) ? 1 : -1;
+                    Position += new Vector2((float)shakeX * shakeSign, (float)shakeY * shakeSign);
 
                     if (shakeTimer == 0)
                     {
