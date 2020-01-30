@@ -54,7 +54,7 @@ namespace Leore.Main
         private Vector2 newPosition;
         private bool invokeRoomChange;
 
-        private int lookLocked;
+        private bool lookLocked;
         float px, py;
 
         // target
@@ -66,7 +66,7 @@ namespace Leore.Main
         /// <summary>
         /// Is called when a room change is initiated. Provides last room and current room as arguments.
         /// </summary>
-        public event EventHandler<Tuple<Room, Room>> OnRoomChange;
+        public event EventHandler<(Room, Room)> OnRoomChange;
 
         private static RoomCamera instance;
         public static new RoomCamera Current { get => instance; }
@@ -208,16 +208,12 @@ namespace Leore.Main
             // if no room is available, always resort to this state
             if (state == State.Default)
             {
-                //lookLocked = Math.Max(lookLocked - 1, 0);
-
                 // if no room is yet found, try to find first room
                 if (CurrentRoom == null)
                 {                    
                     CurrentRoom = target.CollisionPointFirstOrDefault<Room>(target.X, target.Y);
                     if (CurrentRoom != null)
                     {
-                        //lookLocked = 1;
-
                         var tx = Math.Min(Math.Max(target.X + offsetX, CurrentRoom.X + .5f * ViewWidth), CurrentRoom.X + CurrentRoom.BoundingBox.Width - .5f * ViewWidth);
                         var ty = Math.Min(Math.Max(target.Y + offsetY, CurrentRoom.Y + .5f * ViewHeight), CurrentRoom.Y + CurrentRoom.BoundingBox.Height - .5f * ViewHeight);
 
@@ -252,7 +248,7 @@ namespace Leore.Main
                     }
 
                     
-                    if (lookLocked == 0)
+                    if (!lookLocked)
                     {
                         switch ((target as Player).LookDirection)
                         {
@@ -280,7 +276,7 @@ namespace Leore.Main
 
                 vel = new Vector2((tarX - Position.X) / 12f, (tarY - Position.Y) / dyVel);
 
-                if (lookLocked > 0)
+                if (lookLocked)
                 {
                     // move faster during lock-mode
                     vel = new Vector2((tarX - Position.X) / 6f, (tarY - Position.Y) / 6f);
@@ -310,23 +306,20 @@ namespace Leore.Main
                         onShakeCompleteAction = null;
                     }
                 }
-
-
-                if (lookLocked> 0)
+                
+                if (lookLocked)
                 {
                     if (moveDirection == TransitionDirection.Horizontal)
                     {
                         py = Math.Max(Position.Y, Math.Max(CurrentRoom.Y, lastRoom.Y) + .5f * ViewHeight);
                         py = Math.Min(py, Math.Min(CurrentRoom.Y + CurrentRoom.BoundingBox.Height, lastRoom.Y + lastRoom.BoundingBox.Height) - .5f * ViewHeight);
-
-                        //var py = MathUtil.Div(Position.Y, ViewHeight) * ViewHeight + .5f * ViewHeight;
-
+                        
                         Position = new Vector2(Position.X, py);
                         
                         if (Math.Abs(Position.X - tarX) < .5f)
                         {
                             Position = new Vector2(tarX, Position.Y);
-                            lookLocked = 0;
+                            lookLocked = false;
                         }
                     }
 
@@ -343,7 +336,7 @@ namespace Leore.Main
                         if (Math.Abs(Position.Y - tarY) < .5f)
                         {
                             Position = new Vector2(Position.X, tarY);
-                            lookLocked = 0;
+                            lookLocked = false;
                         }
                     }
 
@@ -363,10 +356,7 @@ namespace Leore.Main
                     
                     if (CurrentRoom != null)
                     {
-                        lookLocked = 1;
-
-                        //if (lockDirection == LD.Horizontal)
-                        //    Position = new Vector2(Position.X, Math.Min(Math.Max(target.Y, CurrentRoom.Y + .5f * ViewHeight), CurrentRoom.Y + CurrentRoom.BoundingBox.Height - .5f * ViewHeight));
+                        lookLocked = true;
                         
                         offsetX = 0;
                         state = State.RoomTransition;
@@ -395,7 +385,7 @@ namespace Leore.Main
                 curX = tx;
                 curY = ty;
                 
-                OnRoomChange?.Invoke(this, new Tuple<Room,Room>(lastRoom, CurrentRoom));
+                OnRoomChange?.Invoke(this, (lastRoom, CurrentRoom));
                 
                 state = State.Default;
             }
