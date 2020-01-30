@@ -168,7 +168,6 @@ namespace Leore.Main
 
         private int shakeTimer;
         private Action onShakeCompleteAction;
-        private Rectangle boundsBeforeShake;
         public void Shake(int time, Action onComplete)
         {
             if (shakeTimer > 0 || onShakeCompleteAction != null)
@@ -176,9 +175,7 @@ namespace Leore.Main
 
             if (CurrentRoom != null && (CurrentRoom.BoundingBox.Width == ViewWidth || CurrentRoom.BoundingBox.Height == ViewHeight))
                 DisableBounds();
-
-            boundsBeforeShake = bounds;
-
+            
             shakeTimer = time;
             onShakeCompleteAction = onComplete;
         }
@@ -292,9 +289,6 @@ namespace Leore.Main
                         vel = new Vector2((tarX - Position.X) / 2f, vel.Y);
                     if (Math.Abs(Position.Y - tarY) < 8)
                         vel = new Vector2(vel.X, (tarY - Position.Y) / 2f);
-
-                    //if (MathUtil.Euclidean(Position, new Vector2(tarX, tarY)) < 16)
-                    //    vel = new Vector2((tarX - Position.X) / 2f, (tarY - Position.Y) / 2f);
                 }
 
                 Position = new Vector2(Position.X + vel.X, Position.Y + vel.Y);
@@ -311,7 +305,7 @@ namespace Leore.Main
 
                     if (shakeTimer == 0)
                     {
-                        EnableBounds(boundsBeforeShake);
+                        EnableBounds(new Rectangle((int)CurrentRoom.X, (int)CurrentRoom.Y, (int)CurrentRoom.BoundingBox.Width, (int)CurrentRoom.BoundingBox.Height));
                         onShakeCompleteAction?.Invoke();
                         onShakeCompleteAction = null;
                     }

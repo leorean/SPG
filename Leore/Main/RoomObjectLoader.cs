@@ -237,10 +237,7 @@ namespace Leore.Main
                                 bush.Texture = GameManager.Current.Map.TileSet[t.ID];
                                 break;
                             case 723:
-                                new AirBubbleSpawner(i * Globals.T, j * Globals.T, room)
-                                {
-                                    Texture = GameManager.Current.Map.TileSet[t.ID]
-                                };
+                                new AirBubbleSpawner(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
                                 break;
                             case 724: // door disabler (switch)
                                 new DoorDisabler(i * Globals.T, j * Globals.T, room, DoorDisabler.TriggerType.Switch) { Texture = GameManager.Current.Map.TileSet[t.ID] };
