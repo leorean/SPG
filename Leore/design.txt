@@ -84,19 +84,32 @@
 -> x trials (objective: cleanse towers)
 -> end game (objective: defeat the void)
 
-~~~ Dungeons ~~~
+~~~ Places & Dungeons ~~~
 
 [Dungeon : Ability]
 
+SANCTUARY
+- Outset Shrine (#0) : Push
 - Cave of Trials (#0) : Orb
-- Forest Temple (#1) : Spell
+TEALGLADE WOODS
+- Forest Temple (#1) : Spell (Shooting Star)
+ATOH CAVERN
 - Temple of Nethervault (#2) : Double Jump
+MOUNT ASCENT
 - Temple of Leon Part 1 (#3) : Climb
 - Temple of Leon Part 2 (#4) : Ceil Climb
+IGNON BEACH
 - Ocean Temple (#5) : Breathe underwater
-- (#6) : 
-- (#7) : 
-.....
+PINE WOODS
+- Torwyn Castle (#6) : Rolling
+CYON'S EDGE
+- Frozen Bulwark (#7) : Levitation
+
+Other:
+
+LYBIANNA
+* Spell (Crimson Arc)
+* Spell (Vortex)
 
 ~~~ Story ~~~
 
