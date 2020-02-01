@@ -112,10 +112,19 @@ namespace Leore.Main
                                 t.TileOptions.Visible = true;
                                 break;
                             case 966:
-                                new HiddenPlatform(i * Globals.T, j * Globals.T, room)
-                                {
-                                    Texture = GameManager.Current.Map.TileSet[t.ID]
-                                };
+                                new HiddenPlatform(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
+                                break;
+                            case 967:
+                                new RollAngleBlock(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID], Direction = Direction.LEFT };
+                                break;
+                            case 968:
+                                new RollAngleBlock(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID], Direction = Direction.RIGHT };
+                                break;
+                            case 969:
+                                new RollAngleBlock(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID], Direction = Direction.LEFT, VerticalDirection = Direction.DOWN };
+                                break;
+                            case 970:
+                                new RollAngleBlock(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID], Direction = Direction.RIGHT, VerticalDirection = Direction.DOWN };
                                 break;
                             // spikes (corner, inside)
                             case 976:

@@ -58,6 +58,7 @@
     <Compile Include="Main\StoryScene.cs" />
     <Compile Include="Main\TitleMenu.cs" />
     <Compile Include="Objects\Effects\Emitters\StoryWarpEmitter.cs" />
+    <Compile Include="Objects\Level\RollAngleBlock.cs" />
     <Compile Include="Objects\Level\StoryWarp.cs" />
     <Compile Include="Objects\SpatialGameObject.cs" />
     <Compile Include="Objects\Common.cs" />

@@ -78,14 +78,11 @@ namespace SPG.Util
             return Math.Sign(val) * Math.Max(Math.Abs(val), limit);
         }
 
-        public static double Euclidean(Point p1, Point p2)
-        {
-            return Math.Sqrt(Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2));
-        }
+        public static double Euclidean(Point p1, Point p2) => Math.Sqrt(Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2));
 
-        public static double Euclidean(Vector2 p1, Vector2 p2)
-        {
-            return Math.Sqrt(Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2));
-        }
+        public static double Euclidean(Vector2 p1, Vector2 p2) => Math.Sqrt(Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2));
+
+        public static double Euclidean(float p1x, float p1y, float p2x, float p2y) => Math.Sqrt(Math.Pow(p1x - p2x, 2) + Math.Pow(p1y - p2y, 2));
+
     }
 }
