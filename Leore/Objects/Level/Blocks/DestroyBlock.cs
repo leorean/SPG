@@ -54,4 +54,23 @@ namespace Leore.Objects.Level.Blocks
             }
         }
     }
+
+    // ++++ special destroy block +++++
+
+    public class RollDestroyBlock : DestroyBlock
+    {
+        public RollDestroyBlock(float x, float y, Room room) : base(x, y, room, 1)
+        {
+
+        }
+
+        public override void Hit(int damage, SpellElement element = SpellElement.NONE)
+        {
+            if (damage == 0 || HP == 0 || element != SpellElement.ROLLDAMAGE)
+                return;
+
+            new DestroyEmitter(X + 8, Y + 8, 7);
+            HP = 0;            
+        }
+    }
 }

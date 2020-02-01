@@ -115,16 +115,16 @@ namespace Leore.Main
                                 new HiddenPlatform(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
                                 break;
                             case 967:
-                                new RollAngleBlock(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID], Direction = Direction.LEFT };
+                                new RollBouncer(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID], Direction = Direction.LEFT };
                                 break;
                             case 968:
-                                new RollAngleBlock(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID], Direction = Direction.RIGHT };
+                                new RollBouncer(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID], Direction = Direction.RIGHT };
                                 break;
                             case 969:
-                                new RollAngleBlock(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID], Direction = Direction.LEFT, VerticalDirection = Direction.DOWN };
+                                new RollBouncer(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID], Direction = Direction.LEFT, VerticalDirection = Direction.DOWN };
                                 break;
                             case 970:
-                                new RollAngleBlock(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID], Direction = Direction.RIGHT, VerticalDirection = Direction.DOWN };
+                                new RollBouncer(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID], Direction = Direction.RIGHT, VerticalDirection = Direction.DOWN };
                                 break;
                             // spikes (corner, inside)
                             case 976:
@@ -218,6 +218,9 @@ namespace Leore.Main
                             case 714: // destroy blocks
                             case 715:
                                 new DestroyBlock(i * Globals.T, j * Globals.T, room, t.ID - 714 + 1);
+                                break;
+                            case 971:
+                                new RollDestroyBlock(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
                                 break;
                             case 964: // ice block
                                 new IceBlock(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };

@@ -22,6 +22,7 @@ using Leore.Objects.Level.Blocks;
 using Leore.Objects.Effects.Weather;
 using Leore.Objects.Level.Obstacles;
 using Leore.Objects.Obstacles;
+using Leore.Util;
 using static Leore.Objects.Effects.Transition;
 
 namespace Leore.Main
@@ -214,14 +215,14 @@ namespace Leore.Main
         private bool outOfScreenTransitionStarted;
 
         // variables for rolling..
-        private int directionPressTimer;
+        private int doubleTapTimer;
         private int rollTimeout;
-        private bool rollingVertical;
+        //private bool rollingVertical;
         private float maxVelRoll = 3f;
-        private int horizontalGravityTimer;
-        private int maxHorizontalGravityTimer = 20;
-        RollAngleBlock rollBlock;
-        private float rollVel;
+        private int noRollGravityTimer;
+        private readonly int maxNoRollGravityTimer = 20;
+        RollBouncer rollBlock;
+        //private float rollVel;
 
         // constructor
 
@@ -1307,10 +1308,9 @@ namespace Leore.Main
             // rolling
             if (State == PlayerState.ROLL || State == PlayerState.ROLL_JUMP)
             {
-                var xAcc = .05f;
+                LookDirection = Direction.NONE;
 
-                var rollFactor = 4f;
-                
+                var xAcc = .05f;
                 if (rollBlock != null)
                 {
                     if (!this.CollisionBounds(rollBlock, X + XVel, Y + YVel))
@@ -1319,152 +1319,188 @@ namespace Leore.Main
                     }
                 }
                 
-                horizontalGravityTimer = Math.Max(horizontalGravityTimer - 1, 0);
+                noRollGravityTimer = Math.Max(noRollGravityTimer - 1, 0);
 
-                if (horizontalGravityTimer > 0) Gravity = 0;
-
-                if (!rollingVertical)
+                if (noRollGravityTimer > 0)
+                {
+                    Gravity = 0;
+                }
+                else
                 {
                     if (k_leftHolding)
                         XVel = Math.Max(XVel - xAcc, -maxVelRoll);
                     if (k_rightHolding)
                         XVel = Math.Min(XVel + xAcc, maxVelRoll);
                 }
-                else // VERTICAL rolling
+
+                if (!k_leftHolding && !k_rightHolding && onGround)
                 {
-                    //Gravity = 0;
-                    XVel = 0f;
-
-                    if (onGround)
+                    XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - .03f, 0);
+                    if (Math.Abs(XVel) < .05f)
                     {
-                        rollingVertical = false;
-                    }
-
-                    if (rollBlock == null)
-                    {
-                        rollBlock = this.CollisionBoundsFirstOrDefault<RollAngleBlock>(X + XVel, Y + YVel);
-                        if (rollBlock != null)
+                        rollTimeout = Math.Max(rollTimeout - 1, 0);
+                        if (rollTimeout == 0)
                         {
-                            rollVel = (Math.Max(Math.Abs(YVel), 1) / maxVelRoll) * rollFactor;
-                            
-                            if (rollBlock.VerticalDirection == Direction.DOWN)
-                            {
-                                Position = new Vector2(rollBlock.X + 8, rollBlock.Y + 6);
-                                YVel = 0;
-                                XVel = rollVel * (int)rollBlock.Direction;
-                                rollBlock.Bounce();
-                                horizontalGravityTimer = maxHorizontalGravityTimer;
-                                rollingVertical = false;
-                            }
-                            else
-                            {
-                                Position = new Vector2(rollBlock.X + 4, rollBlock.Y + 6);
-                                YVel = 0;
-                                XVel = rollVel * (int)rollBlock.Direction;
-                                rollBlock.Bounce();
-                                horizontalGravityTimer = maxHorizontalGravityTimer;
-                                rollingVertical = false;
-                            }
+                            State = PlayerState.IDLE;
                         }
                     }
-                }
-                if (!rollingVertical)
-                {
-                    if (onWall && Math.Abs(XVel) >= 1)
-                    {
-                        if (!this.CollisionBounds(rollBlock, X + XVel, Y + YVel))
-                        {
-                            XVel *= -.5f;
-                        }
-                    }
-
-                    if (!k_leftHolding && !k_rightHolding && onGround)
-                    {
-                        XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - .03f, 0);
-                        if (Math.Abs(XVel) < .05f)
-                        {
-                            rollTimeout = Math.Max(rollTimeout - 1, 0);
-                            if (rollTimeout == 0)
-                            {
-                                State = PlayerState.IDLE;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        rollTimeout = 15;
-                    }
-                }
-
-                if (Math.Abs(XVel) > .5f && !onWall)
-                {
-                    Direction = (Direction)Math.Sign(XVel);
-                }
-
-                // rollAngleBlocks
-
-                // destroy blocks
-
-                DestroyBlock destroyBlock;
-                if (!rollingVertical)
-                {
-                    destroyBlock = this.CollisionBoundsFirstOrDefault<DestroyBlock>(X + Math.Sign((int)Direction) + XVel, Y);
                 }
                 else
                 {
-                    destroyBlock = this.CollisionBoundsFirstOrDefault<DestroyBlock>(X, Y + Math.Sign((int)YVel) + YVel);
+                    rollTimeout = 5;
                 }
-                if (destroyBlock != null)
+            
+                if (Math.Abs(XVel) > .5f && !onWall)
                 {
-                    destroyBlock.Hit(destroyBlock.HP);
-                    destroyBlock.Update(gameTime); // enforces update so block is gone by the time the collision is checked.
+                    Direction = (Direction)Math.Sign(XVel);
                 }
                 
                 if (State == PlayerState.ROLL_JUMP)
                 {
                     if (onGround && YVel >= 0)
-                        State = PlayerState.ROLL;
-                }
-
-                if (k_attackPressed)
-                    State = PlayerState.IDLE;
-                
-                // find objects -> rolling vertical
-                if (!rollingVertical && rollBlock == null && Math.Abs(XVel) > .25f * maxVelRoll)
-                {
-                    rollBlock = this.CollisionBoundsFirstOrDefault<RollAngleBlock>(X + XVel, Y);
-                    if (rollBlock != null)
                     {
-                        rollVel = (Math.Max(Math.Abs(XVel), 1) / maxVelRoll) * rollFactor;
-
-                        if (rollBlock.VerticalDirection != Direction.DOWN)
-                        {
-                            Position = new Vector2(rollBlock.X + 8, Y);
-                            YVel = -rollVel;
-                            State = PlayerState.ROLL_JUMP;
-                            rollBlock.Bounce();
-                            horizontalGravityTimer = maxHorizontalGravityTimer;
-                            rollingVertical = true;
-                        }
-                        else
-                        {
-                            //if (onGround && YVel == 0)
-                            {
-                                Position = new Vector2(rollBlock.X + 8, Y);
-                                YVel = rollVel;
-                                State = PlayerState.ROLL_JUMP;
-                                rollBlock.Bounce();
-                                YVel = 4;
-                                horizontalGravityTimer = maxHorizontalGravityTimer;
-                                rollingVertical = true;
-                            }
-                        }
+                        State = PlayerState.ROLL;
                     }
                 }
-            }
-            else
-            {
-                rollingVertical = false;
+
+                if (!k_leftHolding && !k_rightHolding && rollTimeout == 0)
+                    State = PlayerState.JUMP_UP;
+
+                if (k_attackHolding)
+                {
+                    XVel *= .99f;
+                    if (Math.Abs(XVel) < .5f)
+                        State = PlayerState.JUMP_UP;
+                    asd
+                }
+
+                int? rollAngle = null;
+
+                if (rollBlock == null)
+                {
+                    rollBlock = this.CollisionBoundsFirstOrDefault<RollBouncer>(X + XVel, Y + YVel);
+                    if (rollBlock != null)
+                    {
+                        var rollDir = new Vector2(XVel, YVel).ToDirection();
+
+                        switch (rollDir)
+                        {
+                            case Direction.LEFT:
+                                if (rollBlock.Direction == Direction.RIGHT)
+                                {
+                                    if (rollBlock.VerticalDirection != Direction.DOWN)
+                                    {
+                                        // up
+                                        rollAngle = -90;
+                                    }
+                                    else
+                                    {
+                                        // down
+                                        rollAngle = 90;
+                                    }
+                                }
+                                break;
+                            case Direction.RIGHT:
+                                if (rollBlock.Direction == Direction.LEFT)
+                                {
+                                    if (rollBlock.VerticalDirection != Direction.DOWN)
+                                    {
+                                        // up
+                                        rollAngle = -90;
+                                    }
+                                    else
+                                    {
+                                        // down
+                                        rollAngle = 90;
+                                    }
+                                }
+                                break;
+                            case Direction.UP:
+                                if (rollBlock.VerticalDirection == Direction.DOWN)
+                                {
+                                    if (rollBlock.Direction == Direction.LEFT)
+                                    {
+                                        // left
+                                        rollAngle = 180;
+                                    }
+                                    else
+                                    {
+                                        // right
+                                        rollAngle = 0;
+                                    }
+                                }
+                                break;
+                            case Direction.DOWN:
+                                if (rollBlock.VerticalDirection != Direction.DOWN)
+                                {
+                                    if (rollBlock.Direction == Direction.LEFT)
+                                    {
+                                        // left
+                                        rollAngle = 180;                                        
+                                    }
+                                    else
+                                    {
+                                        // right
+                                        rollAngle = 0;                                        
+                                    }
+                                }
+                                break;
+                        }
+
+                        if (rollAngle != null)
+                        {
+                            var vel = Math.Max(Math.Max(Math.Abs(XVel), Math.Abs(YVel)), 1);
+
+                            XVel = (float)MathUtil.LengthDirX(rollAngle.Value) * vel;
+                            YVel = (float)MathUtil.LengthDirY(rollAngle.Value) * vel;
+
+                            if (Math.Abs(XVel) < .1f) XVel = 0;
+                            if (Math.Abs(YVel) < .1f) YVel = 0;
+                            
+                            if (rollBlock.VerticalDirection == Direction.DOWN)
+                                Position = new Vector2(rollBlock.X + 8, rollBlock.Y + 7);
+                            else
+                            {
+                                Position = new Vector2(rollBlock.X + 8, rollBlock.Y + 8 - Gravity);
+                            }
+
+                            rollBlock.Bounce();
+                            if (YVel <= 0)
+                            {
+                                noRollGravityTimer = (int)(maxNoRollGravityTimer * (vel / maxVelRoll));
+                            }
+
+                            State = PlayerState.ROLL_JUMP;
+                        }
+
+                    }
+                }
+                else
+                {                 
+                    if (!this.CollisionBounds(rollBlock, X, Y))
+                    {
+                        rollBlock = null;
+                    }
+                }
+                
+                DestroyBlock destroyBlock = this.CollisionBoundsFirstOrDefault<DestroyBlock>(X + Math.Sign((int)Direction) + XVel, Y);
+                if (destroyBlock == null) destroyBlock = this.CollisionBoundsFirstOrDefault<DestroyBlock>(X, Y + Math.Sign((int)YVel) + YVel);
+                if (destroyBlock != null)
+                {
+                    destroyBlock.Hit(destroyBlock.HP, SpellElement.ROLLDAMAGE);
+                    destroyBlock.Update(gameTime); // enforces update so block is gone by the time the collision is checked.
+                }
+
+                // not touching a roll-angle-block -> bounce off walls
+                if (rollBlock == null)
+                {
+                    if (Math.Abs(XVel) > .5f)
+                        if (GameManager.Current.Map.CollisionTile(X + (.5f * BoundingBox.Width + 3) * Math.Sign((int)XVel), Y))
+                        {
+                            new StarEmitter(X, Y);
+                            XVel *= -.5f;
+                        }
+                }
             }
 
             // walk/idle -> roll
@@ -1472,7 +1508,7 @@ namespace Leore.Main
             {
                 if (State == PlayerState.IDLE || State == PlayerState.WALK || State == PlayerState.GET_UP || State == PlayerState.TURN_AROUND)
                 {
-                    if (directionPressTimer != 0)
+                    if (doubleTapTimer != 0)
                     {
                         if ((Direction == Direction.LEFT && k_leftPressed)
                             || (Direction == Direction.RIGHT && k_rightPressed))
@@ -1485,10 +1521,10 @@ namespace Leore.Main
 
             // ++++ direction press timeout ++++
 
-            directionPressTimer = Math.Max(directionPressTimer - 1, 0);
+            doubleTapTimer = Math.Max(doubleTapTimer - 1, 0);
             if ((k_leftPressed && Direction == Direction.LEFT) || (k_rightPressed && Direction == Direction.RIGHT))
             {
-                directionPressTimer = 10;
+                doubleTapTimer = 10;
             }
 
             // pushing

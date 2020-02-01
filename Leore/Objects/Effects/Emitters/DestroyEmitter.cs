@@ -152,12 +152,15 @@ namespace Leore.Objects.Effects.Emitters
 
             Scale = new Vector2(.5f);
 
+            if (type == 0) { } // destroy block (default)
             if (type == 2) // bush
                 SpawnRate = 8;
             if (type == 4) // ice
                 SpawnRate = 8;
             if (type == 6) // fire
-                SpawnRate = 12;            
+                SpawnRate = 12;
+            if (type == 8) // hard destroy block
+                SpawnRate = 6;
         }
 
         public override void Update(GameTime gameTime)

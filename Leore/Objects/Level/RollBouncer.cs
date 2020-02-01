@@ -6,7 +6,7 @@ using System;
 
 namespace Leore.Objects.Level
 {
-    public class RollAngleBlock : RoomObject
+    public class RollBouncer : RoomObject
     {
         public Direction Direction { get; set; }
         public Direction VerticalDirection { get; set; }
@@ -16,15 +16,15 @@ namespace Leore.Objects.Level
 
         public bool Bouncing { get; private set; }
 
-        RectF bLeft = new RectF(10, 6, 6, 10);
-        RectF bRight = new RectF(0, 6, 6, 10);
-        RectF bLeftDown = new RectF(6, 0, 10, 6);
-        RectF bRightDown = new RectF(0, 0, 10, 6);
+        RectF bLeft = new RectF(10, 10, 6, 6);
+        RectF bRight = new RectF(0, 10, 6, 6);
+        RectF bLeftDown = new RectF(10, 0, 6, 6);
+        RectF bRightDown = new RectF(0, 0, 6, 6);
 
-        public RollAngleBlock(float x, float y, Room room) : base(x, y, room)
+        public RollBouncer(float x, float y, Room room) : base(x, y, room)
         {
             Depth = Globals.LAYER_FG;
-            DebugEnabled = true;
+            //DebugEnabled = true;
         }
 
         public void Bounce()
@@ -51,7 +51,7 @@ namespace Leore.Objects.Level
 
             if (bounced)
             {
-                scale = .3f;
+                scale = .5f;
                 bounced = false;
             }
 
@@ -65,7 +65,7 @@ namespace Leore.Objects.Level
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
-            base.Draw(sb, gameTime);
+            //base.Draw(sb, gameTime);
 
             float posx, posy;
             if (Direction == Direction.LEFT)
