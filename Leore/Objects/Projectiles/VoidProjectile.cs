@@ -262,7 +262,7 @@ namespace Leore.Objects.Projectiles
         public override void HandleCollisionFromDestroyBlock(DestroyBlock block)
         {
             //base.HandleCollisionFromDestroyBlock(block);
-            block.Hit(this);
+            block.Hit(Damage, Element);
         }
         
     }

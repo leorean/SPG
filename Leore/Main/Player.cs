@@ -28,26 +28,22 @@ namespace Leore.Main
 {
     public static class PlayerExtensions
     {
-        public static Direction Reverse(this Direction dir)
-        {
-            return (Direction)(-(int)dir);
-        }
+        public static Direction Reverse(this Direction dir) => (Direction)(-(int)dir);
     }
     
     [Flags]
     public enum PlayerAbility
     {
         NONE = 0,
-        BREATHE_UNDERWATER = 1, // <- ocean
-        CLIMB_WALL = 2, // <- ruins of leon (west)
-        CLIMB_CEIL = 4, // <- ruins of leon (east)
+        BREATHE_UNDERWATER = 1,
+        CLIMB_WALL = 2,
+        CLIMB_CEIL = 4,
         LEVITATE = 8,
-        PUSH = 16, // <- sanctuary
-        ORB = 32, // <- forest temple
-        NO_FALL_DAMAGE = 64, // <- lybianna shop (optional)
+        PUSH = 16,
+        ORB = 32,
+        NO_FALL_DAMAGE = 64,
         DOUBLE_JUMP = 128,
-
-        ROLL = 256 // <- spell exp radius doubled, coins are now magnetic (TODO: implement)
+        ROLL = 256
     }
     
     public class Player : GameObject, IMovable
@@ -62,8 +58,8 @@ namespace Leore.Main
             CEIL_CLIMB, SWIM, DEAD, LEVITATE,
             PUSH, LIE, SWIM_DIVE_IN, SWIM_TURN_AROUND,
             BACKFACING,
-            CARRYOBJECT_TAKE, CARRYOBJECT_IDLE, CARRYOBJECT_WALK, CARRYOBJECT_THROW,
-            LIMBO
+            CARRYOBJECT_TAKE, CARRYOBJECT_IDLE, CARRYOBJECT_WALK, CARRYOBJECT_THROW, ROLL, ROLL_JUMP,
+            LIMBO,            
         }
 
         public PlayerState State { get; set; }
@@ -216,7 +212,11 @@ namespace Leore.Main
         public bool OutOfScreen { get; set; }
         private int outOfScreenTimer = 0;
         private bool outOfScreenTransitionStarted;
-        
+
+        private int directionPressTimer;
+        private int rollTimeout;
+        float maxVelRoll = 3f;
+
         // constructor
 
         public Player(float x, float y) : base(x, y)
@@ -357,7 +357,7 @@ namespace Leore.Main
             
             new FallingFont(X, Y, $"-{hitPoints}", new Color(170, 0, 231), new Color(255, 0, 0));
 
-            if (State == PlayerState.IDLE || State == PlayerState.WALK || State == PlayerState.GET_UP)
+            if (State == PlayerState.IDLE || State == PlayerState.WALK || State == PlayerState.GET_UP || State == PlayerState.ROLL)
                 State = PlayerState.JUMP_UP;
 
             if (State != PlayerState.HIT_GROUND)
@@ -457,7 +457,7 @@ namespace Leore.Main
 
             // gamepad overrides keyboard input if possible
             // TODO: MAPPING
-            
+
             //if (input.GamePadEnabled)
             //{
             //    k_leftPressed = input.DirectionPressedFromStick(Input.Direction.LEFT, Input.Stick.LeftStick, Input.State.Pressed);
@@ -493,10 +493,22 @@ namespace Leore.Main
             var tk_leftHolding = k_leftHolding && (k_rightHolding == false);
             var tk_rightHolding = k_rightHolding && (k_leftHolding == false);
 
+            //if (!tk_leftPressed && !tk_rightPressed)
+            //{
+            //    if (k_rightPressed)
+            //        tk_rightPressed = k_rightPressed;
+            //}
+            //if (!tk_leftHolding && !tk_rightHolding)
+            //{
+            //    if (k_rightHolding)
+            //        tk_rightHolding = k_rightHolding;
+            //}
+
             k_leftPressed = tk_leftPressed;
             k_rightPressed = tk_rightPressed;
             k_leftHolding = tk_leftHolding;
-            k_rightHolding = tk_rightHolding;            
+            k_rightHolding = tk_rightHolding;
+            
         }
 
         // ++++++++++++++++++++++++++
@@ -512,7 +524,7 @@ namespace Leore.Main
             if (k_upHolding) LookDirection = Direction.UP;
             else if (k_downHolding) LookDirection = Direction.DOWN;
             else LookDirection = Direction.NONE;
-
+            
             // ++++ getting hit ++++
 
             InvincibleTimer = Math.Max(InvincibleTimer - 1, 0);
@@ -591,15 +603,15 @@ namespace Leore.Main
             else
                 onIceWall = false;
 
-            if (!Stats.Abilities.HasFlag(PlayerAbility.CLIMB_WALL))
-                onWall = false;
-            if (!Stats.Abilities.HasFlag(PlayerAbility.CLIMB_CEIL))
-                onCeil = false;
+            //if (!Stats.Abilities.HasFlag(PlayerAbility.CLIMB_WALL))
+            //    onWall = false;
+            //if (!Stats.Abilities.HasFlag(PlayerAbility.CLIMB_CEIL))
+            //    onCeil = false;
 
             if (k_attackHolding)
                 onWall = false;
 
-            if (onWall)
+            if (onWall && Stats.Abilities.HasFlag(PlayerAbility.CLIMB_WALL))
             {
                 // transition from jumping to wall performance
                 if (
@@ -618,7 +630,7 @@ namespace Leore.Main
                     }
                 }
             }
-            if (onCeil)
+            if (onCeil && Stats.Abilities.HasFlag(PlayerAbility.CLIMB_CEIL))
             {
                 if ((State == PlayerState.JUMP_UP || State == PlayerState.WALL_CLIMB)
                     && 
@@ -1049,10 +1061,16 @@ namespace Leore.Main
                     switch (f.Direction)
                     {
                         case Direction.LEFT:
-                            XVel = MathUtil.AtMost(XVel - flowPower, 2);
+                            if (State != PlayerState.ROLL)
+                            {
+                                XVel = MathUtil.AtMost(XVel - flowPower, 2);
+                            }
                             break;
                         case Direction.RIGHT:
-                            XVel = MathUtil.AtMost(XVel + flowPower, 2);
+                            if (State != PlayerState.ROLL)
+                            {
+                                XVel = MathUtil.AtMost(XVel + flowPower, 2);
+                            }
                             break;
                         case Direction.UP:
                             if (onGround)
@@ -1111,7 +1129,7 @@ namespace Leore.Main
                 flowDirection = Direction.NONE;
 
             var maxVel = (Direction == flowDirection) ? 2 : defaultMaxVel;
-
+            
             if (YVel != 0)
             {
                 onGround = false;
@@ -1249,10 +1267,14 @@ namespace Leore.Main
                 || State == PlayerState.TURN_AROUND 
                 || State == PlayerState.PUSH
                 || State == PlayerState.JUMP_DOWN
-                || State == PlayerState.JUMP_UP)
+                || State == PlayerState.JUMP_UP
+                || State == PlayerState.ROLL)
             {
-                if (YVel > 0 && !onGround)
-                    State = PlayerState.JUMP_DOWN;
+                if (State != PlayerState.ROLL && State != PlayerState.ROLL_JUMP)
+                {
+                    if (YVel > 0 && !onGround)
+                        State = PlayerState.JUMP_DOWN;
+                }
 
                 if (jumps < maxJumps)
                 {
@@ -1270,11 +1292,95 @@ namespace Leore.Main
                             YVel = -2;
 
                         MovingPlatform = null;
-                        State = PlayerState.JUMP_UP;
+                        State = (State != PlayerState.ROLL) ? PlayerState.JUMP_UP : PlayerState.ROLL_JUMP;                        
                         k_jumpPressed = false;
                     }
                 }
             }
+            
+            // rolling
+            if (State == PlayerState.ROLL || State == PlayerState.ROLL_JUMP)
+            {
+                var xAcc = .05f; //onIce ? .02f : .2f;                
+
+                if (k_leftHolding)
+                    XVel = Math.Max(XVel - xAcc, -maxVelRoll);
+                if (k_rightHolding)
+                    XVel = Math.Min(XVel + xAcc, maxVelRoll);
+
+                if (onWall && Math.Abs(XVel) >= 1)
+                {
+                    //XVel = -Math.Sign(XVel) * Math.Max(Math.Abs(XVel) * .5f, .5f);
+                    XVel *= -.5f;
+                }
+
+                if (!k_leftHolding && !k_rightHolding && onGround)
+                {
+                    XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - .03f, 0);
+                    if (Math.Abs(XVel) < .05f)
+                    {
+                        rollTimeout = Math.Max(rollTimeout - 1, 0);
+                        if (rollTimeout == 0)
+                        {
+                            State = PlayerState.IDLE;
+                        }
+                    }
+                }
+                else
+                {
+                    rollTimeout = 15;
+                }
+                
+                if (Math.Abs(XVel) > .5f && !onWall)
+                {
+                    Direction = (Direction)Math.Sign(XVel);
+                }
+
+                // destroy blocks
+                if (State == PlayerState.ROLL && Math.Abs(XVel) >= .5f * maxVelRoll)
+                {
+                    var destroyBlock = this.CollisionBoundsFirstOrDefault<DestroyBlock>(X + Math.Sign((int)Direction) + XVel, Y);
+                    if (destroyBlock != null)
+                    {
+                        destroyBlock.Hit(destroyBlock.HP);
+                        destroyBlock.Update(gameTime); // enforces update so block is gone by the time the collision is checked.
+                    }
+                }
+
+                if (State == PlayerState.ROLL_JUMP)
+                {
+                    if (onGround && YVel >= 0)
+                        State = PlayerState.ROLL;
+                }
+
+                if (k_attackPressed)
+                    State = PlayerState.IDLE;
+            }
+
+            // walk/idle -> roll
+            if (Stats.Abilities.HasFlag(PlayerAbility.ROLL))
+            {
+                if (State == PlayerState.IDLE || State == PlayerState.WALK || State == PlayerState.GET_UP || State == PlayerState.TURN_AROUND)
+                {
+                    if (directionPressTimer != 0)
+                    {
+                        if ((Direction == Direction.LEFT && k_leftPressed)
+                            || (Direction == Direction.RIGHT && k_rightPressed))
+                        {
+                            State = PlayerState.ROLL;
+                        }
+                    }
+                }
+            }
+
+            // ++++ direction press timeout ++++
+
+            directionPressTimer = Math.Max(directionPressTimer - 1, 0);
+            if ((k_leftPressed && Direction == Direction.LEFT) || (k_rightPressed && Direction == Direction.RIGHT))
+            {
+                directionPressTimer = 10;
+            }
+
             // pushing
             if (State == PlayerState.PUSH)
             {
@@ -2119,6 +2225,17 @@ namespace Leore.Main
                     fSpd = 0.1f;
                     loopAnim = false;
                     break;
+                case PlayerState.ROLL:
+                case PlayerState.ROLL_JUMP:
+                    row = 22;
+                    fAmount = 4;
+                    fSpd = 0.35f * Math.Max((Math.Abs(XVel) / maxVelRoll), .5f);
+                    break;
+                //case PlayerState.ROLL_JUMP:
+                //    row = 22;
+                //    fAmount = 1;
+                //    fSpd = 0.25f;
+                //    break;
             }
 
             SetAnimation(cols * row + offset, cols * row + offset + fAmount - 1, fSpd, loopAnim);

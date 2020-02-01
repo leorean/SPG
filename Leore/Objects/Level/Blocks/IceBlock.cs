@@ -33,15 +33,15 @@ namespace Leore.Objects.Level.Blocks
             }            
         }
 
-        public override void Hit(PlayerProjectile projectile)
+        public override void Hit(int damage, SpellElement element)
         {
-            if (projectile.Damage == 0 || HP == 0 || projectile.Element != SpellElement.FIRE)
+            if (damage == 0 || HP == 0 || element != SpellElement.FIRE)
                 return;
             
-            if (HP <= projectile.Damage)
+            if (HP <= damage)
                 new DestroyEmitter(X + 8, Y + 8, 4);
 
-            HP = Math.Max(HP - projectile.Damage, 0);
+            HP = Math.Max(HP - damage, 0);
         }
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)

@@ -34,22 +34,22 @@ namespace Leore.Objects.Level.Blocks
                 Destroy();
         }
 
-        public override void Hit(PlayerProjectile projectile)
+        public override void Hit(int damage, SpellElement element)
         {
-            if (projectile.Damage == 0 || HP == 0)
+            if (damage == 0 || HP == 0)
                 return;
 
-            if (projectile.Element != SpellElement.ICE)
+            if (element != SpellElement.ICE)
                 return;
 
-            if (HP <= projectile.Damage)
+            if (HP <= damage)
             {
                 var eff = new DestroyEmitter(Center.X, Center.Y, 6);
                 new SingularEffect(Center.X, Center.Y, 15) { Depth = eff.Depth + .0001f, Scale = new Vector2(.5f) };
 
             }
 
-            HP = Math.Max(HP - projectile.Damage, 0);
+            HP = Math.Max(HP - damage, 0);
         }
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)

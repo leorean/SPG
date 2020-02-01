@@ -397,6 +397,8 @@ namespace Leore.Main
         public void Reset()
         {
             SetTarget(null);
+            shakeTimer = 0;
+            onShakeCompleteAction = null;
             
             state = State.Default;
             CurrentRoom = null;
