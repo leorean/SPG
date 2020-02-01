@@ -494,20 +494,20 @@ namespace Leore.Main
 
                         switch (itemType)
                         {
-                            case 0: // magic gloves
+                            case 0: // ability: push
                                 item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
                                 item.Texture = AssetManager.Items[0];
                                 item.Text = itemText;
                                 item.OnObtain = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.PUSH; };
                                 break;
-                            case 1: // orb
+                            case 1: // ability: orb
                                 item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
                                 item.Texture = AssetManager.Orbs[0];
                                 item.DrawOffset = new Vector2(8);
                                 item.OnObtain = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.ORB; };
                                 item.Text = itemText;
                                 break;
-                            case 2: // spell: shoot star
+                            case 2: // spell: shooting star
                                 item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
                                 item.Texture = AssetManager.Items[4];
                                 item.OnObtain = () =>
@@ -525,7 +525,7 @@ namespace Leore.Main
                                 };
                                 item.Text = itemText;
                                 break;
-                            case 4: // seraph cape
+                            case 4: // ability: double jump
                                 item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
                                 item.Texture = AssetManager.Items[8];
                                 item.OnObtain = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.DOUBLE_JUMP; };
@@ -537,16 +537,34 @@ namespace Leore.Main
                                 item.OnObtain = () => { GameManager.Current.AddSpell(SpellType.FIRE); };
                                 item.Text = itemText;                                
                                 break;
-                            case 6: // token of leon (1)
+                            case 6: // ability: climb wall
                                 item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
                                 item.Texture = AssetManager.Items[10];
                                 item.OnObtain = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_WALL; };
                                 item.Text = itemText;
                                 break;
-                            case 7: // token of leon (2)
+                            case 7: // ability: climb ceil
                                 item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
                                 item.Texture = AssetManager.Items[11];
                                 item.OnObtain = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_CEIL; };
+                                item.Text = itemText;
+                                break;
+                            case 8: // ability: roll
+                                item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
+                                item.Texture = AssetManager.Items[12];
+                                item.OnObtain = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.ROLL; };
+                                item.Text = itemText;
+                                break;
+                            case 9: // ability: levitate
+                                item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
+                                item.Texture = AssetManager.Items[13];
+                                item.OnObtain = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.LEVITATE; };
+                                item.Text = itemText;
+                                break;
+                            case 10: // ability: breathe underwater
+                                item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
+                                item.Texture = AssetManager.Items[14];
+                                item.OnObtain = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.BREATHE_UNDERWATER; };
                                 item.Text = itemText;
                                 break;
                             // TODO: add other item types, collectables etc.

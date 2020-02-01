@@ -47,7 +47,7 @@ namespace Leore.Main
         NO_FALL_DAMAGE = 64, // <- lybianna shop (optional)
         DOUBLE_JUMP = 128,
 
-        MAGNETIC = 256 // <- spell exp radius doubled, coins are now magnetic (TODO: implement)
+        ROLL = 256 // <- spell exp radius doubled, coins are now magnetic (TODO: implement)
     }
     
     public class Player : GameObject, IMovable

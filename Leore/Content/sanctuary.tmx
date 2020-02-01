@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="2018.06.27" orientation="orthogonal" renderorder="right-down" width="240" height="90" tilewidth="16" tileheight="16" infinite="0" nextlayerid="133" nextobjectid="1516">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="90" tilewidth="16" tileheight="16" infinite="0" nextlayerid="133" nextobjectid="1516">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="2048" columns="64">
   <image source="tiles.png" width="1024" height="512"/>
  </tileset>
@@ -86643,7 +86643,7 @@ Cave of Trials #r</property>
     <property name="ty" type="int" value="-3"/>
    </properties>
   </object>
-  <object id="1456" name="Magic Gloves" type="item" x="1408" y="496" width="16" height="16">
+  <object id="1456" name="Ability: Push" type="item" x="1408" y="496" width="16" height="16">
    <properties>
     <property name="appearCondition" value="glovesDialog"/>
     <property name="itemName" value="Magic Gloves"/>
@@ -86888,7 +86888,7 @@ We're decendants of them, if you will.</property>
     <property name="bg" type="int" value="10"/>
    </properties>
   </object>
-  <object id="1507" name="Orb" type="item" x="3024" y="1104" width="16" height="16">
+  <object id="1507" name="Ability: Orb" type="item" x="3024" y="1104" width="16" height="16">
    <properties>
     <property name="itemName" value="Orb"/>
     <property name="itemType" type="int" value="1"/>

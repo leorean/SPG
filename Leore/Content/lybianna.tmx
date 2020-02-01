@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="2018.06.27" orientation="orthogonal" renderorder="right-down" width="240" height="180" tilewidth="16" tileheight="16" infinite="0" nextlayerid="125" nextobjectid="1471">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="180" tilewidth="16" tileheight="16" infinite="0" nextlayerid="125" nextobjectid="1472">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="2048" columns="64">
   <image source="tiles.png" width="1024" height="512"/>
  </tileset>
@@ -173190,5 +173190,13 @@ Hm...
    </properties>
   </object>
   <object id="1465" type="waterMill" x="2544" y="1392" width="16" height="16"/>
+  <object id="1471" name="Ability: Roll" type="item" x="592" y="1392" width="16" height="16">
+   <properties>
+    <property name="itemName" value="Earth Totem"/>
+    <property name="itemType" type="int" value="8"/>
+    <property name="text">You've found the ~Earth Totem~!
+Quickly press #l#l or #r#r to roll.</property>
+   </properties>
+  </object>
  </objectgroup>
 </map>
