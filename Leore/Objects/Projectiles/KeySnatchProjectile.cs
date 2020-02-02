@@ -43,8 +43,8 @@ namespace Leore.Objects.Projectiles
         {
             originalPosition = orb.TargetPosition;
 
-            orb.Visible = false;
-            Depth = orb.Depth - .0002f;
+            //orb.Visible = false;
+            Depth = orb.Depth + .0002f;
             BoundingBox = new RectF(-4, -4, 8, 8);
             DrawOffset = new Vector2(8);
             direction = player.Direction;
@@ -108,13 +108,13 @@ namespace Leore.Objects.Projectiles
                     headBack = true;
                 }
                 
-                dist = Math.Min(dist + 2.5f, maxDist);
+                dist = Math.Min(dist + 3, maxDist);
                 if (dist == maxDist)
                     headBack = true;
             }
             else
             {
-                dist = Math.Max(dist - 2.5f, 0);
+                dist = Math.Max(dist - 3, 0);
                 if (dist == 0)
                 {
                     if (key != null)
@@ -124,6 +124,7 @@ namespace Leore.Objects.Projectiles
 
                         new KeyBurstEmitter(X, Y, orb);                        
                     }
+                    orb.Cooldown = 10;
                     Destroy();
                 }
             }
@@ -138,7 +139,7 @@ namespace Leore.Objects.Projectiles
 
         public override void Destroy(bool callGC = false)
         {
-            orb.Visible = true;
+            //orb.Visible = true;
             instance = null;
             base.Destroy(callGC);
         }
@@ -174,7 +175,7 @@ namespace Leore.Objects.Projectiles
         public override void HandleCollision(GameObject obj)
         {
             if (cooldown == 0)
-                cooldown = 2;
+                cooldown = 5;
         }
     }
 }

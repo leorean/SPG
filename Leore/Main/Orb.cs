@@ -121,17 +121,20 @@ namespace Leore.Main
 
             Scale = new Vector2(1, 1);
 
-            if (Type == SpellType.SNATCH_KEYS)
-            {
-                if (player.Direction == Direction.LEFT)
-                    targetAngle = (float)MathUtil.VectorToAngle(new Vector2(1, -Math.Sign((int)player.LookDirection)), true);
-                if (player.Direction == Direction.RIGHT)
-                    targetAngle = (float)MathUtil.VectorToAngle(new Vector2(1, Math.Sign((int)player.LookDirection)), true);
-                Scale = new Vector2((int)player.Direction, 1);
-            } else
-            {
-                targetAngle = 0;
-            }
+            // enable for bending orb
+            //if (Type == SpellType.SNATCH_KEYS)
+            //{
+            //    if (player.Direction == Direction.LEFT)
+            //        targetAngle = (float)MathUtil.VectorToAngle(new Vector2(1, -Math.Sign((int)player.LookDirection)), true);
+            //    if (player.Direction == Direction.RIGHT)
+            //        targetAngle = (float)MathUtil.VectorToAngle(new Vector2(1, Math.Sign((int)player.LookDirection)), true);
+            //    Scale = new Vector2((int)player.Direction, 1);
+            //} else
+            //{
+            //    targetAngle = 0;
+            //}
+
+            targetAngle = 0;
 
             Angle += (targetAngle - Angle) / 6f;
 

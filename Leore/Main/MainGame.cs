@@ -321,6 +321,7 @@ namespace Leore.Main
                     if (Input.IsKeyPressed(Keys.Space, Input.State.Holding))
                     {
                         ObjectManager.GameDelay = 120;
+                        Debug.WriteLine("delay " + RND.Next);
                     }
                     else
                     {

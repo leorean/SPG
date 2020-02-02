@@ -40518,7 +40518,8 @@
     <property name="text">Learned spell: ~Snatch~!
 With this, keys can be stored and will be used when needed.
 |Disclaimer:
-* &quot;[888888]~Keys can only be used in the same area.~&quot;</property>
+* &quot;[888888]~Keys can only be used in the same area.~&quot;
+* &quot;[888888]~Use ~#u[888888]~ or ~#d[888888]~ to direct the spell.~&quot;</property>
    </properties>
   </object>
   <object id="1445" type="door" x="592" y="960" width="16" height="16">
