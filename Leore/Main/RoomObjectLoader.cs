@@ -212,7 +212,7 @@ namespace Leore.Main
                             case 712: // max MP
                                 new StatUpItem(i * Globals.T + 8, j * Globals.T + 8, room, StatType.MP);
                                 break;
-                            case 713: // MP Regen +
+                            case 713: // MP Regen Up
                                 new StatUpItem(i * Globals.T + 8, j * Globals.T + 8, room, StatType.Regen);
                                 break;
                             case 714: // destroy blocks
@@ -416,6 +416,9 @@ namespace Leore.Main
                                 break;
                             case 1025: // AMBIENCE (small bird)
                                 new LittleBirb(i * Globals.T + 8, j * Globals.T, room);
+                                break;
+                            case 1088: // Collectable
+                                new Collectable(i * Globals.T + 8, j * Globals.T + 8, room);
                                 break;
                             default:
                                 var solid = new Solid(i * Globals.T, j * Globals.T, room);

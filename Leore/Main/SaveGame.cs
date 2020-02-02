@@ -33,8 +33,9 @@ namespace Leore.Main
         public List<string> StoryFlags { get; set; } = new List<string>();
 
         public Dictionary<string, int> HeldKeys { get; set; } = new Dictionary<string, int>();
+        public Dictionary<string, int> ItemsBought { get; set; } = new Dictionary<string, int>();
 
-        public Dictionary<string, int> ItemsBought { get; set; } = new Dictionary<string, int>();        
+        public List<ID> Collectables { get; set; } = new List<ID>();
 
     }
 

@@ -48,7 +48,7 @@ namespace Leore.Main
         public static Texture2D Door { get; private set; }
         public static TextureSet Torch { get; private set; }
         public static TextureSet Particles { get; private set; }
-        public static Texture2D WhiteCircle { get; private set; }
+        public static TextureSet WhiteCircle { get; private set; }
         public static TextureSet VoidCircle { get; private set; }
         public static Texture2D Flash { get; private set; }
         public static TextureSet Transition { get; private set; }
@@ -63,6 +63,8 @@ namespace Leore.Main
         public static TextureSet Lava { get; private set; }
         public static TextureSet WaterFall { get; private set; }
         public static TextureSet CoinStatue { get; private set; }
+        public static TextureSet MirrorBossBG { get; private set; }
+        public static TextureSet Collectable { get; private set; }
 
         // ambience
 
@@ -89,7 +91,6 @@ namespace Leore.Main
         public static Font DamageFont { get; private set; }
         public static Font HUDFont { get; private set; }
         public static Font HUDFontSmall { get; private set; }
-        public static TextureSet MirrorBossBG { get; private set; }
         
         public static void InitializeContent(ContentManager content)
         {
@@ -116,7 +117,7 @@ namespace Leore.Main
             Door = content.Load<Texture2D>("door");
             Torch = content.LoadTextureSet("torch");
             Particles = content.LoadTextureSet("particles", 16, 16);
-            WhiteCircle = content.Load<Texture2D>("whiteCircle");
+            WhiteCircle = content.LoadTextureSet("whiteCircle", 64, 64);
             VoidCircle = content.LoadTextureSet("voidCircle", 64, 64);
             Flash = content.Load<Texture2D>("flash");
             Transition = content.LoadTextureSet("transition", 256, 144);
@@ -128,6 +129,7 @@ namespace Leore.Main
             StoryWarp = content.LoadTextureSet("storyWarp", 32, 144);
 
             MirrorBossBG = content.LoadTextureSet("mirrorBossBg", 256, 144);
+            Collectable = content.LoadTextureSet("collectable", 16, 16);
 
             var waterMillSheet = content.Load<Texture2D>("watermill");
             WaterMill = waterMillSheet.Crop(new Rectangle(0, 0, 128, 128));

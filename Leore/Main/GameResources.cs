@@ -140,6 +140,10 @@ namespace Leore.Resources
 
         public static readonly Color VoidColor = Colors.FromHex("973bba");
 
+        public static readonly Color SunColor = Colors.FromHex("f6c048");
+
+        public static readonly Color MagicColor = Colors.FromHex("5fcde4");
+
         public static readonly List<Color> OxygenColors = new List<Color>
         {
             new Color(3, 243, 243),
@@ -180,7 +184,7 @@ namespace Leore.Resources
             new Color(242, 255, 156),
             new Color(104, 197, 100)
         };
-
+        
         // items
 
 

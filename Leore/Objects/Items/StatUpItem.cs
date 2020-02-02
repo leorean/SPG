@@ -17,7 +17,7 @@ namespace Leore.Objects.Items
 
         public StatType Type {get; private set; }
 
-        private PotionEmitter potionEmitter;
+        protected PotionEmitter potionEmitter;
 
         private bool fromShop;
 

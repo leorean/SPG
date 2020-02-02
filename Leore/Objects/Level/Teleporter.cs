@@ -184,9 +184,9 @@ namespace Leore.Objects.Level
                 var c2 = dist / 20f;
                 var c3 = dist / 32f;
 
-                sb.Draw(AssetManager.WhiteCircle, Position, null, new Color(Color.Black, backAlpha), 0, new Vector2(32), Math.Min(c1, .9f), SpriteEffects.None, bgdepth + .0001f);
-                sb.Draw(AssetManager.WhiteCircle, Position, null, new Color(Color.Black, backAlpha), 0, new Vector2(32), c2, SpriteEffects.None, bgdepth + .0002f);
-                sb.Draw(AssetManager.WhiteCircle, Position, null, new Color(Color.Black, backAlpha + .3f), 0, new Vector2(32), c3, SpriteEffects.None, bgdepth + .0003f);
+                sb.Draw(AssetManager.WhiteCircle[0], Position, null, new Color(Color.Black, backAlpha), 0, new Vector2(32), Math.Min(c1, .9f), SpriteEffects.None, bgdepth + .0001f);
+                sb.Draw(AssetManager.WhiteCircle[0], Position, null, new Color(Color.Black, backAlpha), 0, new Vector2(32), c2, SpriteEffects.None, bgdepth + .0002f);
+                sb.Draw(AssetManager.WhiteCircle[0], Position, null, new Color(Color.Black, backAlpha + .3f), 0, new Vector2(32), c3, SpriteEffects.None, bgdepth + .0003f);
             }
         }
     }

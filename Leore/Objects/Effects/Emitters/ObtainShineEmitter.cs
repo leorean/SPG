@@ -11,11 +11,11 @@ namespace Leore.Objects.Effects.Emitters
         private float s = .01f;
         public float lightScale;
         private Vector2 off;
-
+        
         public ObtainShineParticle(ParticleEmitter emitter) : base(emitter)
         {
-            DrawOffset = new Microsoft.Xna.Framework.Vector2(32, 32);
-            Texture = AssetManager.WhiteCircle;
+            DrawOffset = new Vector2(32, 32);
+            Texture = AssetManager.WhiteCircle[0];
 
             LifeTime = 120;
 
@@ -34,7 +34,7 @@ namespace Leore.Objects.Effects.Emitters
             Scale = new Vector2(s);
 
             Alpha = Math.Max(Alpha - .001f, 0);
-            Position = Emitter.Position + off;
+            Position = Emitter.Position + off;            
         }
     }
 

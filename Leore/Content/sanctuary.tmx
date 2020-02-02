@@ -69466,9 +69466,9 @@
    <tile/>
    <tile gid="645"/>
    <tile/>
-   <tile gid="842"/>
-   <tile gid="842"/>
-   <tile gid="842"/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile gid="193"/>
    <tile gid="130"/>
@@ -86490,6 +86490,7 @@
   <object id="1465" type="room" x="1280" y="288" width="256" height="144">
    <properties>
     <property name="bg" type="int" value="0"/>
+    <property name="darkness" type="float" value="0.45"/>
    </properties>
   </object>
   <object id="1467" type="room" x="2816" y="288" width="256" height="288">
@@ -86932,7 +86933,8 @@ An eternal bond has been established.</property>
     <property name="npcType" type="int" value="1"/>
     <property name="setCondition" value="leavingIslandDialog"/>
     <property name="text" value="You've passed the first trial, now the true challenge begins.|You won't be able to return once you leave.|Are you ready?"/>
-    <property name="yesText" value="Very well.|May fate guide you.|We pray for your success."/>
+    <property name="yesText">Very well.
+|May fate guide you. We pray for your success.</property>
    </properties>
   </object>
   <object id="1515" type="movingPlatform" x="2464" y="1088" width="32" height="16">

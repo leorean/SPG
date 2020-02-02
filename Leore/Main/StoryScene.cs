@@ -2,6 +2,7 @@
 using Leore.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SPG;
 using SPG.Draw;
 using SPG.Map;
 using SPG.Objects;
@@ -37,9 +38,9 @@ namespace Leore.Main
 
         public Action OnCompleted;
 
-        private readonly string sunColor = "f6c048";
-        private readonly string voidColor = "973bba";
-        private readonly string magicColor = "5fcde4";
+        string sunColor => GameResources.SunColor.ToHex();
+        string voidColor => GameResources.VoidColor.ToHex();
+        string magicColor => GameResources.MagicColor.ToHex();
 
         public StoryScene(int startFrame, int endFrame) : base(0, 0, null)
         {

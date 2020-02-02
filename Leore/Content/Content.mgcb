@@ -73,6 +73,18 @@
 /processorParam:TextureFormat=Color
 /build:coinStatue.png
 
+#begin collectable.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=False
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:collectable.png
+
 #begin damageFont.png
 /importer:TextureImporter
 /processor:TextureProcessor
