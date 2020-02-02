@@ -89,7 +89,7 @@ namespace Leore.Objects.Projectiles
                     headBack = true;
                 }
 
-                if (player.Stats.HeldKeys > 0)
+                if (player.HasAtLeastOneKey())
                 {
                     var keyBlock = this.CollisionBoundsFirstOrDefault<KeyBlock>(X, Y);
                     if (keyBlock != null && !keyBlock.Unlocked)
@@ -108,13 +108,13 @@ namespace Leore.Objects.Projectiles
                     headBack = true;
                 }
                 
-                dist = Math.Min(dist + 4f, maxDist);
+                dist = Math.Min(dist + 2.5f, maxDist);
                 if (dist == maxDist)
-                    headBack = true;                
+                    headBack = true;
             }
             else
             {
-                dist = Math.Max(dist - 4f, 0);
+                dist = Math.Max(dist - 2.5f, 0);
                 if (dist == 0)
                 {
                     if (key != null)
@@ -147,14 +147,15 @@ namespace Leore.Objects.Projectiles
         {
             base.Draw(sb, gameTime);
 
-            sb.Draw(AssetManager.Projectiles[7], orb.Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, orb.Depth);
+            //sb.Draw(AssetManager.Projectiles[7], orb.Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, orb.Depth);
 
-            for (var i = 0; i < dist; i+= 2)
-            {
-                sb.Draw(AssetManager.Projectiles[8], orb.Position + new Vector2((int)direction * i, Math.Sign(yspd) * i), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
-            }
-            
-            sb.Draw(AssetManager.Projectiles[9], Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
+            //for (var i = 0; i < dist; i+= 2)
+            //{
+            //    sb.Draw(AssetManager.Projectiles[8], orb.Position + new Vector2((int)direction * i, Math.Sign(yspd) * i), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
+            //}
+
+            var texture = headBack ? AssetManager.Projectiles[9] : AssetManager.Projectiles[8];            
+            sb.Draw(texture, Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
 
             if (key != null)
             {

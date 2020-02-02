@@ -13,6 +13,7 @@ using SPG.Save;
 using Leore.Objects.Items;
 using Leore.Objects.Level;
 using Leore.Objects.Effects.Weather;
+using System.Collections.Generic;
 
 namespace Leore.Main
 {
@@ -289,7 +290,7 @@ namespace Leore.Main
                         GameManager.Current.Player.Stats.StoryFlags.Clear();
                         GameManager.Current.Player.Stats.Bosses.Clear();
                         GameManager.Current.Player.Stats.ItemsBought.Clear();
-                        GameManager.Current.Player.Stats.HeldKeys = 0;
+                        GameManager.Current.Player.Stats.HeldKeys = new Dictionary<string, int>();
 
                         Debug.WriteLine("cleared saved lists!");
                     }

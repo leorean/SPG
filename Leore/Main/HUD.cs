@@ -98,10 +98,10 @@ namespace Leore.Main
 
             // KEYS (held)
 
-            if (player.Stats.HeldKeys > 0)
+            if (player.HasAtLeastOneKey())
             {
                 sb.Draw(AssetManager.HUD, new Vector2(hpx + 48, hpy + 34), new Rectangle(64, 96, 16, 16), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Globals.LAYER_UI + .00001f);                
-                font.Draw(sb, hpx + 54, hpy + 36, $"{player.Stats.HeldKeys}x", depth: Globals.LAYER_UI + .00003f);
+                font.Draw(sb, hpx + 54, hpy + 36, $"{player.Stats.HeldKeys[GameManager.Current.Map.Name]}x", depth: Globals.LAYER_UI + .00003f);
 
             }
 

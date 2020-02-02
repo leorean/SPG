@@ -78,14 +78,34 @@ namespace Leore.Main
 
         private Vector2 safePosition;
 
+        public bool HasAtLeastOneKey()
+        {
+            if (!Stats.HeldKeys.ContainsKey(GameManager.Current.Map.Name))
+                return false;
+
+            return Stats.HeldKeys[GameManager.Current.Map.Name] > 0;
+        }
+
         public void UseKeyFromInventory()
         {
-            Stats.HeldKeys--;
+            var keys = 0;
+            if (Stats.HeldKeys.ContainsKey(GameManager.Current.Map.Name))
+            {
+                keys = Math.Max(Stats.HeldKeys[GameManager.Current.Map.Name] - 1, 0);
+                Stats.HeldKeys.Remove(GameManager.Current.Map.Name);
+            }
+            Stats.HeldKeys.Add(GameManager.Current.Map.Name, keys);
             new FollowFont(X, Y - 8, "Key used.");
         }
         public void GetKey()
         {
-            Stats.HeldKeys++;
+            var keys = 1;
+            if (Stats.HeldKeys.ContainsKey(GameManager.Current.Map.Name))
+            {
+                keys = Stats.HeldKeys[GameManager.Current.Map.Name] + 1;
+                Stats.HeldKeys.Remove(GameManager.Current.Map.Name);
+            }
+            Stats.HeldKeys.Add(GameManager.Current.Map.Name, keys);
             new FollowFont(X, Y - 8, "Got key!");
         }
 
@@ -822,7 +842,7 @@ namespace Leore.Main
                 {
                     // ++++ key blocks (when possessing keys in inventory) ++++
 
-                    if (Stats.HeldKeys > 0)
+                    if (HasAtLeastOneKey())
                     {
                         var keyblock = this.CollisionBoundsFirstOrDefault<KeyBlock>(X + (int)Direction * 4, Y + YVel + .1f);
                         if (keyblock != null)
@@ -837,7 +857,7 @@ namespace Leore.Main
 
                     // ++++ key doors (when possessing keys in inventory) ++++
 
-                    if (Stats.HeldKeys > 0 && KeyObject == null)
+                    if (HasAtLeastOneKey() && KeyObject == null)
                     {
                         var keyDoor = this.CollisionBoundsFirstOrDefault<DoorDisabler>(X + (int)Direction * 4, Y);
                         if (keyDoor != null)
