@@ -50,7 +50,7 @@
  <objecttype name="player" color="#ffffff"/>
  <objecttype name="room" color="#ffec9c">
   <property name="bg" type="int" default="-1"/>
-  <property name="dark" type="bool" default="false"/>
+  <property name="darkness" type="float" default="-1"/>
   <property name="weather" type="int" default="-1"/>
  </objecttype>
  <objecttype name="shopItem" color="#fff9d2">

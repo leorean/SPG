@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using SPG.Objects;
 using SPG.Util;
+using System;
 
 namespace Leore.Objects
 {
@@ -9,7 +10,7 @@ namespace Leore.Objects
     {
         public int Background { get; set; } = -1;
         public int Weather { get; set; } = -1;
-        public bool IsDark { get; set; } = false;
+        public float Darkness { get; set; } = -1;
 
         public bool SwitchState { get; set; }
         

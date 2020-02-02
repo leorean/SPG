@@ -118,7 +118,7 @@ namespace Leore.Main
             GameManager.Current.AddGameMap("forest_temple");
 
             // debug maps:
-            GameManager.Current.AddGameMap("worldMap");            
+            //GameManager.Current.AddGameMap("worldMap");
             
             HUD = new HUD();
             HUD.Texture = AssetManager.HUD;

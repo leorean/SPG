@@ -76,11 +76,13 @@ namespace Leore.Objects.Effects.Weather
             ObjectManager.Enable<LightSource>();
             var lightSources = ObjectManager.FindAll<LightSource>().Where(o => !o.Parent.IsOutsideCurrentRoom(64)).ToList();
 
+            float a = 0;
             if (RoomCamera.Current.CurrentRoom != null)
             {
                 x = RoomCamera.Current.ViewX;
                 y = RoomCamera.Current.ViewY;
-                isRoomDark = RoomCamera.Current.CurrentRoom.IsDark;
+                isRoomDark = RoomCamera.Current.CurrentRoom.Darkness >= 0;
+                a = RoomCamera.Current.CurrentRoom.Darkness;
             }
 
             if (!isRoomDark || !enabled)
@@ -96,7 +98,7 @@ namespace Leore.Objects.Effects.Weather
                 globalAlpha = Math.Min(globalAlpha + .03f, 1);
             }
             
-            float a = 0;
+            //float a = RoomCamera.Current.CurrentRoom != null ? RoomCamera.Current.CurrentRoom.Darkness : 0;
             if (lightSources.Count >= 0)
             {
                 // calculate brightness

@@ -32477,16 +32477,16 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="842"/>
-   <tile gid="842"/>
-   <tile gid="842"/>
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="842"/>
-   <tile gid="842"/>
-   <tile gid="842"/>
-   <tile gid="842"/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -34061,9 +34061,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="842"/>
-   <tile gid="842"/>
-   <tile gid="842"/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -36780,16 +36780,16 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="842"/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="842"/>
-   <tile gid="842"/>
-   <tile gid="842"/>
-   <tile gid="842"/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -38083,8 +38083,8 @@
    <tile gid="146"/>
    <tile gid="74"/>
    <tile gid="75"/>
-   <tile gid="842"/>
-   <tile gid="842"/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile gid="73"/>
@@ -39670,9 +39670,9 @@
    <tile gid="1291"/>
    <tile/>
    <tile/>
-   <tile gid="842"/>
-   <tile gid="842"/>
-   <tile gid="842"/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile gid="1035"/>
@@ -40343,49 +40343,47 @@
   <object id="875" type="room" x="768" y="720" width="256" height="144">
    <properties>
     <property name="bg" type="int" value="2"/>
-    <property name="dark" type="bool" value="false"/>
    </properties>
   </object>
   <object id="1422" type="room" x="2048" y="432" width="512" height="288">
    <properties>
     <property name="bg" type="int" value="1"/>
-    <property name="dark" type="bool" value="true"/>
+    <property name="darkness" type="float" value="0.6"/>
    </properties>
   </object>
   <object id="1423" type="room" x="2304" y="720" width="256" height="144">
    <properties>
     <property name="bg" type="int" value="1"/>
-    <property name="dark" type="bool" value="true"/>
+    <property name="darkness" type="float" value="0.3"/>
    </properties>
   </object>
   <object id="1424" type="room" x="2048" y="144" width="256" height="288">
    <properties>
     <property name="bg" type="int" value="1"/>
-    <property name="dark" type="bool" value="true"/>
+    <property name="darkness" type="float" value="0.45"/>
    </properties>
   </object>
   <object id="1428" type="room" x="2304" y="144" width="256" height="144">
    <properties>
     <property name="bg" type="int" value="1"/>
-    <property name="dark" type="bool" value="true"/>
+    <property name="darkness" type="float" value="0.6"/>
    </properties>
   </object>
   <object id="1429" type="room" x="1792" y="288" width="256" height="288">
    <properties>
     <property name="bg" type="int" value="1"/>
-    <property name="dark" type="bool" value="true"/>
+    <property name="darkness" type="float" value="0.45"/>
    </properties>
   </object>
   <object id="1433" type="room" x="1792" y="576" width="256" height="144">
    <properties>
     <property name="bg" type="int" value="1"/>
-    <property name="dark" type="bool" value="true"/>
+    <property name="darkness" type="float" value="0.15"/>
    </properties>
   </object>
   <object id="1434" type="room" x="0" y="576" width="768" height="288">
    <properties>
     <property name="bg" type="int" value="2"/>
-    <property name="dark" type="bool" value="false"/>
    </properties>
   </object>
   <object id="1437" type="room" x="1280" y="720" width="768" height="144">
@@ -40401,25 +40399,22 @@
   <object id="1443" type="room" x="2048" y="864" width="256" height="144">
    <properties>
     <property name="bg" type="int" value="2"/>
-    <property name="dark" type="bool" value="true"/>
+    <property name="darkness" type="float" value="0.45"/>
    </properties>
   </object>
   <object id="1449" type="room" x="1792" y="144" width="256" height="144">
    <properties>
     <property name="bg" type="int" value="2"/>
-    <property name="dark" type="bool" value="false"/>
    </properties>
   </object>
   <object id="1455" type="room" x="1536" y="432" width="256" height="288">
    <properties>
     <property name="bg" type="int" value="2"/>
-    <property name="dark" type="bool" value="false"/>
    </properties>
   </object>
   <object id="1459" type="room" x="1024" y="288" width="512" height="288">
    <properties>
     <property name="bg" type="int" value="2"/>
-    <property name="dark" type="bool" value="false"/>
    </properties>
   </object>
  </objectgroup>

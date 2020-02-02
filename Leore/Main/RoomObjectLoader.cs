@@ -330,6 +330,7 @@ namespace Leore.Main
                                 new Torch(i * Globals.T, j * Globals.T, room, false, LightSource.LightState.Default, true);
                                 break;
                             case 841:
+                                throw new Exception("Remove this object for now..");
                                 new AmbientLightSource(i * Globals.T, j * Globals.T, room);
                                 break;
                             case 842:
@@ -713,7 +714,7 @@ namespace Leore.Main
                     var h = data.ContainsKey("height") ? (int)data["height"] : camera.ViewHeight;
                     var bg = data.ContainsKey("bg") ? (int)data["bg"] : -1;
                     var weather = data.ContainsKey("weather") ? (int)data["weather"] : -1;
-                    var isDark = data.ContainsKey("dark") ? Convert.ToBoolean(data["dark"]) : false;
+                    var darkness = data.ContainsKey("darkness") ? (float)Convert.ToDouble(data["darkness"]) : -1;
 
                     int remX, remY, remW, remH;
                     Math.DivRem(x, camera.ViewWidth, out remX);
@@ -728,7 +729,7 @@ namespace Leore.Main
                     
                     room.Background = bg;
                     room.Weather = weather;
-                    room.IsDark = isDark;
+                    room.Darkness = darkness;
                 }
 
                 // load rooms of standard size when there is none
