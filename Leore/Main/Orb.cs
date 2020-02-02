@@ -29,7 +29,7 @@ namespace Leore.Main
         WIND,
         EARTH,
         DARK,
-        ROLLDAMAGE // special case: player rolls
+        ROLLDAMAGE // special case: player rolls through blocks
 
         // .. TODO
     }

@@ -27,10 +27,10 @@ namespace Leore.Objects.Level.Blocks
             if (HP == 2) Texture = tex2;
         }
 
-        public virtual void Hit(int damage, SpellElement element = SpellElement.NONE)
+        public virtual bool Hit(int damage, SpellElement element = SpellElement.NONE)
         {
             if (damage == 0 || HP == 0)
-                return;
+                return false;
 
             if (HP > damage)
                 new SingularEffect(Center.X - 4 + (float)(RND.Next * 8), Center.Y - 4 + (float)(RND.Next * 8), 5);
@@ -41,6 +41,8 @@ namespace Leore.Objects.Level.Blocks
 
             if (HP == 1) Texture = tex1;
             if (HP == 2) Texture = tex2;
+
+            return true;
         }
 
         public override void Update(GameTime gameTime)
@@ -64,13 +66,15 @@ namespace Leore.Objects.Level.Blocks
 
         }
 
-        public override void Hit(int damage, SpellElement element = SpellElement.NONE)
+        public override bool Hit(int damage, SpellElement element = SpellElement.NONE)
         {
             if (damage == 0 || HP == 0 || element != SpellElement.ROLLDAMAGE)
-                return;
+                return false;
 
             new DestroyEmitter(X + 8, Y + 8, 7);
-            HP = 0;            
+            HP = 0;
+
+            return true;
         }
     }
 }

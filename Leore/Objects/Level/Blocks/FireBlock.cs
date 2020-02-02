@@ -6,6 +6,7 @@ using Leore.Objects.Level.Obstacles;
 using Leore.Objects.Projectiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SPG.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +18,13 @@ namespace Leore.Objects.Level.Blocks
 {
     public class FireBlock : DestroyBlock
     {
-        private float maxHp;
+        private int maxHp;
 
         private Obstacle obstacle;
 
-        public FireBlock(float x, float y, Room room) : base(x, y, room, 1)
+        public int OriginalTextureID { get; set; }
+
+        public FireBlock(float x, float y, Room room, int hp) : base(x, y, room, hp)
         {
             maxHp = HP;
             obstacle = new ObstacleBlock(x, y, room) { Parent = this };
@@ -30,35 +33,50 @@ namespace Leore.Objects.Level.Blocks
         public override void Update(GameTime gameTime)
         {
             //base.Update(gameTime);
+
+            Texture = GameManager.Current.Map.TileSet[OriginalTextureID - maxHp + HP]; 
+
+            if (HP <= 1 && obstacle != null)
+            {
+                obstacle.Parent = null;
+                obstacle.Destroy();
+                obstacle = null;
+            }
+
             if (HP == 0)
                 Destroy();
         }
 
-        public override void Hit(int damage, SpellElement element)
+        public override bool Hit(int damage, SpellElement element)
         {
             if (damage == 0 || HP == 0)
-                return;
+                return false;
 
-            if (element != SpellElement.ICE)
-                return;
+            if (element != SpellElement.ICE)// && element != SpellElement.ROLLDAMAGE)
+                return false;
 
             if (HP <= damage)
             {
                 var eff = new DestroyEmitter(Center.X, Center.Y, 6);
                 new SingularEffect(Center.X, Center.Y, 15) { Depth = eff.Depth + .0001f, Scale = new Vector2(.5f) };
-
             }
-
+            else
+            {
+                new SingularEffect(Center.X, Center.Y, 16);
+            }
+            
             HP = Math.Max(HP - damage, 0);
+
+            return true;
         }
 
-        public override void Draw(SpriteBatch sb, GameTime gameTime)
-        {
-            base.Draw(sb, gameTime);
+        //public override void Draw(SpriteBatch sb, GameTime gameTime)
+        //{
+        //    base.Draw(sb, gameTime);
 
-            var alpha = HP / maxHp;
-            var col = new Color(Color, 1f - .5f * alpha);
-            sb.Draw(AssetManager.Particles[12], Position + new Vector2(8), null, col, Angle, new Vector2(8), Scale, SpriteEffects.None, Depth + .0001f);
-        }
+        //    var alpha =(HP - 1) / maxHp;
+        //    var col = new Color(Color, 1f - alpha);
+        //    sb.Draw(AssetManager.Particles[12], Position + new Vector2(8), null, col, Angle, new Vector2(8), Scale, SpriteEffects.None, Depth + .0001f);
+        //}
     }
 }

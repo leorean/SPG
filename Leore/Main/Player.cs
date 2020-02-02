@@ -220,7 +220,7 @@ namespace Leore.Main
         //private bool rollingVertical;
         private float maxVelRoll = 3f;
         private int noRollGravityTimer;
-        private readonly int maxNoRollGravityTimer = 20;
+        private readonly int maxNoRollGravityTimer = 10;
         RollBouncer rollBlock;
         //private float rollVel;
 
@@ -543,8 +543,22 @@ namespace Leore.Main
                 (obstacle as EnemyProjectile).Kill();
             }
 
-            if (obstacle is ITrapSpike && !(obstacle as ITrapSpike).IsOut)
-                obstacle = null;
+            // spikes can't hurt if they are trapspikes who are'nt out, or if the player is rolling
+            if (obstacle is SpikeObstacle spike)
+            {
+                if (!spike.IsOut)
+                {
+                    obstacle = null;
+                }
+                else
+                {
+                    if (State == PlayerState.ROLL)
+                    {
+                        new StarEmitter(X, Y, 1);
+                        obstacle = null;
+                    }
+                }
+            }
 
             if (obstacle is Lava)
             {
@@ -1275,7 +1289,8 @@ namespace Leore.Main
                 || State == PlayerState.PUSH
                 || State == PlayerState.JUMP_DOWN
                 || State == PlayerState.JUMP_UP
-                || State == PlayerState.ROLL)
+                || State == PlayerState.ROLL
+                || State == PlayerState.ROLL_JUMP)
             {
                 if (State != PlayerState.ROLL && State != PlayerState.ROLL_JUMP)
                 {
@@ -1299,7 +1314,12 @@ namespace Leore.Main
                             YVel = -2;
 
                         MovingPlatform = null;
-                        State = (State != PlayerState.ROLL) ? PlayerState.JUMP_UP : PlayerState.ROLL_JUMP;                        
+
+                        if (State == PlayerState.ROLL)
+                            State = PlayerState.ROLL_JUMP;
+                        else
+                            State = PlayerState.JUMP_UP;
+
                         k_jumpPressed = false;
                     }
                 }
@@ -1327,10 +1347,13 @@ namespace Leore.Main
                 }
                 else
                 {
-                    if (k_leftHolding)
-                        XVel = Math.Max(XVel - xAcc, -maxVelRoll);
-                    if (k_rightHolding)
-                        XVel = Math.Min(XVel + xAcc, maxVelRoll);
+                    if (onGround)
+                    {
+                        if (k_leftHolding)
+                            XVel = Math.Max(XVel - xAcc, -maxVelRoll);
+                        if (k_rightHolding)
+                            XVel = Math.Min(XVel + xAcc, maxVelRoll);
+                    }
                 }
 
                 if (!k_leftHolding && !k_rightHolding && onGround)
@@ -1365,15 +1388,7 @@ namespace Leore.Main
 
                 if (!k_leftHolding && !k_rightHolding && rollTimeout == 0)
                     State = PlayerState.JUMP_UP;
-
-                if (k_attackHolding)
-                {
-                    XVel *= .99f;
-                    if (Math.Abs(XVel) < .5f)
-                        State = PlayerState.JUMP_UP;
-                    asd
-                }
-
+                
                 int? rollAngle = null;
 
                 if (rollBlock == null)
@@ -1447,9 +1462,10 @@ namespace Leore.Main
                                 break;
                         }
 
+                        // bounce off bouncers
                         if (rollAngle != null)
                         {
-                            var vel = Math.Max(Math.Max(Math.Abs(XVel), Math.Abs(YVel)), 1);
+                            var vel = Math.Max(Math.Max(Math.Abs(XVel), Math.Abs(YVel)), 1.5f);
 
                             XVel = (float)MathUtil.LengthDirX(rollAngle.Value) * vel;
                             YVel = (float)MathUtil.LengthDirY(rollAngle.Value) * vel;
@@ -1499,6 +1515,7 @@ namespace Leore.Main
                         {
                             new StarEmitter(X, Y);
                             XVel *= -.5f;
+                            State = PlayerState.JUMP_UP;
                         }
                 }
             }
@@ -1508,14 +1525,41 @@ namespace Leore.Main
             {
                 if (State == PlayerState.IDLE || State == PlayerState.WALK || State == PlayerState.GET_UP || State == PlayerState.TURN_AROUND)
                 {
-                    if (doubleTapTimer != 0)
+                    // roll with double tap
+
+                    //if (doubleTapTimer != 0)
+                    //{
+                    //    if ((Direction == Direction.LEFT && k_leftPressed)
+                    //        || (Direction == Direction.RIGHT && k_rightPressed))
+                    //    {
+                    //        State = PlayerState.ROLL;
+                    //    }
+                    //}
+
+                    // roll with down-key
+
+                    if (!k_attackHolding)
                     {
-                        if ((Direction == Direction.LEFT && k_leftPressed)
-                            || (Direction == Direction.RIGHT && k_rightPressed))
+                        if (k_downPressed)
                         {
-                            State = PlayerState.ROLL;
+                            if ((Direction == Direction.LEFT && k_leftHolding)
+                                || (Direction == Direction.RIGHT && k_rightHolding))
+                            {
+                                State = PlayerState.ROLL;
+                            }
                         }
-                    }
+                        else
+                        {
+                            if (k_downHolding)
+                            {
+                                if ((Direction == Direction.LEFT && k_leftPressed)
+                                || (Direction == Direction.RIGHT && k_rightPressed))
+                                {
+                                    State = PlayerState.ROLL;
+                                }
+                            }
+                        }
+                    }                    
                 }
             }
 

@@ -48,8 +48,10 @@ namespace Leore.Objects.Projectiles
 
         public virtual void HandleCollisionFromDestroyBlock(DestroyBlock block)
         {
-            block.Hit(Damage, Element);
-            HandleCollision(block);
+            if (block.Hit(Damage, Element))
+            {
+                HandleCollision(block);
+            }
         }
 
         public abstract void HandleCollision(GameObject obj);

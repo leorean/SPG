@@ -9,13 +9,7 @@ using System.Threading.Tasks;
 
 namespace Leore.Objects.Level.Obstacles
 {
-
-    public interface ITrapSpike
-    {
-        bool IsOut { get; }
-    }
-
-    public class TrapSpike : SpikeBottom, ITrapSpike
+    public class TrapSpike : SpikeBottom
     {
         protected int timer;
         protected int maxTimer;
@@ -23,9 +17,7 @@ namespace Leore.Objects.Level.Obstacles
         protected float offset;
         protected int maxOffset = 6;
         protected int change;
-
-        public bool IsOut { get; protected set; }
-
+        
         public TrapSpike(float x, float y, Room room, bool isOut, int maxTimer) : base(x, y, room)
         {
             Depth = Globals.LAYER_FG - .0001f;
