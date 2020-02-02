@@ -61,6 +61,9 @@ namespace Leore.Objects.Effects.Weather
         {
             // update
 
+            if (MainGame.Current.State == MainGame.GameState.Paused)
+                return;
+
             t = (t + .02f) % (2 * Math.PI);
 
             // draw
@@ -141,12 +144,12 @@ namespace Leore.Objects.Effects.Weather
             }
 
             spriteBatch.End();
+
+            targetAlpha += (alpha - targetAlpha) / 60f;
         }
 
         public void Draw(SpriteBatch sb, GameTime gameTime)
         {
-            targetAlpha += (alpha - targetAlpha) / 60f;
-
             sb.Draw(darkness, new Vector2(x, y), null, new Color(Color.White, globalAlpha * targetAlpha), 0, new Vector2(0), Vector2.One, SpriteEffects.None, Globals.LAYER_UI - .001f);            
         }
 
