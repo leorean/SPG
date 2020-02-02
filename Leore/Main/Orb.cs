@@ -284,7 +284,6 @@ namespace Leore.Main
                                 case SpellType.FIRE:
 
                                     Cooldown = 30;
-
                                     player.MP += GameResources.MPCost[Type][Level];
 
                                     FireSpell.Create(TargetPosition.X, TargetPosition.Y, Level);

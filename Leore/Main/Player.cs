@@ -24,6 +24,7 @@ using Leore.Objects.Level.Obstacles;
 using Leore.Objects.Obstacles;
 using Leore.Util;
 using static Leore.Objects.Effects.Transition;
+using Leore.Objects.Projectiles;
 
 namespace Leore.Main
 {
@@ -219,9 +220,10 @@ namespace Leore.Main
         private int rollTimeout;
         //private bool rollingVertical;
         private float maxVelRoll = 3f;
-        private int noRollGravityTimer;
-        private readonly int maxNoRollGravityTimer = 10;
-        RollBouncer rollBlock;
+        private float noRollGravityTimer;
+        private readonly float maxNoRollGravityTimer = 20;
+        RollBouncer rollBouncer;
+        RollDamageProjectile rollDamager;
         //private float rollVel;
 
         // constructor
@@ -1328,14 +1330,19 @@ namespace Leore.Main
             // rolling
             if (State == PlayerState.ROLL || State == PlayerState.ROLL_JUMP)
             {
+                if (rollDamager == null)
+                {
+                    rollDamager = new RollDamageProjectile(X, Y);
+                }
+
                 LookDirection = Direction.NONE;
 
                 var xAcc = .05f;
-                if (rollBlock != null)
+                if (rollBouncer != null)
                 {
-                    if (!this.CollisionBounds(rollBlock, X + XVel, Y + YVel))
+                    if (!this.CollisionBounds(rollBouncer, X + XVel, Y + YVel))
                     {
-                        rollBlock = null;
+                        rollBouncer = null;
                     }
                 }
                 
@@ -1356,15 +1363,19 @@ namespace Leore.Main
                     }
                 }
 
-                if (!k_leftHolding && !k_rightHolding && onGround)
+                // escape-the-state
+                if (!k_leftHolding && !k_rightHolding)
                 {
-                    XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - .03f, 0);
-                    if (Math.Abs(XVel) < .05f)
+                    if (onGround)
                     {
-                        rollTimeout = Math.Max(rollTimeout - 1, 0);
-                        if (rollTimeout == 0)
+                        XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - .03f, 0);
+                        if (Math.Abs(XVel) < .05f)
                         {
-                            State = PlayerState.IDLE;
+                            rollTimeout = Math.Max(rollTimeout - 1, 0);
+                            if (rollTimeout == 0)
+                            {
+                                State = PlayerState.IDLE;
+                            }
                         }
                     }
                 }
@@ -1386,24 +1397,32 @@ namespace Leore.Main
                     }
                 }
 
-                if (!k_leftHolding && !k_rightHolding && rollTimeout == 0)
-                    State = PlayerState.JUMP_UP;
-                
-                int? rollAngle = null;
-
-                if (rollBlock == null)
+                if (k_attackPressed)
                 {
-                    rollBlock = this.CollisionBoundsFirstOrDefault<RollBouncer>(X + XVel, Y + YVel);
-                    if (rollBlock != null)
-                    {
-                        var rollDir = new Vector2(XVel, YVel).ToDirection();
+                    YVel -= 1;
+                    State = PlayerState.JUMP_UP;
+                }
 
-                        switch (rollDir)
+                //if (!k_leftHolding && !k_rightHolding && rollTimeout == 0)
+                //    State = PlayerState.JUMP_UP;
+                
+                // bouncing
+
+                int? rollAngle = null;
+                var rollDirection = Direction.NONE;
+
+                if (rollBouncer == null)
+                {
+                    rollBouncer = this.CollisionBoundsFirstOrDefault<RollBouncer>(X + XVel, Y + YVel);
+                    if (rollBouncer != null)
+                    {
+                        rollDirection = new Vector2(XVel, YVel).ToDirection();
+                        switch (rollDirection)
                         {
                             case Direction.LEFT:
-                                if (rollBlock.Direction == Direction.RIGHT)
+                                if (rollBouncer.Direction == Direction.RIGHT)
                                 {
-                                    if (rollBlock.VerticalDirection != Direction.DOWN)
+                                    if (rollBouncer.VerticalDirection != Direction.DOWN)
                                     {
                                         // up
                                         rollAngle = -90;
@@ -1416,9 +1435,9 @@ namespace Leore.Main
                                 }
                                 break;
                             case Direction.RIGHT:
-                                if (rollBlock.Direction == Direction.LEFT)
+                                if (rollBouncer.Direction == Direction.LEFT)
                                 {
-                                    if (rollBlock.VerticalDirection != Direction.DOWN)
+                                    if (rollBouncer.VerticalDirection != Direction.DOWN)
                                     {
                                         // up
                                         rollAngle = -90;
@@ -1431,9 +1450,9 @@ namespace Leore.Main
                                 }
                                 break;
                             case Direction.UP:
-                                if (rollBlock.VerticalDirection == Direction.DOWN)
+                                if (rollBouncer.VerticalDirection == Direction.DOWN)
                                 {
-                                    if (rollBlock.Direction == Direction.LEFT)
+                                    if (rollBouncer.Direction == Direction.LEFT)
                                     {
                                         // left
                                         rollAngle = 180;
@@ -1446,9 +1465,9 @@ namespace Leore.Main
                                 }
                                 break;
                             case Direction.DOWN:
-                                if (rollBlock.VerticalDirection != Direction.DOWN)
+                                if (rollBouncer.VerticalDirection != Direction.DOWN)
                                 {
-                                    if (rollBlock.Direction == Direction.LEFT)
+                                    if (rollBouncer.Direction == Direction.LEFT)
                                     {
                                         // left
                                         rollAngle = 180;                                        
@@ -1465,7 +1484,7 @@ namespace Leore.Main
                         // bounce off bouncers
                         if (rollAngle != null)
                         {
-                            var vel = Math.Min(Math.Max(Math.Max(Math.Abs(XVel), Math.Abs(YVel)), 1.5f), maxVelRoll);
+                            var vel = Math.Min(Math.Max(Math.Max(Math.Abs(XVel), Math.Abs(YVel)), 2f), maxVelRoll);
 
                             XVel = (float)MathUtil.LengthDirX(rollAngle.Value) * vel;
                             YVel = (float)MathUtil.LengthDirY(rollAngle.Value) * vel;
@@ -1473,18 +1492,31 @@ namespace Leore.Main
                             if (Math.Abs(XVel) < .1f) XVel = 0;
                             if (Math.Abs(YVel) < .1f) YVel = 0;
                             
-                            if (rollBlock.VerticalDirection == Direction.DOWN)
-                                Position = new Vector2(rollBlock.X + 8, rollBlock.Y + 7);
+                            if (rollBouncer.VerticalDirection == Direction.DOWN)
+                                Position = new Vector2(rollBouncer.X + 8, rollBouncer.Y + 7);
                             else
                             {
-                                Position = new Vector2(rollBlock.X + 8, rollBlock.Y + 8);
+                                Position = new Vector2(rollBouncer.X + 8, rollBouncer.Y + 7);
                             }
 
-                            rollBlock.Bounce();
-                            if (YVel <= 0)
+                            rollBouncer.Bounce();
+                            //if (YVel <= 0)
+                            if (rollBouncer.VerticalDirection == Direction.DOWN)
                             {
-                                noRollGravityTimer = (int)(maxNoRollGravityTimer * (vel / maxVelRoll));
+                                if (rollDirection == Direction.LEFT || rollDirection == Direction.RIGHT)
+                                    noRollGravityTimer = 0;
+                                if (rollDirection == Direction.UP)
+                                    noRollGravityTimer = maxNoRollGravityTimer;
                             }
+                            else
+                            {
+                                if (rollDirection == Direction.LEFT || rollDirection == Direction.RIGHT)
+                                    noRollGravityTimer = .5f * maxNoRollGravityTimer;
+                                if (rollDirection == Direction.DOWN)
+                                    noRollGravityTimer = 00;
+                            }
+
+                            if (YVel == 0) YVel = -Gravity;
 
                             State = PlayerState.ROLL_JUMP;
                         }
@@ -1493,22 +1525,22 @@ namespace Leore.Main
                 }
                 else
                 {                 
-                    if (!this.CollisionBounds(rollBlock, X, Y))
+                    if (!this.CollisionBounds(rollBouncer, X, Y))
                     {
-                        rollBlock = null;
+                        rollBouncer = null;
                     }
                 }
                 
-                DestroyBlock destroyBlock = this.CollisionBoundsFirstOrDefault<DestroyBlock>(X + Math.Sign((int)Direction) + XVel, Y);
-                if (destroyBlock == null) destroyBlock = this.CollisionBoundsFirstOrDefault<DestroyBlock>(X, Y + Math.Sign((int)YVel) + YVel);
-                if (destroyBlock != null)
-                {
-                    destroyBlock.Hit(destroyBlock.HP, SpellElement.ROLLDAMAGE);
-                    destroyBlock.Update(gameTime); // enforces update so block is gone by the time the collision is checked.
-                }
+                //DestroyBlock destroyBlock = this.CollisionBoundsFirstOrDefault<DestroyBlock>(X + Math.Sign((int)Direction) * Math.Max(Math.Abs(XVel), 2), Y);
+                //if (destroyBlock == null) destroyBlock = this.CollisionBoundsFirstOrDefault<DestroyBlock>(X, Y + Math.Sign((int)YVel) + YVel);
+                //if (destroyBlock != null)
+                //{
+                //    destroyBlock.Hit(destroyBlock.HP, SpellElement.ROLLDAMAGE);
+                //    destroyBlock.Update(gameTime); // enforces update so block is gone by the time the collision is checked.
+                //}
 
                 // not touching a roll-angle-block -> bounce off walls
-                if (rollBlock == null)
+                if (rollBouncer == null)
                 {
                     if (Math.Abs(XVel) > .5f)
                         if (GameManager.Current.Map.CollisionTile(X + (.5f * BoundingBox.Width + 3) * Math.Sign((int)XVel), Y))
@@ -1517,6 +1549,16 @@ namespace Leore.Main
                             XVel *= -.5f;
                             State = PlayerState.JUMP_UP;
                         }
+                }
+
+                rollDamager.Direction = new Vector2(XVel, YVel).ToDirection();
+            }
+            else // not rolling
+            {
+                if (rollDamager != null)
+                {
+                    rollDamager.Destroy();
+                    rollDamager = null;                    
                 }
             }
 
@@ -2469,6 +2511,16 @@ namespace Leore.Main
                 var bg = new Color(20, 113, 126);
 
                 sb.DrawBar(Position + new Vector2(0, 12), (int)(1.5 * Globals.T), Oxygen / (float)MaxOxygen, fg, bg, height: 2, border: false, depth: Globals.LAYER_UI - .001f);
+            }
+
+            // rolling boost shadow
+            if (noRollGravityTimer > 0)
+            {
+                var rollAlpha = noRollGravityTimer / maxNoRollGravityTimer;
+
+                sb.Draw(Texture, Position - new Vector2(XVel, YVel), null, new Color(Color, .6f * rollAlpha), Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0001f);
+                sb.Draw(Texture, Position - new Vector2(2 * XVel, 2 * YVel), null, new Color(Color, .4f * rollAlpha), Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0002f);
+                sb.Draw(Texture, Position - new Vector2(2.5f * XVel, 2.5f * YVel), null, new Color(Color, .2f * rollAlpha), Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0003f);
             }
 
             // draws safe-rect for debug
