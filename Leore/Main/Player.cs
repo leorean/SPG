@@ -1465,7 +1465,7 @@ namespace Leore.Main
                         // bounce off bouncers
                         if (rollAngle != null)
                         {
-                            var vel = Math.Max(Math.Max(Math.Abs(XVel), Math.Abs(YVel)), 1.5f);
+                            var vel = Math.Min(Math.Max(Math.Max(Math.Abs(XVel), Math.Abs(YVel)), 1.5f), maxVelRoll);
 
                             XVel = (float)MathUtil.LengthDirX(rollAngle.Value) * vel;
                             YVel = (float)MathUtil.LengthDirY(rollAngle.Value) * vel;
@@ -1477,7 +1477,7 @@ namespace Leore.Main
                                 Position = new Vector2(rollBlock.X + 8, rollBlock.Y + 7);
                             else
                             {
-                                Position = new Vector2(rollBlock.X + 8, rollBlock.Y + 8 - Gravity);
+                                Position = new Vector2(rollBlock.X + 8, rollBlock.Y + 8);
                             }
 
                             rollBlock.Bounce();
