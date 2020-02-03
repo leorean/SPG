@@ -173272,9 +173272,9 @@ With their magical power, you're able to ~levitate~!</property>
   </object>
   <object id="1484" type="door" x="2848" y="1696" width="16" height="16">
    <properties>
-    <property name="direction" type="int" value="-1"/>
+    <property name="direction" type="int" value="1"/>
     <property name="levelName" value="great_cavern"/>
-    <property name="tx" type="int" value="93"/>
+    <property name="tx" type="int" value="66"/>
     <property name="ty" type="int" value="7"/>
    </properties>
   </object>
