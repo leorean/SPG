@@ -16,7 +16,7 @@ namespace Leore.Objects.Projectiles
         {
             Damage = 1;
             Element = SpellElement.ROLLDAMAGE;
-            BoundingBox = new SPG.Util.RectF(-4, -4, 8, 8);
+            BoundingBox = new SPG.Util.RectF(-4, -4, 8, 8);            
         }
 
         public override void Update(GameTime gameTime)
@@ -40,7 +40,8 @@ namespace Leore.Objects.Projectiles
                     roll_x = 0; roll_y = 1;
                     break;
             }
-            Position = player.Position + new Vector2(8 * roll_x, 8 * roll_y);
+            var dst = 6;
+            Position = player.Position + new Vector2(dst * roll_x + 2 * player.XVel, dst * roll_y + 2 * player.YVel);
         }
         
         public override void HandleCollision(GameObject obj)
@@ -51,11 +52,25 @@ namespace Leore.Objects.Projectiles
             {
                 case Direction.UP:
                 case Direction.DOWN:
-                    player.YVel *= -1f;
+                    if (!(obj is DestroyBlock))
+                    {
+                        player.YVel *= -1f;
+                    }
+                    else
+                    {
+                        //player.YVel *= .5f;
+                    }
                     break;
                 case Direction.LEFT:
                 case Direction.RIGHT:
-                    player.XVel *= -.5f;
+                    if (!(obj is DestroyBlock))
+                    {
+                        player.XVel *= -.5f;
+                    }
+                    else
+                    {
+                        //player.XVel *= .5f;
+                    }
                     break;
             }            
         }

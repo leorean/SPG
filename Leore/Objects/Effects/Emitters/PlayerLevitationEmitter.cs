@@ -23,7 +23,7 @@ namespace Leore.Objects.Effects.Emitters
 
             Position = new Vector2(emitter.X + posX, emitter.Y + posY);
 
-            YVel = 2;            
+            YVel = 2;
         }
 
         public override void Update(GameTime gameTime)
@@ -35,7 +35,7 @@ namespace Leore.Objects.Effects.Emitters
             XVel *= .9f;
             YVel *= .9f;
 
-            Alpha = LifeTime / 15f;
+            Alpha = (float)(Math.Sin(LifeTime / 30f * Math.PI));
 
             Scale = new Vector2(s);
         }
