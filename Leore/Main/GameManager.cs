@@ -224,6 +224,7 @@ namespace Leore.Main
                 o => !(o is Room) 
                 && !(o is Player)
                 && !(o is Weather)
+                && !(o is RollDamageProjectile)
                 ).ToList();
             alive.ForEach(o => o.Destroy());
             

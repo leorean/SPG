@@ -4,6 +4,7 @@ using Leore.Objects.Level;
 using SPG.Objects;
 using Leore.Objects.Level.Blocks;
 using Leore.Objects.Effects.Emitters;
+using System;
 
 namespace Leore.Objects.Projectiles
 {
@@ -16,7 +17,8 @@ namespace Leore.Objects.Projectiles
         {
             Damage = 1;
             Element = SpellElement.ROLLDAMAGE;
-            BoundingBox = new SPG.Util.RectF(-4, -4, 8, 8);            
+            BoundingBox = new SPG.Util.RectF(-4, -4, 8, 8);
+            //DebugEnabled = true;
         }
 
         public override void Update(GameTime gameTime)
@@ -40,8 +42,12 @@ namespace Leore.Objects.Projectiles
                     roll_x = 0; roll_y = 1;
                     break;
             }
-            var dst = 6;
-            Position = player.Position + new Vector2(dst * roll_x + 2 * player.XVel, dst * roll_y + 2 * player.YVel);
+            var dstX = 6;
+            var dstY = 3;
+            Position = player.Position + new Vector2(dstX * roll_x + 2 * player.XVel, dstY * roll_y + 2 * player.YVel);
+
+            if (Math.Max(Math.Abs(player.XVel), Math.Abs(player.YVel)) < .3f)
+                Position = player.Position;
         }
         
         public override void HandleCollision(GameObject obj)
@@ -58,6 +64,7 @@ namespace Leore.Objects.Projectiles
                     }
                     else
                     {
+                        player.YVel *= .5f;
                         //player.YVel *= .5f;
                     }
                     break;
@@ -66,10 +73,12 @@ namespace Leore.Objects.Projectiles
                     if (!(obj is DestroyBlock))
                     {
                         player.XVel *= -.5f;
+                        player.YVel = -1f;
+                        //player.XVel *= -.5f;
                     }
                     else
                     {
-                        //player.XVel *= .5f;
+                        player.XVel *= .8f;
                     }
                     break;
             }            

@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Leore.Objects.Items;
+using Microsoft.Xna.Framework;
+using SPG;
 using SPG.Objects;
 using SPG.Util;
 using System;
@@ -11,17 +13,24 @@ namespace Leore.Objects.Effects.Emitters
 {
     public class CollectableAmbientParticle : Particle
     {
-        float angle;
-        readonly float maxLifeTime = 60;
+        readonly float maxLifeTime = 40;
         float alpha;
 
-        public CollectableAmbientParticle(ParticleEmitter emitter, float angle) : base(emitter)
+        public CollectableAmbientParticle(ParticleEmitter emitter) : base(emitter)
         {
             LifeTime = (int)maxLifeTime;
-            this.angle = angle;
             Scale = new Vector2(3);
 
-            Angle = (float)MathUtil.DegToRad(angle + 45);
+            Angle = (float)MathUtil.DegToRad(RND.Next * 360);
+
+            var rx = 12;
+            var ry = 5;
+            Position = new Vector2(emitter.X - .5f * rx + (float)RND.Next * rx,
+                emitter.Y - .5f * ry + (float)RND.Next * ry);
+
+            YVel = (float) (.5f + RND.Next * .25f);
+
+            Color = CollectableAmbientEmitter.GetRandomColor();
         }
 
         public override void Update(GameTime gameTime)
@@ -31,45 +40,45 @@ namespace Leore.Objects.Effects.Emitters
 
             float life = LifeTime / maxLifeTime;
 
-            if (life < .5f)
-                alpha = life;
+            if (life > .75f)
+                alpha = Math.Min(alpha + .1f, .8f);
             else
-                alpha = 1 - life;
-
-            //alpha = (float)Math.Sin(.5f * life * Math.PI) - .3f;
-
+                alpha = Math.Max(alpha - .02f, 0);
+            
             Scale = new Vector2(Math.Max(Scale.X - .04f, 1));
-
-            var vel = (life - .3f);
-
-            XVel = (float)MathUtil.LengthDirX(angle) * vel;
-            YVel = (float)MathUtil.LengthDirY(angle) * vel;
-
             Alpha = alpha;
+
+            YVel = Math.Max(YVel - .1f, -1);
         }
     }
 
     public class CollectableAmbientEmitter : ParticleEmitter
     {
-        float angle;
         public CollectableAmbientEmitter(float x, float y) : base(x, y)
         {
             SpawnRate = 1;
-            SpawnTimeout = 4;
+            SpawnTimeout = 6;
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            angle = (angle + 5) % (360);
         }
 
         public override void CreateParticle()
         {
-            new CollectableAmbientParticle(this, angle);
-            new CollectableAmbientParticle(this, angle + 120);
-            new CollectableAmbientParticle(this, angle + 240);
+            new CollectableAmbientParticle(this);
+        }
+
+        public static Color GetRandomColor()
+        {
+            var min = 160;
+            var max = 255 - min;
+            var r = min + (int)(RND.Next * max);
+            var g = min + (int)(RND.Next * max);
+            var b = min + (int)(RND.Next * max);
+
+            return new Color(r, g, b);
         }
     }
 }

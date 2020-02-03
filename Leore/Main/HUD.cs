@@ -24,6 +24,9 @@ namespace Leore.Main
         private Font font;
         private Font hudFont;
 
+        private int collectableTimer;
+        private float collectableY;
+
         private Boss boss;
         internal void SetBoss(Boss boss)
         {
@@ -53,6 +56,12 @@ namespace Leore.Main
             mp = (float)Math.Floor(player.MP);
             maxMP = stats.MaxMP;
             coins = stats.Coins;            
+        }
+        
+        public void ShowCollectables(int time, bool fast = false)
+        {
+            collectableTimer = time;
+            if (fast) collectableY = Math.Min(collectableY, 16);
         }
 
         public void Draw(SpriteBatch sb, GameTime gameTime)
@@ -100,9 +109,28 @@ namespace Leore.Main
 
             if (player.HasAtLeastOneKey())
             {
-                sb.Draw(AssetManager.HUD, new Vector2(hpx + 48, hpy + 34), new Rectangle(64, 96, 16, 16), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Globals.LAYER_UI + .00001f);                
+                sb.Draw(AssetManager.HUD, new Vector2(hpx + 48, hpy + 34), new Rectangle(64, 96, 16, 16), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Globals.LAYER_UI + .00001f);
                 font.Draw(sb, hpx + 54, hpy + 36, $"{player.Stats.HeldKeys[GameManager.Current.Map.Name]}x", depth: Globals.LAYER_UI + .00003f);
 
+            }
+
+            // collectables
+
+            if (player.Stats.Collectables.Count > 0)
+            {
+                collectableTimer = Math.Max(collectableTimer - 1, 0);
+                if (collectableTimer == 0)
+                {
+                    collectableY = Math.Min(collectableY + 1, 32);
+                }
+                else
+                {
+                    collectableY = Math.Max(collectableY - .5f, 0);
+                }
+
+                sb.Draw(AssetManager.HUD, new Vector2(mpx - 4, mpy + 130 + collectableY), new Rectangle(80, 96, 16, 16), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Globals.LAYER_UI + .00001f);
+                font.Halign = Font.HorizontalAlignment.Left;
+                font.Draw(sb, mpx + 12, mpy + 132 + collectableY, $"{player.Stats.Collectables.Count}", depth: Globals.LAYER_UI + .00003f);
             }
 
             if (player.Orb != null)

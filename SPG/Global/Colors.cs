@@ -43,7 +43,7 @@ namespace SPG
             }
             catch (Exception) { }
             throw new ArgumentException($"Color code '{hexCode}' is invalid!");
-        }
+        }        
     }
 }
    

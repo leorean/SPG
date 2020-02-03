@@ -171,7 +171,9 @@ namespace Leore.Main
 
         float gamePadLeftXFactor;
         float gamePadLeftYFactor;
-        
+
+        int idleTimer;
+
         // swim vars
 
         private float gravAir = .1f;
@@ -519,18 +521,7 @@ namespace Leore.Main
             var tk_rightPressed = k_rightPressed && (k_leftPressed == false);
             var tk_leftHolding = k_leftHolding && (k_rightHolding == false);
             var tk_rightHolding = k_rightHolding && (k_leftHolding == false);
-
-            //if (!tk_leftPressed && !tk_rightPressed)
-            //{
-            //    if (k_rightPressed)
-            //        tk_rightPressed = k_rightPressed;
-            //}
-            //if (!tk_leftHolding && !tk_rightHolding)
-            //{
-            //    if (k_rightHolding)
-            //        tk_rightHolding = k_rightHolding;
-            //}
-
+            
             k_leftPressed = tk_leftPressed;
             k_rightPressed = tk_rightPressed;
             k_leftHolding = tk_leftHolding;
@@ -546,6 +537,22 @@ namespace Leore.Main
         {
             base.Update(gameTime);
             
+            // ++++ idle timer ++++
+
+            if (!InputMapping.IsAnyKeyPressed())
+            {
+                idleTimer = Math.Min(idleTimer + 1, 999999999);
+            }
+            else
+            {
+                idleTimer = 0;
+            }
+
+            if (idleTimer > 2 * 60)
+            {
+                MainGame.Current.HUD.ShowCollectables(30);
+            }
+
             // ++++ look direction ++++
 
             if (k_upHolding) LookDirection = Direction.UP;
@@ -1349,8 +1356,7 @@ namespace Leore.Main
             if (State == PlayerState.ROLL || State == PlayerState.ROLL_JUMP)
             {
                 if (rollDamager == null)
-                {
-                    new SingularEffect(X, Y, 7);
+                {                    
                     rollDamager = new RollDamageProjectile(X, Y);
                 }
 
@@ -1561,8 +1567,11 @@ namespace Leore.Main
                             State = PlayerState.JUMP_UP;
                         }
                 }
-
-                rollDamager.Direction = new Vector2(XVel, YVel).ToDirection();
+                
+                if (rollDamager != null)
+                {
+                    rollDamager.Direction = new Vector2(XVel, YVel).ToDirection();
+                }
             }
             else // not rolling
             {
@@ -1579,6 +1588,7 @@ namespace Leore.Main
                 if (State == PlayerState.IDLE || State == PlayerState.WALK || State == PlayerState.GET_UP || State == PlayerState.TURN_AROUND)
                 {
                     // roll with down-key
+                    var enableRollState = false;
 
                     if (!k_attackHolding)
                     {
@@ -1587,7 +1597,7 @@ namespace Leore.Main
                             if ((Direction == Direction.LEFT && k_leftHolding)
                                 || (Direction == Direction.RIGHT && k_rightHolding))
                             {
-                                State = PlayerState.ROLL;
+                                enableRollState = true;
                             }
                         }
                         else
@@ -1597,10 +1607,16 @@ namespace Leore.Main
                                 if ((Direction == Direction.LEFT && k_leftPressed)
                                 || (Direction == Direction.RIGHT && k_rightPressed))
                                 {
-                                    State = PlayerState.ROLL;
+                                    enableRollState = true;
                                 }
                             }
                         }
+                    }
+
+                    if (enableRollState)
+                    {
+                        new SingularEffect(X, Y, 7);
+                        State = PlayerState.ROLL;
                     }
                 }
             }

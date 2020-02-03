@@ -4,6 +4,7 @@ using Leore.Objects.Level;
 using Leore.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SPG;
 using SPG.Util;
 using System;
 using System.Collections.Generic;
@@ -27,10 +28,14 @@ namespace Leore.Objects.Items
         CollectableAmbientEmitter emitter;
 
         Player player => GameManager.Current.Player;
-
+        
         public Collectable(float x, float y, Room room) : base(x, y, room, "Collectable")
         {
             AnimationTexture = AssetManager.Collectable;
+            //Texture = AssetManager.Collectable[0];
+
+            Depth = Globals.LAYER_PLAYER - .0001f;
+
             DrawOffset = new Vector2(8);
             light = new LightSource(this);
             light.Scale = new Vector2(.5f);
@@ -45,17 +50,26 @@ namespace Leore.Objects.Items
         {
             base.Update(gameTime);
 
-            t = (t + .1) % (2 * Math.PI);
+            t = (t + .05) % (2 * Math.PI);
             var z = (float)Math.Sin(t);
 
             Position = new Vector2(origPosition.X, origPosition.Y + z);
 
-            SetAnimation(0, 10, .2f, true);
+            light.Scale = new Vector2(.5f - .1f * z);
+
+            SetAnimation(0, 23, .3f, true);
 
             lightAngle1 = (lightAngle1 + 2) % 360;
             lightAngle2 = (lightAngle2 + 360 - 3) % 360;
             
             Taken = player.Stats.Collectables.Contains(ID);
+
+            emitter.Position = Position + new Vector2(0, z - 2);
+
+            //var alpha = .35f + Math.Abs(.25f * z);
+            //Color = new Color(Color.White, alpha);
+            
+            Angle = 0 + .2f * z;
             
             if (Taken)
                 Destroy();            
@@ -78,11 +92,20 @@ namespace Leore.Objects.Items
                 return;
 
             // FLASH
+            //new FlashEmitter(X, Y);
+
             var burst = new KeyBurstEmitter(X, Y, player);
-            burst.Colors = new List<Color> { Color.White };
+
+            var colors = new List<Color>();
+            for(var i = 0; i < 10; i ++)
+            {
+                colors.Add(CollectableAmbientEmitter.GetRandomColor());
+            }
+
+            burst.Colors = colors;
 
             player.Stats.Collectables.Add(ID);
-            //throw new NotImplementedException();
+            MainGame.Current.HUD.ShowCollectables(4 * 60, true);
         }
     }
 }
