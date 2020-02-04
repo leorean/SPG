@@ -1783,7 +1783,8 @@ namespace Leore.Main
                     }
                 } else
                 {
-                    XVel *= .94f;
+                    //XVel *= .94f;
+                    XVel *= .9f;
                 }
                 if (Stats.Abilities.HasFlag(PlayerAbility.LEVITATE))
                 {

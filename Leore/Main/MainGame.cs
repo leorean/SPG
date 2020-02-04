@@ -249,22 +249,19 @@ namespace Leore.Main
                         // toggle: flags ^= flag
 
                         GameManager.Current.Player.Stats.Abilities |= PlayerAbility.DOUBLE_JUMP;
-                        //GameManager.Current.Player.Stats.Abilities |= PlayerAbility.LEVITATE;
-
+                        
                         GameManager.Current.Player.Stats.Abilities |= PlayerAbility.ORB;
                         GameManager.Current.AddStoryFlag("hasOrb");
 
                         GameManager.Current.Player.Stats.Abilities |= PlayerAbility.PUSH;
                         GameManager.Current.Player.Stats.Abilities |= PlayerAbility.NO_FALL_DAMAGE;
 
-                        //GameManager.Current.Player.Stats.Abilities |= PlayerAbility.LEVITATE;
+                        GameManager.Current.Player.Stats.Abilities |= PlayerAbility.LEVITATE;
 
                         GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_WALL;
-                        //GameManager.Current.Player.Stats.Abilities |= PlayerAbility.NO_FALL_DAMAGE;
-
-                        //GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.CLIMB_CEIL;
-                        //GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.CLIMB_WALL;
-
+                        GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_CEIL;
+                        GameManager.Current.Player.Stats.Abilities |= PlayerAbility.ROLL;
+                        
                         GameManager.Current.AddSpell(SpellType.STAR);
                         GameManager.Current.AddSpell(SpellType.SNATCH_KEYS);
                         GameManager.Current.AddSpell(SpellType.CRIMSON_ARC);
@@ -278,6 +275,26 @@ namespace Leore.Main
                         //GameManager.Current.Player.Stats.MaxHP = 14;
                         //GameManager.Current.Player.Stats.MaxMP = 40;
                         //GameManager.Current.Player.Stats.MPRegen = .4f;
+
+                        Debug.WriteLine("Added abilities");
+                    }
+
+                    if (Input.IsKeyPressed(Keys.D8, Input.State.Pressed))
+                    {
+                        GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.DOUBLE_JUMP;                                                
+                        //GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.PUSH;
+                        //GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.NO_FALL_DAMAGE;
+
+                        GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.LEVITATE;
+                        GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.CLIMB_WALL;
+                        GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.CLIMB_CEIL;
+                        GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.ROLL;
+
+                        GameManager.Current.RemoveSpell(SpellType.VOID);
+                        GameManager.Current.RemoveSpell(SpellType.FIRE);
+                        GameManager.Current.AddSpell(SpellType.NONE);
+
+                        Debug.WriteLine("Removed abilities");
                     }
 
                     if (Input.IsKeyPressed(Keys.O, Input.State.Pressed))

@@ -80,6 +80,8 @@ namespace Leore.Objects.Effects.Emitters
         private Room room;
         private int waterCount;
 
+        private RoomCamera camera => RoomCamera.Current;
+
         public GlobalWaterBubbleEmitter(float x, float y) : base(x, y)
         {
         }
@@ -98,16 +100,16 @@ namespace Leore.Objects.Effects.Emitters
             base.Update(gameTime);
 
             var roomSize = 0;
-            if (RoomCamera.Current.CurrentRoom != null)
+            if (camera.CurrentRoom != null)
             {
-                roomSize = MathUtil.Div(RoomCamera.Current.CurrentRoom.BoundingBox.Width, RoomCamera.Current.ViewWidth) 
-                    * MathUtil.Div(RoomCamera.Current.CurrentRoom.BoundingBox.Height, RoomCamera.Current.ViewHeight);                
+                roomSize = MathUtil.Div(camera.CurrentRoom.BoundingBox.Width, camera.ViewWidth) 
+                    * MathUtil.Div(camera.CurrentRoom.BoundingBox.Height, camera.ViewHeight);                
             }
 
             // measure how many water tiles there are
-            if (room != RoomCamera.Current.CurrentRoom && RoomCamera.Current.CurrentRoom != null)
+            if (room != camera.CurrentRoom && camera.CurrentRoom != null)
             {
-                room = RoomCamera.Current.CurrentRoom;
+                room = camera.CurrentRoom;
                 
                 var posX = room.X;
                 var posY = room.Y;
@@ -128,11 +130,27 @@ namespace Leore.Objects.Effects.Emitters
                 }
             }
 
-            SpawnRate = (int)Math.Ceiling(roomSize * .5f);
-            SpawnTimeout = 1;
+            if (room != null)
+            {
+                var roomTileAmount = (roomSize * (room.BoundingBox.Width / Globals.T) * (room.BoundingBox.Height / Globals.T));
+                var viewTileAmount = (1 * (room.BoundingBox.Width / Globals.T) * (room.BoundingBox.Height / Globals.T));
+                var waterPercent = waterCount / roomTileAmount;
 
-            if (Particles.Count >= waterCount * .5f)
+                if (Particles.Count < (int)Math.Min((waterPercent * viewTileAmount), 20))
+                    SpawnRate = 1;
+                else
+                    SpawnRate = 0;
+            }
+            else
+            {
                 SpawnRate = 0;
+            }
+
+            //SpawnRate = (int)Math.Ceiling(roomSize * .5f);
+            //SpawnTimeout = 1;
+
+            //if (Particles.Count >= waterCount * .25f)
+            //    SpawnRate = 0;
         }
     }
 }

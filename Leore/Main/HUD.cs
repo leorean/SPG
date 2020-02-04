@@ -116,7 +116,7 @@ namespace Leore.Main
 
             // collectables
 
-            if (player.Stats.Collectables.Count > 0)
+            if (player.Stats.Collectables.Count > 0 && !ObjectManager.Exists<MessageBox>())
             {
                 collectableTimer = Math.Max(collectableTimer - 1, 0);
                 if (collectableTimer == 0)
