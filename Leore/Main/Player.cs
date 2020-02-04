@@ -1584,6 +1584,7 @@ namespace Leore.Main
             {
                 if (rollDamager != null)
                 {
+                    new SingularEffect(X, Y, 7);
                     rollDamager.Destroy();
                     rollDamager = null;                    
                 }
@@ -2059,7 +2060,10 @@ namespace Leore.Main
 
                     if (k_leftHolding)
                     {
-                        XVel = Math.Max(XVel - waterAccX, -waterVelMax);
+                        if (!(Direction == Direction.LEFT && currentFlowDirection == Direction.LEFT))
+                        {
+                            XVel = Math.Max(XVel - waterAccX, -waterVelMax);
+                        }
                         if (sx < tSwimVecX)
                         {
                             Direction = Direction.LEFT;
@@ -2072,7 +2076,10 @@ namespace Leore.Main
                     }
                     else if (k_rightHolding)
                     {
-                        XVel = Math.Min(XVel + waterAccX, waterVelMax);
+                        if (!(Direction == Direction.RIGHT && currentFlowDirection == Direction.RIGHT))
+                        {
+                            XVel = Math.Min(XVel + waterAccX, waterVelMax);
+                        }
                         if (sx > -tSwimVecX)
                         {
                             Direction = Direction.RIGHT;

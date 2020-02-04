@@ -117,6 +117,7 @@ namespace Leore.Main
             GameManager.Current.AddGameMap("tealglade_woods");
             GameManager.Current.AddGameMap("forest_temple");
             GameManager.Current.AddGameMap("great_cavern");
+            GameManager.Current.AddGameMap("nethervault_temple");
 
             // debug maps:
             //GameManager.Current.AddGameMap("worldMap");

@@ -131,9 +131,10 @@ namespace Leore.Objects.Projectiles
 
             Position = orb.Position + new Vector2((int)direction *  dist, yspd * dist);
 
-            if (orb.State != OrbState.ATTACK || player.Direction != direction)
+            //if (orb.State != OrbState.ATTACK || player.Direction != direction)
+            if (player.Direction != direction)
             {
-                headBack = true;                
+                    headBack = true;                
             }
         }
 
