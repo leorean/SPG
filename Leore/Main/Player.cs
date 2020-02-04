@@ -1386,6 +1386,13 @@ namespace Leore.Main
                         if (k_rightHolding)
                             XVel = Math.Min(XVel + xAcc, maxVelRoll);
                     }
+                    else
+                    {
+                        if (k_leftHolding)
+                            XVel = Math.Max(XVel - .25f * xAcc, -maxVelRoll);
+                        if (k_rightHolding)
+                            XVel = Math.Min(XVel + .25f * xAcc, maxVelRoll);
+                    }
                 }
 
                 rollAngle = (rollAngle + (5 * XVel)) % 360;
