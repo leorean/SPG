@@ -63710,9 +63710,9 @@ What a pickle...</property>
     <property name="disappearCondition" value="ancient2,giantBatDead"/>
     <property name="npcType" type="int" value="1"/>
     <property name="setCondition" value="ancient2"/>
-    <property name="text">This is the ~Temple of Nethervault~.
-|The next ~altar of light~ is nigh, but a dark presence lingers here..
-Be careful.</property>
+    <property name="text">This is the ~Nethervault~.
+|The next ~altar of light~ is nigh, but darkness lingers..
+|Until we meet again.</property>
    </properties>
   </object>
  </objectgroup>

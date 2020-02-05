@@ -94,7 +94,7 @@ SANCTUARY
 TEALGLADE WOODS
 - Forest Temple (#1) : Spell (Shooting Star)
 GREAT CAVERN
-- Temple of Nethervault (#2) : Double Jump
+- The Nethervault (#2) : Double Jump
 MOUNT ASCENT
 - Temple of Leon Part 1 (#3) : Wall Climb / Fire Orb
 - Temple of Leon Part 2 (#4) : Ceil Climb
