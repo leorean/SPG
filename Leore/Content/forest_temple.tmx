@@ -34684,7 +34684,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="94" name="OBJ" visible="0" locked="1">
+ <objectgroup id="94" name="OBJ">
   <object id="1421" type="door" x="1232" y="256" width="16" height="16">
    <properties>
     <property name="levelName" value="tealglade_woods"/>

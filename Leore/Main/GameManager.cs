@@ -451,6 +451,7 @@ namespace Leore.Main
                     CoinsAfterDeath = 0;
                 }
 
+                MainGame.Current.HUD.SetVisible(true);
                 MainGame.Current.State = MainGame.GameState.Running;
             }
             else

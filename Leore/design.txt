@@ -96,12 +96,12 @@ TEALGLADE WOODS
 GREAT CAVERN
 - Temple of Nethervault (#2) : Double Jump
 MOUNT ASCENT
-- Temple of Leon Part 1 (#3) : Wall Climb / Orb: Fire
+- Temple of Leon Part 1 (#3) : Wall Climb / Fire Orb
 - Temple of Leon Part 2 (#4) : Ceil Climb
 OCEAN
 - Sunken Temple (#5) : Breathe underwater
 PINE WOODS
-- Torwyn Castle (#6) : Rolling
+- Torwyn Castle (#6) : Rolling / Earth Orb?
 CYON'S EDGE
 - Frozen Bulwark (#7) : Levitation
 
@@ -110,6 +110,9 @@ Other:
 LYBIANNA
 * Spell (Crimson Arc)
 * Spell (Vortex)
+
+???
+* Spell (Earth)
 
 ~~~ Story ~~~
 

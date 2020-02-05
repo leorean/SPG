@@ -70,7 +70,7 @@ namespace Leore.Objects.Projectiles
                     break;
                 case Direction.LEFT:
                 case Direction.RIGHT:
-                    if (!(obj is DestroyBlock))
+                    if (!(obj is DestroyBlock) && !(obj is Pot))
                     {
                         player.XVel *= -.5f;
                         player.YVel = -1f;
