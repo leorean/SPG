@@ -63570,8 +63570,8 @@ It existed long before our era.
   <object id="1486" type="door" x="2512" y="1248" width="16" height="16">
    <properties>
     <property name="levelName" value="nethervault_temple"/>
-    <property name="tx" type="int" value="5"/>
-    <property name="ty" type="int" value="5"/>
+    <property name="tx" type="int" value="18"/>
+    <property name="ty" type="int" value="34"/>
    </properties>
   </object>
   <object id="1487" type="door" x="1568" y="832" width="16" height="16">

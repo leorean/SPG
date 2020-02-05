@@ -48,12 +48,12 @@ namespace Leore.Objects.Level.Obstacles
                 }
             }
             if (change == 1)
-            {                
+            {
+                IsOut = false;
                 offset = Math.Min(offset + .5f, maxOffset);
                 if (offset == maxOffset)
                 {   
-                    change = 0;
-                    IsOut = false;
+                    change = 0;                    
                 }
             }
             
