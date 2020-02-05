@@ -58,10 +58,10 @@ namespace Leore.Objects.Items
                     HighlightColor = GameResources.MpColors.First();
 
                     Name = "MP-Up";
-                    Text = $"~Max. MP~ increased by [{statColorHex}]~5~.";
+                    Text = $"~Max. MP~ increased by [{statColorHex}]~2~.";
                     OnObtain = () => 
                     {
-                        player.Stats.MaxMP += 5;
+                        player.Stats.MaxMP += 2;
                         player.MP = player.Stats.MaxMP;
                         new PotionBurstEmitter(X, Y, PotionType.MP);
                         if (fromShop)

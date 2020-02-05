@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="160" height="99" tilewidth="16" tileheight="16" infinite="0" nextlayerid="119" nextobjectid="1540">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="160" height="99" tilewidth="16" tileheight="16" infinite="0" nextlayerid="119" nextobjectid="1541">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="2048" columns="64">
   <image source="tiles.png" width="1024" height="512"/>
  </tileset>
@@ -27192,8 +27192,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="745"/>
+   <tile gid="746"/>
    <tile/>
    <tile/>
    <tile/>
@@ -27352,8 +27352,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="809"/>
+   <tile gid="810"/>
    <tile/>
    <tile/>
    <tile/>
@@ -27512,8 +27512,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="809"/>
+   <tile gid="810"/>
    <tile/>
    <tile/>
    <tile/>
@@ -27672,8 +27672,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="809"/>
+   <tile gid="810"/>
    <tile/>
    <tile/>
    <tile/>
@@ -27832,15 +27832,15 @@
    <tile gid="745"/>
    <tile gid="746"/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile gid="284"/>
    <tile gid="809"/>
    <tile gid="810"/>
-   <tile gid="284"/>
-   <tile gid="809"/>
-   <tile gid="810"/>
-   <tile gid="284"/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile gid="284"/>
    <tile gid="809"/>
@@ -27992,15 +27992,15 @@
    <tile gid="809"/>
    <tile gid="810"/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile gid="348"/>
    <tile gid="809"/>
    <tile gid="810"/>
-   <tile gid="348"/>
-   <tile gid="809"/>
-   <tile gid="810"/>
-   <tile gid="348"/>
+   <tile/>
+   <tile/>
+   <tile gid="284"/>
+   <tile/>
+   <tile gid="284"/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile gid="348"/>
    <tile gid="809"/>
@@ -28152,14 +28152,14 @@
    <tile gid="873"/>
    <tile gid="874"/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
    <tile gid="873"/>
    <tile gid="874"/>
    <tile/>
-   <tile gid="873"/>
-   <tile gid="874"/>
+   <tile/>
+   <tile gid="348"/>
+   <tile/>
+   <tile gid="348"/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -28312,14 +28312,14 @@
    <tile gid="937"/>
    <tile gid="938"/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
    <tile gid="937"/>
    <tile gid="938"/>
    <tile/>
-   <tile gid="937"/>
-   <tile gid="938"/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -28472,14 +28472,14 @@
    <tile gid="1001"/>
    <tile gid="1002"/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
    <tile gid="1001"/>
    <tile gid="1002"/>
    <tile/>
-   <tile gid="1001"/>
-   <tile gid="1002"/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -58879,7 +58879,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="870"/>
+   <tile/>
    <tile gid="931"/>
    <tile gid="808"/>
    <tile gid="868"/>
@@ -59039,8 +59039,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="870"/>
-   <tile gid="641"/>
+   <tile/>
+   <tile/>
    <tile gid="867"/>
    <tile gid="868"/>
    <tile gid="868"/>
@@ -59198,9 +59198,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="795"/>
-   <tile gid="870"/>
-   <tile gid="583"/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile gid="867"/>
    <tile gid="868"/>
    <tile gid="868"/>
@@ -59358,17 +59358,17 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="795"/>
-   <tile gid="870"/>
-   <tile gid="583"/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile gid="931"/>
+   <tile gid="808"/>
+   <tile gid="868"/>
+   <tile gid="807"/>
    <tile gid="932"/>
-   <tile gid="932"/>
-   <tile gid="932"/>
-   <tile gid="932"/>
-   <tile gid="932"/>
-   <tile gid="932"/>
-   <tile gid="932"/>
+   <tile gid="808"/>
+   <tile gid="868"/>
+   <tile gid="807"/>
    <tile gid="932"/>
    <tile gid="932"/>
    <tile gid="932"/>
@@ -59518,17 +59518,17 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="795"/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile gid="931"/>
+   <tile gid="932"/>
+   <tile gid="933"/>
    <tile gid="870"/>
-   <tile gid="583"/>
-   <tile gid="806"/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="931"/>
+   <tile gid="932"/>
+   <tile gid="933"/>
    <tile/>
    <tile/>
    <tile/>
@@ -59678,16 +59678,16 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="795"/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile gid="870"/>
-   <tile gid="644"/>
+   <tile/>
    <tile gid="870"/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="870"/>
    <tile/>
    <tile/>
    <tile/>
@@ -59838,16 +59838,16 @@
    <tile/>
    <tile/>
    <tile gid="795"/>
-   <tile gid="998"/>
-   <tile gid="934"/>
-   <tile gid="998"/>
-   <tile gid="934"/>
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="838"/>
    <tile/>
    <tile/>
+   <tile gid="870"/>
+   <tile/>
+   <tile gid="870"/>
+   <tile/>
+   <tile gid="870"/>
    <tile/>
    <tile/>
    <tile/>
@@ -60003,11 +60003,11 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile gid="795"/>
-   <tile/>
-   <tile/>
+   <tile gid="934"/>
+   <tile gid="838"/>
+   <tile gid="934"/>
+   <tile gid="838"/>
+   <tile gid="934"/>
    <tile/>
    <tile/>
    <tile/>
@@ -60163,18 +60163,18 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="583"/>
+   <tile/>
+   <tile gid="583"/>
+   <tile/>
+   <tile gid="583"/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="838"/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile gid="725"/>
    <tile/>
    <tile gid="867"/>
    <tile gid="861"/>
@@ -60323,11 +60323,11 @@
    <tile gid="804"/>
    <tile gid="804"/>
    <tile gid="804"/>
-   <tile gid="804"/>
-   <tile gid="804"/>
-   <tile gid="804"/>
-   <tile gid="804"/>
-   <tile gid="804"/>
+   <tile gid="805"/>
+   <tile gid="795"/>
+   <tile gid="806"/>
+   <tile gid="795"/>
+   <tile gid="803"/>
    <tile gid="804"/>
    <tile gid="804"/>
    <tile gid="804"/>
@@ -60483,11 +60483,11 @@
    <tile gid="868"/>
    <tile gid="868"/>
    <tile gid="868"/>
-   <tile gid="868"/>
-   <tile gid="868"/>
-   <tile gid="868"/>
-   <tile gid="868"/>
-   <tile gid="868"/>
+   <tile gid="869"/>
+   <tile/>
+   <tile gid="870"/>
+   <tile/>
+   <tile gid="867"/>
    <tile gid="868"/>
    <tile gid="868"/>
    <tile gid="868"/>
@@ -63526,17 +63526,6 @@
   </object>
  </objectgroup>
  <objectgroup id="94" name="OBJ">
-  <object id="1479" type="npc" x="2400" y="1248" width="16" height="16">
-   <properties>
-    <property name="appearCondition" value=""/>
-    <property name="disappearCondition" value="ancient2,giantBatDead"/>
-    <property name="npcType" type="int" value="1"/>
-    <property name="setCondition" value="ancient2"/>
-    <property name="text">This is the ~Temple of Nethervault~.
-It existed long before our era.
-|You must find ~3 keys~ to access the temple.</property>
-   </properties>
-  </object>
   <object id="1480" type="npc" x="560" y="1104" width="16" height="16">
    <properties>
     <property name="centerText" type="bool" value="true"/>
@@ -63713,6 +63702,17 @@ What a pickle...</property>
    <properties>
     <property name="tx" type="int" value="12"/>
     <property name="ty" type="int" value="-2"/>
+   </properties>
+  </object>
+  <object id="1540" type="npc" x="2512" y="1248" width="16" height="16">
+   <properties>
+    <property name="appearCondition" value=""/>
+    <property name="disappearCondition" value="ancient2,giantBatDead"/>
+    <property name="npcType" type="int" value="1"/>
+    <property name="setCondition" value="ancient2"/>
+    <property name="text">This is the ~Temple of Nethervault~.
+|The next ~altar of light~ is nigh, but a dark presence lingers here..
+Be careful.</property>
    </properties>
   </object>
  </objectgroup>

@@ -1786,6 +1786,7 @@ namespace Leore.Main
                 {
                     //XVel *= .94f;
                     XVel *= .9f;
+                    YVel = Math.Min(YVel, 3);
                 }
                 if (Stats.Abilities.HasFlag(PlayerAbility.LEVITATE))
                 {

@@ -59,6 +59,11 @@ namespace Leore.Objects.Level
                               boss = new BossGiantBat(Room.X + 5 * Globals.T, Room.Y + 5 * Globals.T, Room, setCondition);
                               boss.ID = ID;
                               break;
+                          case 2:
+                              new FlashEmitter(player.X, player.Y, longFlash: true);
+                              //boss = new BossGiantBat(Room.X + 5 * Globals.T, Room.Y + 5 * Globals.T, Room, setCondition);
+                              //boss.ID = ID;
+                              break;
                       }
                       Destroy();
                   });
