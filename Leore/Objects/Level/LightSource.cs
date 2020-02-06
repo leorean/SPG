@@ -53,11 +53,18 @@ namespace Leore.Objects.Level
         public LightSource(GameObject parent) : base(parent.Center.X, parent.Center.Y)
         {
             this.Parent = parent;
+
+            BoundingBox = new SPG.Util.RectF(0, 0, 0, 0);
         }
         
         public override void BeginUpdate(GameTime gameTime)
         {
-            base.BeginUpdate(gameTime);            
+            base.BeginUpdate(gameTime);
+
+            if (Parent != null)
+            {
+                Position = Parent.Position;
+            }
         }        
     }
 

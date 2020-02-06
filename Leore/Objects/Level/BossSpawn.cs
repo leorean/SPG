@@ -61,9 +61,11 @@ namespace Leore.Objects.Level
                               break;
                           case 2:
                               //new FlashEmitter(player.X, player.Y, longFlash: true);
-                              //boss = new BossShadowLizard(Room.X + 5 * Globals.T, Room.Y + 5 * Globals.T, Room, setCondition);
-                              boss = new BossShadowLizard(player.X - 6*Globals.T, player.Y -6 * Globals.T, Room, setCondition);
+                              boss = new BossShadowLizard(player.X - 4 * Globals.T, player.Y - 4 * Globals.T, Room, setCondition);
                               boss.ID = ID;
+
+                              GameManager.Current.OverwriteSwitchStateTo(true);
+
                               break;
                       }
                       Destroy();
