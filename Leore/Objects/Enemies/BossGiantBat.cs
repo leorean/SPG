@@ -163,6 +163,8 @@ namespace Leore.Objects.Enemies
 
                     preventDeath = false;
 
+                    deathAlpha = Math.Min(deathAlpha + .01f, 1);
+
                     Move(0, -.2f);
 
                     XVel = 0;
@@ -204,8 +206,6 @@ namespace Leore.Objects.Enemies
             }
             else
             {
-                deathAlpha = Math.Min(deathAlpha + .01f, 1);
-
                 sb.Draw(AssetManager.BossGiantBat[8], Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
                 sb.Draw(AssetManager.BossGiantBat[9], Position, null, new Color(Color, deathAlpha), Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0001f);
             }

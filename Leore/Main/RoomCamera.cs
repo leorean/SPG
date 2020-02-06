@@ -235,28 +235,34 @@ namespace Leore.Main
                         return;                    
                 }
                 
-                if (target is Player)
+                if (target is Player player)
                 {
                     var dir = (target as Player).Direction;
-                    
-                    switch ((target as Player).State)
-                    {
-                        
-                        case Player.PlayerState.OBTAIN:
-                        case Player.PlayerState.DEAD:
-                        case Player.PlayerState.BACKFACING:
-                            offsetX *= .9f;
-                            break;
-                        default:
-                            offsetX += Math.Sign((int)dir) * 1f;
-                            offsetX = offsetX.Clamp(-4 * Globals.T, 4 * Globals.T);                            
-                            break;
-                    }
 
+                    if (MainGame.Current.HUD.Boss == null)
+                    {
+                        switch (player.State)
+                        {
+
+                            case Player.PlayerState.OBTAIN:
+                            case Player.PlayerState.DEAD:
+                            case Player.PlayerState.BACKFACING:
+                                offsetX *= .9f;
+                                break;
+                            default:
+                                offsetX += Math.Sign((int)dir) * 1f;
+                                offsetX = offsetX.Clamp(-4 * Globals.T, 4 * Globals.T);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        offsetX *= .9f;
+                    }
                     
                     if (!lookLocked)
                     {
-                        switch ((target as Player).LookDirection)
+                        switch (player.LookDirection)
                         {
                             case Direction.UP:
                                 offsetY = Math.Max(offsetY - .5f, -3 * Globals.T);

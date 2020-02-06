@@ -137,7 +137,7 @@ namespace Leore.Objects.Enemies
             new SingularEffect(X, Y);
 
             if (!Respawn)
-                GameManager.Current.NonRespawnableIDs.Add(ID);
+                GameManager.Current.NonRespawnableIDs.Add(ID);            
         }
 
         public override void EndUpdate(GameTime gameTime)

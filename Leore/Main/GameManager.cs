@@ -463,7 +463,7 @@ namespace Leore.Main
             LoadLevelObjects();
 
             RoomCamera.Current.SetTarget(Player);            
-            MainGame.Current.HUD.SetBoss(null);
+            MainGame.Current.HUD.Boss = null;
 
         }
 

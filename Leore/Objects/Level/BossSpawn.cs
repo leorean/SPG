@@ -41,7 +41,8 @@ namespace Leore.Objects.Level
             {
                 player.SetControlsEnabled(false);
 
-                RoomCamera.Current.Shake(0 * 60, () =>
+                var quake = 3 * 60;
+                RoomCamera.Current.Shake(0, () =>
                   {
                       player.SetControlsEnabled(true);
 
@@ -60,12 +61,9 @@ namespace Leore.Objects.Level
                               boss.ID = ID;
                               break;
                           case 2:
-                              //new FlashEmitter(player.X, player.Y, longFlash: true);
-                              boss = new BossShadowLizard(player.X - 4 * Globals.T, player.Y - 4 * Globals.T, Room, setCondition);
-                              boss.ID = ID;
-
-                              GameManager.Current.OverwriteSwitchStateTo(true);
-
+                              new FlashEmitter(player.X, player.Y, longFlash: false);
+                              boss = new BossShadowLizard(player.X - 0 * Globals.T, player.Y - 8 * Globals.T, Room, setCondition);
+                              boss.ID = ID;                              
                               break;
                       }
                       Destroy();

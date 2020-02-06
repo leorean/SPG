@@ -536,12 +536,7 @@ namespace Leore.Main
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            //if (light != null)
-            //{
-            //    light.Position = Position;
-            //}
-
+            
             // ++++ idle timer ++++
 
             if (!InputMapping.IsAnyKeyPressed())

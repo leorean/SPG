@@ -34,18 +34,29 @@ namespace Leore.Objects.Enemies
         private Player player => GameManager.Current.Player;
         private RoomCamera camera => RoomCamera.Current;
 
-        float alpha;
+        private float alpha;
+        private float maxAlpha = 1;
+        private float minAlpha = 0;//.3f;
 
-        int attacks;
-        int attackTimer;
-        int maxFollowTimer = 10 * 60;
-        int followTimer;
-        int maxRetreatTimer = 2 * 60;
-        int retreatTimer;
+        private int attacks;
+        private int attackTimer;
+        private int maxFollowTimer = 10 * 60;
+        private int followTimer;
+        private int maxRetreatTimer = 2 * 60;
+        private int retreatTimer;
+
+        private float eyeFrame;
+
+        private float deathAlpha;
+
+        private int deathTimer = 3 * 60;
+        private bool preventDeath;
+        private bool sawLight;
+        private int footPrint;
 
         public BossShadowLizard(float x, float y, Room room, string setCondition) : base(x, y, room, setCondition)
         {
-            HP = 200;
+            HP = 80;
             
             AnimationTexture = AssetManager.BossShadowLizard;
             DrawOffset = new Vector2(48);
@@ -53,29 +64,96 @@ namespace Leore.Objects.Enemies
 
             Depth = Globals.LAYER_BG2 + .0001f;
             
-            knockback = .03f;
+            knockback = .1f;
 
             Direction = Direction.RIGHT;
 
             followTimer = maxFollowTimer;
             state = State.FOLLOW_PLAYER;
 
-            alpha = .5f;
+            alpha = 0;// .5f;
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
+            Damage = (alpha > minAlpha) ? 1 : 0;
+
             var hpPercent = HP / MaxHP;
+
+            var dst = 2 * Globals.T;
+            var torch = this.CollisionRectangleFirstOrDefault<Torch>(X - dst, Y - dst, X + dst, Y + dst);
+            if (torch != null)
+            {
+                if (!sawLight)
+                    deathAlpha = 1;
+
+                sawLight = true;
+            }
+
+            if (sawLight || state != State.FOLLOW_PLAYER)
+            {
+                alpha = Math.Min(alpha + .02f, maxAlpha);
+            }
+            else
+            {
+                alpha = Math.Max(alpha - .05f, minAlpha);
+            }
+
+            deathAlpha = (state == State.DIE) ? Math.Min(deathAlpha + .005f, 1) : Math.Max(deathAlpha - .05f, 0);
 
             switch (state)
             {
                 case State.IDLE:
-                    SetAnimation(0, 3, .1f, true);                    
+                    eyeFrame = Math.Max(eyeFrame - .05f, 0);
+                    SetAnimation(0, 3, .1f, true);
+
+                    XVel = 0;
+                    XVel = 0;
+
+                    //alpha = Math.Max(alpha - .02f, 0);
+
                     break;
                 case State.FOLLOW_PLAYER:
                     {
+                        eyeFrame = 0;
+                        
+                        if (followTimer % 6 == 0)
+                        {
+                            footPrint = (footPrint + 1) % 4;
+                            float ang = 0;
+                            switch (footPrint)
+                            {
+                                case 0:
+                                    ang = 45;
+                                    break;
+                                case 1:
+                                    ang = 45;
+                                    break;
+                                case 2:
+                                    ang = 315;
+                                    break;
+                                case 3:
+                                    ang = 315;
+                                    break;
+                            }
+
+                            //var dx = (float)(fx * 32 * MathUtil.LengthDirX(MathUtil.RadToDeg(Angle)));
+                            //var dy = (float)(fy * 32 * MathUtil.LengthDirY(MathUtil.RadToDeg(Angle)));
+                            var dx = (float)(8 * MathUtil.LengthDirX(MathUtil.RadToDeg(Angle) + ang));
+                            var dy = (float)(8 * MathUtil.LengthDirY(MathUtil.RadToDeg(Angle) + ang));
+
+                            var offx = 10;// * (float)MathUtil.LengthDirX(MathUtil.RadToDeg(Angle));
+                            var offy = 10;// * (float)MathUtil.LengthDirY(MathUtil.RadToDeg(Angle));
+
+                            var foot = new SingularEffect(X + offx + dx, Y + offy + dy, 17);
+                            foot.Angle = Angle;
+                            foot.Scale = new Vector2(.75f);
+                            foot.Color = new Color(Color.White, 1 - alpha);
+                            foot.Depth = Depth - .00001f;                            
+                        }
+
                         followTimer = Math.Max(followTimer - 1, 0);
                         
                         var maxSpd = .7f;
@@ -94,8 +172,9 @@ namespace Leore.Objects.Enemies
                         YVel = MathUtil.AtMost(YVel, maxSpd);
                         
                         Angle = (float)MathUtil.VectorToAngle(new Vector2(XVel, YVel), true);
-                        
-                        if (followTimer == 0)
+
+                        //if (followTimer == 0)
+                        if (sawLight || followTimer == 0)
                         {
                             followTimer = maxFollowTimer;
                             retreatTimer = maxRetreatTimer;
@@ -112,6 +191,8 @@ namespace Leore.Objects.Enemies
                     break;
                 case State.RETREAT:
                     {
+                        eyeFrame = Math.Min(eyeFrame + .1f, 3);
+
                         var angle = (float)MathUtil.VectorToAngle(new Vector2(X - player.X, Y - player.Y - 1 * Globals.T), false);
                         XVel = .5f * (float)MathUtil.LengthDirX(angle);
                         YVel = .5f * (float)MathUtil.LengthDirY(angle);
@@ -147,8 +228,6 @@ namespace Leore.Objects.Enemies
                             {
                                 for (var i = -1; i < 2; i++)
                                 {
-
-                                    //var angle = (float)MathUtil.VectorToAngle(new Vector2(player.X - X, player.Y - Y), false) + i * 20;
                                     var angle = MathUtil.RadToDeg(Angle) + i * 20;
                                     SpawnProjectile(angle);
 
@@ -157,6 +236,7 @@ namespace Leore.Objects.Enemies
                             else
                             {
                                 SetAnimation(0, 3, .2f, true);
+                                eyeFrame = 4;
 
                                 if (attacks > 4)
                                 {
@@ -187,9 +267,33 @@ namespace Leore.Objects.Enemies
 
                             camera.Shake(2 * 60, () =>
                             {
+                                sawLight = false;
                                 state = State.FOLLOW_PLAYER;                                
                             });
                         }
+                    }
+                    break;
+                case State.DIE:
+                    
+                    eyeFrame = 5;
+                    alpha = maxAlpha;
+                    SetAnimation(0, 0, 0, false);
+
+                    preventDeath = false;
+                    
+                    XVel = 0;
+                    YVel = 0;
+                    Damage = 0;
+                    deathTimer = Math.Max(deathTimer - 1, 0);
+                    if (deathTimer % 5 == 0)
+                        new SingularEffect(Left + RND.Int((int)BoundingBox.Width), Top + RND.Int((int)BoundingBox.Height), 8);
+
+                    if (deathTimer == 0)
+                    {
+                        Coin.Spawn(X, Y, Room, 2000);
+                        new FlashEmitter(X, Y, longFlash: true);
+                        base.OnDeath();
+                        base.Destroy();
                     }
                     break;
 
@@ -211,21 +315,16 @@ namespace Leore.Objects.Enemies
             else
             {
                 YVel = 0;
-            }
-            
-            Color = new Color(Color, alpha);
-        }
-
-        bool InsideRoomArea()
-        {
-            var clt = 2.5f * Globals.T;
-            return X > Room.X + clt && X < Room.X + Room.BoundingBox.Width - clt
-                && Y > Room.Y + clt && Y < Room.Y + Room.BoundingBox.Height - clt;
+            }            
         }
 
         private void SpawnProjectile(double degAngle)
         {
-            var proj = new DefaultEnemyProjectile(X, Y);
+            var dst = 6;
+            var dx = dst * (float)MathUtil.LengthDirX(degAngle);
+            var dy = dst * (float)MathUtil.LengthDirY(degAngle);
+
+            var proj = new DefaultEnemyProjectile(X + dx, Y + dy);
             proj.Texture = AssetManager.Projectiles[14];
             var lightSource = new LightSource(proj);
             lightSource.Active = true;
@@ -239,32 +338,56 @@ namespace Leore.Objects.Enemies
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
-            if (state != State.DIE)
-            {
-                base.Draw(sb, gameTime);
-            }
-            else
-            {
-            //    deathAlpha = Math.Min(deathAlpha + .01f, 1);
+            //base.Draw(sb, gameTime);
+            
+            // feet
+            //var feetAlpha = maxAlpha - alpha - minAlpha;
+            //sb.Draw(AssetManager.BossShadowLizard[AnimationFrame], Position, null, new Color(Color, feetAlpha), Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
+            //sb.Draw(AssetManager.BossShadowLizard[(int)MathUtil.Clamp(AnimationFrame - 1, MinFrame, MaxFrame)], Position, null, new Color(Color, feetAlpha * .25f), Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
 
-            //    sb.Draw(AssetManager.BossGiantBat[8], Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
-            //    sb.Draw(AssetManager.BossGiantBat[9], Position, null, new Color(Color, deathAlpha), Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0001f);
-            }            
+            //body
+            sb.Draw(AssetManager.BossShadowLizard[AnimationFrame + 8], Position, null, new Color(Color, alpha), Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0001f);
+            //sb.Draw(AssetManager.BossShadowLizard[(int)MathUtil.Clamp(AnimationFrame + 8 - 1, MinFrame + 8, MaxFrame + 8)], Position, null, new Color(Color, alpha * .5f), Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0001f);
+
+            if ((int)eyeFrame > 0)
+            {
+                sb.Draw(AssetManager.BossShadowLizard[15 + (int)eyeFrame], Position, null, new Color(Color, alpha), Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0002f);
+            }
+
+            if (deathAlpha > 0)
+            {
+                sb.Draw(AssetManager.BossShadowLizard[21], Position, null, new Color(Color, deathAlpha), Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0003f);
+            }
         }
 
         public override void Hit(int hitPoints, float degAngle)
         {
-            base.Hit(hitPoints, degAngle);            
+            //if (alpha > 0)
+            //{
+            //    hitPoints *= 2;
+            //}
+
+            if (alpha == 0)
+                hitPoints = 0;
+
+            base.Hit(hitPoints, degAngle);
         }
 
         public override void Destroy(bool callGC = false)
         {
+            if (preventDeath)
+                return;
+
             base.Destroy();
         }
 
         public override void OnDeath()
         {
-            //base.OnDeath();
+            preventDeath = true;
+            if (state == State.DIE)
+                return;
+            state = State.DIE;
+            
             base.OnDeath();
             
         }

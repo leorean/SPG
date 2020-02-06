@@ -19,23 +19,23 @@ namespace Leore.Objects.Enemies
         public Boss(float x, float y, Room room, string setCondition) : base(x, y, room)
         {
             this.setCondition = setCondition;
-            MainGame.Current.HUD.SetBoss(this);
+            MainGame.Current.HUD.Boss = this;
         }
 
         public override void Hit(int hitPoints, float degAngle)
         {
             base.Hit(hitPoints, degAngle);
-            MainGame.Current.HUD.SetBoss(this);
+            MainGame.Current.HUD.Boss = this;
         }
 
         public override void OnDeath()
         {
             //base.OnDeath(); // never un-comment this!
-
+            
             GameManager.Current.AddStoryFlag(setCondition);
 
             GameManager.Current.Player.Stats.Bosses.Add(ID);
-            MainGame.Current.HUD.SetBoss(null);
+            MainGame.Current.HUD.Boss = null;
         }        
     }
 }

@@ -26,13 +26,9 @@ namespace Leore.Main
 
         private int collectableTimer;
         private float collectableY;
-
-        private Boss boss;
-        internal void SetBoss(Boss boss)
-        {
-            this.boss = boss;
-        }
-
+        
+        internal Boss Boss { get; set; }
+        
         private Player player => GameManager.Current.Player;
         
         public HUD()
@@ -160,13 +156,13 @@ namespace Leore.Main
                 sb.Draw(AssetManager.HUD, new Vector2(mpx + 1, mpy + 3), new Rectangle(16 * spellLevel, 96 + 16 * (int)spell, 16, 16), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Globals.LAYER_UI + .00002f);
             }
 
-            if (boss != null && !ObjectManager.Exists<MessageBox>())
+            if (Boss != null && !ObjectManager.Exists<MessageBox>())
             {
                 // icon
                 sb.Draw(AssetManager.HUD, new Vector2(x + 48, y + 128), new Rectangle(128, 32, 16, 16), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Globals.LAYER_UI + .00001f);
 
                 sb.Draw(AssetManager.HUD, new Vector2(x + 64, y + 128), new Rectangle(128, 0, 128, 16), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Globals.LAYER_UI + .00001f);
-                sb.Draw(AssetManager.HUD, new Vector2(x + 64 + 4, y + 128), new Rectangle(128 + 4, 16, (int)((128 - 8) * boss.HP / (float)boss.MaxHP), 16), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Globals.LAYER_UI + .00002f);
+                sb.Draw(AssetManager.HUD, new Vector2(x + 64 + 4, y + 128), new Rectangle(128 + 4, 16, (int)((128 - 8) * Boss.HP / (float)Boss.MaxHP), 16), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Globals.LAYER_UI + .00002f);
             }
         }
 
