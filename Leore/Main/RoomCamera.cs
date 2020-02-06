@@ -170,6 +170,12 @@ namespace Leore.Main
         private Action onShakeCompleteAction;
         public void Shake(int time, Action onComplete)
         {
+            if (time == 0)
+            {
+                onComplete?.Invoke();
+                return;
+            }
+
             if (shakeTimer > 0 || onShakeCompleteAction != null)
                 return;
 

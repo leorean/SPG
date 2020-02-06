@@ -6254,7 +6254,7 @@
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
-   <tile gid="856"/>
+   <tile gid="994"/>
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
@@ -6381,7 +6381,7 @@
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
-   <tile gid="856"/>
+   <tile gid="994"/>
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
@@ -6518,7 +6518,7 @@
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
-   <tile gid="856"/>
+   <tile gid="994"/>
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
@@ -6759,6 +6759,7 @@
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
+   <tile gid="994"/>
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
@@ -6788,7 +6789,6 @@
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
-   <tile gid="856"/>
    <tile/>
    <tile/>
    <tile/>
@@ -6837,7 +6837,6 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
@@ -6896,6 +6895,7 @@
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
+   <tile gid="994"/>
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
@@ -6914,9 +6914,9 @@
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
+   <tile gid="994"/>
    <tile gid="856"/>
    <tile gid="856"/>
-   <tile gid="856"/>
    <tile/>
    <tile/>
    <tile/>
@@ -7013,7 +7013,6 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
@@ -7038,6 +7037,7 @@
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
+   <tile gid="994"/>
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
@@ -7290,7 +7290,7 @@
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
-   <tile gid="856"/>
+   <tile gid="994"/>
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
@@ -7400,6 +7400,7 @@
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
+   <tile gid="994"/>
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
@@ -7409,6 +7410,7 @@
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
+   <tile gid="994"/>
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
@@ -7427,8 +7429,6 @@
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
-   <tile gid="856"/>
-   <tile gid="856"/>
    <tile/>
    <tile/>
    <tile/>
@@ -7525,12 +7525,11 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="856"/>
-   <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
+   <tile gid="994"/>
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
@@ -7554,6 +7553,7 @@
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
+   <tile gid="994"/>
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
@@ -7783,6 +7783,17 @@
    <tile/>
    <tile gid="856"/>
    <tile gid="856"/>
+   <tile gid="994"/>
+   <tile gid="856"/>
+   <tile gid="856"/>
+   <tile gid="856"/>
+   <tile gid="856"/>
+   <tile gid="856"/>
+   <tile gid="994"/>
+   <tile gid="856"/>
+   <tile gid="856"/>
+   <tile gid="856"/>
+   <tile gid="994"/>
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
@@ -7797,18 +7808,7 @@
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
-   <tile gid="856"/>
-   <tile gid="856"/>
-   <tile gid="856"/>
-   <tile gid="856"/>
-   <tile gid="856"/>
-   <tile gid="856"/>
-   <tile gid="856"/>
-   <tile gid="856"/>
-   <tile gid="856"/>
-   <tile gid="856"/>
-   <tile gid="856"/>
-   <tile gid="856"/>
+   <tile gid="994"/>
    <tile gid="856"/>
    <tile gid="856"/>
    <tile gid="856"/>
@@ -30456,7 +30456,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="838"/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -30582,11 +30582,11 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="995"/>
-   <tile gid="996"/>
-   <tile gid="996"/>
-   <tile gid="996"/>
-   <tile gid="997"/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -30836,16 +30836,16 @@
    <tile gid="869"/>
    <tile/>
    <tile/>
-   <tile gid="998"/>
-   <tile/>
-   <tile/>
-   <tile gid="838"/>
-   <tile/>
-   <tile gid="838"/>
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="998"/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -30967,23 +30967,23 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="998"/>
-   <tile/>
-   <tile gid="998"/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="998"/>
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="998"/>
    <tile/>
    <tile/>
-   <tile gid="838"/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -31111,7 +31111,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="998"/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -31355,17 +31355,17 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="998"/>
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="838"/>
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="998"/>
    <tile/>
-   <tile gid="998"/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -31479,7 +31479,6 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="998"/>
    <tile/>
    <tile/>
    <tile/>
@@ -31487,7 +31486,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="998"/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -31737,7 +31737,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="998"/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -31868,7 +31868,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="998"/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -32329,7 +32329,7 @@
   <object id="1456" type="room" x="1536" y="720" width="512" height="288">
    <properties>
     <property name="bg" type="int" value="11"/>
-    <property name="darkness" type="float" value="0"/>
+    <property name="darkness" type="float" value="0.45"/>
    </properties>
   </object>
   <object id="1457" type="room" x="256" y="432" width="256" height="144">

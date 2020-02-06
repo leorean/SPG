@@ -41,7 +41,7 @@ namespace Leore.Objects.Level
             {
                 player.SetControlsEnabled(false);
 
-                RoomCamera.Current.Shake(2 * 60, () =>
+                RoomCamera.Current.Shake(0 * 60, () =>
                   {
                       player.SetControlsEnabled(true);
 
@@ -60,9 +60,10 @@ namespace Leore.Objects.Level
                               boss.ID = ID;
                               break;
                           case 2:
-                              new FlashEmitter(player.X, player.Y, longFlash: true);
-                              //boss = new BossGiantBat(Room.X + 5 * Globals.T, Room.Y + 5 * Globals.T, Room, setCondition);
-                              //boss.ID = ID;
+                              //new FlashEmitter(player.X, player.Y, longFlash: true);
+                              //boss = new BossShadowLizard(Room.X + 5 * Globals.T, Room.Y + 5 * Globals.T, Room, setCondition);
+                              boss = new BossShadowLizard(player.X - 6*Globals.T, player.Y -6 * Globals.T, Room, setCondition);
+                              boss.ID = ID;
                               break;
                       }
                       Destroy();

@@ -80,6 +80,7 @@ namespace Leore.Main
         public static TextureSet EnemySlurp { get; private set; }
 
         public static TextureSet BossGiantBat { get; private set; }
+        public static TextureSet BossShadowLizard { get; private set; }
 
         // orb
 
@@ -148,6 +149,7 @@ namespace Leore.Main
             EnemyVoidling = content.LoadTextureSet("enemyVoidling");
             EnemySlime = content.LoadTextureSet("enemySlime", 32, 64);
             BossGiantBat = content.LoadTextureSet("bossGiantBat", 80, 80);
+            BossShadowLizard = content.LoadTextureSet("bossShadowLizard", 96, 96);
             EnemySlurp = content.LoadTextureSet("enemySlurp");
 
             Orbs = content.LoadTextureSet("orb", 16, 16);
