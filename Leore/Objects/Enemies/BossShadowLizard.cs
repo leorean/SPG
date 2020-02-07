@@ -23,6 +23,7 @@ namespace Leore.Objects.Enemies
         private enum State
         {
             IDLE,
+            SNEAK,
             FOLLOW_PLAYER,
             RETREAT,
             ATTACK,
@@ -44,6 +45,7 @@ namespace Leore.Objects.Enemies
         private int followTimer;
         private int maxRetreatTimer = 2 * 60;
         private int retreatTimer;
+        private int sneakTimer;
 
         private float eyeFrame;
 
@@ -53,10 +55,19 @@ namespace Leore.Objects.Enemies
         private bool preventDeath;
         private bool sawLight;
         private int footPrint;
+        private int sneakTransitionTimer;
 
+        private float maxSpd = .7f;
+
+        private float projectileTimer;
+
+        private float torchTimer;
+        
+        private int invincibleTimer;
+        
         public BossShadowLizard(float x, float y, Room room, string setCondition) : base(x, y, room, setCondition)
         {
-            HP = 80;
+            HP = 140;
             
             AnimationTexture = AssetManager.BossShadowLizard;
             DrawOffset = new Vector2(48);
@@ -69,9 +80,31 @@ namespace Leore.Objects.Enemies
             Direction = Direction.RIGHT;
 
             followTimer = maxFollowTimer;
-            state = State.FOLLOW_PLAYER;
+            state = State.SNEAK;
 
-            alpha = 0;// .5f;
+            alpha = 0;
+
+            //ActivateRandomTorch();
+        }
+
+        private void ActivateRandomTorch()
+        {
+            var torches = ObjectManager.FindAll<Torch>();
+
+            int lastIndex = -1;
+            int index = -1;
+            foreach (var torch in torches)
+            {
+                if (torch.Active)
+                    lastIndex = torches.FindIndex(o => o == torch);
+                torch.Active = false;                
+            }
+            while (index == lastIndex || index == -1)
+            {
+                index = RND.Int(torches.Count - 1);
+            }
+            torches[index].Active = true;
+            SpellEXP.Spawn(torches[index].Center.X, torches[index].Center.Y, 15);
         }
 
         public override void Update(GameTime gameTime)
@@ -79,20 +112,32 @@ namespace Leore.Objects.Enemies
             base.Update(gameTime);
 
             Damage = (alpha > minAlpha) ? 1 : 0;
+            IgnoreProjectiles = (Damage == 0);
+            var hpPercent = (float)HP / (float)MaxHP;
 
-            var hpPercent = HP / MaxHP;
+            invincibleTimer = Math.Max(invincibleTimer - 1, 0);
 
-            var dst = 2 * Globals.T;
-            var torch = this.CollisionRectangleFirstOrDefault<Torch>(X - dst, Y - dst, X + dst, Y + dst);
-            if (torch != null)
+            torchTimer = Math.Max(torchTimer - 1, 0);
+            if (torchTimer == 0)
             {
-                if (!sawLight)
-                    deathAlpha = 1;
-
-                sawLight = true;
+                ActivateRandomTorch();
+                torchTimer = 8 * 60;
             }
 
-            if (sawLight || state != State.FOLLOW_PLAYER)
+            var dst = 2.5f * Globals.T;
+            var torch = this.CollisionRectangleFirstOrDefault<Torch>(X - dst, Y - dst, X + dst, Y + dst);
+            if (torch != null && torch.Active)
+            {
+                if (!sawLight)
+                {
+                    deathAlpha = 1;
+
+                    sneakTransitionTimer = 2 * 60;
+                    sawLight = true;
+                }
+            }
+
+            if (sawLight || state != State.SNEAK)
             {
                 alpha = Math.Min(alpha + .02f, maxAlpha);
             }
@@ -103,6 +148,16 @@ namespace Leore.Objects.Enemies
 
             deathAlpha = (state == State.DIE) ? Math.Min(deathAlpha + .005f, 1) : Math.Max(deathAlpha - .05f, 0);
 
+            if (hpPercent < .5f)
+            {
+                projectileTimer = Math.Max(projectileTimer - 1, 0);
+                if (projectileTimer == 0)
+                {
+                    projectileTimer = 60 + 240 * hpPercent;
+                    SpawnProjectile((float)(MathUtil.VectorToAngle(new Vector2(player.X - X, player.Y - Y))));
+                }
+            }
+
             switch (state)
             {
                 case State.IDLE:
@@ -111,56 +166,91 @@ namespace Leore.Objects.Enemies
 
                     XVel = 0;
                     XVel = 0;
+                    
+                    break;
+                case State.SNEAK:
+                    {
+                        eyeFrame = Math.Max(eyeFrame - .05f, 0);
 
-                    //alpha = Math.Max(alpha - .02f, 0);
+                        sneakTimer++;
 
+                        if (sneakTransitionTimer == 0)
+                        {
+                            if (sneakTimer % 12 == 0)
+                            {
+                                footPrint = (footPrint + 1) % 6;
+                                float ang = 0;
+                                //ang = 270 - footPrint * 90;
+                                ang = 90 + footPrint * 90;
+
+                                if (footPrint < 4)
+                                {
+                                    //ang += i * 60;
+
+                                    var dx = (float)(8 * MathUtil.LengthDirX((MathUtil.RadToDeg(Angle) + ang)) % 360);
+                                    var dy = (float)(8 * MathUtil.LengthDirY((MathUtil.RadToDeg(Angle) + ang)) % 360);
+
+                                    var foot = new SingularEffect(X + dx, Y + dy, 17);
+                                    foot.Angle = Angle;
+                                    foot.Scale = new Vector2(.75f);
+                                    foot.Color = new Color(Color.White, 1 - alpha);
+                                    foot.Depth = Depth - .00001f;
+                                }
+                            }
+
+                            var maxSpd = .7f;
+                            var animSpd = Math.Min(Math.Max(Math.Max(Math.Abs(XVel), Math.Abs(YVel)), .1f), maxSpd) / maxSpd;
+
+                            SetAnimation(4, 7, .15f * animSpd, true);
+
+                            var targetAngle = (float)MathUtil.VectorToAngle(new Vector2(player.X - X, player.Y - Y), false);
+                            var lx = .02f * (float)MathUtil.LengthDirX(targetAngle);
+                            var ly = .02f * (float)MathUtil.LengthDirY(targetAngle);
+
+                            XVel += lx;
+                            YVel += ly;
+
+                            XVel = MathUtil.AtMost(XVel, maxSpd);
+                            YVel = MathUtil.AtMost(YVel, maxSpd);
+
+                            Angle = (float)MathUtil.VectorToAngle(new Vector2(XVel, YVel), true);
+
+                        }
+
+                        if (sawLight)
+                        {
+                            XVel = 0;
+                            YVel = 0;
+
+                            SetAnimation(0, 3, .1f, true);
+                            eyeFrame = 3;
+
+                            var footPrints = ObjectManager.FindAll<SingularEffect>().Where(o => o.Type == 17);
+                            foreach(var footPrint in footPrints)
+                            {
+                                footPrint.Destroy();
+                            }
+
+                            sneakTransitionTimer = Math.Max(sneakTransitionTimer - 1, 0);
+                            if (sneakTransitionTimer == 0)
+                            {
+                                state = State.FOLLOW_PLAYER;
+                            }
+                        }
+
+                    }
                     break;
                 case State.FOLLOW_PLAYER:
                     {
-                        eyeFrame = 0;
-                        
-                        if (followTimer % 6 == 0)
-                        {
-                            footPrint = (footPrint + 1) % 4;
-                            float ang = 0;
-                            switch (footPrint)
-                            {
-                                case 0:
-                                    ang = 45;
-                                    break;
-                                case 1:
-                                    ang = 45;
-                                    break;
-                                case 2:
-                                    ang = 315;
-                                    break;
-                                case 3:
-                                    ang = 315;
-                                    break;
-                            }
-
-                            //var dx = (float)(fx * 32 * MathUtil.LengthDirX(MathUtil.RadToDeg(Angle)));
-                            //var dy = (float)(fy * 32 * MathUtil.LengthDirY(MathUtil.RadToDeg(Angle)));
-                            var dx = (float)(8 * MathUtil.LengthDirX(MathUtil.RadToDeg(Angle) + ang));
-                            var dy = (float)(8 * MathUtil.LengthDirY(MathUtil.RadToDeg(Angle) + ang));
-
-                            var offx = 10;// * (float)MathUtil.LengthDirX(MathUtil.RadToDeg(Angle));
-                            var offy = 10;// * (float)MathUtil.LengthDirY(MathUtil.RadToDeg(Angle));
-
-                            var foot = new SingularEffect(X + offx + dx, Y + offy + dy, 17);
-                            foot.Angle = Angle;
-                            foot.Scale = new Vector2(.75f);
-                            foot.Color = new Color(Color.White, 1 - alpha);
-                            foot.Depth = Depth - .00001f;                            
-                        }
-
-                        followTimer = Math.Max(followTimer - 1, 0);
-                        
                         var maxSpd = .7f;
                         var animSpd = Math.Min(Math.Max(Math.Max(Math.Abs(XVel), Math.Abs(YVel)), .1f), maxSpd) / maxSpd;
 
                         SetAnimation(4, 7, .15f * animSpd, true);
 
+                        eyeFrame = 0;
+                        
+                        followTimer = Math.Max(followTimer - 1, 0);
+                        
                         var targetAngle = (float)MathUtil.VectorToAngle(new Vector2(player.X - X, player.Y - Y), false);
                         var lx = .02f * (float)MathUtil.LengthDirX(targetAngle);
                         var ly = .02f * (float)MathUtil.LengthDirY(targetAngle);
@@ -205,6 +295,7 @@ namespace Leore.Objects.Enemies
 
                         if (retreatTimer == 0)
                         {
+                            attackTimer = 2 * 60;
                             state = State.ATTACK;
                         }
                     }
@@ -267,8 +358,10 @@ namespace Leore.Objects.Enemies
 
                             camera.Shake(2 * 60, () =>
                             {
-                                sawLight = false;
-                                state = State.FOLLOW_PLAYER;                                
+                                if (HP > 0)
+                                {
+                                    BackToSneakState();
+                                }
                             });
                         }
                     }
@@ -277,7 +370,7 @@ namespace Leore.Objects.Enemies
                     
                     eyeFrame = 5;
                     alpha = maxAlpha;
-                    SetAnimation(0, 0, 0, false);
+                    SetAnimation(13, 13, 0, false);
 
                     preventDeath = false;
                     
@@ -318,6 +411,14 @@ namespace Leore.Objects.Enemies
             }            
         }
 
+        private void BackToSneakState()
+        {
+            sawLight = false;
+            sneakTransitionTimer = 0;
+            sneakTimer = 0;
+            state = State.SNEAK;
+        }
+
         private void SpawnProjectile(double degAngle)
         {
             var dst = 6;
@@ -339,36 +440,25 @@ namespace Leore.Objects.Enemies
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
             //base.Draw(sb, gameTime);
+            sb.Draw(AssetManager.BossShadowLizard[AnimationFrame], Position, null, new Color(Color, alpha), Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
             
-            // feet
-            //var feetAlpha = maxAlpha - alpha - minAlpha;
-            //sb.Draw(AssetManager.BossShadowLizard[AnimationFrame], Position, null, new Color(Color, feetAlpha), Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
-            //sb.Draw(AssetManager.BossShadowLizard[(int)MathUtil.Clamp(AnimationFrame - 1, MinFrame, MaxFrame)], Position, null, new Color(Color, feetAlpha * .25f), Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
-
-            //body
-            sb.Draw(AssetManager.BossShadowLizard[AnimationFrame + 8], Position, null, new Color(Color, alpha), Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0001f);
-            //sb.Draw(AssetManager.BossShadowLizard[(int)MathUtil.Clamp(AnimationFrame + 8 - 1, MinFrame + 8, MaxFrame + 8)], Position, null, new Color(Color, alpha * .5f), Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0001f);
-
             if ((int)eyeFrame > 0)
             {
-                sb.Draw(AssetManager.BossShadowLizard[15 + (int)eyeFrame], Position, null, new Color(Color, alpha), Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0002f);
+                sb.Draw(AssetManager.BossShadowLizard[7 + (int)eyeFrame], Position, null, new Color(Color, alpha), Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0002f);
             }
 
             if (deathAlpha > 0)
             {
-                sb.Draw(AssetManager.BossShadowLizard[21], Position, null, new Color(Color, deathAlpha), Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0003f);
+                sb.Draw(AssetManager.BossShadowLizard[13], Position, null, new Color(Color, deathAlpha), Angle, DrawOffset, Scale, SpriteEffects.None, Depth + .0003f);
             }
         }
 
         public override void Hit(int hitPoints, float degAngle)
         {
-            //if (alpha > 0)
-            //{
-            //    hitPoints *= 2;
-            //}
+            if (invincibleTimer != 0)
+                return;
 
-            if (alpha == 0)
-                hitPoints = 0;
+            invincibleTimer = 2;
 
             base.Hit(hitPoints, degAngle);
         }

@@ -13,7 +13,7 @@ namespace Leore.Objects.Projectiles
 {
     public class CrimsonProjectile : PlayerProjectile
     {
-        private int pierce = 6;
+        private int pierce;
 
         public CrimsonProjectile(float x, float y, SpellLevel level) : base(x, y, level)
         {
@@ -23,13 +23,16 @@ namespace Leore.Objects.Projectiles
             switch (level)
             {
                 case SpellLevel.ONE:
-                    Damage = 1;
+                    pierce = 2;
+                    Damage = 3;
                     break;
                 case SpellLevel.TWO:
-                    Damage = 1;
+                    pierce = 3;
+                    Damage = 2;
                     break;
                 case SpellLevel.THREE:
-                    Damage = 2;
+                    pierce = 5;
+                    Damage = 1;
                     break;
             }
 
