@@ -421,6 +421,9 @@ namespace Leore.Objects.Enemies
 
         private void SpawnProjectile(double degAngle)
         {
+            if (state == State.DIE)
+                return;
+
             var dst = 6;
             var dx = dst * (float)MathUtil.LengthDirX(degAngle);
             var dy = dst * (float)MathUtil.LengthDirY(degAngle);

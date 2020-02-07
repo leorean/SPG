@@ -1325,7 +1325,7 @@ namespace Leore.Main
                         State = PlayerState.JUMP_DOWN;
                 }
 
-                if (jumps < maxJumps)
+                if (jumps < maxJumps && !jumpControlDisabled)
                 {
                     if (k_jumpPressed)
                     {
@@ -2269,9 +2269,15 @@ namespace Leore.Main
             var yVelBeforeCollision = YVel;
 
             var g = this.MoveAdvanced(moveWithPlatforms);
-            
-            if (inWater || onWall || onCeil)                
+
+            if (inWater
+                || State == PlayerState.WALL_IDLE
+                || State == PlayerState.WALL_CLIMB
+                || State == PlayerState.CEIL_IDLE
+                || State == PlayerState.CEIL_CLIMB)
+            {
                 jumps = Math.Min(jumps, 1);
+            }
                         
             if (g)
             {
