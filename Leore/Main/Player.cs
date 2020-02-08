@@ -2276,7 +2276,7 @@ namespace Leore.Main
                 || State == PlayerState.CEIL_IDLE
                 || State == PlayerState.CEIL_CLIMB)
             {
-                jumps = Math.Min(jumps, 1);
+                jumps = Math.Min(jumps, 0);
             }
                         
             if (g)

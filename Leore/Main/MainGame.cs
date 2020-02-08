@@ -260,14 +260,16 @@ namespace Leore.Main
 
                         //GameManager.Current.Player.Stats.Abilities |= PlayerAbility.LEVITATE;
 
-                        //GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_WALL;
-                        //GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_CEIL;
-                        //GameManager.Current.Player.Stats.Abilities |= PlayerAbility.ROLL;
+                        GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_WALL;
+                        GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_CEIL;
+                        GameManager.Current.Player.Stats.Abilities |= PlayerAbility.ROLL;
                         
                         GameManager.Current.AddSpell(SpellType.STAR);
                         GameManager.Current.AddSpell(SpellType.SNATCH_KEYS);
                         GameManager.Current.AddSpell(SpellType.CRIMSON_ARC);
-                        //GameManager.Current.AddSpell(SpellType.FIRE);
+
+                        GameManager.Current.AddSpell(SpellType.FIRE);
+
                         //GameManager.Current.RemoveSpell(SpellType.NONE);
                         //GameManager.Current.AddSpell(SpellType.VOID);
 
