@@ -41,7 +41,7 @@ namespace Leore.Objects.Projectiles
             switch (level)
             {
                 case SpellLevel.ONE:
-                    maxPower = .5f * 60;
+                    maxPower = 1 * 60;
                     break;
                 case SpellLevel.TWO:
                     maxPower = 1 * 60;
@@ -84,11 +84,13 @@ namespace Leore.Objects.Projectiles
                 {
                     case SpellLevel.ONE:
                         {
-                            var proj = new FireBallProjectile(X, Y);
+                            var proj = new FireBallProjectile(X, Y);                            
                             proj.XVel = Math.Sign((int)player.Direction) * (1.25f - Math.Abs(.25f * (int)player.LookDirection));
                             proj.YVel = Math.Max(-2f + 1f * (int)player.LookDirection, -2.5f);
-                            
-                            delay = (int)(20 + (1 - p) * 20);
+                            proj.Bounce = 2;
+
+                            //delay = (int)(20 + (1 - p) * 20);
+                            delay = 25;
                         }
                         break;
 
@@ -140,9 +142,7 @@ namespace Leore.Objects.Projectiles
                                 {
                                     proj.XVel *= .5f;
                                     proj.YVel += 1f;
-                                }
-
-                                proj.Damage = 2;
+                                }                                
                             }
 
                             iteration = (iteration + 1) % 6;

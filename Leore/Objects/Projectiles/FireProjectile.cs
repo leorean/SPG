@@ -80,7 +80,7 @@ namespace Leore.Objects.Projectiles
             Scale = new Vector2(.75f);
             Gravity = .13f;
 
-            Damage = 3;
+            Damage = 2;
 
             a = new List<Vector2>() { Position, Position, Position, Position };            
             d = 0;
@@ -123,6 +123,7 @@ namespace Leore.Objects.Projectiles
             {
                 XVel *= .95f;
                 YVel = -Math.Sign(YVel) * Math.Max(Math.Abs(YVel) * .85f, 1.3f);
+                YVel = MathUtil.AtMost(YVel, 2);
 
                 Bounce = Math.Max(Bounce - 1, 0);
             }
