@@ -6,6 +6,7 @@ using Leore.Resources;
 using Leore.Main;
 using SPG.Objects;
 using Leore.Objects.Level;
+using Leore.Objects.Effects;
 
 namespace Leore.Objects.Enemies
 {
@@ -20,6 +21,7 @@ namespace Leore.Objects.Enemies
         private State state;
 
         private bool seenPlayer;
+        private int seenTimer;
         private bool stuck = false;
 
         public EnemyGrassy(float x, float y, Room room) : base(x, y, room)
@@ -48,7 +50,9 @@ namespace Leore.Objects.Enemies
             var player = GameManager.Current.Player;
 
             var onGround = false;
-            
+
+            seenTimer = Math.Max(seenTimer - 1, 0);
+
             switch (state)
             {
                 case State.HIDING:
@@ -60,7 +64,8 @@ namespace Leore.Objects.Enemies
                         if (MathUtil.Euclidean(Position, player.Position) < 3 * Globals.T || hit)
                         {
                             YVel = -3;
-                            seenPlayer = true;                            
+                            seenPlayer = true;
+                            seenTimer = 5 * 60;
                         }
                         SetAnimation(0, 1, .025, true);
                     }
@@ -104,6 +109,15 @@ namespace Leore.Objects.Enemies
                         XVel = Math.Max(XVel - .01f, -.65f);
                     if (X < player.X)
                         XVel = Math.Min(XVel + .01f, .65f);
+
+                    if (Math.Abs(X - player.X) > 6 * Globals.T && seenTimer == 0 && onGround)
+                    {
+                        XVel = 0;
+                        YVel = 0;
+                        seenPlayer = false;
+                        state = State.HIDING;
+                        new SingularEffect(X, Y, 0);
+                    }
 
                     
                     SetAnimation(3, 6, .2, true);
