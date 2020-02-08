@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="180" tilewidth="16" tileheight="16" infinite="0" nextlayerid="125" nextobjectid="1485">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="180" tilewidth="16" tileheight="16" infinite="0" nextlayerid="125" nextobjectid="1486">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="3072" columns="64">
   <image source="tiles.png" width="1024" height="768"/>
  </tileset>
@@ -173275,6 +173275,13 @@ With their magical power, you're able to ~levitate~!</property>
     <property name="direction" type="int" value="1"/>
     <property name="levelName" value="great_cavern"/>
     <property name="tx" type="int" value="66"/>
+    <property name="ty" type="int" value="7"/>
+   </properties>
+  </object>
+  <object id="1485" type="door" x="3792" y="1344" width="16" height="16">
+   <properties>
+    <property name="levelName" value="pine_woods"/>
+    <property name="tx" type="int" value="2"/>
     <property name="ty" type="int" value="7"/>
    </properties>
   </object>

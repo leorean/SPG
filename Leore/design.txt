@@ -97,7 +97,7 @@ GREAT CAVERN
 - The Nethervault (#2) : Double Jump
 MOUNT ASCENT
 - Temple of Leon Part 1 (#3) : Wall Climb / Fire Orb
-- Temple of Leon Part 2 (#4) : Ceil Climb
+- Temple of Leon Part 2 (#4) : Ceil Climb / Ice Orb
 OCEAN
 - Sunken Temple (#5) : Breathe underwater
 PINE WOODS
