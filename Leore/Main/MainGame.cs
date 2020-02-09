@@ -179,9 +179,12 @@ namespace Leore.Main
 
             // STATE-independent logic here:
 
-            if (InputMapping.KeyPressed(InputMapping.ResetLevel))
+            if (Properties.Settings.Default.IsDebugBuild)
             {
-                GameManager.Current.ReloadLevel();
+                if (InputMapping.KeyPressed(InputMapping.ResetLevel))
+                {
+                    GameManager.Current.ReloadLevel();
+                }
             }
 
             if (InputMapping.KeyPressed(InputMapping.Pause))
@@ -199,162 +202,164 @@ namespace Leore.Main
 
                 // ++++ debug input ++++
 
-                if (Input.IsKeyPressed(Keys.D0, Input.State.Pressed))
+                if (Properties.Settings.Default.IsDebugBuild)
                 {
-                    var posX = MathUtil.Div(GameManager.Current.Player.Position.X, Globals.T) * Globals.T + 8;
-                    var posY = MathUtil.Div(GameManager.Current.Player.Position.Y, Globals.T) * Globals.T + 8;
 
-                    GameManager.Current.Save(posX, posY, GameManager.Current.Map.Name);
-
-                    Debug.WriteLine("Saved.");
-                }
-
-                if (Input.IsKeyPressed(Keys.D5, Input.State.Pressed))
-                {
-                    RoomCamera.Current.Zoom -= .1f;
-                    Debug.WriteLine(RoomCamera.Current.Zoom);
-                }
-                if (Input.IsKeyPressed(Keys.D6, Input.State.Pressed))
-                {
-                    RoomCamera.Current.Zoom += .1f;
-                    Debug.WriteLine(RoomCamera.Current.Zoom);
-                }
-
-                if (Input.IsKeyPressed(Keys.C, Input.State.Pressed))
-                {
-                    var dialog = new MessageDialog("Delete save game?");
-                    dialog.YesAction = () =>
+                    if (Input.IsKeyPressed(Keys.D0, Input.State.Pressed))
                     {
-                        GameManager.Current.SaveGame.Delete();
-                        Debug.WriteLine("Deleted save game.");
-                    };
-                }
+                        var posX = MathUtil.Div(GameManager.Current.Player.Position.X, Globals.T) * Globals.T + 8;
+                        var posY = MathUtil.Div(GameManager.Current.Player.Position.Y, Globals.T) * Globals.T + 8;
 
-                // debug keys
-                
-                if (GameManager.Current.Player != null)
-                {
+                        GameManager.Current.Save(posX, posY, GameManager.Current.Map.Name);
 
-
-                    if (Input.IsKeyPressed(Keys.H, Input.State.Pressed))
-                    {
-                        GameManager.Current.Player.Hit(1);
-                        GameManager.Current.Player.HP++;
+                        Debug.WriteLine("Saved.");
                     }
 
-                    if (Input.IsKeyPressed(Keys.D9, Input.State.Pressed))
+                    //if (Input.IsKeyPressed(Keys.D5, Input.State.Pressed))
+                    //{
+                    //    RoomCamera.Current.Zoom -= .1f;
+                    //    Debug.WriteLine(RoomCamera.Current.Zoom);
+                    //}
+                    //if (Input.IsKeyPressed(Keys.D6, Input.State.Pressed))
+                    //{
+                    //    RoomCamera.Current.Zoom += .1f;
+                    //    Debug.WriteLine(RoomCamera.Current.Zoom);
+                    //}
+
+                    if (Input.IsKeyPressed(Keys.C, Input.State.Pressed))
                     {
-                        //stats.Abilities = PlayerAbility.NONE;
-
-                        // add: flags |= flag
-                        // remove: flags &= ~flag
-                        // toggle: flags ^= flag
-
-                        GameManager.Current.Player.Stats.Abilities |= PlayerAbility.DOUBLE_JUMP;
-                        
-                        GameManager.Current.Player.Stats.Abilities |= PlayerAbility.ORB;
-                        GameManager.Current.AddStoryFlag("hasOrb");
-
-                        GameManager.Current.Player.Stats.Abilities |= PlayerAbility.PUSH;
-                        GameManager.Current.Player.Stats.Abilities |= PlayerAbility.NO_FALL_DAMAGE;
-
-                        //GameManager.Current.Player.Stats.Abilities |= PlayerAbility.LEVITATE;
-
-                        GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_WALL;
-                        GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_CEIL;
-                        GameManager.Current.Player.Stats.Abilities |= PlayerAbility.ROLL;
-                        
-                        GameManager.Current.AddSpell(SpellType.STAR);
-                        GameManager.Current.AddSpell(SpellType.SNATCH_KEYS);
-                        GameManager.Current.AddSpell(SpellType.CRIMSON_ARC);
-
-                        GameManager.Current.AddSpell(SpellType.FIRE);
-
-                        //GameManager.Current.RemoveSpell(SpellType.NONE);
-                        //GameManager.Current.AddSpell(SpellType.VOID);
-
-                        //GameManager.Current.Player.Stats.MaxHP = 5;
-                        //GameManager.Current.Player.Stats.MaxMP = 30;
-                        //GameManager.Current.Player.Stats.MPRegen = .1f;
-                        //GameManager.Current.Player.Stats.MaxHP = 14;
-                        //GameManager.Current.Player.Stats.MaxMP = 40;
-                        //GameManager.Current.Player.Stats.MPRegen = .4f;
-
-                        Debug.WriteLine("Added abilities");
-                    }
-
-                    if (Input.IsKeyPressed(Keys.D8, Input.State.Pressed))
-                    {
-                        GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.DOUBLE_JUMP;                                                
-                        //GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.PUSH;
-                        //GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.NO_FALL_DAMAGE;
-
-                        GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.LEVITATE;
-                        GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.CLIMB_WALL;
-                        GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.CLIMB_CEIL;
-                        GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.ROLL;
-
-                        GameManager.Current.RemoveSpell(SpellType.VOID);
-                        GameManager.Current.RemoveSpell(SpellType.FIRE);
-                        GameManager.Current.AddSpell(SpellType.NONE);
-
-                        Debug.WriteLine("Removed abilities");
-                    }
-
-                    if (Input.IsKeyPressed(Keys.O, Input.State.Pressed))
-                    {
-                        Coin.Spawn(GameManager.Current.Player.X, GameManager.Current.Player.Y, RoomCamera.Current.CurrentRoom, 2000);
-                        Debug.WriteLine($"{ObjectManager.Count<Coin>()} coins exist. (Blocks: {ObjectManager.Count<Solid>()}, active: {ObjectManager.ActiveObjects.Count}, overall: {ObjectManager.Count<GameObject>()})");
-
-                        GameManager.Current.Player.Stats.KeysAndKeyblocks.Clear();
-                        GameManager.Current.Player.Stats.Items.Clear();
-                        GameManager.Current.Player.Stats.Teleporters.Clear();
-                        GameManager.Current.Player.Stats.StoryFlags.Clear();
-                        GameManager.Current.Player.Stats.Bosses.Clear();
-                        GameManager.Current.Player.Stats.ItemsBought.Clear();
-                        GameManager.Current.Player.Stats.HeldKeys = new Dictionary<string, int>();
-
-                        Debug.WriteLine("cleared saved lists!");
-                    }
-
-                    if (Input.IsKeyPressed(Keys.M, Input.State.Pressed))
-                    {
-                        var dialog = new MessageDialog("Do you like message dialogs?");
-
+                        var dialog = new MessageDialog("Delete save game?");
                         dialog.YesAction = () =>
                         {
-                            Coin.Spawn(GameManager.Current.Player.X, GameManager.Current.Player.Y, RoomCamera.Current.CurrentRoom, 100);
-                        };
-                        dialog.NoAction = () =>
-                        {
-                            GameManager.Current.Player.HP = 0;
+                            GameManager.Current.SaveGame.Delete();
+                            Debug.WriteLine("Deleted save game.");
                         };
                     }
 
-                    if (mouse.RightButton == ButtonState.Pressed)
+                    if (GameManager.Current.Player != null)
                     {
-                        var sep = RoomCamera.Current.ToVirtual(mouse.Position.ToVector2());
-                        if (ObjectManager.CollisionPointFirstOrDefault<SpellEXP>(sep.X, sep.Y) == null)
+
+
+                        if (Input.IsKeyPressed(Keys.H, Input.State.Pressed))
                         {
-                            SpellEXP.Spawn(sep.X, sep.Y, 11);
+                            GameManager.Current.Player.Hit(1);
+                            GameManager.Current.Player.HP++;
                         }
-                    }
 
-                    if (Input.IsKeyPressed(Keys.Space, Input.State.Holding))
-                    {
-                        ObjectManager.GameDelay = 120;
-                        Debug.WriteLine("delay " + RND.Next);
-                    }
-                    else
-                    {
-                        ObjectManager.GameDelay = 0;
-                    }
-                    
-                    if (mouse.LeftButton == ButtonState.Pressed)
-                    {
-                        GameManager.Current.Player.Position = RoomCamera.Current.ToVirtual(mouse.Position.ToVector2());
-                        GameManager.Current.Player.XVel = 0;
-                        GameManager.Current.Player.YVel = 0;
+                        if (Input.IsKeyPressed(Keys.D9, Input.State.Pressed))
+                        {
+                            //stats.Abilities = PlayerAbility.NONE;
+
+                            // add: flags |= flag
+                            // remove: flags &= ~flag
+                            // toggle: flags ^= flag
+
+                            GameManager.Current.Player.Stats.Abilities |= PlayerAbility.DOUBLE_JUMP;
+
+                            GameManager.Current.Player.Stats.Abilities |= PlayerAbility.ORB;
+                            GameManager.Current.AddStoryFlag("hasOrb");
+
+                            GameManager.Current.Player.Stats.Abilities |= PlayerAbility.PUSH;
+                            GameManager.Current.Player.Stats.Abilities |= PlayerAbility.NO_FALL_DAMAGE;
+
+                            //GameManager.Current.Player.Stats.Abilities |= PlayerAbility.LEVITATE;
+
+                            GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_WALL;
+                            GameManager.Current.Player.Stats.Abilities |= PlayerAbility.CLIMB_CEIL;
+                            GameManager.Current.Player.Stats.Abilities |= PlayerAbility.ROLL;
+
+                            GameManager.Current.AddSpell(SpellType.STAR);
+                            GameManager.Current.AddSpell(SpellType.SNATCH_KEYS);
+                            GameManager.Current.AddSpell(SpellType.CRIMSON_ARC);
+
+                            GameManager.Current.AddSpell(SpellType.FIRE);
+
+                            //GameManager.Current.RemoveSpell(SpellType.NONE);
+                            //GameManager.Current.AddSpell(SpellType.VOID);
+
+                            //GameManager.Current.Player.Stats.MaxHP = 5;
+                            //GameManager.Current.Player.Stats.MaxMP = 30;
+                            //GameManager.Current.Player.Stats.MPRegen = .1f;
+                            //GameManager.Current.Player.Stats.MaxHP = 14;
+                            //GameManager.Current.Player.Stats.MaxMP = 40;
+                            //GameManager.Current.Player.Stats.MPRegen = .4f;
+
+                            Debug.WriteLine("Added abilities");
+                        }
+
+                        if (Input.IsKeyPressed(Keys.D8, Input.State.Pressed))
+                        {
+                            GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.DOUBLE_JUMP;
+                            //GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.PUSH;
+                            //GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.NO_FALL_DAMAGE;
+
+                            GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.LEVITATE;
+                            GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.CLIMB_WALL;
+                            GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.CLIMB_CEIL;
+                            GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.ROLL;
+
+                            GameManager.Current.RemoveSpell(SpellType.VOID);
+                            GameManager.Current.RemoveSpell(SpellType.FIRE);
+                            GameManager.Current.AddSpell(SpellType.NONE);
+
+                            Debug.WriteLine("Removed abilities");
+                        }
+
+                        if (Input.IsKeyPressed(Keys.O, Input.State.Pressed))
+                        {
+                            Coin.Spawn(GameManager.Current.Player.X, GameManager.Current.Player.Y, RoomCamera.Current.CurrentRoom, 2000);
+                            Debug.WriteLine($"{ObjectManager.Count<Coin>()} coins exist. (Blocks: {ObjectManager.Count<Solid>()}, active: {ObjectManager.ActiveObjects.Count}, overall: {ObjectManager.Count<GameObject>()})");
+
+                            GameManager.Current.Player.Stats.KeysAndKeyblocks.Clear();
+                            GameManager.Current.Player.Stats.Items.Clear();
+                            GameManager.Current.Player.Stats.Teleporters.Clear();
+                            GameManager.Current.Player.Stats.StoryFlags.Clear();
+                            GameManager.Current.Player.Stats.Bosses.Clear();
+                            GameManager.Current.Player.Stats.ItemsBought.Clear();
+                            GameManager.Current.Player.Stats.HeldKeys = new Dictionary<string, int>();
+
+                            Debug.WriteLine("cleared saved lists!");
+                        }
+
+                        if (Input.IsKeyPressed(Keys.M, Input.State.Pressed))
+                        {
+                            var dialog = new MessageDialog("Do you like message dialogs?");
+
+                            dialog.YesAction = () =>
+                            {
+                                Coin.Spawn(GameManager.Current.Player.X, GameManager.Current.Player.Y, RoomCamera.Current.CurrentRoom, 100);
+                            };
+                            dialog.NoAction = () =>
+                            {
+                                GameManager.Current.Player.HP = 0;
+                            };
+                        }
+
+                        if (mouse.RightButton == ButtonState.Pressed)
+                        {
+                            var sep = RoomCamera.Current.ToVirtual(mouse.Position.ToVector2());
+                            if (ObjectManager.CollisionPointFirstOrDefault<SpellEXP>(sep.X, sep.Y) == null)
+                            {
+                                SpellEXP.Spawn(sep.X, sep.Y, 11);
+                            }
+                        }
+
+                        if (Input.IsKeyPressed(Keys.Space, Input.State.Holding))
+                        {
+                            ObjectManager.GameDelay = 120;
+                            Debug.WriteLine("delay " + RND.Next);
+                        }
+                        else
+                        {
+                            ObjectManager.GameDelay = 0;
+                        }
+
+                        if (mouse.LeftButton == ButtonState.Pressed)
+                        {
+                            GameManager.Current.Player.Position = RoomCamera.Current.ToVirtual(mouse.Position.ToVector2());
+                            GameManager.Current.Player.XVel = 0;
+                            GameManager.Current.Player.YVel = 0;
+                        }
                     }
                 }
             }

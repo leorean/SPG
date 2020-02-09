@@ -172922,6 +172922,7 @@
   <object id="1419" type="door" x="976" y="48" width="16" height="16">
    <properties>
     <property name="levelName" value="sanctuary"/>
+    <property name="textAfterTransition" value="The Sanctuary"/>
     <property name="tx" type="int" value="130"/>
     <property name="ty" type="int" value="59"/>
    </properties>
@@ -173113,7 +173114,7 @@ It will prevent ~fall damage~.</property>
     <property name="centerText" type="bool" value="false"/>
     <property name="direction" type="int" value="-1"/>
     <property name="npcType" type="int" value="4"/>
-    <property name="text" value="From here, I can gaze into the woods.|I see some sort of ~temple~ emerging from the trees."/>
+    <property name="text" value="From here, I can gaze into the forest.|I see some sort of ~temple~ emerging from the trees."/>
    </properties>
   </object>
   <object id="1453" type="npc" x="2672" y="1376" width="16" height="16">
@@ -173153,7 +173154,7 @@ Hm...
     <property name="disappearCondition" value=""/>
     <property name="npcType" type="int" value="12"/>
     <property name="text">Do you know ~Wyshin~? He is our oldest resident. Or, shall I say, was.
-|He moved to the ~woods~ years ago, saying something about a prophecy or something..</property>
+|He moved to the ~Tealglade Woods~ years ago, saying something about a prophecy or something..</property>
    </properties>
   </object>
   <object id="1457" type="npc" x="64" y="1408" width="16" height="16">

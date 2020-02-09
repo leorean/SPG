@@ -468,21 +468,21 @@ namespace SPG.Objects
             }            
         }
 
-        //public static void Enable(Func<GameObject, bool> predicate)
-        //{
-        //    for (var i = 0; i < Objects.Count; i++)
-        //    {
-        //        var o = Objects[i];
-        //        if (o.Enabled)
-        //            continue;
-        //        if (predicate(o))
-        //        {
-        //            Enable(o, false);
-        //        }                
-        //    }
+        public static void Enable(Func<GameObject, bool> predicate)
+        {
+            for (var i = 0; i < Objects.Count; i++)
+            {
+                var o = Objects[i];
+                if (o.Enabled)
+                    continue;
+                if (predicate(o))
+                {
+                    Enable(o, false);
+                }
+            }
 
-        //    UpdateActiveObjectList();
-        //}
+            UpdateActiveObjectList();
+        }
     }
 }
 

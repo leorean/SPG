@@ -482,16 +482,20 @@ namespace Leore.Main
 
             // ++++ debug ++++
 
-            if (InputMapping.KeyPressed(Keys.LeftShift, Input.State.Holding) || InputMapping.KeyPressed(Keys.RightShift, Input.State.Holding))
+            if (Properties.Settings.Default.IsDebugBuild)
             {
-                if (k_leftPressed)
-                    Position = new Vector2(Position.X - 16 * Globals.T, Position.Y);
-                if (k_rightPressed)
-                    Position = new Vector2(Position.X + 16 * Globals.T, Position.Y);
-                if (k_upPressed)
-                    Position = new Vector2(Position.X, Position.Y - 9 * Globals.T);
-                if (k_downPressed)
-                    Position = new Vector2(Position.X, Position.Y + 9 * Globals.T);
+
+                if (InputMapping.KeyPressed(Keys.LeftShift, Input.State.Holding) || InputMapping.KeyPressed(Keys.RightShift, Input.State.Holding))
+                {
+                    if (k_leftPressed)
+                        Position = new Vector2(Position.X - 16 * Globals.T, Position.Y);
+                    if (k_rightPressed)
+                        Position = new Vector2(Position.X + 16 * Globals.T, Position.Y);
+                    if (k_upPressed)
+                        Position = new Vector2(Position.X, Position.Y - 9 * Globals.T);
+                    if (k_downPressed)
+                        Position = new Vector2(Position.X, Position.Y + 9 * Globals.T);
+                }
             }
 
             // gamepad overrides keyboard input if possible

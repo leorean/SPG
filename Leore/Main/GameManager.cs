@@ -340,8 +340,7 @@ namespace Leore.Main
                 if (keepPlayer)
                 {
                     if (obj is IPlayerTransferrable)
-                        continue;
-                    //if (obj is Player || obj is Orb || obj is PlayerLevitationEmitter)                        
+                        continue;                        
                 }
 
                 obj.Parent = null;
@@ -597,15 +596,9 @@ namespace Leore.Main
             //    ObjectManager.Enable(o);
             //}
 
-            ObjectManager.Enable<IKeepEnabledAcrossRooms>();
+            ObjectManager.Enable<IKeepEnabledAcrossRooms>();            
+            ObjectManager.Enable(o => o is Enemy && o is RoomObject ro && ro.Room == room);
 
-            //var enemyObjects = ObjectManager.Objects.Where(o => o is Enemy && o is RoomObject ro && ro.Room == room);
-            //foreach (var o in enemyObjects)
-            //{
-            //    ObjectManager.Enable(o);
-            //}
-
-            //ObjectManager.Enable(o => (o is Enemy && o is RoomObject ro && ro.Room == room)
             //|| Attribute.GetCustomAttribute(o.GetType(), typeof(KeepEnabledAcrossRoomsAttribute)) != null);
 
             //ObjectManager.Enable(o => Attribute.GetCustomAttribute(o.GetType(), typeof(KeepEnabledAcrossRoomsAttribute)) != null);

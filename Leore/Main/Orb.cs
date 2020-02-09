@@ -212,10 +212,7 @@ namespace Leore.Main
                     XVel *= .8f;
                     YVel *= .8f;
 
-                    // attack projectiles
-
-                    //spellEmitter.Active = true;
-
+                    // attack projectiles                    
                     if (player.MP >= GameResources.MPCost[Type][Level])
                     {
                         if (Cooldown == 0)
@@ -255,7 +252,7 @@ namespace Leore.Main
                                     break;
                                 case SpellType.CRIMSON_ARC: // ++++ CRIMSON ++++
 
-                                    //cooldown = 60;
+                                    Cooldown = 60;
 
                                     ObjectManager.Enable<CrimsonSpell>();
                                     
