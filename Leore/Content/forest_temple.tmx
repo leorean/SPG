@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="160" height="54" tilewidth="16" tileheight="16" infinite="0" nextlayerid="135" nextobjectid="1478">
- <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="2048" columns="64">
-  <image source="tiles.png" width="1024" height="512"/>
+ <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="3072" columns="64">
+  <image source="tiles.png" width="1024" height="768"/>
  </tileset>
  <layer id="131" name="BG2" width="160" height="54">
   <data>
@@ -11125,6 +11125,9 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="1476"/>
+   <tile gid="1477"/>
+   <tile gid="1478"/>
    <tile/>
    <tile/>
    <tile/>
@@ -11282,12 +11285,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile gid="661"/>
-   <tile/>
+   <tile gid="1540"/>
+   <tile gid="1541"/>
+   <tile gid="1542"/>
    <tile/>
    <tile/>
    <tile/>
@@ -34688,6 +34688,7 @@
   <object id="1421" type="door" x="1232" y="256" width="16" height="16">
    <properties>
     <property name="levelName" value="tealglade_woods"/>
+    <property name="textAfterTransition" value="Tealglade Woods"/>
     <property name="tx" type="int" value="77"/>
     <property name="ty" type="int" value="29"/>
    </properties>
@@ -34851,6 +34852,7 @@
     <property name="levelName" value="tealglade_woods"/>
     <property name="setCondition" value="dungeon1complete"/>
     <property name="text" value="...In the caves, the darkness waits... "/>
+    <property name="textAfterTransition" value="Tealglade Woods"/>
     <property name="tx" type="int" value="77"/>
     <property name="ty" type="int" value="29"/>
    </properties>

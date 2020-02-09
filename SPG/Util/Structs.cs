@@ -84,6 +84,11 @@ namespace SPG.Util
             Height = h;
         }
 
+        public Rectangle ToRectangle()
+        {
+            return new Rectangle((int)Math.Floor(X), (int)Math.Floor(Y), (int)Math.Ceiling(Width), (int)Math.Ceiling(Height));
+        }
+
         public override string ToString()
         {
             return $"x:{X}, y:{Y}, w:{Width}, h:{Height}";

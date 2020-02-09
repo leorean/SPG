@@ -442,7 +442,7 @@ namespace Leore.Main
 
                 Transition = new Transition();
                 Transition.FadeOut();
-                Transition.OnTransitionEnd = (t, u, v) => { Transition = null; };
+                Transition.OnTransitionEnd = (a, b, c, d) => { Transition = null; };
 
                 // death penalty
                 if (CoinsAfterDeath > 0)

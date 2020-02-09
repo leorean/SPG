@@ -69,7 +69,7 @@ namespace Leore.Main
                             case 535:
                             case 612:
                             case 646:
-                            case 789:
+                            case 729:
                             case 794:
                             case 1041:
                             case 1219:
@@ -599,9 +599,13 @@ namespace Leore.Main
                         var direction = data.ContainsKey("direction") ? (Direction)(int)data["direction"] : Direction.NONE;
                         var levelName = data.ContainsKey("levelName") ? data["levelName"].ToString() : null;
 
+                        var textAfterTransition = data.ContainsKey("textAfterTransition") ? data["textAfterTransition"].ToString() : null;
+
                         var door = new Door(x, y, room, tx, ty, levelName);
                         door.TransitionType = (TransitionType)fadeType;
                         door.Direction = direction;
+                        door.BoundingBox = new RectF(4, 0, width - 8, height);
+                        door.TextAfterTransition = textAfterTransition;
                     }                    
                     if (type == "npc")
                     {
@@ -680,8 +684,9 @@ namespace Leore.Main
                         var text = data.ContainsKey("text") ? data["text"].ToString() : null;
                         var levelName = data.ContainsKey("levelName") ? data["levelName"].ToString() : null;
                         var direction = data.ContainsKey("direction") ? (Direction)(int)data["direction"] : Direction.NONE;
+                        var textAfterTransition = data.ContainsKey("textAfterTransition") ? data["textAfterTransition"].ToString() : null;
 
-                        var warp = new StoryWarp(x + 16, y + 8, room, setCondition, tx, ty, text, direction, levelName);
+                        var warp = new StoryWarp(x + 16, y + 8, room, setCondition, tx, ty, text, direction, levelName, textAfterTransition);
                     }
                     if (type == "jumpDisabler")
                     {

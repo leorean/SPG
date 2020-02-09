@@ -19,6 +19,7 @@ namespace Leore.Objects.Level
         string setCondition;        
         string text;
         string levelName;
+        string textAfterTransition;
         Direction direction;
 
         Vector2 targetPos;
@@ -32,7 +33,7 @@ namespace Leore.Objects.Level
 
         private StoryWarpEmitter emitter;
 
-        public StoryWarp(float x, float y, Room room, string setCondition, int tx, int ty, string text, Direction direction = Direction.NONE, string levelName = null) : base(x, y, room)
+        public StoryWarp(float x, float y, Room room, string setCondition, int tx, int ty, string text, Direction direction = Direction.NONE, string levelName = null, string textAfterTransition = null) : base(x, y, room)
         {
             BoundingBox = new RectF(-8, 0, 16, 8);
             
@@ -124,7 +125,7 @@ namespace Leore.Objects.Level
         
         void Complete()
         {
-            RoomCamera.Current.ChangeRoomsToPosition(targetPos, TransitionType.LIGHT_FLASH_LONG_FADE, direction, levelName);
+            RoomCamera.Current.ChangeRoomsToPosition(targetPos, TransitionType.LIGHT_FLASH_LONG_FADE, direction, levelName, textAfterTransition);
             Destroy();
         }
 

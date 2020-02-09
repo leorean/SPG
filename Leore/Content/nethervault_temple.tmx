@@ -12314,9 +12314,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="1476"/>
+   <tile gid="1477"/>
+   <tile gid="1478"/>
    <tile/>
    <tile/>
    <tile/>
@@ -12442,9 +12442,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="742"/>
-   <tile gid="661"/>
-   <tile/>
+   <tile gid="1540"/>
+   <tile gid="1541"/>
+   <tile gid="1542"/>
    <tile gid="744"/>
    <tile/>
    <tile/>

@@ -82,7 +82,7 @@ namespace Leore.Main
         }
 
         // if type = 0, black transition. if type = 1, white transition, if type = 2, white transition + lie down
-        private void Transition_1(TransitionType transitionType, Direction direction, string levelName)
+        private void Transition_1(TransitionType transitionType, Direction direction, string levelName, string textAfterTransition)
         {
             // reset possible teleporter stuff
             player.Teleporter?.Reset();
@@ -137,22 +137,27 @@ namespace Leore.Main
             GameManager.Current.Transition.FadeOut();
             
             GameManager.Current.Transition.OnTransitionEnd = Transition_2;
-            player.Visible = true;
+            player.Visible = true;            
         }
 
-        private void Transition_2(TransitionType type, Direction direction, string levelName)
+        private void Transition_2(TransitionType type, Direction direction, string levelName, string textAfterTransition)
         {
             GameManager.Current.Transition.OnTransitionEnd = null;
             GameManager.Current.Transition = null;
             //player.Visible = true; <- done already at end of transition_1            
             MainGame.Current.HUD.SetVisible(true);
+
+            if (textAfterTransition != null)
+            {
+                new LevelTextDisplay(player.X, player.Y, CurrentRoom, textAfterTransition);
+            }
         }
 
-        public void ChangeRoomsToPosition(Vector2 position, TransitionType type, Direction direction, string levelName)
+        public void ChangeRoomsToPosition(Vector2 position, TransitionType type, Direction direction, string levelName, string textAfterTransition)
         {
             //player.State = Player.PlayerState.BACKFACING;
             
-            GameManager.Current.Transition = new Transition(type, direction, levelName);
+            GameManager.Current.Transition = new Transition(type, direction, levelName, textAfterTransition);
             GameManager.Current.Transition.FadeIn();
             
             newPosition = position;

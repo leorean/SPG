@@ -57,6 +57,7 @@
     <Compile Include="Main\SaveGame.cs" />
     <Compile Include="Main\StoryScene.cs" />
     <Compile Include="Main\TitleMenu.cs" />
+    <Compile Include="Objects\Effects\Ambience\LevelTextDisplay.cs" />
     <Compile Include="Objects\Effects\Emitters\CollectableAmbientEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\StoryWarpEmitter.cs" />
     <Compile Include="Objects\Enemies\BossShadowLizard.cs" />

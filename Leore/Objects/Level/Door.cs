@@ -29,6 +29,7 @@ namespace Leore.Objects.Level
             this.Type = type;
             Visible = false;
 
+            // the door disabler can only be used on 16x16 doors.
             BoundingBox = new SPG.Util.RectF(4, 0, 8, 16);
         }
 
@@ -113,11 +114,13 @@ namespace Leore.Objects.Level
 
         public string LevelName { get; private set; }
 
+        public string TextAfterTransition { get; set; }
+
         public Door(float x, float y, Room room, int tx, int ty, string levelName, string name = null) : base(x, y, room, name)
         {
             Depth = Globals.LAYER_BG + .001f;
             
-            BoundingBox = new SPG.Util.RectF(4, 0, 8, 16);
+            //BoundingBox = new SPG.Util.RectF(4, 0, 8, 16);
             Texture = AssetManager.Door;
 
             Tx = tx;

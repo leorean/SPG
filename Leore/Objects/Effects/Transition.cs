@@ -20,7 +20,7 @@ namespace Leore.Objects.Effects
             LIGHT_FLASH_LONG_FADE = 3
         }
         
-        public delegate void TransitionEnd(TransitionType type, Direction direction, string levelName);
+        public delegate void TransitionEnd(TransitionType type, Direction direction, string levelName, string textAfterTransition);
         public TransitionEnd OnTransitionEnd;
         
         private double alpha = 0f;
@@ -32,12 +32,14 @@ namespace Leore.Objects.Effects
         private int spriteIndex;
         private Direction direction;
         private string levelName;
+        private string textAfterTransition;
 
-        public Transition(TransitionType type = TransitionType.DARK, Direction direction = Direction.NONE, string levelName = null)
+        public Transition(TransitionType type = TransitionType.DARK, Direction direction = Direction.NONE, string levelName = null, string textAfterTransition = null)
         {
             this.type = type;
             this.direction = direction;
             this.levelName = levelName;
+            this.textAfterTransition = textAfterTransition;
 
             switch (type)
             {
@@ -102,7 +104,7 @@ namespace Leore.Objects.Effects
                 if (alpha == 1)
                 {
                     fade = Fade.NONE;
-                    OnTransitionEnd?.Invoke(type, direction, levelName);
+                    OnTransitionEnd?.Invoke(type, direction, levelName, textAfterTransition);
                 }
             }
 
@@ -112,7 +114,7 @@ namespace Leore.Objects.Effects
                 if (alpha == 0)
                 {
                     fade = Fade.NONE;
-                    OnTransitionEnd?.Invoke(type, direction, levelName);
+                    OnTransitionEnd?.Invoke(type, direction, levelName, textAfterTransition);
                 }
             }
 

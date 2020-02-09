@@ -4561,9 +4561,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="165"/>
-   <tile gid="165"/>
-   <tile gid="166"/>
+   <tile gid="220"/>
+   <tile gid="220"/>
+   <tile gid="220"/>
    <tile gid="228"/>
    <tile gid="229"/>
    <tile gid="230"/>
@@ -4721,9 +4721,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="229"/>
-   <tile gid="100"/>
-   <tile gid="230"/>
+   <tile gid="220"/>
+   <tile gid="220"/>
+   <tile gid="220"/>
    <tile gid="228"/>
    <tile gid="229"/>
    <tile gid="230"/>
@@ -14645,9 +14645,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="1473"/>
+   <tile gid="1474"/>
+   <tile gid="1475"/>
    <tile/>
    <tile/>
    <tile/>
@@ -14805,9 +14805,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="1537"/>
+   <tile gid="1538"/>
+   <tile gid="1539"/>
    <tile/>
    <tile/>
    <tile/>
@@ -40617,11 +40617,12 @@ Well.. you're on the right path - There's an ancient temple ahead.
    <properties>
     <property name="direction" type="int" value="-1"/>
     <property name="levelName" value="forest_temple"/>
+    <property name="textAfterTransition" value="Forest Temple"/>
     <property name="tx" type="int" value="77"/>
     <property name="ty" type="int" value="16"/>
    </properties>
   </object>
-  <object id="1471" type="npc" x="1232" y="464" width="16" height="16">
+  <object id="1471" type="npc" x="1264" y="432" width="16" height="16">
    <properties>
     <property name="disappearCondition" value="D000"/>
     <property name="npcType" type="int" value="1"/>

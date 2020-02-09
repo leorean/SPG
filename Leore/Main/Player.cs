@@ -967,7 +967,7 @@ namespace Leore.Main
 
                             var newPosition = new Vector2(newTeleID.x, newTeleID.y);
                             
-                            RoomCamera.Current.ChangeRoomsToPosition(newPosition, TransitionType.LIGHT, Direction.NONE, GameManager.Current.GetMapNameFromIndex(newTeleID.mapIndex).Name);
+                            RoomCamera.Current.ChangeRoomsToPosition(newPosition, TransitionType.LIGHT, Direction.NONE, GameManager.Current.GetMapNameFromIndex(newTeleID.mapIndex).Name, null);
                             Teleporter.OnFinishedAnimation = null;
 
                         };
@@ -1047,7 +1047,7 @@ namespace Leore.Main
                     if (outOfScreenTimer == 0 && !outOfScreenTransitionStarted)
                     {
                         outOfScreenTransitionStarted = true;
-                        RoomCamera.Current.ChangeRoomsToPosition(safePosition, 0, Direction.NONE, null);
+                        RoomCamera.Current.ChangeRoomsToPosition(safePosition, 0, Direction.NONE, null, null);
                     }
 
                     XVel = 0;
@@ -1075,7 +1075,7 @@ namespace Leore.Main
                         }
 
                         State = PlayerState.BACKFACING;
-                        RoomCamera.Current.ChangeRoomsToPosition(pos, door.TransitionType, door.Direction, door.LevelName);
+                        RoomCamera.Current.ChangeRoomsToPosition(pos, door.TransitionType, door.Direction, door.LevelName, door.TextAfterTransition);
 
                     }
                 }
@@ -1213,7 +1213,7 @@ namespace Leore.Main
                     if (this.CollisionBoundsFirstOrDefault<PushBlock>(safePosition.X, safePosition.Y + 1) != null)
                     {
                         safePosition = GameManager.Current.SaveGame.playerPosition;
-                        RoomCamera.Current.ChangeRoomsToPosition(safePosition, 0, Direction.NONE, null);
+                        RoomCamera.Current.ChangeRoomsToPosition(safePosition, 0, Direction.NONE, null, null);
                     }
                     else
                     {
