@@ -214,18 +214,19 @@ namespace Leore.Main
             {
                 RoomObjectLoader.CreateRoomObjects(n);
             }
-
+            
             RoomObjectLoader.CleanObjectsExceptRoom(startRoom);            
         }
 
         public void UnloadRoomObjects(Room room)
         {
-            var alive = ObjectManager.Objects.Where(
-                o => !(o is Room) 
+            var alive = ObjectManager.Objects.Where(o => !(o is IKeepAliveBetweenRooms)).ToList();
+                //o => Attribute.GetCustomAttribute(o.GetType(), typeof(KeepAliveBetweenRoomsAttribute)) == null).ToList();
+                /*!(o is Room) 
                 && !(o is Player)
                 && !(o is Weather)
                 && !(o is RollDamageProjectile)
-                ).ToList();
+                && !(o is IKeepAliveBetweenRooms)*/                
             alive.ForEach(o => o.Destroy());
             
             LoadedRooms.Remove(room);
@@ -398,11 +399,16 @@ namespace Leore.Main
 
                 var playerData = Map.ObjectData.FindFirstDataByTypeName("player");
 
+                string levelText = null;
+
                 if (playerData != null)
                 {
                     spawnX = (float)(int)playerData["x"] + 8;
                     spawnY = (float)(int)playerData["y"] + 7.9f;
                     var dir = (int)playerData["direction"];
+
+                    levelText = playerData.ContainsKey("levelText") ? playerData["levelText"].ToString() : null;
+
                     direction = (dir == 1) ? Direction.RIGHT : Direction.LEFT;
                 }
                 originalSpawnPosition = new Vector2(spawnX, spawnY);
@@ -444,6 +450,11 @@ namespace Leore.Main
                 Transition.FadeOut();
                 Transition.OnTransitionEnd = (a, b, c, d) => { Transition = null; };
 
+                if (levelText != null)
+                {
+                    new LevelTextDisplay(Player.X, Player.Y, levelText);
+                }
+
                 // death penalty
                 if (CoinsAfterDeath > 0)
                 {
@@ -464,6 +475,7 @@ namespace Leore.Main
 
             RoomCamera.Current.SetTarget(Player);            
             MainGame.Current.HUD.Boss = null;
+            MainGame.Current.Input.Enabled = true;
 
         }
 
@@ -570,25 +582,32 @@ namespace Leore.Main
 
             // ++++ enable global objects ++++
 
-            ObjectManager.Enable<Room>();            
-            ObjectManager.Enable<MessageBox>();
-            ObjectManager.Enable<GlobalWaterBubbleEmitter>();
-            ObjectManager.Enable<PlayerGhost>();
-            ObjectManager.Enable<Orb>();
-            ObjectManager.Enable<Player>();
-            ObjectManager.Enable<PlayerProjectile>();
-            ObjectManager.Enable<TitleMenu>();
-            ObjectManager.Enable<StoryScene>();
+            //ObjectManager.Enable<Room>();
+            //ObjectManager.Enable<MessageBox>();
+            //ObjectManager.Enable<GlobalWaterBubbleEmitter>();
+            //ObjectManager.Enable<PlayerGhost>();
+            //ObjectManager.Enable<Orb>();
+            //ObjectManager.Enable<Player>();
+            //ObjectManager.Enable<StoryScene>();
 
-            // todo: instead of those, let them inherit from spell and activate spell
-            ObjectManager.Enable<FireSpell>();
-            ObjectManager.Enable<CrimsonSpell>();
-            //ObjectManager.Enable<KeySnatchProjectile>();
-            
-            // todo: solve more smoothly?
-            foreach (var o in ObjectManager.Objects.Where(o => o is Enemy && (o as RoomObject).Room == room)) {
-                ObjectManager.Enable(o);
-            }
+            //var keepEnabledObjects = ObjectManager.Objects.Where(o => o is IKeepEnabledAcrossRooms);
+            //foreach (var o in keepEnabledObjects)
+            //{
+            //    ObjectManager.Enable(o);
+            //}
+
+            ObjectManager.Enable<IKeepEnabledAcrossRooms>();
+
+            //var enemyObjects = ObjectManager.Objects.Where(o => o is Enemy && o is RoomObject ro && ro.Room == room);
+            //foreach (var o in enemyObjects)
+            //{
+            //    ObjectManager.Enable(o);
+            //}
+
+            //ObjectManager.Enable(o => (o is Enemy && o is RoomObject ro && ro.Room == room)
+            //|| Attribute.GetCustomAttribute(o.GetType(), typeof(KeepEnabledAcrossRoomsAttribute)) != null);
+
+            //ObjectManager.Enable(o => Attribute.GetCustomAttribute(o.GetType(), typeof(KeepEnabledAcrossRoomsAttribute)) != null);
 
             // ++++ update camera ++++
 
@@ -602,7 +621,7 @@ namespace Leore.Main
             ObjectManager.UpdateObjects(gameTime);
 
         }
-
+        
         public void AddSpell(SpellType spellType)
         {
             if (!Player.Stats.Spells.ContainsKey(spellType))

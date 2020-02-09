@@ -39,6 +39,16 @@ namespace Leore.Main
         }
 
         public static ID Unknown { get; } = new ID(-1, -1, -1);
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
     
     public class SpatialGameObject : GameObject

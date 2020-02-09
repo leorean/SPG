@@ -6,7 +6,7 @@ using System;
 
 namespace Leore.Objects
 {
-    public class Room : SpatialGameObject
+    public class Room : SpatialGameObject, IKeepAliveBetweenRooms, IKeepEnabledAcrossRooms
     {
         public int Background { get; set; } = -1;
         public int Weather { get; set; } = -1;

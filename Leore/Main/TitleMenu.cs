@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Leore.Main
 {
-    public class TitleMenu : GameObject
+    public class TitleMenu : GameObject, IKeepEnabledAcrossRooms
     {
         private RoomCamera camera => RoomCamera.Current;
         Vector2 pos;

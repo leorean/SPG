@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Leore.Objects.Effects.Weather
 {
-    public abstract class Weather : GameObject
+    public abstract class Weather : GameObject, IKeepAliveBetweenRooms
     {
         protected GameObject weatherChild;
 

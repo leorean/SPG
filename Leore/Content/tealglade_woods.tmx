@@ -40622,11 +40622,11 @@ Well.. you're on the right path - There's an ancient temple ahead.
     <property name="ty" type="int" value="16"/>
    </properties>
   </object>
-  <object id="1471" type="npc" x="1264" y="432" width="16" height="16">
+  <object id="1471" type="npc" x="1232" y="464" width="16" height="16">
    <properties>
-    <property name="disappearCondition" value="D000"/>
+    <property name="disappearCondition" value="ancientBeforeForestTemple"/>
     <property name="npcType" type="int" value="1"/>
-    <property name="setCondition" value="D000"/>
+    <property name="setCondition" value="ancientBeforeForestTemple"/>
     <property name="text" value="&quot;Blessed by the ~altars of light~, the path shall be revealed to the ~aspirant of the Ancients~.&quot;"/>
    </properties>
   </object>

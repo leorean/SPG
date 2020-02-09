@@ -102,13 +102,7 @@ namespace SPG.Draw
         {
             if (filled)
             {
-                var r = rect.ToRectangle();
-
-                var errorX = rect.X > 0 ? rect.X / (float)(int)rect.X : 0;
-                var errorY = rect.Y > 0 ? rect.Y / (float)(int)rect.Y : 0;
-
-                //public void Draw(Texture2D texture, Rectangle destinationRectangle, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, SpriteEffects effects, float layerDepth);
-                sb.Draw(Pixel, r, null, col, 0, new Vector2(errorX, errorY), SpriteEffects.None, depth);
+                sb.Draw(Pixel, new Vector2(rect.X, rect.Y), null, col, 0, Vector2.Zero, new Vector2(rect.Width, rect.Height), SpriteEffects.None, depth);
             }
             else
             {

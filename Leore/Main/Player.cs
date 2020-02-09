@@ -48,7 +48,7 @@ namespace Leore.Main
         ROLL = 256
     }
     
-    public class Player : GameObject, IMovable
+    public class Player : GameObject, IMovable, IKeepAliveBetweenRooms, IKeepEnabledAcrossRooms
     {
         // public
         
@@ -1357,7 +1357,7 @@ namespace Leore.Main
             {
                 if (rollDamager == null)
                 {                    
-                    rollDamager = new RollDamageProjectile(X, Y);
+                    rollDamager = new RollDamageProjectile(this);
                 }
 
                 LookDirection = Direction.NONE;
@@ -1585,6 +1585,7 @@ namespace Leore.Main
                 if (rollDamager != null)
                 {
                     new SingularEffect(X, Y, 7);
+                    rollDamager.Parent = null;
                     rollDamager.Destroy();
                     rollDamager = null;                    
                 }

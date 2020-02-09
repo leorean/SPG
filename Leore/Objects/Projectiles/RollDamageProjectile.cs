@@ -13,14 +13,16 @@ namespace Leore.Objects.Projectiles
         private Player player => GameManager.Current.Player;
         public Direction Direction { get; set; }
 
-        public RollDamageProjectile(float x, float y) : base(x, y, SpellLevel.ONE)
+        public RollDamageProjectile(Player player) : base(player.X, player.Y, SpellLevel.ONE)
         {
             Damage = 1;
             Element = SpellElement.ROLLDAMAGE;
             BoundingBox = new SPG.Util.RectF(-4, -4, 8, 8);
             //DebugEnabled = true;
-        }
 
+            Parent = player;
+        }
+        
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);

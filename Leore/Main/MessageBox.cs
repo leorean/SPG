@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Leore.Main
 {
-    public class MessageBox : GameObject
+    public class MessageBox : GameObject, IKeepEnabledAcrossRooms
     {
         public enum TextSpeed
         {

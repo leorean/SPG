@@ -9,7 +9,7 @@ namespace Leore.Objects.Projectiles
     /// <summary>
     /// Every spell should inherit from this object, else there are problems when holding a spell at the room border or while changing rooms
     /// </summary>
-    public abstract class SpellObject : GameObject
+    public abstract class SpellObject : GameObject, IKeepEnabledAcrossRooms
     {
         public SpellObject(float x, float y, string name = null) : base(x, y, name)
         {

@@ -44,7 +44,8 @@ namespace Leore.Objects.Level
             this.text = text;
             this.direction = direction;
             this.levelName = levelName;
-            
+            this.textAfterTransition = textAfterTransition;
+
             if (!string.IsNullOrEmpty(levelName))
             {
                 var px = tx * Globals.T + 8;

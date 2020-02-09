@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Leore.Main
 {
-    public class StoryScene : GameObject
+    public class StoryScene : GameObject, IKeepEnabledAcrossRooms
     {
         private TextureSet image => AssetManager.Scenes;
         private RoomCamera camera => RoomCamera.Current;

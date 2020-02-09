@@ -155,7 +155,7 @@ namespace SPG.Objects
         /// Enables all objects of type T
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        public static void Enable<T>() where T : GameObject
+        public static void Enable<T>()
         {
             for (var i = 0; i < Objects.Count; i++)
             {
@@ -172,11 +172,20 @@ namespace SPG.Objects
 
         public static void Enable(GameObject gameObject)
         {
+            Enable(gameObject, true);
+        }
+
+        private static void Enable(GameObject gameObject, bool updateActiveObjectList)
+        {
             if (gameObject == null)
                 return;
 
             gameObject.Enabled = true;
-            UpdateActiveObjectList();
+
+            if (updateActiveObjectList)
+            {
+                UpdateActiveObjectList();
+            }
         }
 
         public static List<T> CollisionPoints<T>(float x, float y) where T : GameObject
@@ -404,9 +413,6 @@ namespace SPG.Objects
         /// </summary>
         public static void UpdateObjects(GameTime gameTime)
         {
-            //Objects.SortByY();
-            //Objects.Reverse();
-
             UpdateActiveObjectList();
             
             if (ElapsedTime > GameDelay)
@@ -436,9 +442,6 @@ namespace SPG.Objects
                         continue;
                     o.EndUpdate(gameTime);
                 }
-                //Objects.Where(o => o.Enabled == true).ToList().ForEach(o => o.BeginUpdate(gameTime));
-                //Objects.Where(o => o.Enabled == true).ToList().ForEach(o => o.Update(gameTime));
-                //Objects.Where(o => o.Enabled == true).ToList().ForEach(o => o.EndUpdate(gameTime));
             }
             ElapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;            
         }
@@ -448,8 +451,6 @@ namespace SPG.Objects
         /// </summary>
         public static void DrawObjects(SpriteBatch sb, GameTime gameTime, Rectangle visibleRect = new Rectangle())
         {
-            //SortByID();
-            
             for (var i = 0; i < ActiveObjects.Count; i++)
             {
                 var o = ActiveObjects[i];
@@ -464,12 +465,24 @@ namespace SPG.Objects
                 //}
 
                 o.Draw(sb, gameTime);
-            }
-
-            //Objects.Where(o => o.Visible).ToList().ForEach(o => o.Draw(sb, gameTime));
+            }            
         }
 
-        
+        //public static void Enable(Func<GameObject, bool> predicate)
+        //{
+        //    for (var i = 0; i < Objects.Count; i++)
+        //    {
+        //        var o = Objects[i];
+        //        if (o.Enabled)
+        //            continue;
+        //        if (predicate(o))
+        //        {
+        //            Enable(o, false);
+        //        }                
+        //    }
+
+        //    UpdateActiveObjectList();
+        //}
     }
 }
 

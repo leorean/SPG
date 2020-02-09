@@ -86,7 +86,8 @@ namespace SPG.Util
 
         public Rectangle ToRectangle()
         {
-            return new Rectangle((int)Math.Floor(X), (int)Math.Floor(Y), (int)Math.Ceiling(Width), (int)Math.Ceiling(Height));
+            //return new Rectangle((int)Math.Floor(X), (int)Math.Floor(Y), (int)Math.Ceiling(Width), (int)Math.Ceiling(Height));
+            return new Rectangle((int)X, (int)Y, (int)Width, (int)Height);
         }
 
         public override string ToString()

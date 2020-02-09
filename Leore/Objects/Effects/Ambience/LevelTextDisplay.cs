@@ -7,11 +7,12 @@ using Leore.Main;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SPG.Draw;
+using SPG.Objects;
 using SPG.Util;
 
 namespace Leore.Objects.Effects.Ambience
 {
-    public class LevelTextDisplay : RoomObject
+    public class LevelTextDisplay : GameObject, IKeepAliveBetweenRooms, IKeepEnabledAcrossRooms
     {
         private float alpha;
         private float xo;
@@ -20,7 +21,7 @@ namespace Leore.Objects.Effects.Ambience
         Font font = AssetManager.DefaultFont.Copy();
         RoomCamera camera => RoomCamera.Current;
 
-        public LevelTextDisplay(float x, float y, Room room, string name = null) : base(x, y, room, name)
+        public LevelTextDisplay(float x, float y, string name = null) : base(x, y, name)
         {
             xo = camera.ViewWidth * .25f;
         }
@@ -28,6 +29,8 @@ namespace Leore.Objects.Effects.Ambience
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            Position = camera.Position;
 
             if (!shown)
             {
@@ -50,8 +53,8 @@ namespace Leore.Objects.Effects.Ambience
                 {
                     Destroy();
                 }
-            }         
-        }
+            }
+        }        
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
@@ -64,12 +67,11 @@ namespace Leore.Objects.Effects.Ambience
 
             font.Draw(sb, camera.ViewX + xo, camera.ViewY + 3 * Globals.T, Name);
 
-            var y = camera.ViewY + 3 * Globals.T + 4;
+            float y = camera.ViewY + 3 * Globals.T + 5;
             var depth = font.Depth;
 
-            sb.DrawRectangle(new RectF(camera.ViewX, y - 10, camera.ViewWidth + 1, 13), new Color(Color.Black, .5f * alpha), true, depth - .0001f);
-            sb.DrawLine(camera.ViewX, y, camera.ViewX + camera.ViewWidth, y, font.Color, depth);            
-
+            sb.DrawRectangle(new RectF(camera.ViewX, y - 11, camera.ViewWidth + 1, 14), new Color(Color.Black, .5f * alpha), true, depth - .0001f);
+            sb.DrawLine(camera.ViewX, y, camera.ViewX + camera.ViewWidth, y, font.Color, depth);
         }
     }
 }

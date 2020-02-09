@@ -75,7 +75,7 @@ namespace Leore.Objects.Effects.Emitters
         }
     }
 
-    public class GlobalWaterBubbleEmitter : ParticleEmitter
+    public class GlobalWaterBubbleEmitter : ParticleEmitter, IKeepEnabledAcrossRooms
     {
         private Room room;
         private int waterCount;

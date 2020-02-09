@@ -149,7 +149,7 @@ namespace Leore.Main
 
             if (textAfterTransition != null)
             {
-                new LevelTextDisplay(player.X, player.Y, CurrentRoom, textAfterTransition);
+                new LevelTextDisplay(player.X, player.Y, textAfterTransition);
             }
         }
 

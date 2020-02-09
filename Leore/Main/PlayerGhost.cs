@@ -7,7 +7,7 @@ using System;
 
 namespace Leore.Main
 {
-    public class PlayerGhost : GameObject
+    public class PlayerGhost : GameObject, IKeepEnabledAcrossRooms
     {
         private double alpha = .01;
         private float spawnY;

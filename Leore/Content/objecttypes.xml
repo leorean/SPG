@@ -15,6 +15,7 @@
   <property name="direction" type="int" default="0"/>
   <property name="fadeType" type="int" default="0"/>
   <property name="levelName" type="string" default=""/>
+  <property name="textAfterTransition" type="string"/>
   <property name="tx" type="int" default="0"/>
   <property name="ty" type="int" default="0"/>
  </objecttype>
@@ -47,7 +48,10 @@
   <property name="text" type="string"/>
   <property name="yesText" type="string"/>
  </objecttype>
- <objecttype name="player" color="#ffffff"/>
+ <objecttype name="player" color="#ffffff">
+  <property name="direction" type="int" default="0"/>
+  <property name="levelText" type="string"/>
+ </objecttype>
  <objecttype name="room" color="#ffec9c">
   <property name="bg" type="int" default="-1"/>
   <property name="darkness" type="float" default="-1"/>
@@ -70,6 +74,7 @@
   <property name="levelName" type="string"/>
   <property name="setCondition" type="string"/>
   <property name="text" type="string"/>
+  <property name="textAfterTransition" type="string"/>
   <property name="tx" type="int" default="0"/>
   <property name="ty" type="int" default="0"/>
  </objecttype>
