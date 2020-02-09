@@ -32346,8 +32346,9 @@
    <properties>
     <property name="direction" type="int" value="-1"/>
     <property name="levelName" value="great_cavern"/>
-    <property name="setCondition" value="dungeon2complete"/>
+    <property name="setCondition" value="D2"/>
     <property name="text" value="...two peaks...the mountain calls..."/>
+    <property name="textAfterTransition" value="The Great Cavern"/>
     <property name="tx" type="int" value="157"/>
     <property name="ty" type="int" value="78"/>
    </properties>
@@ -32369,6 +32370,7 @@
   <object id="1423" type="door" x="288" y="544" width="16" height="16">
    <properties>
     <property name="levelName" value="great_cavern"/>
+    <property name="textAfterTransition" value="The Great Cavern"/>
     <property name="tx" type="int" value="157"/>
     <property name="ty" type="int" value="78"/>
    </properties>

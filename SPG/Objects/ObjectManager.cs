@@ -136,7 +136,7 @@ namespace SPG.Objects
         /// Disables all objects of type T
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        public static void Disable<T>() where T : GameObject
+        public static void Disable<T>()
         {
             for (var i = 0; i < ActiveObjects.Count; i++)
             {

@@ -48,7 +48,12 @@ namespace Leore.Main
         ROLL = 256
     }
     
-    public class Player : GameObject, IMovable, IKeepAliveBetweenRooms, IKeepEnabledAcrossRooms
+    /// <summary>
+    /// Everything that implements this interface will be not destroyed when copying the player
+    /// </summary>
+    public interface IPlayerTransferrable { }
+
+    public class Player : GameObject, IMovable, IKeepAliveBetweenRooms, IKeepEnabledAcrossRooms, IPlayerTransferrable
     {
         // public
         
@@ -271,7 +276,8 @@ namespace Leore.Main
             coinFont.Valign = Font.VerticalAlignment.Top;
             coinFont.Color = new Color(153, 229, 80);
 
-            levitationEmitter = new PlayerLevitationEmitter(x, y, this);
+            levitationEmitter = new PlayerLevitationEmitter(x, y);
+            levitationEmitter.Parent = this;
 
             HP = Stats.MaxHP;
             MP = Stats.MaxMP;
@@ -386,8 +392,12 @@ namespace Leore.Main
             
             new FallingFont(X, Y, $"-{hitPoints}", new Color(170, 0, 231), new Color(255, 0, 0));
 
-            if (State == PlayerState.IDLE || State == PlayerState.WALK || State == PlayerState.GET_UP || State == PlayerState.ROLL)
+            if (State == PlayerState.IDLE || State == PlayerState.WALK || State == PlayerState.GET_UP)
                 State = PlayerState.JUMP_UP;
+
+            if (State == PlayerState.ROLL || State == PlayerState.ROLL_JUMP)
+                State = PlayerState.HIT_AIR;
+
 
             if (State != PlayerState.HIT_GROUND)
             {
@@ -1342,7 +1352,7 @@ namespace Leore.Main
 
                         MovingPlatform = null;
 
-                        if (State == PlayerState.ROLL)
+                        if (State == PlayerState.ROLL || State == PlayerState.ROLL_JUMP)
                             State = PlayerState.ROLL_JUMP;
                         else
                             State = PlayerState.JUMP_UP;
@@ -1431,7 +1441,7 @@ namespace Leore.Main
                         State = PlayerState.ROLL;
                     }
                 }
-
+                
                 if (k_attackPressed)
                 {
                     YVel -= 1;
@@ -1570,7 +1580,7 @@ namespace Leore.Main
                         if (GameManager.Current.Map.CollisionTile(X + (.5f * BoundingBox.Width + 3) * Math.Sign((int)XVel), Y))
                         {
                             new StarEmitter(X, Y);
-                            XVel *= -.5f;
+                            XVel *= -.5f;                            
                             State = PlayerState.JUMP_UP;
                         }
                 }

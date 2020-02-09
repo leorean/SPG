@@ -54,7 +54,7 @@ namespace Leore.Main
         THREE = 3
     }
 
-    public class Orb : GameObject, IKeepEnabledAcrossRooms
+    public class Orb : GameObject, IKeepEnabledAcrossRooms, IPlayerTransferrable
     {
         public Direction Direction => player.Direction;
         public OrbState State { get; set; }

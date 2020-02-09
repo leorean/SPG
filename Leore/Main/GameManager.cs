@@ -192,7 +192,7 @@ namespace Leore.Main
                     Player.Orb.Parent = null;
                     Player.Orb.Destroy();
                     Player.Orb = orb;
-                }                
+                }
             }
             
             // find starting room
@@ -339,8 +339,9 @@ namespace Leore.Main
             {
                 if (keepPlayer)
                 {
-                    if (obj is Player || obj is Orb)
+                    if (obj is IPlayerTransferrable)
                         continue;
+                    //if (obj is Player || obj is Orb || obj is PlayerLevitationEmitter)                        
                 }
 
                 obj.Parent = null;

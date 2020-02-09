@@ -56,11 +56,19 @@ namespace Leore.Objects.Projectiles
         {
             new StarEmitter(X, Y, 2, 0);
 
+            if (!(obj is DestroyBlock || obj is Pot))
+            {
+                player.XVel = -Math.Sign(player.XVel) * .5f;
+                player.YVel = -1;
+                player.State = Player.PlayerState.HIT_AIR;
+                return;
+            }
+
             switch (Direction)
             {
                 case Direction.UP:
                 case Direction.DOWN:
-                    if (!(obj is DestroyBlock))
+                    if (!(obj is DestroyBlock) && !(obj is Pot))
                     {
                         player.YVel *= -1f;
                     }

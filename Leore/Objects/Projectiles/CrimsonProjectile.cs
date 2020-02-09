@@ -8,6 +8,7 @@ using SPG.Map;
 using SPG.Objects;
 using SPG.Util;
 using Leore.Resources;
+using Leore.Objects.Level.Blocks;
 
 namespace Leore.Objects.Projectiles
 {
@@ -78,7 +79,8 @@ namespace Leore.Objects.Projectiles
 
         public override void HandleCollision(GameObject obj)
         {
-            pierce--;
+            if (!(obj is DestroyBlock))
+                pierce--;
             
             if (pierce == 0 || obj is Enemies.EnemyVoidling.Shield)
             {

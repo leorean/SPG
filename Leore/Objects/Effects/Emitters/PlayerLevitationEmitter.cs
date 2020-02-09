@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Leore.Main;
+using Microsoft.Xna.Framework;
 using SPG.Objects;
 using SPG.Util;
 using System;
@@ -6,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Leore.Objects.Effects.Emitters
 {
-    public class PlayerLevitationParticle : Particle
+    public class PlayerLevitationParticle : Particle, IKeepAliveBetweenRooms, IKeepEnabledAcrossRooms
     {
         public PlayerLevitationParticle(ParticleEmitter emitter) : base(emitter)
         {
@@ -41,14 +42,17 @@ namespace Leore.Objects.Effects.Emitters
         }
     }
 
-    public class PlayerLevitationEmitter : ParticleEmitter
+    public class PlayerLevitationEmitter : ParticleEmitter, IPlayerTransferrable
     {
         List<Color> particleColors;
 
-        public PlayerLevitationEmitter(float x, float y, GameObject parent) : base(x, y)
+        public override void Destroy(bool callGC = false)
         {
-            Parent = parent;
+            base.Destroy(callGC);
+        }
 
+        public PlayerLevitationEmitter(float x, float y) : base(x, y)
+        {
             particleColors = new List<Color>
             {
                 new Color(255, 255, 255),

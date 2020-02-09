@@ -63578,6 +63578,7 @@
   <object id="1486" type="door" x="2512" y="1248" width="16" height="16">
    <properties>
     <property name="levelName" value="nethervault_temple"/>
+    <property name="textAfterTransition" value="The Nethervault"/>
     <property name="tx" type="int" value="18"/>
     <property name="ty" type="int" value="34"/>
    </properties>
@@ -63726,12 +63727,11 @@ What a pickle...</property>
   <object id="1540" type="npc" x="2512" y="1248" width="16" height="16">
    <properties>
     <property name="appearCondition" value=""/>
-    <property name="disappearCondition" value="ancient2,giantBatDead"/>
+    <property name="disappearCondition" value="ancientBeforeNethervault"/>
     <property name="npcType" type="int" value="1"/>
-    <property name="setCondition" value="ancient2"/>
+    <property name="setCondition" value="ancientBeforeNethervault"/>
     <property name="text">This is the ~Nethervault~.
-|The next ~altar of light~ is nigh, but darkness lingers..
-|Until we meet again.</property>
+|You'll find the next ~altar of light~ inside. But be aware.</property>
    </properties>
   </object>
  </objectgroup>
