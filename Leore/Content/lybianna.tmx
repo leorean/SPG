@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="180" tilewidth="16" tileheight="16" infinite="0" nextlayerid="125" nextobjectid="1492">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="180" tilewidth="16" tileheight="16" infinite="0" nextlayerid="125" nextobjectid="1493">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="3072" columns="64">
   <image source="tiles.png" width="1024" height="768"/>
  </tileset>
@@ -68132,7 +68132,7 @@
    <tile gid="4"/>
    <tile/>
    <tile gid="161"/>
-   <tile/>
+   <tile gid="679"/>
    <tile/>
    <tile/>
    <tile/>
@@ -68365,7 +68365,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="678"/>
    <tile/>
    <tile gid="225"/>
    <tile/>
@@ -148212,7 +148212,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="1027"/>
    <tile/>
    <tile/>
    <tile/>
@@ -149421,7 +149421,7 @@
    <tile/>
    <tile/>
    <tile gid="1"/>
-   <tile/>
+   <tile gid="1027"/>
    <tile/>
    <tile gid="65"/>
    <tile gid="130"/>
@@ -153116,7 +153116,7 @@
    <tile gid="716"/>
    <tile gid="716"/>
    <tile/>
-   <tile/>
+   <tile gid="1027"/>
    <tile/>
    <tile/>
    <tile/>
@@ -155050,7 +155050,7 @@
    <tile gid="130"/>
    <tile gid="67"/>
    <tile/>
-   <tile/>
+   <tile gid="1027"/>
    <tile/>
    <tile gid="65"/>
    <tile gid="130"/>
@@ -155251,7 +155251,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="1027"/>
    <tile/>
    <tile/>
    <tile/>
@@ -155260,7 +155260,7 @@
    <tile gid="577"/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="1027"/>
    <tile/>
    <tile/>
    <tile/>
@@ -173147,7 +173147,7 @@ Sometimes, Tas is picking on me outside the village.
     <property name="text">I'm the ~mayor~.
 |So, you need permission to enter the woods?
 Hm...
-|..whatever, okay, tell the guard that I, the mayor, ~grants you access~.
+|..whatever, okay, tell the guard that I, the mayor, ~grant you access~.
 |But be warned! There are ~monsters~ lurking everywhere!</property>
    </properties>
   </object>
@@ -173325,6 +173325,14 @@ With their magical power, you're able to ~levitate~!</property>
     <property name="centerText" type="bool" value="false"/>
     <property name="npcType" type="int" value="5"/>
     <property name="text" value="You came back in one piece. I'm impressed."/>
+   </properties>
+  </object>
+  <object id="1492" type="npc" x="2080" y="960" width="16" height="16">
+   <properties>
+    <property name="centerText" type="bool" value="false"/>
+    <property name="npcType" type="int" value="14"/>
+    <property name="text">What's up? Oh that's right. We are. We are up. Waaaaay up.
+|Tehehe...</property>
    </properties>
   </object>
  </objectgroup>

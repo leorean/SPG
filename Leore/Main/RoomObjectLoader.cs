@@ -417,6 +417,9 @@ namespace Leore.Main
                             case 1025: // AMBIENCE (small bird)
                                 new LittleBirb(i * Globals.T + 8, j * Globals.T, room);
                                 break;
+                            case 1026: // AMBIENCE (small worm)
+                                new LittleWorm(i * Globals.T + 8, j * Globals.T, room);
+                                break;
                             case 1088: // Collectable
                                 new Collectable(i * Globals.T + 8, j * Globals.T + 8, room);
                                 break;
