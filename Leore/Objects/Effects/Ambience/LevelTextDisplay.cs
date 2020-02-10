@@ -18,12 +18,27 @@ namespace Leore.Objects.Effects.Ambience
         private float xo;
         private bool shown;
 
-        Font font = AssetManager.DefaultFont.Copy();
+        Font font;
+        float fontZoom;
         RoomCamera camera => RoomCamera.Current;
 
         public LevelTextDisplay(float x, float y, string name = null) : base(x, y, name)
         {
             xo = camera.ViewWidth * .25f;
+
+            if (Properties.Settings.Default.HighResText == true)
+            {
+                font = AssetManager.MessageFont.Copy();
+                fontZoom = .5f;
+                font.Spacing = (uint)(1 / fontZoom);
+            }
+            else
+            {
+                font = AssetManager.DefaultFont.Copy();
+                fontZoom = 1;
+                font.Spacing = 1;
+            }
+
         }
 
         public override void Update(GameTime gameTime)
@@ -65,12 +80,12 @@ namespace Leore.Objects.Effects.Ambience
 
             font.Color = new Color(Color, alpha);
 
-            font.Draw(sb, camera.ViewX + xo, camera.ViewY + 3 * Globals.T, Name);
+            font.Draw(sb, camera.ViewX + xo, camera.ViewY + 3 * Globals.T, Name, scale: fontZoom);
 
             float y = camera.ViewY + 3 * Globals.T + 5;
             var depth = font.Depth;
 
-            sb.DrawRectangle(new RectF(camera.ViewX, y - 11, camera.ViewWidth + 1, 14), new Color(Color.Black, .5f * alpha), true, depth - .0001f);
+            sb.DrawRectangle(new RectF(camera.ViewX, y - 11, camera.ViewWidth + 1, 14), new Color(Color.Black, Math.Min(.5f * alpha, .5f)), true, depth - .0001f);
             sb.DrawLine(camera.ViewX, y, camera.ViewX + camera.ViewWidth, y, font.Color, depth);
         }
     }

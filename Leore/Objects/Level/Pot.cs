@@ -5,10 +5,11 @@ using Leore.Objects.Items;
 using Leore.Objects.Projectiles;
 using SPG.Objects;
 using SPG.Util;
+using Leore.Main;
 
 namespace Leore.Objects.Level
 {
-    public class Pot : RoomObject
+    public class Pot : RoomObject, IIgnoreRollKnockback
     {
         public Pot(float x, float y, Room room) : base(x, y, room)
         {

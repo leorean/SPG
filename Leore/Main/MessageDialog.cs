@@ -59,8 +59,8 @@ namespace Leore.Main
 
                 font.Color = Color;
 
-                font.Draw(sb, yesPos.X + T, yesPos.Y + 8, "Yes");
-                font.Draw(sb, noPos.X + T, noPos.Y + 8, "No");
+                font.Draw(sb, yesPos.X + T, yesPos.Y + 8, "Yes", scale: zoom);
+                font.Draw(sb, noPos.X + T, noPos.Y + 8, "No", scale: zoom);
 
             }
 

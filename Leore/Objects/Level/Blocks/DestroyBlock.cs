@@ -10,7 +10,7 @@ using Leore.Objects.Enemies;
 
 namespace Leore.Objects.Level.Blocks
 {
-    public class DestroyBlock : Solid
+    public class DestroyBlock : Solid, IIgnoreRollKnockback
     {
         public int HP { get; set; }
 

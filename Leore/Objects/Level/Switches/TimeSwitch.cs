@@ -14,7 +14,7 @@ using Leore.Objects.Effects.Emitters;
 
 namespace Leore.Objects.Level.Switches
 {
-    public class TimeSwitch : GroundSwitch
+    public class TimeSwitch : GroundSwitch, IIgnoreRollKnockback
     {
         private float timer;
         private float maxTimer;

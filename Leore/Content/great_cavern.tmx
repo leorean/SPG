@@ -55224,7 +55224,7 @@
    <tile gid="861"/>
    <tile gid="862"/>
    <tile/>
-   <tile gid="962"/>
+   <tile gid="963"/>
    <tile/>
    <tile/>
    <tile/>
@@ -63549,7 +63549,7 @@
    <properties>
     <property name="centerText" type="bool" value="true"/>
     <property name="npcType" type="int" value="0"/>
-    <property name="text" value="#u Lybianna #u"/>
+    <property name="text" value="#u way out #u"/>
    </properties>
   </object>
   <object id="1482" type="door" x="464" y="1040" width="16" height="16">

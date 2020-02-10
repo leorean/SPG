@@ -12,7 +12,7 @@ using SPG.Objects;
 
 namespace Leore.Objects.Level.Switches
 {
-    public class ToggleSwitch : RoomObject
+    public class ToggleSwitch : RoomObject, IIgnoreRollKnockback
     {
         public bool Active { get; set; }
 

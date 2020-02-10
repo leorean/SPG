@@ -45,45 +45,84 @@ namespace Leore.Main
         public StoryScene(int startFrame, int endFrame) : base(0, 0, null)
         {
             position = new Vector2(camera.ViewX, camera.ViewY);
-            
+
             // ---- INTRO ----
 
             // 0:
-            texts.Add($"In the beginning, there was a dull, but vast celestial body, drifting through the [{voidColor}]~Void~." +
-                $"|It was given the name ~Leore~.");
+            texts.Add($"In the [{voidColor}]~Void~, there was a world floating through time and space.|This world was called ~Leore~.");
             // 1:
-            texts.Add($"When the [{sunColor}]~sun, source of all energy~, came to be, life was created." +
-                $"|Every living being is born as a child of the [{sunColor}]~sun~, holding part of it's energy within." +
-                $"|This energy is called [{magicColor}]~magic~.");
+            texts.Add($"Then came the [{sunColor}]~Sun~." +
+                $"|It created life." +
+                $"|Years, decades, centuries, even millenia passed and life evolved.");
             // 2:
-            texts.Add($"Eons passed and life was flourishing on ~Leore~. And so, in time, civilizations formed and thrived. " +
-                $"|But eventually, the apex of life was reached.");
+            texts.Add($"And so, in time, civilizations formed and thrived. " +
+                $"|But eventually, the apex was reached.");
             // 3:
-            texts.Add($"The [{sunColor}]~sun~ became weaker, drifting slowly away and ~Leore~ would eventually face a cold dark death.");
+            texts.Add($"Eventually, the [{sunColor}]~Sun~ became weaker and would drift away, yielding a cold death to the creatures of  ~Leore~.");
             // 4:
-            texts.Add($"There were the protectors of the world called ~Ancients~, who defied the apocalypse." +
-                $"|They found a solution that should prevent the inevitable destiny of ~Leore~.");
+            texts.Add($"There were the protectors of the world - called ~Ancients~ - who defied this apocalypse." +
+                $"|They discovered a way that would prevent the inevitable doom of ~Leore~.");
             // 5:
-            texts.Add($"The ~Ancients~ built towers across the world that would create a vast [{magicColor}]~magic barrier~.");
+            texts.Add($"The ~Ancients~ built [{sunColor}]~holy structures~ across the world. \nThese would create a vast [{magicColor}]~magic barrier~.");
 
             // 6:
             texts.Add($"This barrier would maintain equilibrium between [{sunColor}]~light~ and [{voidColor}]~darkness~." +
-                $"|For centuries, this has been proven true and life was protected, not knowing the actual truth.");
+                $"|For centuries, this has been proven true and life was protected.|Only a few would even know of this actuality.");
             // 7:
-            texts.Add($"Eventually, the [{voidColor}]~Void~ found a way to break through..");
-
+            texts.Add($"But light cannot exist without darkness.\nThe [{sunColor}]~Sun~ could not exist without the [{voidColor}]~Void~.");
+            
             // 8:
-            texts.Add($"It corrupted the towers turning them from [{sunColor}]~sacred sites~ into [{voidColor}]~structures of darkness~." +
-                $"|The ~Ancients~ were forced to seal the towers, ~removing them from the physical world~.");
+            texts.Add($"And eventually, the [{voidColor}]~Void~ found a way to break through the barrier.");
 
             // 9:
+            texts.Add($"The [{sunColor}]~sacred sites~ were corrupted and turned into [{voidColor}]~structures of darkness~." +
+                $"|The ~Ancients~ were able to ~seal them~ just in time before the barrier would give in completely." +
+                $"|But they had to pay an ultimate price..");
+
+            // 10:
             texts.Add($"In their final act, they emplaced their power into an ~Orb~ that would awaken the rightful heir.");
 
-            // 10
+            // 11
             texts.Add($"...|" +
                 $".....|" +
                 $"...wake up.");
-            
+
+            //// 0:
+            //texts.Add($"In the beginning, there was a dull, but vast celestial body, drifting through the [{voidColor}]~Void~." +
+            //    $"|It was given the name ~Leore~.");
+            //// 1:
+            //texts.Add($"When the [{sunColor}]~sun, source of all energy~, came to be, life was created." +
+            //    $"|Every living being is born as a child of the [{sunColor}]~sun~, holding part of it's energy within." +
+            //    $"|This energy is called [{magicColor}]~magic~.");
+            //// 2:
+            //texts.Add($"Eons passed and life was flourishing on ~Leore~. And so, in time, civilizations formed and thrived. " +
+            //    $"|But eventually, the apex of life was reached.");
+            //// 3:
+            //texts.Add($"The [{sunColor}]~sun~ became weaker, drifting slowly away and ~Leore~ would eventually face a cold dark death.");
+            //// 4:
+            //texts.Add($"There were the protectors of the world called ~Ancients~, who defied the apocalypse." +
+            //    $"|They found a solution that should prevent the inevitable destiny of ~Leore~.");
+            //// 5:
+            //texts.Add($"The ~Ancients~ built towers across the world that would create a vast [{magicColor}]~magic barrier~.");
+
+            //// 6:
+            //texts.Add($"This barrier would maintain equilibrium between [{sunColor}]~light~ and [{voidColor}]~darkness~." +
+            //    $"|For centuries, this has been proven true and life was protected, not knowing the actual truth.");
+            //// 7:
+            //texts.Add($"Eventually, the [{voidColor}]~Void~ found a way to break through..");
+
+            //// 8:
+            //texts.Add($"It corrupted the towers turning them from [{sunColor}]~sacred sites~ into [{voidColor}]~structures of darkness~." +
+            //    $"|The ~Ancients~ were forced to seal the towers, ~removing them from the physical world~.");
+
+            //// 9:
+            //texts.Add($"In their final act, they emplaced their power into an ~Orb~ that would awaken the rightful heir.");
+
+            //// 10
+            //texts.Add($"...|" +
+            //    $".....|" +
+            //    $"...wake up.");
+
             // ---- ENDING 1 ----
 
             // 8:

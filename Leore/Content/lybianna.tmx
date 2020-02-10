@@ -150127,7 +150127,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="716"/>
+   <tile/>
    <tile/>
    <tile/>
    <tile gid="716"/>
@@ -150367,7 +150367,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="716"/>
+   <tile/>
    <tile/>
    <tile/>
    <tile gid="716"/>
@@ -172950,7 +172950,7 @@ Lybianna #r</property>
   </object>
   <object id="1427" type="boss" x="1328" y="1296" width="16" height="112">
    <properties>
-    <property name="appearCondition" value="dungeon1complete"/>
+    <property name="appearCondition" value="D1"/>
     <property name="setCondition" value="mirrorDead"/>
    </properties>
   </object>
@@ -173098,7 +173098,10 @@ It will prevent ~fall damage~.</property>
    <properties>
     <property name="centerText" type="bool" value="true"/>
     <property name="npcType" type="int" value="0"/>
-    <property name="text" value="-Welcome to Lybianna-"/>
+    <property name="text">-Welcome-
+|Village rules:
+* Breaking pots prohibited
+* No monsters allowed</property>
    </properties>
   </object>
   <object id="1451" type="npc" x="2208" y="1392" width="16" height="16">

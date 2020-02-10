@@ -75,16 +75,7 @@ namespace Leore.Main
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            // TODO: remove
-            //new StoryScene(0, 9).OnCompleted = () =>
-            //{
-            //    GameManager.Current.ReloadLevel();
-            //};
-
-            //Destroy();
-            //return;
-
+            
             if (InputMapping.KeyPressed(InputMapping.ResetMenu))
             {
                 Reset();
@@ -176,7 +167,7 @@ namespace Leore.Main
                                 };
                                 dialog.YesAction = () =>
                                 {
-                                    new StoryScene(0, 10).OnCompleted = () =>
+                                    new StoryScene(0, 11).OnCompleted = () =>
                                     {
                                         GameManager.Current.ReloadLevel();
                                     };

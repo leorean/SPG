@@ -10,4 +10,5 @@ namespace Leore.Main
 
     public interface IKeepEnabledAcrossRooms { }
 
+    public interface IIgnoreRollKnockback { }
 }

@@ -79,5 +79,17 @@ namespace Leore.Properties {
                 this["SoundVolume"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool HighResText {
+            get {
+                return ((bool)(this["HighResText"]));
+            }
+            set {
+                this["HighResText"] = value;
+            }
+        }
     }
 }

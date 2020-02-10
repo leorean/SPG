@@ -30,6 +30,7 @@ namespace Leore.Main
         protected List<string> texts;
         protected Font font;
         protected int maxWidth;
+        protected float zoom;
 
         protected int offY = 6 * Globals.T;
         protected int page = 0;
@@ -146,7 +147,19 @@ namespace Leore.Main
         /// <param name="name"></param>
         public MessageBox(string text, bool centerText = false, string name = null, Color? hiColor = null, TextSpeed textSpeed = TextSpeed.NORMAL) : base(0, 0, name)
         {
-            font = AssetManager.DefaultFont.Copy();
+            if (Properties.Settings.Default.HighResText == true)
+            {
+                font = AssetManager.MessageFont.Copy();
+                zoom = .5f;
+                font.Spacing = (uint)(1 / zoom);
+            }
+            else
+            {
+                font = AssetManager.DefaultFont.Copy();
+                zoom = 1f;
+                font.Spacing = 1;
+            }
+
             halign = centerText ? Font.HorizontalAlignment.Center : Font.HorizontalAlignment.Left;
             valign = Font.VerticalAlignment.Top;
 
@@ -175,7 +188,7 @@ namespace Leore.Main
             text = text.Replace("\n|", "|");
             text = text.Replace("  ", " ");
 
-            maxWidth = RoomCamera.Current.ViewWidth - Globals.T - 4;
+            maxWidth = (int)((RoomCamera.Current.ViewWidth - Globals.T - 4) / zoom);
 
             foreach (var txt in text.Split('|'))
             {
@@ -449,12 +462,12 @@ namespace Leore.Main
             font.Halign = halign;
             font.Valign = valign;
             font.Color = Color;
-
+            
             if (hiColor != null)
                 font.HighlightColor = new Color((Color)hiColor, alpha);
 
             if (!string.IsNullOrEmpty(curText) && alpha > .5f)
-                font.Draw(sb, X + 8 + 2 + offX, Y + 8 + 2, curText, maxWidth);            
+                font.Draw(sb, X + 8 + 2 + offX, Y + 8 + 2, curText, (int)(maxWidth / zoom), zoom);
         }
     }
 }

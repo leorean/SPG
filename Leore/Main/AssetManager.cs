@@ -89,10 +89,12 @@ namespace Leore.Main
         // fonts
 
         public static Font DefaultFont { get; private set; }
+        public static Font MessageFont { get; private set; }
         public static Font DamageFont { get; private set; }
         public static Font HUDFont { get; private set; }
         public static Font HUDFontSmall { get; private set; }
         
+
         public static void InitializeContent(ContentManager content)
         {
             TitleMenu = content.Load<Texture2D>("titleMenu");
@@ -171,11 +173,13 @@ namespace Leore.Main
             // load fonts
 
             var defaultFont = content.LoadTextureSet("font", 10, 10);
+            var messageFont = content.LoadTextureSet("messageFont", 20, 20);
             var damageFont = content.LoadTextureSet("damageFont", 10, 10);
             var hudFont = content.LoadTextureSet("hudFont", 9, 14);
             var hudFontSmall = content.LoadTextureSet("hudFontSmall", 10, 10);
 
             DefaultFont = new Font(defaultFont, ' ');
+            MessageFont = new Font(messageFont, ' ');
             DamageFont = new Font(damageFont, ' ');
             HUDFont = new Font(hudFont, ' ');
             HUDFontSmall = new Font(hudFontSmall, ' ');

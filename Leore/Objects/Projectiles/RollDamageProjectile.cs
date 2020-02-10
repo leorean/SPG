@@ -56,7 +56,7 @@ namespace Leore.Objects.Projectiles
         {
             new StarEmitter(X, Y, 2, 0);
 
-            if (!(obj is DestroyBlock || obj is Pot))
+            if (!(obj is IIgnoreRollKnockback))
             {
                 player.XVel = -Math.Sign(player.XVel) * .5f;
                 player.YVel = -1;
@@ -68,7 +68,7 @@ namespace Leore.Objects.Projectiles
             {
                 case Direction.UP:
                 case Direction.DOWN:
-                    if (!(obj is DestroyBlock) && !(obj is Pot))
+                    if (!(obj is IIgnoreRollKnockback))
                     {
                         player.YVel *= -1f;
                     }
@@ -80,7 +80,7 @@ namespace Leore.Objects.Projectiles
                     break;
                 case Direction.LEFT:
                 case Direction.RIGHT:
-                    if (!(obj is DestroyBlock) && !(obj is Pot))
+                    if (!(obj is IIgnoreRollKnockback))
                     {
                         player.XVel *= -.5f;
                         player.YVel = -1f;
