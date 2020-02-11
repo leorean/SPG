@@ -41,6 +41,8 @@ namespace Leore.Objects.Projectiles
 
         private Vector2 originalPosition;
 
+        private int cooldown;
+
         private BoomerangProjectile(float x, float y, Orb orb) : base(x, y, orb.Level)
         {
             this.orb = orb;
@@ -70,7 +72,6 @@ namespace Leore.Objects.Projectiles
                     acc = .01f;
                     maxVel = 3.5f;
                     angSpd = 10f;
-                    Damage = 1;
                     break;
                 case SpellLevel.TWO:
                     Texture = AssetManager.Projectiles[16];
@@ -79,7 +80,6 @@ namespace Leore.Objects.Projectiles
                     maxVel = 4f;
                     maxDist = 64;
                     angSpd = 15f;
-                    Damage = 2;
                     break;
                 case SpellLevel.THREE:
                     Texture = AssetManager.Projectiles[17];
@@ -88,7 +88,6 @@ namespace Leore.Objects.Projectiles
                     maxVel = 5f;
                     maxDist = 64;
                     angSpd = 25f;
-                    Damage = 2;
                     break;
             }
 
@@ -104,11 +103,11 @@ namespace Leore.Objects.Projectiles
             angSpd = Math.Sign((int)player.Direction) * Math.Abs(angSpd);
 
 
-            XVel = .6f * player.XVel + (float)MathUtil.LengthDirX(ang) * s;
-            YVel = .1f * player.YVel + (float)MathUtil.LengthDirY(ang) * s;
+            //XVel = .9f * player.XVel + (float)MathUtil.LengthDirX(ang) * s;
+            //YVel = .3f * player.YVel + (float)MathUtil.LengthDirY(ang) * s;
 
-            //XVel = .6f * player.XVel + Math.Sign((int)player.Direction) * s;
-            //YVel = .1f * player.YVel + Math.Sign((int)player.LookDirection) * 2;
+            XVel = (float)MathUtil.LengthDirX(ang) * s;
+            YVel = (float)MathUtil.LengthDirY(ang) * s;            
         }
 
         public static BoomerangProjectile Create(float x, float y, Orb parent)
@@ -143,6 +142,14 @@ namespace Leore.Objects.Projectiles
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            cooldown = Math.Max(cooldown - 1, 0);
+            if (cooldown > 0)
+                Damage = 0;
+            else
+            {
+                Damage = (orb.Level == SpellLevel.ONE) ? 1 : 2;
+            }
 
             if (touchedPlayer)
             {
@@ -225,6 +232,11 @@ namespace Leore.Objects.Projectiles
 
             degAngle = (degAngle + angSpd) % 360;
             Angle = (float)MathUtil.DegToRad(degAngle);
+
+            Move(player.XVel, player.YVel);
+
+            //Angle = (float)MathUtil.VectorToAngle(new Vector2(XVel, YVel), true);
+
         }
 
         private void HeadBack()
@@ -247,6 +259,7 @@ namespace Leore.Objects.Projectiles
 
                 new KeyBurstEmitter(X, Y, orb);
             }
+            orb.Position = Position;
             orb.Cooldown = 10;
             Destroy();
         }
@@ -264,6 +277,8 @@ namespace Leore.Objects.Projectiles
         public override void HandleCollision(GameObject obj)
         {
             //throw new NotImplementedException();
+            if (cooldown == 0)
+                cooldown = 5;
 
             if (obj is IIgnoreRollKnockback)
                 return;

@@ -1445,10 +1445,19 @@ namespace Leore.Main
                     }
                 }
                 
-                if (k_attackPressed)
+                if (k_attackHolding)
                 {
-                    YVel -= 1;
-                    State = PlayerState.JUMP_UP;
+                    XVel *= .9f;
+                    if (!onGround)
+                    {
+                        YVel -= 1;
+                        State = PlayerState.JUMP_UP;
+                    }
+
+                    if (Math.Abs(XVel) < .2f)
+                    {
+                        State = PlayerState.JUMP_UP;
+                    }
                 }
 
                 // bouncing

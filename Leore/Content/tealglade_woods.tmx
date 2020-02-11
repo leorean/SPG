@@ -40473,13 +40473,6 @@
     <property name="ty" type="int" value="0"/>
    </properties>
   </object>
-  <object id="1435" type="npc" x="864" y="816" width="16" height="16">
-   <properties>
-    <property name="centerText" type="bool" value="true"/>
-    <property name="npcType" type="int" value="0"/>
-    <property name="text" value="Tealglade Woods"/>
-   </properties>
-  </object>
   <object id="1439" type="door" x="2256" y="816" width="16" height="16">
    <properties>
     <property name="tx" type="int" value="6"/>
@@ -40488,6 +40481,7 @@
   </object>
   <object id="1440" type="door" x="2352" y="800" width="16" height="16">
    <properties>
+    <property name="textAfterTransition" value="Tealglade Woods"/>
     <property name="tx" type="int" value="-6"/>
     <property name="ty" type="int" value="1"/>
    </properties>

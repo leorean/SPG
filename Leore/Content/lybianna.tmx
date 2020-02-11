@@ -172866,7 +172866,6 @@
   <object id="1463" type="door" x="64" y="1408" width="16" height="16">
    <properties>
     <property name="levelName" value="tealglade_woods"/>
-    <property name="textAfterTransition" value="Tealglade Woods"/>
     <property name="tx" type="int" value="155"/>
     <property name="ty" type="int" value="15"/>
    </properties>
