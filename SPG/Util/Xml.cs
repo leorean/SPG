@@ -15,7 +15,7 @@ namespace SPG.Util
         public static XmlDocument Load(string fileName)
         {
             fileName = "Content/" + fileName;
-            var content = "";
+            string content = "";
             if (File.Exists(fileName))
             {
                 using (var stream = TitleContainer.OpenStream(fileName))
@@ -27,6 +27,27 @@ namespace SPG.Util
                         doc.LoadXml(content);
                         return doc;
                     }
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Loads a stream in XML format.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static XmlDocument Load(Stream stream)
+        {
+            using (stream)
+            {
+                string content = "";
+                using (var reader = new StreamReader(stream))
+                {
+                    content = reader.ReadToEnd();
+                    var doc = new XmlDocument();
+                    doc.LoadXml(content);
+                    return doc;
                 }
             }
             return null;

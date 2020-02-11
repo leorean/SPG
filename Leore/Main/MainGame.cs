@@ -14,6 +14,8 @@ using Leore.Objects.Items;
 using Leore.Objects.Level;
 using Leore.Objects.Effects.Weather;
 using System.Collections.Generic;
+using System.IO;
+using Leore.Util;
 
 namespace Leore.Main
 {
@@ -54,6 +56,8 @@ namespace Leore.Main
         
         public MainGame()
         {
+            Content = new EmbeddedResourceContentManager(Services);
+
             Content.RootDirectory = "Content";
 
             // fundamental setup
@@ -94,6 +98,8 @@ namespace Leore.Main
             };
         }
         
+        
+
         /// <summary>
         /// called BEFORE initialize
         /// </summary>
@@ -111,14 +117,22 @@ namespace Leore.Main
             AssetManager.InitializeContent(Content);
 
             // ++++ Maps +++++
-            
-            GameManager.Current.AddGameMap("sanctuary");
-            GameManager.Current.AddGameMap("lybianna");
-            GameManager.Current.AddGameMap("tealglade_woods");
-            GameManager.Current.AddGameMap("forest_temple");
-            GameManager.Current.AddGameMap("great_cavern");
-            GameManager.Current.AddGameMap("nethervault_temple");
-            GameManager.Current.AddGameMap("pine_woods");
+
+            GameManager.Current.AddGameMap(ContentUtil.GetResourceStream("sanctuary"));
+            GameManager.Current.AddGameMap(ContentUtil.GetResourceStream("lybianna"));
+            GameManager.Current.AddGameMap(ContentUtil.GetResourceStream("tealglade_woods"));
+            GameManager.Current.AddGameMap(ContentUtil.GetResourceStream("forest_temple"));
+            GameManager.Current.AddGameMap(ContentUtil.GetResourceStream("great_cavern"));
+            GameManager.Current.AddGameMap(ContentUtil.GetResourceStream("nethervault_temple"));
+            GameManager.Current.AddGameMap(ContentUtil.GetResourceStream("pine_woods"));
+
+            //GameManager.Current.AddGameMap("sanctuary");
+            //GameManager.Current.AddGameMap("lybianna");
+            //GameManager.Current.AddGameMap("tealglade_woods");
+            //GameManager.Current.AddGameMap("forest_temple");
+            //GameManager.Current.AddGameMap("great_cavern");
+            //GameManager.Current.AddGameMap("nethervault_temple");
+            //GameManager.Current.AddGameMap("pine_woods");
 
             // debug maps:
             //GameManager.Current.AddGameMap("worldMap");

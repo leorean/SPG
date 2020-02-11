@@ -18,6 +18,7 @@ using System.Xml;
 using SPG.Util;
 using System.Diagnostics;
 using Leore.Util;
+using System.IO;
 
 namespace Leore.Main
 {
@@ -74,16 +75,11 @@ namespace Leore.Main
             SaveGame = new SaveGame("save.dat");
         }
 
-        public void AddGameMap(string assetName)
+        private void Add(XmlDocument xml, string name)
         {
-            if (!assetName.EndsWith(".tmx"))
-                assetName = assetName + ".tmx";
-
-            XmlDocument xml = Xml.Load(assetName);
-
             var id = maps.Count;
 
-            var map = new GameMap(xml, assetName.Replace(".tmx", ""), id);
+            var map = new GameMap(xml, name.Replace(".tmx", ""), id);
 
             map.TileSet = AssetManager.TileSet;
             map.LayerDepth["FG"] = Globals.LAYER_FG;
@@ -92,6 +88,21 @@ namespace Leore.Main
             map.LayerDepth["BG2"] = Globals.LAYER_BG2;
 
             maps.Add(map);
+        }
+
+        public void AddGameMap((Stream stream, string assetName) input)
+        {
+            XmlDocument xml = Xml.Load(input.stream);
+            Add(xml, input.assetName);
+        }
+
+        public void AddGameMap(string assetName)
+        {
+            if (!assetName.EndsWith(".tmx"))
+                assetName = assetName + ".tmx";
+
+            XmlDocument xml = Xml.Load(assetName);
+            Add(xml, assetName);
         }
 
         public void SetCurrentGameMap(string mapName)
