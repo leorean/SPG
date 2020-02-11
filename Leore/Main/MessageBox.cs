@@ -299,11 +299,7 @@ namespace Leore.Main
 
             return wholeString;            
         }
-
-        ~MessageBox()
-        {
-        }
-
+        
         public override void EndUpdate(GameTime gameTime)
         {
             base.EndUpdate(gameTime);

@@ -72,8 +72,7 @@ namespace Leore.Objects.Effects.Emitters
         private GameObject target;
 
         public Action OnFinishedAction;
-        private PotionBurstEmitter potionBurstEmitter;
-
+        
         public KeyBurstEmitter(float x, float y, GameObject target) : base(x, y)
         {
             Colors.Add(new Color(255, 243, 130));

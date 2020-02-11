@@ -56,9 +56,7 @@ namespace Leore.Objects.Enemies
         private bool sawLight;
         private int footPrint;
         private int sneakTransitionTimer;
-
-        private float maxSpd = .7f;
-
+        
         private float projectileTimer;
 
         private float torchTimer;

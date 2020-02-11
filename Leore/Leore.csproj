@@ -269,33 +269,15 @@
     </None>
     <None Include="app.config" />
     <None Include="app.manifest" />
-    <EmbeddedResource Include="Content\worldMap.tmx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\lybianna.tmx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\tutorial2.tmx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\sanctuary.tmx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\tealglade_woods.tmx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\forest_temple.tmx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\great_cavern.tmx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\nethervault_temple.tmx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\pine_woods.tmx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Content\worldMap.tmx" />
+    <EmbeddedResource Include="Content\lybianna.tmx" />
+    <EmbeddedResource Include="Content\tutorial2.tmx" />
+    <EmbeddedResource Include="Content\sanctuary.tmx" />
+    <EmbeddedResource Include="Content\tealglade_woods.tmx" />
+    <EmbeddedResource Include="Content\forest_temple.tmx" />
+    <EmbeddedResource Include="Content\great_cavern.tmx" />
+    <EmbeddedResource Include="Content\nethervault_temple.tmx" />
+    <EmbeddedResource Include="Content\pine_woods.tmx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

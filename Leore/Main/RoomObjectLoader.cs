@@ -331,8 +331,6 @@ namespace Leore.Main
                                 break;
                             case 841:
                                 throw new Exception("Remove this object for now..");
-                                new AmbientLightSource(i * Globals.T, j * Globals.T, room);
-                                break;
                             case 842:
                                 new LightObject(i * Globals.T, j * Globals.T, room);
                                 break;
