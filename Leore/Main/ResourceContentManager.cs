@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -21,8 +22,11 @@ namespace Leore.Main
         
         protected override Stream OpenStream(string assetName)
         {
-            assetName = typeof(EmbeddedResourceContentManager).Assembly.GetName().Name + "." + assetName.Replace('\\', '.') + ".xnb";            
-            return Assembly.GetExecutingAssembly().GetManifestResourceStream(assetName);            
+            var assembly = Assembly.GetExecutingAssembly();
+            assetName = assembly.GetName().Name + ".Content." + assetName.Replace('\\', '.') + ".xnb";
+            var stream = assembly.GetManifestResourceStream(assetName);
+            
+            return stream;
         }
     }
 }
