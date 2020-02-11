@@ -43,16 +43,23 @@ namespace Leore.Objects.Projectiles
 
         private int cooldown;
 
+        IceEmitter emitter;
+
         private BoomerangProjectile(float x, float y, Orb orb) : base(x, y, orb.Level)
         {
             this.orb = orb;
-            
+
+            AnimationTexture = AssetManager.Projectiles;
+
             Depth = orb.Depth + .0002f;
             BoundingBox = new RectF(-4, -4, 8, 8);
             DrawOffset = new Vector2(8);
             
             Scale = new Vector2((int)player.Direction, 1);
             light = new LightSource(this) { Active = true, Scale = new Vector2(.45f) };
+
+            emitter = new IceEmitter(X, Y);
+            emitter.Active = true;
 
             originalPosition = Position;
 
@@ -66,7 +73,7 @@ namespace Leore.Objects.Projectiles
             switch (orb.Level)
             {
                 case SpellLevel.ONE:
-                    Texture = AssetManager.Projectiles[15];
+                    //Texture = AssetManager.Projectiles[15];
                     maxDist = 48;
                     s = 4;
                     acc = .01f;
@@ -74,7 +81,7 @@ namespace Leore.Objects.Projectiles
                     angSpd = 10f;
                     break;
                 case SpellLevel.TWO:
-                    Texture = AssetManager.Projectiles[16];
+                    //Texture = AssetManager.Projectiles[16];
                     s = 8;
                     acc = .01f;
                     maxVel = 4f;
@@ -82,7 +89,7 @@ namespace Leore.Objects.Projectiles
                     angSpd = 15f;
                     break;
                 case SpellLevel.THREE:
-                    Texture = AssetManager.Projectiles[17];
+                    //Texture = AssetManager.Projectiles[17];
                     s = 16;
                     acc = .01f;
                     maxVel = 5f;
@@ -103,8 +110,13 @@ namespace Leore.Objects.Projectiles
             angSpd = Math.Sign((int)player.Direction) * Math.Abs(angSpd);
 
 
+            ObjectManager.Enable(emitter);
+
             //XVel = .9f * player.XVel + (float)MathUtil.LengthDirX(ang) * s;
             //YVel = .3f * player.YVel + (float)MathUtil.LengthDirY(ang) * s;
+
+            //if (player.LookDirection == Direction.UP)
+            //    Angle = (float)MathUtil.DegToRad(player.Direction == Direction.LEFT ? 45 : -45);
 
             XVel = (float)MathUtil.LengthDirX(ang) * s;
             YVel = (float)MathUtil.LengthDirY(ang) * s;            
@@ -134,6 +146,8 @@ namespace Leore.Objects.Projectiles
             light.Parent = null;
             light.Destroy();
 
+            emitter.Active = false;
+
             orb.Visible = true;
 
             base.Destroy(callGC);
@@ -143,12 +157,14 @@ namespace Leore.Objects.Projectiles
         {
             base.Update(gameTime);
 
+            emitter.Position = Position;
+
             cooldown = Math.Max(cooldown - 1, 0);
             if (cooldown > 0)
                 Damage = 0;
             else
             {
-                Damage = (orb.Level == SpellLevel.ONE) ? 1 : 2;
+                Damage = (orb.Level == SpellLevel.ONE) ? 1 : (orb.Level == SpellLevel.TWO) ? 2 : 3;
             }
 
             if (touchedPlayer)
@@ -229,14 +245,14 @@ namespace Leore.Objects.Projectiles
             }
 
             Move(XVel, YVel);
+            Move(.5f * player.XVel, .5f * player.YVel);
 
-            degAngle = (degAngle + angSpd) % 360;
-            Angle = (float)MathUtil.DegToRad(degAngle);
-
-            Move(player.XVel, player.YVel);
-
+            //degAngle = (degAngle + angSpd) % 360;
+            //Angle = (float)MathUtil.DegToRad(degAngle);            
             //Angle = (float)MathUtil.VectorToAngle(new Vector2(XVel, YVel), true);
 
+            Scale = new Vector2((XVel < 0) ? -1 : 1, 1);
+            SetAnimation(15, 16, .3f, true);
         }
 
         private void HeadBack()
@@ -280,11 +296,13 @@ namespace Leore.Objects.Projectiles
             if (cooldown == 0)
                 cooldown = 5;
 
-            if (obj is IIgnoreRollKnockback)
-                return;
+            return;
 
-            if (orb.Level == SpellLevel.THREE)
-                return;
+            //if (obj is IIgnoreRollKnockback)
+            //    return;
+
+            //if (orb.Level == SpellLevel.THREE)
+            //    return;
 
             if (!headBack)
             {

@@ -78,6 +78,7 @@
     <Compile Include="Objects\Effects\Ambience\LevelTextDisplay.cs" />
     <Compile Include="Objects\Effects\Ambience\LittleWorm.cs" />
     <Compile Include="Objects\Effects\Emitters\CollectableAmbientEmitter.cs" />
+    <Compile Include="Objects\Effects\Emitters\IceEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\StoryWarpEmitter.cs" />
     <Compile Include="Objects\Enemies\BossShadowLizard.cs" />
     <Compile Include="Objects\Items\Collectable.cs" />
