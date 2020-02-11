@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="180" tilewidth="16" tileheight="16" infinite="0" nextlayerid="125" nextobjectid="1493">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="180" tilewidth="16" tileheight="16" infinite="0" nextlayerid="125" nextobjectid="1494">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="3072" columns="64">
   <image source="tiles.png" width="1024" height="768"/>
  </tileset>
@@ -173333,6 +173333,13 @@ With their magical power, you're able to ~levitate~!</property>
     <property name="npcType" type="int" value="14"/>
     <property name="text">What's up? Oh that's right. We are. We are up. Waaaaay up.
 |Tehehe...</property>
+   </properties>
+  </object>
+  <object id="1493" name="Spell: Boomerang" type="item" x="2880" y="1344" width="16" height="16">
+   <properties>
+    <property name="itemName" value="Boomerang"/>
+    <property name="itemType" type="int" value="11"/>
+    <property name="text" value="Learned spell: ~Boomerang~!"/>
    </properties>
   </object>
  </objectgroup>

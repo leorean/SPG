@@ -41,7 +41,7 @@ namespace Leore.Objects.Projectiles
                 HandleCollisionFromDestroyBlock(destBlock);
             }
 
-            if (this.IsOutsideCurrentRoom(2 * Globals.T))
+            if (!(this is BoomerangProjectile) && this.IsOutsideCurrentRoom(2 * Globals.T))
                 Destroy();
 
         }

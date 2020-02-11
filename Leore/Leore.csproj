@@ -83,6 +83,7 @@
     <Compile Include="Objects\Items\Collectable.cs" />
     <Compile Include="Objects\Level\RollBouncer.cs" />
     <Compile Include="Objects\Level\StoryWarp.cs" />
+    <Compile Include="Objects\Projectiles\BoomerangProjectile.cs" />
     <Compile Include="Objects\Projectiles\RollDamageProjectile.cs" />
     <Compile Include="Objects\SpatialGameObject.cs" />
     <Compile Include="Objects\Common.cs" />
@@ -219,7 +220,7 @@
     <EmbeddedResource Include="Icon.bmp" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="Content\bin\DesktopGL\**\*.*">
+    <EmbeddedResource Include="Content\bin\DesktopGL\**\*.*">
       <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
     </EmbeddedResource>
     <MonoGameContentReference Include="Content\Content.mgcb" />

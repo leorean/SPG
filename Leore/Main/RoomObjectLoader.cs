@@ -586,6 +586,15 @@ namespace Leore.Main
                                 item.OnObtain = () => { GameManager.Current.Player.Stats.Abilities |= PlayerAbility.BREATHE_UNDERWATER; };
                                 item.Text = itemText;
                                 break;
+                            case 11: // spell: boomerang
+                                item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
+                                item.Texture = AssetManager.Items[15];
+                                item.OnObtain = () => {
+                                    GameManager.Current.RemoveSpell(SpellType.SNATCH_KEYS);
+                                    GameManager.Current.AddSpell(SpellType.BOOMERANG);
+                                };
+                                item.Text = itemText;
+                                break;
                             // TODO: add other item types, collectables etc.
                             default:
                                 throw new NotImplementedException("Item type not implemented!");

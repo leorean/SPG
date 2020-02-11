@@ -41,8 +41,8 @@ namespace Leore.Main
         CRIMSON_ARC,
         VOID,
         SNATCH_KEYS,
-        FIRE
-        //BOOMERANG,
+        FIRE,
+        BOOMERANG,
         //ROCK,
         //LIGHTNING,        
     }
@@ -198,6 +198,9 @@ namespace Leore.Main
                             TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 0, 0);
                             //TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 6, 0);
                             break;
+                        case SpellType.BOOMERANG:
+                            TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 0, 0);
+                            break;
                         default:
                             TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 14, 14 * Math.Sign((int)player.LookDirection));
                             break;
@@ -267,12 +270,12 @@ namespace Leore.Main
                                     
                                     break;
 
-                                case SpellType.VOID:
+                                case SpellType.VOID: // ++++ VOID ++++
                                     Visible = false;
-                                    VoidProjectile.Create(X, Y, this);                                    
+                                    VoidProjectile.Create(X, Y, this);
                                     break;
 
-                                case SpellType.SNATCH_KEYS:
+                                case SpellType.SNATCH_KEYS: // ++++ Snatch Keys ++++
 
                                     //if (MathUtil.Euclidean(Position, TargetPosition) < 2)
                                     {
@@ -281,7 +284,7 @@ namespace Leore.Main
                                     }
                                     break;
 
-                                case SpellType.FIRE:
+                                case SpellType.FIRE: // ++++ Fire ++++
 
                                     Cooldown = 30;
                                     player.MP += GameResources.MPCost[Type][Level];
@@ -289,7 +292,12 @@ namespace Leore.Main
                                     FireSpell.Create(TargetPosition.X, TargetPosition.Y, Level);
 
                                     break;
+                                case SpellType.BOOMERANG: // ++++ Boomerang ++++
 
+                                    Visible = false;
+                                    BoomerangProjectile.Create(player.X, player.Y, this);
+
+                                    break;
                                 // TODO: other spells!!!
                                 default:
                                     break;

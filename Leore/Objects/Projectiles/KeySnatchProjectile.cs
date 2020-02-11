@@ -37,6 +37,8 @@ namespace Leore.Objects.Projectiles
 
         private Vector2 originalPosition;
 
+        private Vector2 maxPosition;
+
         private LightSource light;
 
         private KeySnatchProjectile(float x, float y) : base(x, y, SpellLevel.ONE)
@@ -131,6 +133,8 @@ namespace Leore.Objects.Projectiles
 
             Position = orb.Position + new Vector2((int)direction *  dist, yspd * dist);
 
+            maxPosition = orb.Position + new Vector2((int)direction * maxDist, yspd * maxDist);
+
             //if (orb.State != OrbState.ATTACK || player.Direction != direction)
             if (player.Direction != direction)
             {
@@ -156,8 +160,19 @@ namespace Leore.Objects.Projectiles
             //    sb.Draw(AssetManager.Projectiles[8], orb.Position + new Vector2((int)direction * i, Math.Sign(yspd) * i), null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
             //}
 
-            var texture = headBack ? AssetManager.Projectiles[9] : AssetManager.Projectiles[8];            
-            sb.Draw(texture, Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
+            var texture = headBack ? AssetManager.Projectiles[9] : AssetManager.Projectiles[8];
+            
+            //sb.Draw(texture, Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
+            
+            if (!headBack)
+            {
+                sb.Draw(AssetManager.Projectiles[7], Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
+                sb.Draw(texture, maxPosition, null, new Color(Color, 1 * (dist / maxDist)), Angle, DrawOffset, Scale, SpriteEffects.None, Depth - .0001f);
+            }
+            else
+            {
+                sb.Draw(texture, Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
+            }
 
             if (key != null)
             {
