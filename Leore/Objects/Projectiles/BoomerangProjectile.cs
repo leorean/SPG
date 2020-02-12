@@ -28,7 +28,6 @@ namespace Leore.Objects.Projectiles
         private LightSource light;
         private Key key;
 
-        private bool touchedPlayer;
         private bool headBack;
 
         private float spd;
@@ -70,13 +69,11 @@ namespace Leore.Objects.Projectiles
             emitter.Depth = Depth - .0001f;
 
             originalPosition = Position;
-
-            touchedPlayer = true;
-
+            
             spd = 0;
             maxDist = 48;
 
-            maxLifeTime = 3 * 60;
+            maxLifeTime = 5 * 60;
             lifeTime = maxLifeTime;
             
             switch (orb.Level)
@@ -89,13 +86,13 @@ namespace Leore.Objects.Projectiles
                     break;
                 case SpellLevel.TWO:                    
                     acc = .01f;
-                    maxVel = 4f;
+                    maxVel = 3.5f;
                     maxDist = 64;
                     //angSpd = 15f;
                     break;
                 case SpellLevel.THREE:                    
                     acc = .01f;
-                    maxVel = 5f;
+                    maxVel = 3.5f;
                     maxDist = 64;
                     //angSpd = 25f;
                     break;
@@ -177,7 +174,7 @@ namespace Leore.Objects.Projectiles
             else
             {
                 //Damage = (orb.Level == SpellLevel.ONE) ? 2 : (orb.Level == SpellLevel.TWO) ? 2 : 3;
-                Damage = 1;
+                Damage = (lifeTime > 0) ? 1 : 0;
             }
 
             if (lifeTime < (maxLifeTime - 30) && orb.State != OrbState.ATTACK)
@@ -186,21 +183,21 @@ namespace Leore.Objects.Projectiles
                 lifeTime = 0;
             }
 
-            if (touchedPlayer)
-            {
-                if (MathUtil.Euclidean(Position, originalPosition) > Globals.T)
-                {
-                    touchedPlayer = false;
-                }
-            }
-            else {
-                if ((this.CollisionBounds(orb, X, Y)/* || this.CollisionBounds(player, X, Y)*/) && orb.State != OrbState.ATTACK)
-                {
-                    //FinishUp();
-                    //return;
-                    lifeTime = 0;
-                }
-            }
+            //if (touchedPlayer)
+            //{
+            //    if (MathUtil.Euclidean(Position, originalPosition) > Globals.T)
+            //    {
+            //        touchedPlayer = false;
+            //    }
+            //}
+            //else {
+            //    if ((this.CollisionBounds(orb, X, Y)/* || this.CollisionBounds(player, X, Y)*/) && orb.State != OrbState.ATTACK)
+            //    {
+            //        //FinishUp();
+            //        //return;
+            //        lifeTime = 0;
+            //    }
+            //}
 
             if (MathUtil.Euclidean(Position, originalPosition) >= maxDist)
             {
@@ -346,22 +343,7 @@ namespace Leore.Objects.Projectiles
         {
             if (cooldown == 0)
                 cooldown = 4;
-                //cooldown = (orb.Level == SpellLevel.ONE) ? 10 : 3;
-
-            return;
-
-            //if (obj is IIgnoreRollKnockback)
-            //    return;
-
-            //if (orb.Level == SpellLevel.THREE)
-            //    return;
-
-            if (!headBack)
-            {
-                XVel *= -.5f;
-                YVel *= -.5f;
-                headBack = true;
-            }
+            return;            
         }
     }
 }
