@@ -2314,7 +2314,10 @@ namespace Leore.Main
                 //}
 
                 jumps = 0;
-                if (!onGround && yVelBeforeCollision > Gravity && !inWater && State != PlayerState.BACKFACING)
+                if (!onGround && yVelBeforeCollision > Gravity && !inWater 
+                    && State != PlayerState.BACKFACING 
+                    && State != PlayerState.WALL_CLIMB 
+                    && State != PlayerState.WALL_IDLE)
                 {
                     new SingularEffect(X + XVel, Y, 12);
                 }

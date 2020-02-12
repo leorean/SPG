@@ -33,7 +33,8 @@ namespace Leore.Objects.Effects.Emitters
 
             //Texture = AssetManager.Particles[(int)frame];
 
-            Alpha = LifeTime / 60f;
+            var t = (LifeTime / 60f);
+            Alpha = (float)Math.Sin(t * Math.PI) * .5f;
 
             Scale = new Vector2(.5f + (LifeTime / 60f) * .5f);
 
