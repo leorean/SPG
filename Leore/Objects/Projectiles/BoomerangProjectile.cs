@@ -20,7 +20,7 @@ namespace Leore.Objects.Projectiles
 {
     public class BoomerangProjectile : PlayerProjectile
     {
-        private static BoomerangProjectile Current;
+        private static List<BoomerangProjectile> Instances = new List<BoomerangProjectile>();
 
         private Player player => GameManager.Current.Player;
         private Orb orb;
@@ -36,8 +36,8 @@ namespace Leore.Objects.Projectiles
         private float maxVel;
         private float maxDist;
 
-        private float degAngle;
-        private float angSpd;
+        //private float degAngle;
+        //private float angSpd;
 
         private Vector2 originalPosition;
 
@@ -45,11 +45,18 @@ namespace Leore.Objects.Projectiles
 
         IceEmitter emitter;
 
-        private BoomerangProjectile(float x, float y, Orb orb) : base(x, y, orb.Level)
+        int lifeTime;
+        int maxLifeTime;
+
+        private BoomerangProjectile(float x, float y, Orb orb, float angle) : base(x, y, orb.Level)
         {
+            Instances.Add(this);
+
             this.orb = orb;
 
             AnimationTexture = AssetManager.Projectiles;
+
+            Element = SpellElement.ICE;
 
             Depth = orb.Depth + .0002f;
             BoundingBox = new RectF(-4, -4, 8, 8);
@@ -60,6 +67,7 @@ namespace Leore.Objects.Projectiles
 
             emitter = new IceEmitter(X, Y);
             emitter.Active = true;
+            emitter.Depth = Depth - .0001f;
 
             originalPosition = Position;
 
@@ -68,79 +76,82 @@ namespace Leore.Objects.Projectiles
             spd = 0;
             maxDist = 48;
 
-            var s = 0;
+            maxLifeTime = 3 * 60;
+            lifeTime = maxLifeTime;
             
             switch (orb.Level)
             {
                 case SpellLevel.ONE:
-                    //Texture = AssetManager.Projectiles[15];
-                    maxDist = 48;
-                    s = 4;
+                    maxDist = 48;                    
                     acc = .01f;
                     maxVel = 3.5f;
-                    angSpd = 10f;
+                    //angSpd = 10f;
                     break;
-                case SpellLevel.TWO:
-                    //Texture = AssetManager.Projectiles[16];
-                    s = 8;
+                case SpellLevel.TWO:                    
                     acc = .01f;
                     maxVel = 4f;
                     maxDist = 64;
-                    angSpd = 15f;
+                    //angSpd = 15f;
                     break;
-                case SpellLevel.THREE:
-                    //Texture = AssetManager.Projectiles[17];
-                    s = 16;
+                case SpellLevel.THREE:                    
                     acc = .01f;
                     maxVel = 5f;
                     maxDist = 64;
-                    angSpd = 25f;
+                    //angSpd = 25f;
                     break;
             }
 
-            var ang = 0;
+            //var ang = 0;
 
-            if (player.Direction == Direction.LEFT && player.LookDirection == Direction.UP) ang = 180 + 45;
-            if (player.Direction == Direction.LEFT && player.LookDirection == Direction.NONE) ang = 180;
-            if (player.Direction == Direction.LEFT && player.LookDirection == Direction.DOWN) ang = 180 - 45;
-            if (player.Direction == Direction.RIGHT && player.LookDirection == Direction.UP) ang = 0 - 45;
-            if (player.Direction == Direction.RIGHT && player.LookDirection == Direction.NONE) ang = 0;
-            if (player.Direction == Direction.RIGHT && player.LookDirection == Direction.DOWN) ang = 0 + 45;
+            //if (player.Direction == Direction.LEFT && player.LookDirection == Direction.UP) ang = 180 + 45;
+            //if (player.Direction == Direction.LEFT && player.LookDirection == Direction.NONE) ang = 180;
+            //if (player.Direction == Direction.LEFT && player.LookDirection == Direction.DOWN) ang = 180 - 45;
+            //if (player.Direction == Direction.RIGHT && player.LookDirection == Direction.UP) ang = 0 - 45;
+            //if (player.Direction == Direction.RIGHT && player.LookDirection == Direction.NONE) ang = 0;
+            //if (player.Direction == Direction.RIGHT && player.LookDirection == Direction.DOWN) ang = 0 + 45;
 
-            angSpd = Math.Sign((int)player.Direction) * Math.Abs(angSpd);
-
-
-            ObjectManager.Enable(emitter);
-
+            //angSpd = Math.Sign((int)player.Direction) * Math.Abs(angSpd);
+            
             //XVel = .9f * player.XVel + (float)MathUtil.LengthDirX(ang) * s;
             //YVel = .3f * player.YVel + (float)MathUtil.LengthDirY(ang) * s;
 
             //if (player.LookDirection == Direction.UP)
             //    Angle = (float)MathUtil.DegToRad(player.Direction == Direction.LEFT ? 45 : -45);
 
-            XVel = (float)MathUtil.LengthDirX(ang) * s;
-            YVel = (float)MathUtil.LengthDirY(ang) * s;            
+            XVel = (float)MathUtil.LengthDirX(angle) * maxVel;
+            YVel = (float)MathUtil.LengthDirY(angle) * maxVel;
         }
 
-        public static BoomerangProjectile Create(float x, float y, Orb parent)
+        public static void Create(float x, float y, Orb orb)
         {
-            if (Current != null)
+            if (Instances.Count > 0)
             {
-                //Current.player.MP += Math.Max(Current.player.MP - GameResources.MPCost[Current.orb.Type][Current.orb.Level], 0);
-                Current.player.MP += GameResources.MPCost[Current.orb.Type][Current.orb.Level];
-                return Current;
+                Instances[0].player.MP += GameResources.MPCost[Instances[0].orb.Type][Instances[0].orb.Level];
+                return;
             }
 
-            Current = new BoomerangProjectile(x, y, parent);
+            var angle = (float)MathUtil.VectorToAngle(new Vector2(orb.TargetPosition.X - x, orb.TargetPosition.Y - y));
 
-            //new CrimsonBurstEmitter(x, y) { ParticleColors = new List<Color>() { Color.Black } };
-            return Current;
+            switch (orb.Level)
+            {
+                case SpellLevel.ONE:
+                    new BoomerangProjectile(x, y, orb, angle);
+                    break;
+                case SpellLevel.TWO:
+                    new BoomerangProjectile(x, y, orb, angle - (Math.Sign((int)orb.Direction) * 15));
+                    new BoomerangProjectile(x, y, orb, angle + (Math.Sign((int)orb.Direction) * 15));
+                    break;
+                case SpellLevel.THREE:
+                    new BoomerangProjectile(x, y, orb, angle - (Math.Sign((int)orb.Direction) * 15));
+                    new BoomerangProjectile(x, y, orb, angle);
+                    new BoomerangProjectile(x, y, orb, angle + (Math.Sign((int)orb.Direction) * 15));
+                    break;
+            }            
         }
 
         public override void Destroy(bool callGC = false)
         {
-            if (Current == this)
-                Current = null;
+            Instances.Remove(this);
             
             FadeOutLight.Create(this, light.Scale);
             light.Parent = null;
@@ -148,7 +159,7 @@ namespace Leore.Objects.Projectiles
 
             emitter.Active = false;
 
-            orb.Visible = true;
+            //orb.Visible = true;
 
             base.Destroy(callGC);
         }
@@ -157,28 +168,37 @@ namespace Leore.Objects.Projectiles
         {
             base.Update(gameTime);
 
-            emitter.Position = Position;
-
+            emitter.Position = orb.Position;
+            emitter.SpawnPosition = Position;
+            
             cooldown = Math.Max(cooldown - 1, 0);
             if (cooldown > 0)
                 Damage = 0;
             else
             {
-                Damage = (orb.Level == SpellLevel.ONE) ? 1 : (orb.Level == SpellLevel.TWO) ? 2 : 3;
+                //Damage = (orb.Level == SpellLevel.ONE) ? 2 : (orb.Level == SpellLevel.TWO) ? 2 : 3;
+                Damage = 1;
+            }
+
+            if (lifeTime < (maxLifeTime - 30) && orb.State != OrbState.ATTACK)
+            {
+                HeadBack();
+                lifeTime = 0;
             }
 
             if (touchedPlayer)
             {
-                if (MathUtil.Euclidean(Position, player.Position) > Globals.T)
+                if (MathUtil.Euclidean(Position, originalPosition) > Globals.T)
                 {
                     touchedPlayer = false;
                 }
             }
             else {
-                if (this.CollisionBounds(player, X, Y))
+                if ((this.CollisionBounds(orb, X, Y)/* || this.CollisionBounds(player, X, Y)*/) && orb.State != OrbState.ATTACK)
                 {
-                    FinishUp();
-                    return;
+                    //FinishUp();
+                    //return;
+                    lifeTime = 0;
                 }
             }
 
@@ -187,11 +207,11 @@ namespace Leore.Objects.Projectiles
                 HeadBack();
             }
 
-            var ang = MathUtil.VectorToAngle(new Vector2(player.X - X, player.Y - Y));
+            var ang = MathUtil.VectorToAngle(new Vector2(orb.X - X, orb.Y - Y));
             XVel += spd * (float)(MathUtil.LengthDirX(ang));
             YVel += spd * (float)(MathUtil.LengthDirY(ang));
 
-            spd = Math.Min(spd + acc, 1);
+            spd = Math.Min(spd + acc, .5f);
             
             XVel = MathUtil.AtMost(XVel, maxVel);
             YVel = MathUtil.AtMost(YVel, maxVel);
@@ -202,46 +222,74 @@ namespace Leore.Objects.Projectiles
                 coin.Take(player);
             }
 
-            if (key == null)
+            //if (true)
+            //{
+            //    foreach(var other in Instances)
+            //    {
+            //        if (other == this) continue;
+
+            //        if(this.CollisionBounds(other, X, Y))
+            //        {
+            //            var kb = MathUtil.VectorToAngle(new Vector2(X - other.X, Y - other.Y));
+            //            XVel += 1.5f * (float)MathUtil.LengthDirX(kb);
+            //            YVel += 1.5f * (float)MathUtil.LengthDirY(kb);
+            //        }
+            //    }
+            //}
+
+            //if (key == null)
+            //{
+            //    // let's not give this spell the power to collect keys..
+            //    //key = this.CollisionBoundsFirstOrDefault<Key>(X, Y);
+
+            //    //if (key != null)
+            //    //{
+            //    //    key.Destroy();
+            //    //    HeadBack();
+            //    //}
+
+            //    //if (player.HasAtLeastOneKey())
+            //    //{
+            //    //    var keyBlock = this.CollisionBoundsFirstOrDefault<KeyBlock>(X, Y);
+            //    //    if (keyBlock != null && !keyBlock.Unlocked)
+            //    //    {
+            //    //        new SingularEffect(keyBlock.Center.X, keyBlock.Center.Y, 9);
+            //    //        keyBlock.Unlock(keyBlock.Center.X, keyBlock.Center.Y);
+            //    //        player.UseKeyFromInventory();
+            //    //        HeadBack();
+            //    //    }
+            //    //}
+            //}
+
+            ////if (!headBack)
+            ////{
+            ////    //var laser = this.CollisionBoundsFirstOrDefault<LaserObstacle>(X, Y);
+            ////    //if (laser != null)
+            ////    //{
+            ////    //    new StarEmitter(X, Y, 5);
+            ////    //    HeadBack();
+            ////    //}
+            ////}
+            ////else
+            ////{
+            ////    //if (orb.State != OrbState.ATTACK)
+            ////    //{
+            ////    //    var dist = MathUtil.Euclidean(Position, player.Position);
+            ////    //    if (dist < 8)
+            ////    //    {
+            ////    //        FinishUp();
+            ////    //    }
+            ////    //}
+            ////}
+
+            lifeTime = Math.Max(lifeTime - 1, 0);
+            if (lifeTime == 0)
             {
-
-                key = this.CollisionBoundsFirstOrDefault<Key>(X, Y);
-
-                if (key != null)
-                {
-                    key.Destroy();
-                    HeadBack();
-                }
-
-                if (player.HasAtLeastOneKey())
-                {
-                    var keyBlock = this.CollisionBoundsFirstOrDefault<KeyBlock>(X, Y);
-                    if (keyBlock != null && !keyBlock.Unlocked)
-                    {
-                        new SingularEffect(keyBlock.Center.X, keyBlock.Center.Y, 9);
-                        keyBlock.Unlock(keyBlock.Center.X, keyBlock.Center.Y);
-                        player.UseKeyFromInventory();
-                        HeadBack();
-                    }
-                }
-            }
-
-            if (!headBack)
-            {
-                var laser = this.CollisionBoundsFirstOrDefault<LaserObstacle>(X, Y);
-                if (laser != null)
-                {
-                    new StarEmitter(X, Y, 5);
-                    HeadBack();
-                }             
-            }
-            else
-            {
-                var dist = MathUtil.Euclidean(Position, player.Position);
-                if (dist < 8)
-                {
+                ang = MathUtil.VectorToAngle(new Vector2(orb.X - X, orb.Y - Y));
+                XVel = 1.5f * (float)(MathUtil.LengthDirX(ang));
+                YVel = 1.5f * (float)(MathUtil.LengthDirY(ang));
+                if (this.CollisionBounds(orb, X, Y))
                     FinishUp();
-                }
             }
 
             Move(XVel, YVel);
@@ -263,6 +311,10 @@ namespace Leore.Objects.Projectiles
             XVel *= .5f;
             YVel *= .5f;
 
+            var ang = MathUtil.VectorToAngle(new Vector2(XVel, YVel)) + 90 * Math.Sign((int)orb.Direction);
+            XVel -= 2 * (float)(MathUtil.LengthDirX(ang));
+            YVel -= 2 * (float)(MathUtil.LengthDirY(ang));
+
             headBack = true;            
         }
 
@@ -275,7 +327,7 @@ namespace Leore.Objects.Projectiles
 
                 new KeyBurstEmitter(X, Y, orb);
             }
-            orb.Position = Position;
+            //orb.Position = Position;
             orb.Cooldown = 10;
             Destroy();
         }
@@ -292,9 +344,9 @@ namespace Leore.Objects.Projectiles
 
         public override void HandleCollision(GameObject obj)
         {
-            //throw new NotImplementedException();
             if (cooldown == 0)
-                cooldown = 5;
+                cooldown = 4;
+                //cooldown = (orb.Level == SpellLevel.ONE) ? 10 : 3;
 
             return;
 

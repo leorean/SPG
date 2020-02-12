@@ -14,24 +14,14 @@ namespace Leore.Objects.Effects.Emitters
 {
     public class IceParticle : Particle
     {
-        private float frame;
-        private float minFrame;
-        private float maxFrame;
-        private float fSpd;
-
         public IceParticle(ParticleEmitter emitter) : base(emitter)
         {
             DrawOffset = new Vector2(8);
             LifeTime = 60;
-
-            minFrame = 17;
-            maxFrame = 20;
-            frame = minFrame;
-            fSpd = .1f;
-
+            
             Texture = AssetManager.Particles[17 + RND.Int(3)];
-
-            Position = emitter.Position + new Vector2(-4 + RND.Int(8), -4 + RND.Int(8));            
+            
+            Depth = emitter.Depth;
         }
 
         public override void Update(GameTime gameTime)
@@ -59,11 +49,11 @@ namespace Leore.Objects.Effects.Emitters
 
     public class IceEmitter : ParticleEmitter
     {
-        private List<Color> particleColors;
+        public Vector2 SpawnPosition;
 
         public IceEmitter(float x, float y) : base(x, y)
         {
-            particleColors = GameResources.MpColors;
+            SpawnTimeout = 3;
         }
 
         public override void Update(GameTime gameTime)
@@ -76,7 +66,8 @@ namespace Leore.Objects.Effects.Emitters
 
         public override void CreateParticle()
         {
-            new IceParticle(this);
+            var part = new IceParticle(this);
+            part.Position = SpawnPosition + new Vector2(-4 + RND.Int(8), -4 + RND.Int(8));
         }
     }
 }

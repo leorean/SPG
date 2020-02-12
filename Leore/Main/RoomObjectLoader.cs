@@ -590,7 +590,7 @@ namespace Leore.Main
                                 item = new AbilityItem(x + 8, y + 8, room, itemName, setCondition: itemSetCondition, appearCondition: itemAppearCondition);
                                 item.Texture = AssetManager.Items[15];
                                 item.OnObtain = () => {
-                                    GameManager.Current.RemoveSpell(SpellType.SNATCH_KEYS);
+                                    //GameManager.Current.RemoveSpell(SpellType.SNATCH_KEYS);
                                     GameManager.Current.AddSpell(SpellType.BOOMERANG);
                                 };
                                 item.Text = itemText;

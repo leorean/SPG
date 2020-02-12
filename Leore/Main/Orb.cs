@@ -199,7 +199,7 @@ namespace Leore.Main
                             //TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 6, 0);
                             break;
                         case SpellType.BOOMERANG:
-                            TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 0, 0);
+                            TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 38, 14 * Math.Sign((int)player.LookDirection));
                             break;
                         default:
                             TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 14, 14 * Math.Sign((int)player.LookDirection));
@@ -293,10 +293,7 @@ namespace Leore.Main
 
                                     break;
                                 case SpellType.BOOMERANG: // ++++ Boomerang ++++
-
-                                    Visible = false;
                                     BoomerangProjectile.Create(player.X, player.Y, this);
-
                                     break;
                                 // TODO: other spells!!!
                                 default:

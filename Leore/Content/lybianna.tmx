@@ -152965,17 +152965,17 @@
    <tile gid="197"/>
    <tile gid="969"/>
    <tile/>
+   <tile gid="972"/>
+   <tile gid="973"/>
+   <tile gid="974"/>
+   <tile/>
+   <tile gid="838"/>
+   <tile gid="841"/>
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="197"/>
+   <tile gid="771"/>
    <tile gid="197"/>
    <tile gid="130"/>
    <tile gid="130"/>
@@ -173334,7 +173334,7 @@ With their magical power, you're able to ~levitate~!</property>
 |Tehehe...</property>
    </properties>
   </object>
-  <object id="1493" name="Spell: Boomerang" type="item" x="2880" y="1344" width="16" height="16">
+  <object id="1493" name="Spell: Boomerang" type="item" x="1200" y="1488" width="16" height="16">
    <properties>
     <property name="itemName" value="Boomerang"/>
     <property name="itemType" type="int" value="11"/>
