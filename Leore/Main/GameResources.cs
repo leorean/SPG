@@ -83,7 +83,7 @@ namespace Leore.Resources
                 }
             },
             {
-                SpellType.BOOMERANG,
+                SpellType.ICE,
                 new Dictionary<SpellLevel, int> {
                     {SpellLevel.ONE, 80 },
                     {SpellLevel.TWO, 240 },
@@ -143,7 +143,7 @@ namespace Leore.Resources
                 }
             },
             {
-                SpellType.BOOMERANG,
+                SpellType.ICE,
                 new Dictionary<SpellLevel, float> {
                     {SpellLevel.ONE, 4f },
                     {SpellLevel.TWO, 3f },

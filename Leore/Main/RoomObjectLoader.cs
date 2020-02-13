@@ -591,7 +591,7 @@ namespace Leore.Main
                                 item.Texture = AssetManager.Items[15];
                                 item.OnObtain = () => {
                                     //GameManager.Current.RemoveSpell(SpellType.SNATCH_KEYS);
-                                    GameManager.Current.AddSpell(SpellType.BOOMERANG);
+                                    GameManager.Current.AddSpell(SpellType.ICE);
                                 };
                                 item.Text = itemText;
                                 break;

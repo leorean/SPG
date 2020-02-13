@@ -84,7 +84,7 @@
     <Compile Include="Objects\Items\Collectable.cs" />
     <Compile Include="Objects\Level\RollBouncer.cs" />
     <Compile Include="Objects\Level\StoryWarp.cs" />
-    <Compile Include="Objects\Projectiles\BoomerangProjectile.cs" />
+    <Compile Include="Objects\Projectiles\IceProjectile.cs" />
     <Compile Include="Objects\Projectiles\RollDamageProjectile.cs" />
     <Compile Include="Objects\SpatialGameObject.cs" />
     <Compile Include="Objects\Common.cs" />

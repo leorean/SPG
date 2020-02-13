@@ -123,7 +123,7 @@ namespace Leore.Objects.Projectiles
             {
                 XVel *= .95f;
                 YVel = -Math.Sign(YVel) * Math.Max(Math.Abs(YVel) * .85f, 1.3f);
-                YVel = MathUtil.AtMost(YVel, 2);
+                YVel = MathUtil.AtMost(YVel, 2.5f);
 
                 Bounce = Math.Max(Bounce - 1, 0);
             }

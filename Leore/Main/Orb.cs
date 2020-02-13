@@ -42,7 +42,7 @@ namespace Leore.Main
         VOID,
         SNATCH_KEYS,
         FIRE,
-        BOOMERANG,
+        ICE,
         //ROCK,
         //LIGHTNING,        
     }
@@ -198,8 +198,8 @@ namespace Leore.Main
                             TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 0, 0);
                             //TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 6, 0);
                             break;
-                        case SpellType.BOOMERANG:
-                            TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 38, 20 * Math.Sign((int)player.LookDirection));
+                        case SpellType.ICE:
+                            TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 4, 4 * Math.Sign((int)player.LookDirection));
                             break;
                         default:
                             TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 14, 14 * Math.Sign((int)player.LookDirection));
@@ -292,8 +292,8 @@ namespace Leore.Main
                                     FireSpell.Create(TargetPosition.X, TargetPosition.Y, Level);
 
                                     break;
-                                case SpellType.BOOMERANG: // ++++ Boomerang ++++
-                                    BoomerangProjectile.Create(player.X, player.Y, this);
+                                case SpellType.ICE: // ++++ Boomerang ++++
+                                    IceProjectile.Create(player.X, player.Y, this);
                                     break;
                                 // TODO: other spells!!!
                                 default:
