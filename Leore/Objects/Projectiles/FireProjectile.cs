@@ -186,6 +186,7 @@ namespace Leore.Objects.Projectiles
         private FireSpell spell;
 
         private float spd;
+        private int cooldown;
 
         public FireArcProjectile(float x, float y, FireSpell spell) : base(x, y, SpellLevel.TWO)
         {
@@ -195,8 +196,6 @@ namespace Leore.Objects.Projectiles
 
             Scale = Vector2.One;
             
-            Damage = 3;
-
             origin = Position;
             centerPos = Position;
 
@@ -206,6 +205,7 @@ namespace Leore.Objects.Projectiles
         public override void HandleCollision(GameObject obj)
         {
             //base.HandleCollision(obj);
+            cooldown = 5;
         }
 
         public override void Destroy(bool callGC = false)
@@ -219,8 +219,11 @@ namespace Leore.Objects.Projectiles
             base.Update(gameTime);
             
             light.Scale = Scale * .6f;
-            
-            var inWater = GameManager.Current.Map.CollisionTile(X, Y, GameMap.WATER_INDEX);
+
+            cooldown = Math.Max(cooldown - 1, 0);
+            Damage = cooldown == 0 ? 3 : 0;
+
+            var inWater = GameManager.Current.Map.CollisionTile(X, Y, GameMap.WATER_INDEX) && !GameManager.Current.Map.CollisionTile(X, Y);
             if (inWater)
                 Destroy();
             
@@ -228,7 +231,7 @@ namespace Leore.Objects.Projectiles
             {
                 centerPos = orb.TargetPosition;
                 origin = centerPos;
-                if (orb.State != OrbState.ATTACK || player.MP <= GameResources.MPCost[SpellType.FIRE][level])
+                if (orb.State != OrbState.ATTACK || orb.Level != level || player.MP <= GameResources.MPCost[SpellType.FIRE][level])
                 {
                     originalAngle = (float)MathUtil.VectorToAngle(new Vector2((int)player.Direction, Math.Sign((int)player.LookDirection)));
                     angle = originalAngle;
@@ -241,7 +244,7 @@ namespace Leore.Objects.Projectiles
                 var off = spell.ArcProjectiles.Count > 0 ? ((float)(spell.ArcProjectiles.IndexOf(this) + 1) / (float)(spell.ArcProjectiles.Count)) * 360 : 0;
                 offAngle = spell.ArcAngle + ((int)off);
 
-                arcDist = 8 + spell.Power * 12;
+                arcDist = 6 + spell.Power * 14;
             }
             else
             {
@@ -253,18 +256,19 @@ namespace Leore.Objects.Projectiles
             
             XVel = spd * (float)MathUtil.LengthDirX(angle);
             YVel = spd * (float)MathUtil.LengthDirY(angle);
-            
+
+            Angle = (float)MathUtil.DegToRad(offAngle + 90);
+
             // movement
 
             Position = centerPos + new Vector2(xpos, ypos);
-
             centerPos += new Vector2(XVel, YVel);
+            
+            // destroy
 
-            //Move(XVel, YVel);
-
-            if (MathUtil.Euclidean(Position, origin) > 3 * Globals.T)
+            if (MathUtil.Euclidean(Position, origin) > 5 * Globals.T)
             {
-                arcDist = Math.Max(arcDist - .4f, 0);
+                arcDist = Math.Max(arcDist - 2f, 0);
                 if (arcDist == 0)
                     Destroy();
             }
