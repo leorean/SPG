@@ -292,8 +292,8 @@ namespace Leore.Main
                                     FireSpell.Create(TargetPosition.X, TargetPosition.Y, Level);
 
                                     break;
-                                case SpellType.ICE: // ++++ Boomerang ++++
-                                    IceProjectile.Create(player.X, player.Y, this);
+                                case SpellType.ICE: // ++++ Boomerang ++++                                    
+                                    new IceProjectile(player.X, player.Y, Level);
                                     break;
                                 // TODO: other spells!!!
                                 default:

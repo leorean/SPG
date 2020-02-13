@@ -13,6 +13,7 @@ using SPG.Util;
 using Leore.Objects.Level;
 using Leore.Objects.Effects;
 using System.Diagnostics;
+using Leore.Resources;
 
 namespace Leore.Objects.Projectiles
 {
@@ -168,44 +169,49 @@ namespace Leore.Objects.Projectiles
 
     // ++++ Level: 2 ++++
 
-    public class FireArcProjectile : FireProjectile
+    public class FireArcProjectile : FireProjectile, IKeepAliveBetweenRooms, IKeepEnabledAcrossRooms
     {
-        private int lifeTime = 40;
-        
-        private Direction dir;
-        private Direction lookDir;
-
-        private float t;
-        private float amp;
-        private float spd;
-
-        private float maxSpd;
-
-        private float tVel = .15f;
-
-        private float pxVel, pyVel;
-
         private Vector2 origin;
 
-        public FireArcProjectile(float x, float y, Direction dir, Direction lookDir, float amp, float spd, float t, float tVel) : base(x, y, SpellLevel.TWO)
+        private float angle;
+        private float originalAngle;
+        
+        bool shot;
+
+        private float arcDist;
+
+        private int offAngle;
+        private Vector2 centerPos;
+
+        private FireSpell spell;
+
+        private float spd;
+
+        public FireArcProjectile(float x, float y, FireSpell spell) : base(x, y, SpellLevel.TWO)
         {
-            Scale = new Vector2(.75f);
+            this.spell = spell;
 
-            this.maxSpd = spd;
-            this.amp = amp;
-            this.t = t;
-            this.tVel = tVel;
-            this.dir = dir;
-            this.lookDir = lookDir;
+            EffectOnDestroy = true;
 
-            Damage = 2;
-
-            pxVel = player.XVel;
-            pyVel = player.YVel;
+            Scale = Vector2.One;
+            
+            Damage = 3;
 
             origin = Position;
+            centerPos = Position;
 
-            Texture = AssetManager.Projectiles[11];
+            Texture = AssetManager.Projectiles[10];
+        }
+
+        public override void HandleCollision(GameObject obj)
+        {
+            //base.HandleCollision(obj);
+        }
+
+        public override void Destroy(bool callGC = false)
+        {
+            base.Destroy(callGC);
+            spell.ArcProjectiles.Remove(this);
         }
 
         public override void Update(GameTime gameTime)
@@ -213,88 +219,76 @@ namespace Leore.Objects.Projectiles
             base.Update(gameTime);
             
             light.Scale = Scale * .6f;
-
-            lifeTime = Math.Max(lifeTime - 1, 0);
             
-            var col = GameManager.Current.Map.CollisionTile(X + XVel, Y + YVel);
-            
-            if (!col)
-                col = ObjectManager.CollisionPointFirstOrDefault<Solid>(X, Y) != null;
-
-            if (col)
-            {
-                Destroy();
-                return;
-            }
-
             var inWater = GameManager.Current.Map.CollisionTile(X, Y, GameMap.WATER_INDEX);
-            if (inWater && !col)
+            if (inWater)
                 Destroy();
             
-            t = (t + tVel) % (float)(2 * Math.PI);
-
-            spd = Math.Min(spd + .15f, maxSpd);
-            if (spd == maxSpd)
+            if (!shot)
             {
-                //if (Math.Abs(spd) < .5f)
-                //    lifeTime = 0;
-                //maxSpd *= .9f;
+                centerPos = orb.TargetPosition;
+                origin = centerPos;
+                if (orb.State != OrbState.ATTACK || player.MP <= GameResources.MPCost[SpellType.FIRE][level])
+                {
+                    originalAngle = (float)MathUtil.VectorToAngle(new Vector2((int)player.Direction, Math.Sign((int)player.LookDirection)));
+                    angle = originalAngle;
+
+                    spd = 2;
+                    
+                    shot = true;
+                }
+
+                var off = spell.ArcProjectiles.Count > 0 ? ((float)(spell.ArcProjectiles.IndexOf(this) + 1) / (float)(spell.ArcProjectiles.Count)) * 360 : 0;
+                offAngle = spell.ArcAngle + ((int)off);
+
+                arcDist = 8 + spell.Power * 12;
             }
-
-            var angle = 0;
-            switch (lookDir)
-            {
-                case Direction.NONE:
-                    angle = 90;
-                    break;
-                case Direction.UP:
-                    angle = 45;
-                    break;
-                case Direction.DOWN:
-                    angle = - 45;
-                    break;
-            }
-
-            // sine wave
-            
-            var xv = (float)MathUtil.LengthDirX(angle) * (float)Math.Sin(t) * amp * Math.Sign((int)dir);
-            var yv = (float)MathUtil.LengthDirY(angle) * (float)Math.Sin(t) * amp;
-
-            var lx = Math.Sign((int)dir) * spd;
-            var ly = Math.Sign((int)lookDir) * spd;
-
-            XVel = xv + lx;// + .5f * pxVel;
-            YVel = yv + ly;// + .5f * pyVel;
-
-            if (amp > 0)
-                Angle = (float)MathUtil.VectorToAngle(new Vector2(XVel, YVel), true);
             else
-                Angle = (float)MathUtil.VectorToAngle(new Vector2(lx, ly), true);
-
-            // linear movement
-
-            Move(XVel, YVel);
+            {
+                offAngle = (offAngle + spell.ArcSpeed) % 360;
+            }
             
-            if (lifeTime == 0 || MathUtil.Euclidean(Position, origin) > 5 * Globals.T)
-                Destroy();            
-        }
+            var xpos = (float)MathUtil.LengthDirX(offAngle) * arcDist;
+            var ypos = (float)MathUtil.LengthDirY(offAngle) * arcDist;
+            
+            XVel = spd * (float)MathUtil.LengthDirX(angle);
+            YVel = spd * (float)MathUtil.LengthDirY(angle);
+            
+            // movement
 
+            Position = centerPos + new Vector2(xpos, ypos);
+
+            centerPos += new Vector2(XVel, YVel);
+
+            //Move(XVel, YVel);
+
+            if (MathUtil.Euclidean(Position, origin) > 3 * Globals.T)
+            {
+                arcDist = Math.Max(arcDist - .4f, 0);
+                if (arcDist == 0)
+                    Destroy();
+            }
+        }
+        
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
-            sb.Draw(Texture, Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);            
+            sb.Draw(Texture, Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Depth);
         }
     }
 
-    // ++++ Level: 3 ++++
+    // ++++ Level: 2 & 3 ++++
 
     public class FlameThrowerProjectile : FireProjectile
     {
         private float alpha = 1;
+        private float maxVel = 0;
 
         public FlameThrowerProjectile(float x, float y) : base(x, y, SpellLevel.THREE)
         {
-            Scale = new Vector2(.4f);
-            Texture = AssetManager.Projectiles[12];
+            Scale = Vector2.One;
+
+            AnimationTexture = AssetManager.Projectiles;
+            SetAnimation(24, 28, .15f, false);
 
             Damage = 1;
             
@@ -304,18 +298,20 @@ namespace Leore.Objects.Projectiles
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            
+
+            maxVel = Math.Max(Math.Abs(XVel), maxVel);
+
             XVel *= .96f;
             YVel *= .96f;
 
             Angle = (float)MathUtil.VectorToAngle(new Vector2(XVel, YVel), true);
 
-            Scale = new Vector2(Math.Min(Scale.X + .02f, .8f));
+            //Scale = new Vector2(Math.Min(Scale.X + .02f, .8f));
 
             light.Scale = Scale;
 
-            if (Math.Abs(XVel) < .1f)
-                Destroy();
+            //if (Math.Abs(XVel) < .1f)
+            //    Destroy();
 
             var inWater = GameManager.Current.Map.CollisionTile(X, Y, GameMap.WATER_INDEX);
             if (inWater)
@@ -343,10 +339,16 @@ namespace Leore.Objects.Projectiles
                 YVel = -YVel * .85f;
             }
 
-            alpha = Math.Max(alpha - .02f, 0);
-            Color = new Color(Color, alpha);
+            //if (AnimationFrame >= MaxFrame - 2)
+            //alpha = Math.Max(alpha - .05f, 0);
 
-            if (Math.Max(Math.Abs(XVel), Math.Abs(YVel)) < .5f || alpha == 0)
+            var lifeTime = Math.Abs(XVel - Math.Sign(XVel) * .5f) / maxVel;
+
+            alpha = (float)Math.Sin(lifeTime * Math.PI);
+
+            Color = new Color(Color, alpha);
+            
+            if (Math.Max(Math.Abs(XVel), Math.Abs(YVel)) < .5f)// || alpha == 0)
                 Destroy();
         }        
     }

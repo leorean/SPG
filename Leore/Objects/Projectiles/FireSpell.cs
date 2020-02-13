@@ -17,24 +17,28 @@ using Leore.Resources;
 
 namespace Leore.Objects.Projectiles
 {
-    public class FireSpell : SpellObject
+    public class FireSpell : SpellObject, IKeepAliveBetweenRooms, IKeepEnabledAcrossRooms
     {
         private Player player => GameManager.Current.Player;
         private Orb orb => GameManager.Current.Player.Orb;
 
         private static FireSpell instance;
         
-        private float power;
+        private float curPower;
         private float maxPower;
+        public float Power { get; private set; }
 
         private int delay;
-        private int maxDelay = 5;
         
         private double t;
 
         private SpellLevel level;
 
         private int iteration;
+        
+        public int ArcSpeed { get; set; } = 10;
+        public int ArcAngle { get; set; }
+        public List<FireArcProjectile> ArcProjectiles { get; set; }  = new List<FireArcProjectile>();
 
         public FireSpell(float x, float y, SpellLevel level) : base(x, y)
         {
@@ -44,7 +48,7 @@ namespace Leore.Objects.Projectiles
                     maxPower = 1 * 60;
                     break;
                 case SpellLevel.TWO:
-                    maxPower = 1 * 60;
+                    maxPower = 3 * 60;
                     break;
                 case SpellLevel.THREE:
                     maxPower = 1 * 60;
@@ -63,13 +67,15 @@ namespace Leore.Objects.Projectiles
         {
             base.Update(gameTime);
             
-            power = Math.Min(power + 1, maxPower);
+            curPower = Math.Min(curPower + 1, maxPower);
 
             t = (t + .5f) % (Math.PI * 2);
 
             Angle = (Angle + .2f) % (int)(2 * Math.PI);
 
-            var p = power / maxPower;
+            ArcAngle = (ArcAngle + ArcSpeed) % 360;
+
+            Power = curPower / maxPower;
 
             Position = player.Position + new Vector2(7 * Math.Sign((int)player.Direction), 0);
             
@@ -84,33 +90,6 @@ namespace Leore.Objects.Projectiles
                 {
                     case SpellLevel.ONE:
                         {
-                            var proj = new FireBallProjectile(X, Y);                            
-                            proj.XVel = Math.Sign((int)player.Direction) * (1.25f - Math.Abs(.25f * (int)player.LookDirection));
-                            proj.YVel = Math.Max(-2f + 1f * (int)player.LookDirection, -2.5f);
-                            proj.Bounce = 2;
-
-                            //delay = (int)(20 + (1 - p) * 20);
-                            delay = 25;
-                        }
-                        break;
-
-                    case SpellLevel.TWO:
-                        {
-                            //    var tVel = .3f;
-
-                            //    new FireArcProjectile(X, Y, player.Direction, player.LookDirection, 0, 3f, 0, tVel) { EffectOnDestroy = true };
-
-                            //    if (p > 0f)
-                            //    {
-                            //        new FireArcProjectile(X, Y, player.Direction, player.LookDirection, 1f, 2.5f, 1.9f * (float)Math.PI, 0) { Scale = new Vector2(.4f), Damage = 1, EffectOnDestroy = true };
-                            //        new FireArcProjectile(X, Y, player.Direction, player.LookDirection, 1f, 2.5f, 0.1f * (float)Math.PI, 0) { Scale = new Vector2(.4f), Damage = 1, EffectOnDestroy = true };
-                            //    }
-                            //    if (p > .5f)
-                            //    {
-                            //        new FireArcProjectile(X, Y, player.Direction, player.LookDirection, 1f, 3.2f, 1.95f * (float)Math.PI, 0) { Scale = new Vector2(.4f), Damage = 1, EffectOnDestroy = true };
-                            //        new FireArcProjectile(X, Y, player.Direction, player.LookDirection, 1f, 3.2f, 0.05f * (float)Math.PI, 0) { Scale = new Vector2(.4f), Damage = 1, EffectOnDestroy = true };
-                            //    }                            
-                            //    delay = 10 + (int)(15 * (1 - p));
                             FireBallProjectile proj = null;
                             if (iteration == 0)
                             {
@@ -149,14 +128,28 @@ namespace Leore.Objects.Projectiles
                             delay = 8;
                         }
                         break;
+                    case SpellLevel.TWO:
+                        {
+                            if (ArcProjectiles.Count < 3)
+                            {
 
+                                var proj = new FireArcProjectile(X, Y, this);
+                                delay = 30;
+                                ArcProjectiles.Add(proj);
+                            }
+                            else
+                            {
+                                player.MP = Math.Min(player.MP + GameResources.MPCost[SpellType.FIRE][level], player.Stats.MaxMP);
+                            }
+                        }
+                        break;
                     case SpellLevel.THREE:
                         {
                             var proj = new FlameThrowerProjectile(X, Y);
-                            proj.XVel = Math.Sign((int)player.Direction) * (.75f + 2.5f * p) + player.XVel;
+                            proj.XVel = Math.Sign((int)player.Direction) * (1.75f + 1.5f * Power) + player.XVel;
                             proj.YVel = -.3f * (float)Math.Sin(t) + player.YVel + 1f * (int)player.LookDirection;
 
-                            delay = (int)(maxDelay * (.5f - .25f * p) * 3);
+                            delay = (int)((.5f - .25f * Power) * 15);
                         }
                         break;
                 }
