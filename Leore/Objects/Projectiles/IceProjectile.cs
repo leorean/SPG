@@ -18,97 +18,6 @@ using SPG.Util;
 
 namespace Leore.Objects.Projectiles
 {
-    public class IceSpell : SpellObject
-    {
-        private static IceSpell instance;
-
-        private static Player player => GameManager.Current.Player;
-        private static Orb orb => player.Orb;
-
-        private Vector2 originalPosition;
-        private float originalAngle;
-
-        private bool letGo;
-
-        public List<IceArcProjectile> Projectiles { get; private set; } = new List<IceArcProjectile>();
-
-        private int cooldown;
-
-        private IceSpell(float x, float y, SpellLevel level) : base(x, y, level)
-        {
-
-            BoundingBox = new RectF(-4, -4, 8, 8);
-            DrawOffset = new Vector2(8);
-            Texture = AssetManager.Projectiles[11];            
-        }
-
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-
-            if (level == SpellLevel.ONE || level == SpellLevel.TWO)
-                Destroy();
-
-            cooldown = Math.Max(cooldown - 1, 0);
-            if (cooldown == 0)
-            {
-                var proj = new IceArcProjectile(X, Y, this);
-                cooldown = 30;
-                Projectiles.Add(proj);
-            }
-
-            if (orb.State != OrbState.ATTACK || orb.Type != SpellType.ICE || level != orb.Level || player.MP < GameResources.MPCost[SpellType.ICE][level])
-            {
-                instance = null;
-                letGo = true;                
-            }
-
-            if (!letGo)
-            {
-                originalPosition = Position;
-                originalAngle = (float)MathUtil.VectorToAngle(new Vector2((int)player.Direction, Math.Sign((int)player.LookDirection)));
-
-                Position = orb.Position;
-            }
-            else
-            {
-                XVel += .02f * (float)MathUtil.LengthDirX(originalAngle);
-                YVel += .02f * (float)MathUtil.LengthDirY(originalAngle);
-                XVel = MathUtil.AtMost(XVel, 3);
-                YVel = MathUtil.AtMost(YVel, 3);
-            }
-
-            Move(XVel, YVel);
-
-            if (letGo && MathUtil.Euclidean(Position, originalPosition) > 5 * Globals.T)
-                Destroy();
-        }
-
-        public static void Create(float x, float y, SpellLevel level)
-        {
-            if (instance == null)
-            {
-                instance = new IceSpell(x, y, level);
-                return;
-            } else
-            {
-                player.MP += GameResources.MPCost[SpellType.ICE][level];
-            }
-
-        }
-
-        public override void Destroy(bool callGC = false)
-        {
-            foreach(var proj in Projectiles.ToList())
-            {
-                proj.Destroy();
-            }
-
-            instance = null;
-            base.Destroy(callGC);            
-        }
-    }
-
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     public class IceProjectile : PlayerProjectile
@@ -317,52 +226,210 @@ namespace Leore.Objects.Projectiles
         }
     }
 
-    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-    public class IceArcProjectile : PlayerProjectile
+    public class IceSpell : SpellObject
     {
-        private Player player => GameManager.Current.Player;
+        private static IceSpell instance;
 
-        private IceSpell spell;
+        private static Player player => GameManager.Current.Player;
+        private static Orb orb => player.Orb;
 
-        public IceArcProjectile(float x, float y, IceSpell spell) : base(x, y, SpellLevel.TWO)
+        private Vector2 originalPosition;
+        private float originalAngle;
+
+        private bool letGo;
+
+        public List<IceArcProjectile> Projectiles { get; private set; } = new List<IceArcProjectile>();
+
+        private int cooldown;
+
+        private IceSpell(float x, float y, SpellLevel level) : base(x, y, level)
         {
-            Texture = AssetManager.Projectiles[19];
-            DrawOffset = new Vector2(8);
-            BoundingBox = new RectF(-4, -4, 8, 8);
-            Damage = 2;
-
-            Element = SpellElement.ICE;
-
-            this.spell = spell;
-            Position = new Vector2(spell.X - 8 + RND.Int(16), spell.Y - 8 + RND.Int(16));
+            //BoundingBox = new RectF(-4, -4, 8, 8);
+            //DrawOffset = new Vector2(8);
+            //Texture = AssetManager.Projectiles[11];            
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            var targetAngle = MathUtil.VectorToAngle(new Vector2(spell.X - X, spell.Y - Y));
+            if (level == SpellLevel.ONE || level == SpellLevel.TWO)
+                Destroy();
 
-            XVel += .2f * (float)(MathUtil.LengthDirX(targetAngle));
-            YVel += .2f * (float)(MathUtil.LengthDirY(targetAngle));
-            
-            XVel = MathUtil.AtMost(XVel, 3);
-            YVel = MathUtil.AtMost(YVel, 3);
+            cooldown = Math.Max(cooldown - 1, 0);
+            if (cooldown == 0)
+            {
+                player.MP = Math.Max(player.MP - GameResources.MPCost[SpellType.ICE][level], 0);
 
-            Move(XVel, YVel);
+                var proj = new IceArcProjectile(X, Y, this);
+                cooldown = 10;
+                Projectiles.Add(proj);
+
+                if (Projectiles.Count > 30)
+                {
+                    FreeProjectile(Projectiles[0]);
+                }
+            }
+
+            if (orb.State != OrbState.ATTACK || orb.Type != SpellType.ICE || level != orb.Level || player.MP < GameResources.MPCost[SpellType.ICE][level])
+            {
+                instance = null;
+                letGo = true;
+            }
+
+            if (!letGo)
+            {
+                originalPosition = Position;
+                originalAngle = (float)MathUtil.VectorToAngle(new Vector2((int)player.Direction, Math.Sign((int)player.LookDirection)));
+
+                Position = orb.Position;
+            }
+
+            if (letGo)
+                Destroy();
+        }
+
+        public static void Create(float x, float y, SpellLevel level)
+        {
+            if (instance == null)
+            {
+                instance = new IceSpell(x, y, level);
+                return;
+            }
+            else
+            {
+                player.MP += GameResources.MPCost[SpellType.ICE][level];
+            }
+
         }
 
         public override void Destroy(bool callGC = false)
         {
-            spell.Projectiles.Remove(this);
+            foreach (var proj in Projectiles.ToList())
+            {
+                FreeProjectile(proj);
+            }
 
+            instance = null;
+            base.Destroy(callGC);
+        }
+
+        private void FreeProjectile(IceArcProjectile proj)
+        {
+            //var ta = (float)MathUtil.VectorToAngle(new Vector2(XVel, YVel));
+            //proj.TargetAngle = ta;
+            if(player.LookDirection == Direction.NONE)
+            {
+                proj.XVel = 3 * Math.Sign((int)orb.Direction);
+                proj.YVel = 0;
+            }
+            else
+            {
+                proj.XVel = 0;
+                proj.YVel = 3 * Math.Sign((int)player.LookDirection);
+            }
+
+            proj.Target = null;
+            Projectiles.Remove(proj);
+        }
+    }
+
+    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    public class IceArcProjectile : PlayerProjectile
+    {
+        private Player player => GameManager.Current.Player;
+        public IceSpell Target { get; set; }
+        public float TargetAngle { get; set; }
+        private IceEmitter emitter;
+        
+        public IceArcProjectile(float x, float y, IceSpell spell) : base(x, y, SpellLevel.TWO)
+        {
+            AnimationTexture = AssetManager.Projectiles;
+            SetAnimation(29, 30, .2f, true);
+
+            DrawOffset = new Vector2(8);
+            BoundingBox = new RectF(-4, -4, 8, 8);
+            Damage = 2;
+
+            Element = SpellElement.ICE;
+
+            Target = spell;
+            Position = new Vector2(spell.X - 8 + RND.Int(16), spell.Y - 8 + RND.Int(16));
+
+            emitter = new IceEmitter(X, Y);
+            emitter.SpawnTimeout = 10;
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            emitter.Position = Target != null ? Target.Position : Position;
+            emitter.SpawnPosition = Position;
+
+            Scale = (XVel > 0) ? new Vector2(1, 1) : new Vector2(-1, 1);
+
+            var xCol = GameManager.Current.Map.CollisionTile(X + XVel, Y);
+            var yCol = GameManager.Current.Map.CollisionTile(X, Y + YVel);
+            
+            if (Target != null)
+            {
+                var inBlock = GameManager.Current.Map.CollisionTile(X, Y);                
+                if (inBlock)
+                    Destroy();
+            }
+
+            if (Target != null)
+            {
+                TargetAngle = (float)MathUtil.VectorToAngle(new Vector2(Target.X - X, Target.Y - Y));
+                XVel += .1f * MathUtil.LengthDirX(TargetAngle);
+                YVel += .1f * MathUtil.LengthDirY(TargetAngle);
+
+                foreach (var proj in Target.Projectiles)
+                {
+                    if (this == proj)
+                        continue;
+
+                    if (this.CollisionBounds(proj, X, Y))
+                    {
+                        var ang = MathUtil.VectorToAngle(new Vector2(X - proj.X, Y - proj.Y));
+
+                        XVel += .2f * (float)MathUtil.LengthDirX(ang);
+                        YVel += .2f * (float)MathUtil.LengthDirY(ang);
+                    }
+                }
+            }
+            
+            if (!xCol) { Move(XVel, 0); } else { XVel *= -.25f; }
+
+            if (!yCol) { Move(0, YVel); } else { YVel *= -.25f; }
+
+            if (Target == null && (xCol || yCol)) { Destroy(); }
+
+            XVel = MathUtil.AtMost(XVel, 3);
+            YVel = MathUtil.AtMost(YVel, 3);            
+        }
+
+        public override void Destroy(bool callGC = false)
+        {
+            emitter.Active = false;
+
+            if (Target != null)
+            {
+                Target.Projectiles.Remove(this);
+            }
+            new SingularEffect(X, Y, 10);
             base.Destroy(callGC);            
         }
 
         public override void HandleCollision(GameObject obj)
         {
-            //throw new NotImplementedException();
+
+            if (obj is Pot)
+                return;
+
+            Destroy();
         }
     }
 }

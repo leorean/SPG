@@ -49,7 +49,7 @@ namespace SPG.Util
 
             return RadToDeg(rad);
         }
-
+        
         public static Vector2 Vector2(this Vector3 vec)
         {
             return new Vector2(vec.X, vec.Y);
@@ -58,15 +58,17 @@ namespace SPG.Util
         public static double LengthDirX(double degAngle)
         {
             var rad = (degAngle / 360f) * 2 * Math.PI;
-            return Math.Cos(rad);
-            
+            return Math.Cos(rad);            
         }
-
+        
         public static double LengthDirY(double degAngle)
         {
             var rad = (degAngle / 360f) * 2 * Math.PI;
             return Math.Sin(rad);
         }
+
+        public static float LengthDirX(float degAngle) => (float)LengthDirX((double)degAngle);
+        public static float LengthDirY(float degAngle) => (float)LengthDirY((double)degAngle);
 
         public static float AtMost(float val, float limit)
         {

@@ -196,10 +196,9 @@ namespace Leore.Main
                             break;
                         case SpellType.FIRE:
                             TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 0, 0);
-                            //TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 6, 0);
                             break;
                         case SpellType.ICE:
-                            TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 4, 4 * Math.Sign((int)player.LookDirection));
+                            TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 8, 4 * Math.Sign((int)player.LookDirection));
                             break;
                         default:
                             TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 14, 14 * Math.Sign((int)player.LookDirection));
@@ -238,8 +237,7 @@ namespace Leore.Main
                                                 Cooldown = 8;
                                                 break;
                                         }
-
-                                        //var proj = new StarProjectile(TargetPosition.X, TargetPosition.Y, Level);
+                                        
                                         var proj = new StarProjectile(TargetPosition.X, Y, Level);
                                         var starDegAngle = MathUtil.VectorToAngle(new Vector2(TargetPosition.X - player.X, 0));
 
@@ -259,7 +257,7 @@ namespace Leore.Main
 
                                     ObjectManager.Enable<CrimsonSpell>();
                                     
-                                    if (!ObjectManager.Exists<CrimsonSpell>())// && GameManager.Current.Player.MP >= GameResources.MPCost[SpellType.CRIMSON_ARC][Level])
+                                    if (!ObjectManager.Exists<CrimsonSpell>())
                                     {
                                         new CrimsonBurstEmitter(X, Y);
                                         new CrimsonSpell(this);
