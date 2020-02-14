@@ -18,6 +18,99 @@ using SPG.Util;
 
 namespace Leore.Objects.Projectiles
 {
+    public class IceSpell : SpellObject
+    {
+        private static IceSpell instance;
+
+        private static Player player => GameManager.Current.Player;
+        private static Orb orb => player.Orb;
+
+        private Vector2 originalPosition;
+        private float originalAngle;
+
+        private bool letGo;
+
+        public List<IceArcProjectile> Projectiles { get; private set; } = new List<IceArcProjectile>();
+
+        private int cooldown;
+
+        private IceSpell(float x, float y, SpellLevel level) : base(x, y, level)
+        {
+
+            BoundingBox = new RectF(-4, -4, 8, 8);
+            DrawOffset = new Vector2(8);
+            Texture = AssetManager.Projectiles[11];            
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            if (level == SpellLevel.ONE || level == SpellLevel.TWO)
+                Destroy();
+
+            cooldown = Math.Max(cooldown - 1, 0);
+            if (cooldown == 0)
+            {
+                var proj = new IceArcProjectile(X, Y, this);
+                cooldown = 30;
+                Projectiles.Add(proj);
+            }
+
+            if (orb.State != OrbState.ATTACK || orb.Type != SpellType.ICE || level != orb.Level || player.MP < GameResources.MPCost[SpellType.ICE][level])
+            {
+                instance = null;
+                letGo = true;                
+            }
+
+            if (!letGo)
+            {
+                originalPosition = Position;
+                originalAngle = (float)MathUtil.VectorToAngle(new Vector2((int)player.Direction, Math.Sign((int)player.LookDirection)));
+
+                Position = orb.Position;
+            }
+            else
+            {
+                XVel += .02f * (float)MathUtil.LengthDirX(originalAngle);
+                YVel += .02f * (float)MathUtil.LengthDirY(originalAngle);
+                XVel = MathUtil.AtMost(XVel, 3);
+                YVel = MathUtil.AtMost(YVel, 3);
+            }
+
+            Move(XVel, YVel);
+
+            if (letGo && MathUtil.Euclidean(Position, originalPosition) > 5 * Globals.T)
+                Destroy();
+        }
+
+        public static void Create(float x, float y, SpellLevel level)
+        {
+            if (instance == null)
+            {
+                instance = new IceSpell(x, y, level);
+                return;
+            } else
+            {
+                player.MP += GameResources.MPCost[SpellType.ICE][level];
+            }
+
+        }
+
+        public override void Destroy(bool callGC = false)
+        {
+            foreach(var proj in Projectiles.ToList())
+            {
+                proj.Destroy();
+            }
+
+            instance = null;
+            base.Destroy(callGC);            
+        }
+    }
+
+    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
     public class IceProjectile : PlayerProjectile
     {
         private static List<IceProjectile> Instances = new List<IceProjectile>();
@@ -40,14 +133,14 @@ namespace Leore.Objects.Projectiles
         private float maxLifeTime;
 
         private float originalAngle;
-        
+
+        private float alpha;
+
         int dmg;
-
         int curFrame;
-        float fSpd;
-
-        bool hitWall;
+        float angle;
         
+
         public IceProjectile(float x, float y, SpellLevel level) : base(x, y, level)
         {
             var angle = (float)MathUtil.VectorToAngle(new Vector2(orb.TargetPosition.X - x, orb.TargetPosition.Y - y));
@@ -74,30 +167,29 @@ namespace Leore.Objects.Projectiles
 
             originalPosition = Position;
 
-            fSpd = .3f;
+            alpha = 1;
 
-            maxVel = 4.5f;
-            
+            maxVel = 4.5f;            
             maxLifeTime = 999;
 
-            SetAnimation(15, 18, fSpd, true);
+            SetAnimation(15, 18, .3f, true);
 
             switch (level)
             {
                 case SpellLevel.ONE:
                     orb.Cooldown = 40;
                     dmg = 3;
-                    maxVel = 5.5f;
+                    maxVel = 5;
                     break;
+                //case SpellLevel.TWO:
+                //    orb.Cooldown = 30;
+                //    dmg = 2;
+                //    maxVel = 5.5f;
+                //    break;
                 case SpellLevel.TWO:
-                    orb.Cooldown = 20;
-                    dmg = 2;
-                    maxVel = 6f;
-                    break;
-                case SpellLevel.THREE:
-                    SetAnimation(20, 23, fSpd, true);
+                    SetAnimation(20, 23, .2f, false);
                     angle = angle - 10 + RND.Int(20);
-                    orb.Cooldown = 10;
+                    orb.Cooldown = 15;
                     dmg = 1;
                     maxVel = 6f;
                     maxLifeTime = .7f * 60;
@@ -122,16 +214,6 @@ namespace Leore.Objects.Projectiles
             emitter.Active = false;
             
             base.Destroy(callGC);
-
-            //if (level > 1)
-            //{
-            //    new IceProjectile(X, Y, orb, originalAngle - 10, level - 1);
-            //    new IceProjectile(X, Y, orb, originalAngle + 10, level - 1);
-            //}
-            //if (level > 2)
-            //{
-            //    new IceProjectile(X, Y, orb, originalAngle, level - 1);                
-            //}
         }
 
         public override void Update(GameTime gameTime)
@@ -151,74 +233,45 @@ namespace Leore.Objects.Projectiles
                 Damage = dmg;
             }
             
-            //if (level == SpellLevel.ONE)
-            //{
-            //    KnockBackOnWall();
-            //}
-
-            //if (level == SpellLevel.TWO)
-            //{
-            //    BounceOnWall();
-            //}
-
-            if (!hitWall)
+            switch (level)
             {
+                case SpellLevel.ONE:
+                case SpellLevel.TWO:
+                case SpellLevel.THREE:
+                    var targetAngle = originalAngle - 180;
+                    XVel += .25f * (float)(MathUtil.LengthDirX(targetAngle));
+                    YVel += .25f * (float)(MathUtil.LengthDirY(targetAngle));
 
-                switch (level)
-                {
-                    case SpellLevel.ONE:
-                    case SpellLevel.TWO:
-                    case SpellLevel.THREE:
-                        var targetAngle = originalAngle - 180;
-                        XVel += .25f * (float)(MathUtil.LengthDirX(targetAngle));
-                        YVel += .25f * (float)(MathUtil.LengthDirY(targetAngle));
+                    if (lifeTime < maxLifeTime - 60 && this.IsOutsideCurrentRoom(2 * Globals.T))
+                    {
+                        FinishUp();
+                    }
 
-                        if (lifeTime < maxLifeTime - 60 && this.IsOutsideCurrentRoom(2 * Globals.T))
+                    XVel = MathUtil.AtMost(XVel, maxVel);
+                    YVel = MathUtil.AtMost(YVel, maxVel);
+
+                    if (lifeTime < maxLifeTime - 20)
+                    {
+                        if (MathUtil.Euclidean(Position, originalPosition) < 8)
                         {
                             FinishUp();
                         }
-
-                        XVel = MathUtil.AtMost(XVel, maxVel);
-                        YVel = MathUtil.AtMost(YVel, maxVel);
-
-                        if (lifeTime < maxLifeTime - 20)
-                        {
-                            if (MathUtil.Euclidean(Position, originalPosition) < 8)
-                            {
-                                FinishUp();
-                            }
-                        }
-                        break;
-                    //case SpellLevel.TWO:
-                    //    XVel *= .99f;
-                    //    YVel *= .99f;
-
-                    //    if (Math.Max(Math.Abs(XVel), Math.Abs(YVel)) < .2f)
-                    //        FinishUp();
-
-                    //    break;                    
-                        break;
-                }
+                    }
+                    break;
+            }
                 
-                if (lifeTime == 0)
-                {
-                    FinishUp();
-                }
-            }
-            else
+            if (lifeTime == 0)
             {
-                XVel *= .97f;
-                YVel = Math.Min(YVel + .1f, 4.5f);
-
-                if(RoomCamera.Current.CurrentRoom == null || (Y > RoomCamera.Current.CurrentRoom.Y + RoomCamera.Current.CurrentRoom.BoundingBox.Height))
+                alpha = Math.Max(alpha - .1f, 0);
+                if (alpha == 0)
                 {
                     FinishUp();
                 }
             }
-
+                
             Move(XVel, YVel);
 
-            //if (level == SpellLevel.ONE)
+            if (level == SpellLevel.ONE)// || level == SpellLevel.TWO)
             {
                 var ang = MathUtil.RadToDeg(Angle);
                 if (curFrame != AnimationFrame)
@@ -228,300 +281,88 @@ namespace Leore.Objects.Projectiles
                 curFrame = AnimationFrame;
                 Angle = (float)MathUtil.DegToRad(ang);
             }
-            //if (level == SpellLevel.TWO)
-            //{
-            //    Angle = (float)(MathUtil.VectorToAngle(new Vector2(XVel, YVel), true));
-            //}
-        }
-
-        private void BounceOnWall()
-        {
-            
-            var solid = this.CollisionBoundsFirstOrDefault<Solid>(X + XVel, Y);
-            if (solid != null && !(solid is IIgnoreRollKnockback && !(solid is RollDestroyBlock)))
+            if (level == SpellLevel.TWO)
             {
-                XVel *= -1;
+                angle = (angle + 10) % 360;
+                if (AnimationFrame != MaxFrame)
+                {
+                    Angle = (float)(MathUtil.VectorToAngle(new Vector2(XVel, YVel), true));
+                }
+                else
+                {
+                    Angle = (float)MathUtil.DegToRad(angle);
+                }
             }
-            solid = this.CollisionBoundsFirstOrDefault<Solid>(X, Y + YVel);
-            if (solid != null && !(solid is IIgnoreRollKnockback && !(solid is RollDestroyBlock)))
-            {
-                YVel *= -1;
-            }
+
+            Color = new Color(Color, alpha);
         }
-
-        private void KnockBackOnWall()
-        {
-            if (hitWall)
-                return;
-
-            var solid = this.CollisionBoundsFirstOrDefault<Solid>(X, Y);
-            if (solid != null && !(solid is IIgnoreRollKnockback && !(solid is RollDestroyBlock)))
-            {
-                new SingularEffect(X, Y, 3);
-                XVel = -.75f * Math.Sign(XVel);
-                YVel = -1.5f;
-                emitter.Active = false;
-                hitWall = true;
-                fSpd = .6f;
-            }
-        }
-
+        
         private void FinishUp()
         {
             if (!this.CollisionBounds(orb, X, Y))
-                new SingularEffect(X, Y, 3);
+                new SingularEffect(X, Y, 10).Scale = new Vector2(.5f);
             Destroy();
         }
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
-            base.Draw(sb, gameTime);
-
-            //sb.Draw(AssetManager.Projectiles[17], orb.Position, null, Color, 0, new Vector2(8), Vector2.One, SpriteEffects.None, Depth);            
+            base.Draw(sb, gameTime);            
         }
 
         public override void HandleCollision(GameObject obj)
         {
             if (cooldown == 0)
-                cooldown = 4;
+                cooldown = 10;
             return;            
         }
     }
 
-    //public class IceProjectile : PlayerProjectile
-    //{
-    //    private static List<IceProjectile> Instances = new List<IceProjectile>();
+    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    //    private Player player => GameManager.Current.Player;
-    //    private Orb orb;
+    public class IceArcProjectile : PlayerProjectile
+    {
+        private Player player => GameManager.Current.Player;
 
-    //    private LightSource light;
-    //    private Key key;
+        private IceSpell spell;
 
-    //    private bool headBack;
+        public IceArcProjectile(float x, float y, IceSpell spell) : base(x, y, SpellLevel.TWO)
+        {
+            Texture = AssetManager.Projectiles[19];
+            DrawOffset = new Vector2(8);
+            BoundingBox = new RectF(-4, -4, 8, 8);
+            Damage = 2;
 
-    //    private float spd;
-    //    private float acc;
-    //    private float maxVel;
-    //    private float maxDist;
+            Element = SpellElement.ICE;
 
-    //    private float scale;
+            this.spell = spell;
+            Position = new Vector2(spell.X - 8 + RND.Int(16), spell.Y - 8 + RND.Int(16));
+        }
 
-    //    private Vector2 originalPosition;
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
 
-    //    private int cooldown;
+            var targetAngle = MathUtil.VectorToAngle(new Vector2(spell.X - X, spell.Y - Y));
 
-    //    private IceEmitter emitter;
+            XVel += .2f * (float)(MathUtil.LengthDirX(targetAngle));
+            YVel += .2f * (float)(MathUtil.LengthDirY(targetAngle));
+            
+            XVel = MathUtil.AtMost(XVel, 3);
+            YVel = MathUtil.AtMost(YVel, 3);
 
-    //    private int lifeTime;
-    //    private int maxLifeTime;
+            Move(XVel, YVel);
+        }
 
-    //    private IceProjectile(float x, float y, Orb orb, float angle) : base(x, y, orb.Level)
-    //    {
-    //        Instances.Add(this);
+        public override void Destroy(bool callGC = false)
+        {
+            spell.Projectiles.Remove(this);
 
-    //        this.orb = orb;
+            base.Destroy(callGC);            
+        }
 
-    //        AnimationTexture = AssetManager.Projectiles;
-
-    //        Element = SpellElement.ICE;
-
-    //        Depth = orb.Depth + .0002f;
-    //        BoundingBox = new RectF(-4, -4, 8, 8);
-    //        DrawOffset = new Vector2(8);
-
-    //        Scale = new Vector2((int)player.Direction * scale, scale);
-    //        light = new LightSource(this) { Active = true, Scale = new Vector2(scale * .45f) };
-
-    //        emitter = new IceEmitter(X, Y);
-    //        emitter.Active = true;
-    //        emitter.Depth = Depth - .0001f;
-
-    //        originalPosition = Position;
-
-    //        scale = 1f;
-
-    //        spd = 0;
-    //        maxDist = 48;
-    //        acc = .01f;
-
-    //        maxLifeTime = 5 * 60;
-    //        lifeTime = maxLifeTime;
-
-    //        switch (orb.Level)
-    //        {
-    //            case SpellLevel.ONE:
-    //                maxDist = 48;
-    //                maxVel = 3.5f;
-    //                break;
-    //            case SpellLevel.TWO:
-    //                maxVel = 3.5f;
-    //                maxDist = 64;
-    //                break;
-    //            case SpellLevel.THREE:
-    //                maxVel = 3.5f;
-    //                maxDist = 64;
-    //                break;
-    //        }
-
-    //        XVel = (float)MathUtil.LengthDirX(angle) * maxVel;
-    //        YVel = (float)MathUtil.LengthDirY(angle) * maxVel;
-    //    }
-
-    //    public static void Create(float x, float y, Orb orb)
-    //    {
-    //        if (Instances.Count > 0)
-    //        {
-    //            Instances[0].player.MP += GameResources.MPCost[Instances[0].orb.Type][Instances[0].orb.Level];
-    //            return;
-    //        }
-
-    //        orb.Visible = false;
-
-    //        var angle = (float)MathUtil.VectorToAngle(new Vector2(orb.TargetPosition.X - x, orb.TargetPosition.Y - y));
-
-    //        switch (orb.Level)
-    //        {
-    //            case SpellLevel.ONE:
-    //                new IceProjectile(x, y, orb, angle);
-    //                break;
-    //            case SpellLevel.TWO:
-    //                new IceProjectile(x, y, orb, angle - (Math.Sign((int)orb.Direction) * 15));
-    //                new IceProjectile(x, y, orb, angle + (Math.Sign((int)orb.Direction) * 15));
-    //                break;
-    //            case SpellLevel.THREE:
-    //                new IceProjectile(x, y, orb, angle - (Math.Sign((int)orb.Direction) * 15));
-    //                new IceProjectile(x, y, orb, angle);
-    //                new IceProjectile(x, y, orb, angle + (Math.Sign((int)orb.Direction) * 15));
-    //                break;
-    //        }
-    //    }
-
-    //    public override void Destroy(bool callGC = false)
-    //    {
-    //        Instances.Remove(this);
-
-    //        if (Instances.Count == 0)
-    //        {
-    //            orb.Visible = true;
-    //        }
-
-    //        FadeOutLight.Create(this, light.Scale);
-    //        light.Parent = null;
-    //        light.Destroy();
-
-    //        emitter.Active = false;
-
-    //        //orb.Visible = true;
-
-    //        base.Destroy(callGC);
-    //    }
-
-    //    public override void Update(GameTime gameTime)
-    //    {
-    //        base.Update(gameTime);
-
-    //        emitter.Position = player.Position;
-    //        emitter.SpawnPosition = Position;
-
-    //        cooldown = Math.Max(cooldown - 1, 0);
-    //        if (cooldown > 0)
-    //            Damage = 0;
-    //        else
-    //        {
-    //            Damage = (lifeTime > 0) ? 1 : 0;
-    //        }
-
-    //        if (lifeTime < (maxLifeTime - 30) && orb.State != OrbState.ATTACK)
-    //        {
-    //            HeadBack();
-    //            lifeTime = 0;
-    //        }
-
-    //        if (MathUtil.Euclidean(Position, originalPosition) >= maxDist)
-    //        {
-    //            HeadBack();
-    //        }
-
-    //        var ang = MathUtil.VectorToAngle(new Vector2(orb.X - X, orb.Y - Y));
-    //        XVel += spd * (float)(MathUtil.LengthDirX(ang));
-    //        YVel += spd * (float)(MathUtil.LengthDirY(ang));
-
-    //        spd = Math.Min(spd + acc, .5f);
-
-    //        XVel = MathUtil.AtMost(XVel, maxVel);
-    //        YVel = MathUtil.AtMost(YVel, maxVel);
-
-    //        var coins = this.CollisionBounds<Coin>(X, Y);
-    //        foreach (var coin in coins)
-    //        {
-    //            coin.Take(player);
-    //        }
-
-    //        lifeTime = Math.Max(lifeTime - 1, 0);
-    //        if (lifeTime == 0)
-    //        {
-    //            ang = MathUtil.VectorToAngle(new Vector2(orb.X - X, orb.Y - Y));
-    //            XVel = 1.5f * (float)(MathUtil.LengthDirX(ang));
-    //            YVel = 1.5f * (float)(MathUtil.LengthDirY(ang));
-    //            if (this.CollisionBounds(orb, X, Y))
-    //                FinishUp();
-    //        }
-
-    //        Move(XVel, YVel);
-    //        Move(.5f * player.XVel, .5f * player.YVel);
-
-    //        Scale = new Vector2((XVel < 0) ? -scale : scale, scale);
-
-    //        SetAnimation(15, 16, .3f, true);
-    //    }
-
-    //    private void HeadBack()
-    //    {
-    //        if (headBack)
-    //            return;
-
-    //        XVel *= .5f;
-    //        YVel *= .5f;
-
-    //        var ang = MathUtil.VectorToAngle(new Vector2(XVel, YVel)) + 90 * Math.Sign((int)orb.Direction);
-    //        XVel -= 2 * (float)(MathUtil.LengthDirX(ang));
-    //        YVel -= 2 * (float)(MathUtil.LengthDirY(ang));
-
-    //        headBack = true;
-    //    }
-
-    //    private void FinishUp()
-    //    {
-    //        if (key != null)
-    //        {
-    //            player.Stats.KeysAndKeyblocks.Add(key.ID);
-    //            player.GetKey();
-
-    //            new KeyBurstEmitter(X, Y, orb);
-    //        }
-    //        //orb.Position = Position;
-    //        orb.Cooldown = 10;
-    //        Destroy();
-    //    }
-
-    //    public override void Draw(SpriteBatch sb, GameTime gameTime)
-    //    {
-    //        base.Draw(sb, gameTime);
-
-    //        sb.Draw(AssetManager.Projectiles[17], orb.Position, null, Color, 0, new Vector2(8), Vector2.One, SpriteEffects.None, Depth);
-
-    //        if (key != null)
-    //        {
-    //            sb.Draw(key.Texture, Position + new Vector2((int)0, 0), null, Color, 0, DrawOffset, Vector2.One, SpriteEffects.None, Depth + .0001f);
-    //        }
-    //    }
-
-    //    public override void HandleCollision(GameObject obj)
-    //    {
-    //        if (cooldown == 0)
-    //            cooldown = 4;
-    //        return;
-    //    }
-    //}
+        public override void HandleCollision(GameObject obj)
+        {
+            //throw new NotImplementedException();
+        }
+    }
 }

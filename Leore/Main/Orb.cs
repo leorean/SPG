@@ -293,7 +293,18 @@ namespace Leore.Main
 
                                     break;
                                 case SpellType.ICE: // ++++ Boomerang ++++                                    
-                                    new IceProjectile(player.X, player.Y, Level);
+
+                                    switch (Level)
+                                    {
+                                        case SpellLevel.ONE:
+                                        case SpellLevel.TWO:                                            
+                                            new IceProjectile(player.X, player.Y, Level);
+                                            break;
+                                        case SpellLevel.THREE:
+                                            IceSpell.Create(TargetPosition.X, TargetPosition.Y, Level);
+                                            break;
+                                    }
+                                                                        
                                     break;
                                 // TODO: other spells!!!
                                 default:

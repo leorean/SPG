@@ -27,9 +27,9 @@ namespace Leore.Objects.Projectiles
         float power = 0;
         float maxPower = 0;
 
-        private int level;
+        private int intLevel;
 
-        public CrimsonSpell(Orb orb) : base(orb.X, orb.Y)
+        public CrimsonSpell(Orb orb) : base(orb.X, orb.Y, orb.Level)
         {
             Parent = orb;
             this.orb = orb;
@@ -49,7 +49,7 @@ namespace Leore.Objects.Projectiles
             maxPower = 30 * (int)orb.Level;
 
             //level = Math.Min(MathUtil.Div(power, 30), (int)orb.Level - 1);
-            level = (int)orb.Level - 1;
+            intLevel = (int)orb.Level - 1;
 
             power = Math.Min(power + 1, maxPower);
 
@@ -66,7 +66,7 @@ namespace Leore.Objects.Projectiles
                     var x = orb.Parent.X;
                     var y = orb.Parent.Y;
 
-                    switch (level)
+                    switch (intLevel)
                     {
                         case 0:
                             SpawnProjectile(x, y, degAngle);
@@ -152,7 +152,7 @@ namespace Leore.Objects.Projectiles
 
                 // arrow
 
-                var arrow = AssetManager.Projectiles[4 + level];
+                var arrow = AssetManager.Projectiles[4 + intLevel];
                 sb.Draw(arrow, Position + recoil, null, Color, Angle + (float)MathUtil.DegToRad(45), DrawOffset, Scale, SpriteEffects.None, Depth + .0001f);                
             }
         }

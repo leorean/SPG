@@ -9,10 +9,13 @@ namespace Leore.Objects.Projectiles
     /// <summary>
     /// Every spell should inherit from this object, else there are problems when holding a spell at the room border or while changing rooms
     /// </summary>
-    public abstract class SpellObject : GameObject, IKeepEnabledAcrossRooms
+    public abstract class SpellObject : GameObject, IKeepEnabledAcrossRooms, IKeepAliveBetweenRooms
     {
-        public SpellObject(float x, float y, string name = null) : base(x, y, name)
+        protected SpellLevel level;
+
+        public SpellObject(float x, float y, SpellLevel level) : base(x, y)
         {
+            this.level = level;
         }
     }
 
@@ -21,13 +24,10 @@ namespace Leore.Objects.Projectiles
         public int Damage { get; set; } = 1;
 
         public SpellElement Element { get; protected set; } = SpellElement.NONE;
-
-        protected SpellLevel level;
-
-        public PlayerProjectile(float x, float y, SpellLevel level) : base(x, y)
+        
+        public PlayerProjectile(float x, float y, SpellLevel level) : base(x, y, level)
         {
-            Depth = Globals.LAYER_PROJECTILE;
-            this.level = level;
+            Depth = Globals.LAYER_PROJECTILE;            
         }
 
         public override void Update(GameTime gameTime)

@@ -17,7 +17,7 @@ using Leore.Resources;
 
 namespace Leore.Objects.Projectiles
 {
-    public class FireSpell : SpellObject, IKeepAliveBetweenRooms, IKeepEnabledAcrossRooms
+    public class FireSpell : SpellObject
     {
         private Player player => GameManager.Current.Player;
         private Orb orb => GameManager.Current.Player.Orb;
@@ -31,16 +31,14 @@ namespace Leore.Objects.Projectiles
         private int delay;
         
         private double t;
-
-        private SpellLevel level;
-
+        
         private int iteration;
         
         public int ArcSpeed { get; set; } = 10;
         public int ArcAngle { get; set; }
         public List<FireArcProjectile> ArcProjectiles { get; set; }  = new List<FireArcProjectile>();
 
-        public FireSpell(float x, float y, SpellLevel level) : base(x, y)
+        public FireSpell(float x, float y, SpellLevel level) : base(x, y, level)
         {
             switch (level)
             {
@@ -155,10 +153,9 @@ namespace Leore.Objects.Projectiles
                 }
             }
             
-            if (orb.State != OrbState.ATTACK || level != orb.Level || player.MP < GameResources.MPCost[SpellType.FIRE][level])
+            if (orb.State != OrbState.ATTACK || orb.Type != SpellType.FIRE || level != orb.Level || player.MP < GameResources.MPCost[SpellType.FIRE][level])
             {
-                new CrimsonBurstEmitter(orb.X, orb.Y) { ParticleColors = GameResources.FireColors };
-
+                new SaveBurstEmitter(orb.X, orb.Y) { ParticleColors = GameResources.FireColors };
                 Destroy();
             }            
         }
