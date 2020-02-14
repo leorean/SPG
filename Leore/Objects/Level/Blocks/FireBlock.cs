@@ -24,49 +24,58 @@ namespace Leore.Objects.Level.Blocks
 
         public int OriginalTextureID { get; set; }
 
+        private float hp;
+
         public FireBlock(float x, float y, Room room, int hp) : base(x, y, room, hp)
         {
             maxHp = HP;
             obstacle = new ObstacleBlock(x, y, room) { Parent = this };
+
+            this.hp = HP;
         }
 
         public override void Update(GameTime gameTime)
         {
             //base.Update(gameTime);
+            
+            Texture = GameManager.Current.Map.TileSet[OriginalTextureID - maxHp + HP];
 
-            Texture = GameManager.Current.Map.TileSet[OriginalTextureID - maxHp + HP]; 
-
+            HP = (int)Math.Ceiling(hp);
+            
             if (HP <= 1 && obstacle != null)
             {
                 obstacle.Parent = null;
                 obstacle.Destroy();
                 obstacle = null;
-            }
-
-            if (HP == 0)
-                Destroy();
+            }            
         }
 
         public override bool Hit(int damage, SpellElement element)
         {
-            if (damage == 0 || HP == 0)
+            if (damage == 0 || hp == 0)
                 return false;
 
             if (element != SpellElement.ICE)// && element != SpellElement.ROLLDAMAGE)
                 return false;
 
-            if (HP <= damage)
+            var dmg = damage / 10f;
+
+            hp = Math.Max(hp - dmg, 0);
+
+            if (hp <= dmg)
             {
                 var eff = new DestroyEmitter(Center.X, Center.Y, 6);
                 new SingularEffect(Center.X, Center.Y, 15) { Depth = eff.Depth + .0001f, Scale = new Vector2(.5f) };
+                Destroy();
             }
             else
             {
-                new SingularEffect(Center.X, Center.Y, 16);
+                var eff = new SingularEffect(Center.X, Center.Y, 16);
+                eff.Depth = Depth + .0001f;
             }
-            
-            HP = Math.Max(HP - damage, 0);
 
+            //HP = Math.Max(HP - damage, 0);
+            
             return true;
         }
 
