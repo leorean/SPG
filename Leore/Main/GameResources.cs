@@ -79,7 +79,7 @@ namespace Leore.Resources
                 new Dictionary<SpellLevel, int> {
                     {SpellLevel.ONE, 80 },
                     {SpellLevel.TWO, 240 },
-                    {SpellLevel.THREE, 300 }
+                    {SpellLevel.THREE, 260 }
                 }
             },
             {
@@ -138,7 +138,7 @@ namespace Leore.Resources
                 SpellType.FIRE,
                 new Dictionary<SpellLevel, float> {
                     {SpellLevel.ONE, 1 },
-                    {SpellLevel.TWO, 2 },
+                    {SpellLevel.TWO, 4 },
                     {SpellLevel.THREE, .2f }                    
                 }
             },
@@ -147,7 +147,7 @@ namespace Leore.Resources
                 new Dictionary<SpellLevel, float> {
                     {SpellLevel.ONE, 1f },
                     {SpellLevel.TWO, .5f },
-                    {SpellLevel.THREE, .5f }
+                    {SpellLevel.THREE, .75f }
                 }
             },
         };

@@ -257,7 +257,7 @@ namespace Leore.Objects.Projectiles
             XVel = spd * (float)MathUtil.LengthDirX(angle);
             YVel = spd * (float)MathUtil.LengthDirY(angle);
 
-            Angle = (float)MathUtil.DegToRad(offAngle + 90);
+            Angle = (float)MathUtil.DegToRad(offAngle - 45);
 
             // movement
 

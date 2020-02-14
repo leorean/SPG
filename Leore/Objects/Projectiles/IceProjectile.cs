@@ -13,6 +13,7 @@ using Leore.Objects.Obstacles;
 using Leore.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SPG.Map;
 using SPG.Objects;
 using SPG.Util;
 
@@ -342,11 +343,23 @@ namespace Leore.Objects.Projectiles
         public IceSpell Target { get; set; }
         public float TargetAngle { get; set; }
         private IceEmitter emitter;
-        
+
+        private LightSource light;
+
+        private Vector2 origin;
+
+        bool dead;
+
         public IceArcProjectile(float x, float y, IceSpell spell) : base(x, y, SpellLevel.TWO)
         {
-            AnimationTexture = AssetManager.Projectiles;
-            SetAnimation(29, 30, .2f, true);
+            //Texture = AssetManager.Projectiles[11];
+            //AnimationTexture = AssetManager.Projectiles;
+            //SetAnimation(29, 30, .2f, true);
+
+            Angle = (float)MathUtil.DegToRad(RND.Int(360));
+
+            Texture = AssetManager.Projectiles[11];
+            Scale = new Vector2(.5f);
 
             DrawOffset = new Vector2(8);
             BoundingBox = new RectF(-4, -4, 8, 8);
@@ -359,6 +372,8 @@ namespace Leore.Objects.Projectiles
 
             emitter = new IceEmitter(X, Y);
             emitter.SpawnTimeout = 10;
+
+            light = new LightSource(this) { Active = true, Scale = new Vector2(.45f) };
         }
 
         public override void Update(GameTime gameTime)
@@ -368,13 +383,18 @@ namespace Leore.Objects.Projectiles
             emitter.Position = Target != null ? Target.Position : Position;
             emitter.SpawnPosition = Position;
 
-            Scale = (XVel > 0) ? new Vector2(1, 1) : new Vector2(-1, 1);
+            //Scale = (XVel > 0) ? new Vector2(1, 1) : new Vector2(-1, 1);
+            //Angle = (float)MathUtil.VectorToAngle(new Vector2(XVel, YVel), true);
+            
+            Scale = new Vector2(Math.Min(Scale.X + .01f, 1));
 
-            var xCol = GameManager.Current.Map.CollisionTile(X + XVel, Y);
-            var yCol = GameManager.Current.Map.CollisionTile(X, Y + YVel);
+            var xCol = GameManager.Current.Map.CollisionTile(X + XVel, Y) || GameManager.Current.Map.CollisionTile(X + XVel, Y, GameMap.WATER_INDEX);
+            var yCol = GameManager.Current.Map.CollisionTile(X, Y + YVel) || GameManager.Current.Map.CollisionTile(X, Y + YVel, GameMap.WATER_INDEX);
             
             if (Target != null)
             {
+                origin = Position;
+
                 var inBlock = GameManager.Current.Map.CollisionTile(X, Y);                
                 if (inBlock)
                     Destroy();
@@ -405,6 +425,7 @@ namespace Leore.Objects.Projectiles
 
             if (!yCol) { Move(0, YVel); } else { YVel *= -.25f; }
 
+            if (MathUtil.Euclidean(origin, Position) > 6 * Globals.T) Destroy();
             if (Target == null && (xCol || yCol)) { Destroy(); }
 
             XVel = MathUtil.AtMost(XVel, 3);
@@ -413,12 +434,20 @@ namespace Leore.Objects.Projectiles
 
         public override void Destroy(bool callGC = false)
         {
+            if (dead)
+                return;
+
+            dead = true;
+
             emitter.Active = false;
 
             if (Target != null)
             {
                 Target.Projectiles.Remove(this);
             }
+
+            FadeOutLight.Create(this, light.Scale);
+
             new SingularEffect(X, Y, 10);
             base.Destroy(callGC);            
         }
