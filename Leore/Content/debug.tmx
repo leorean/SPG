@@ -8694,15 +8694,15 @@
    <properties>
     <property name="itemName" value="Earth Totem"/>
     <property name="itemType" type="int" value="8"/>
-    <property name="text">You've found the ~Earth Totem~!
-Press #d + #r / #l to roll.</property>
+    <property name="text">You found the ~Earth Totem~!
+Press #d + #r / #l to ~roll~.</property>
    </properties>
   </object>
   <object id="1424" name="Ability: Levitate" type="item" x="944" y="208" width="16" height="16">
    <properties>
     <property name="itemName" value="Leaf Wings"/>
     <property name="itemType" type="int" value="9"/>
-    <property name="text">You've found the ~Leaf Wings~!
+    <property name="text">You found the ~Leaf Wings~!
 With their magical power, you're able to ~levitate~!</property>
    </properties>
   </object>
@@ -8710,17 +8710,17 @@ With their magical power, you're able to ~levitate~!</property>
    <properties>
     <property name="itemName" value="Clacicon"/>
     <property name="itemType" type="int" value="11"/>
-    <property name="text" value="Learned spell: ~Ice~!"/>
+    <property name="text" value="Learned to cast ~Ice~!"/>
    </properties>
   </object>
-  <object id="1426" name="Spell: Grab Keys" type="item" x="928" y="240" width="16" height="16">
+  <object id="1426" name="Spell: Snatch" type="item" x="928" y="240" width="16" height="16">
    <properties>
     <property name="appearCondition" value=""/>
     <property name="itemName" value="Snatch"/>
     <property name="itemType" type="int" value="3"/>
     <property name="setCondition" value="hasSnatch"/>
-    <property name="text">Learned spell: ~Snatch~!
-With this, keys can be stored and will be used when needed.
+    <property name="text">Learned to cast ~Snatch~!
+|With this spell, keys can be stored and will be used when needed.
 |Disclaimer:
 * &quot;[888888]~Keys can only be used in the same area.~&quot;
 * &quot;[888888]~Use ~#u[888888]~ or ~#d[888888]~ to direct the spell.~&quot;</property>
@@ -8731,7 +8731,7 @@ With this, keys can be stored and will be used when needed.
     <property name="itemName" value="Shooting Star"/>
     <property name="itemType" type="int" value="2"/>
     <property name="setCondition" value="hasSpell"/>
-    <property name="text" value="Learned spell: ~Shooting Star~!"/>
+    <property name="text" value="Learned to cast ~Shooting Star~!"/>
    </properties>
   </object>
   <object id="1428" name="Ability: Double Jump" type="item" x="976" y="208" width="16" height="16">
@@ -8740,7 +8740,7 @@ With this, keys can be stored and will be used when needed.
     <property name="itemName" value="Seraph Cape"/>
     <property name="itemType" type="int" value="4"/>
     <property name="setCondition" value="hasDoubleJump"/>
-    <property name="text">You found the ~Seraph Cape~.
+    <property name="text">You found the ~Seraph Cape~!
 |Now you can perform a jump in mid-air!</property>
    </properties>
   </object>
@@ -8748,7 +8748,7 @@ With this, keys can be stored and will be used when needed.
    <properties>
     <property name="itemName" value="Flamicon"/>
     <property name="itemType" type="int" value="5"/>
-    <property name="text" value="Learned spell: ~Fire~!"/>
+    <property name="text" value="Learned to cast ~Fire~!"/>
    </properties>
   </object>
  </objectgroup>

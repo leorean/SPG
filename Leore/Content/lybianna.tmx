@@ -173042,7 +173042,7 @@ It will prevent ~fall damage~.</property>
   </object>
   <object id="1444" type="shopItem" x="2560" y="1536" width="16" height="16">
    <properties>
-    <property name="acquireText" value="Learned spell: ~Crimson Arc~."/>
+    <property name="acquireText" value="Learned to cast ~Crimson Arc~!"/>
     <property name="appearCondition" value="hasSpell"/>
     <property name="displayText" value="A dark, powerful aura surrounds the pages of this book.."/>
     <property name="itemName" value="Crimson Book"/>
