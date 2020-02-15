@@ -11,7 +11,7 @@
 	- Stars destroy blocks
 
 - Key Orb (DONE):
-	- Snatches keys
+	- Grabs keys
 	
 - Crimson Orb (DONE):
 	- Bow
@@ -28,18 +28,18 @@
 - Earth Orb:
 	- shoot balistic stones (strong but high cooldown?)
 
-- ???? Orb:
+- Ice Orb (DONE):
 	- ???
 
 (Elements)
 
 - Fire:
-- Water:
-- Lightning:
 - Ice:
+- Lightning:
+- Plant:
 - Stone:
 - Light:
-- Shadow:
+- Dark:
 
 ~~~ Items ~~~
 

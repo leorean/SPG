@@ -19,7 +19,8 @@ namespace Leore.Objects.Level.Blocks
         private int regenDelay;
 
         private float hp;
-        
+        private float cooldown;
+
         public IceBlock(float x, float y, Room room) : base(x, y, room, 6)
         {
             maxHp = HP;
@@ -31,11 +32,13 @@ namespace Leore.Objects.Level.Blocks
             //base.Update(gameTime);
 
             HP = (int)Math.Ceiling(hp);
-            
+
+            cooldown = Math.Max(cooldown - 1, 0);
+
             regenDelay = Math.Max(regenDelay - 1, 0);
-            if (regenDelay == 0)
+            if (cooldown == 0&& regenDelay == 0)
             {
-                hp = (int)Math.Min(hp + .2f, maxHp);
+                hp = Math.Min(hp + .1f, maxHp);
                 regenDelay = 10;
             }
 
@@ -45,12 +48,14 @@ namespace Leore.Objects.Level.Blocks
             }
         }
 
-        public override bool Hit(int damage, SpellElement element)
+        public override bool Hit(PlayerProjectile projectile)
         {
-            if (damage == 0 || HP == 0 || element != SpellElement.FIRE)
+            if (projectile.Damage == 0 || HP == 0 || projectile.Element != SpellElement.FIRE || cooldown > 0)
                 return false;
 
-            var dmg = 1;
+            cooldown = 10;
+
+            var dmg = projectile.Damage;
             
             if (hp <= dmg)
             {

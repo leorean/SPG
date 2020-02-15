@@ -21,30 +21,38 @@ namespace Leore.Main
         ATTACK
     }
 
+    /// <summary>
+    /// Depending on the element, certain objects behave differently (are immune or triggered...)
+    /// </summary>
     public enum SpellElement
     {
         NONE = 0,
+
+        LIGHT,
+        DARK,
+
         FIRE,
         ICE,
-        WIND,
-        EARTH,
-        DARK,
-        ROLLDAMAGE // special case: player rolls through blocks
 
-        // .. TODO
+        PLANT,
+        STONE        
     }
 
     public enum SpellType
     {
-        NONE = 0,
-        STAR,
-        CRIMSON_ARC,
-        VOID,
-        SNATCH_KEYS,
-        FIRE,
-        ICE,
-        //ROCK,
-        //LIGHTNING,        
+        NONE,                   // = SpellElement.NONE,
+        CRIMSON_ARC,            // = SpellElement.NONE,
+        SNATCH_KEYS,            // = SpellElement.NONE,
+
+        STAR,                   // = SpellElement.LIGHT,
+        VOID,                   // = SpellElement.DARK,
+
+        FIRE,                   // = SpellElement.FIRE,
+        ICE,                    // = SpellElement.ICE
+
+        ROCK,                   // = SpellElement.NONE
+        PLANT,                  // = SpellElement.NONE
+        LIGHTNING               // = SpellElement.NONE
     }
 
     public enum SpellLevel

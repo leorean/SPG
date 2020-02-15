@@ -27,17 +27,17 @@ namespace Leore.Objects.Level.Blocks
             if (HP == 2) Texture = tex2;
         }
 
-        public virtual bool Hit(int damage, SpellElement element = SpellElement.NONE)
+        public virtual bool Hit(PlayerProjectile projectile)
         {
-            if (damage == 0 || HP == 0)
+            if (projectile.Damage == 0 || HP == 0)
                 return false;
 
-            if (HP > damage)
+            if (HP > projectile.Damage)
                 new SingularEffect(Center.X - 4 + (float)(RND.Next * 8), Center.Y - 4 + (float)(RND.Next * 8), 5);
             else
                 new DestroyEmitter(X + 8, Y + 8);
             
-            HP = Math.Max(HP - damage, 0);
+            HP = Math.Max(HP - projectile.Damage, 0);
 
             if (HP == 1) Texture = tex1;
             if (HP == 2) Texture = tex2;
@@ -66,9 +66,12 @@ namespace Leore.Objects.Level.Blocks
 
         }
 
-        public override bool Hit(int damage, SpellElement element = SpellElement.NONE)
+        public override bool Hit(PlayerProjectile projectile)
         {
-            if (damage == 0 || HP == 0 || element != SpellElement.ROLLDAMAGE)
+            if (!(projectile is RollDamageProjectile))
+                return false;
+
+            if (projectile.Damage == 0 || HP == 0)
                 return false;
 
             new DestroyEmitter(X + 8, Y + 8, 7);

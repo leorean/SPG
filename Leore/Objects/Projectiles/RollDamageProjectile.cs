@@ -16,7 +16,7 @@ namespace Leore.Objects.Projectiles
         public RollDamageProjectile(Player player) : base(player.X, player.Y, SpellLevel.ONE)
         {
             Damage = 1;
-            Element = SpellElement.ROLLDAMAGE;
+            //Element = SpellElement.ROLLDAMAGE;
             BoundingBox = new SPG.Util.RectF(-4, -4, 8, 8);
             //DebugEnabled = true;
 

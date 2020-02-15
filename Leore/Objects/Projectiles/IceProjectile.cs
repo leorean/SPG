@@ -63,7 +63,7 @@ namespace Leore.Objects.Projectiles
             Element = SpellElement.ICE;
             
             Depth = orb.Depth + .0002f;
-            BoundingBox = new RectF(-4, -4, 8, 8);
+            BoundingBox = new RectF(-2, -2, 4, 4);
             DrawOffset = new Vector2(8);
 
             scale = 1f;
@@ -90,12 +90,7 @@ namespace Leore.Objects.Projectiles
                     orb.Cooldown = 40;
                     dmg = 3;
                     maxVel = 5;
-                    break;
-                //case SpellLevel.TWO:
-                //    orb.Cooldown = 30;
-                //    dmg = 2;
-                //    maxVel = 5.5f;
-                //    break;
+                    break;                
                 case SpellLevel.TWO:
                     SetAnimation(20, 23, .2f, false);
                     angle = angle - 10 + RND.Int(20);
@@ -221,9 +216,12 @@ namespace Leore.Objects.Projectiles
 
         public override void HandleCollision(GameObject obj)
         {
-            if (cooldown == 0)
-                cooldown = 10;
-            return;            
+            if (cooldown > 0)
+                return;
+
+            cooldown = 10;
+            if (obj is FireBlock)
+                FinishUp();
         }
     }
 
@@ -355,7 +353,7 @@ namespace Leore.Objects.Projectiles
             //Texture = AssetManager.Projectiles[11];
             //AnimationTexture = AssetManager.Projectiles;
             //SetAnimation(29, 30, .2f, true);
-
+            
             Angle = (float)MathUtil.DegToRad(RND.Int(360));
 
             Texture = AssetManager.Projectiles[11];

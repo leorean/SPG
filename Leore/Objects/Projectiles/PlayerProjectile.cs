@@ -48,7 +48,7 @@ namespace Leore.Objects.Projectiles
 
         public virtual void HandleCollisionFromDestroyBlock(DestroyBlock block)
         {
-            if (block.Hit(Damage, Element))
+            if (block.Hit(this))
             {
                 HandleCollision(block);
             }

@@ -104,7 +104,7 @@ namespace Leore.Objects.Projectiles
             var radius = Math.Max((32 - 6) * Scale.X, 0);
             var bx = -radius;
             var bw = 2 * radius;
-            BoundingBox = new SPG.Util.RectF(bx, bx, bw, bw);
+            BoundingBox = new RectF(bx, bx, bw, bw);
 
             if (!free)
             {
@@ -127,46 +127,43 @@ namespace Leore.Objects.Projectiles
                 }
             } else
             {
-                //if (level > SpellLevel.ONE)
+                var t = 1 * Globals.T;
+                var enemies = this.CollisionRectangles<Enemy>(Left - t, Top - t, Right + t, Bottom + t);
+                foreach (var enemy in enemies)
                 {
-                    var t = 1 * Globals.T;
-                    var enemies = this.CollisionRectangles<Enemy>(Left - t, Top - t, Right + t, Bottom + t);
-                    foreach (var enemy in enemies)
-                    {
-                        if (enemy is Boss)
-                            continue;
+                    if (enemy is Boss)
+                        continue;
 
-                        var angle = MathUtil.VectorToAngle(enemy.Center - Center);
+                    var angle = MathUtil.VectorToAngle(enemy.Center - Center);
 
-                        var lx = (float)MathUtil.LengthDirX(angle);
-                        var ly = (float)MathUtil.LengthDirY(angle);
+                    var lx = (float)MathUtil.LengthDirX(angle);
+                    var ly = (float)MathUtil.LengthDirY(angle);
 
-                        var sign = -1;
+                    var sign = -1;
 
-                        var ex = enemy.XVel + lx * sign * succ;
-                        var ey = enemy.YVel + ly * sign * succ;
+                    var ex = enemy.XVel + lx * sign * succ;
+                    var ey = enemy.YVel + ly * sign * succ;
 
-                        enemy.XVel = MathUtil.AtMost(ex, 2);
-                        enemy.YVel = MathUtil.AtMost(ey, 2);
-                    }
+                    enemy.XVel = MathUtil.AtMost(ex, 2);
+                    enemy.YVel = MathUtil.AtMost(ey, 2);
+                }
 
-                    var coins = this.CollisionRectangles<Coin>(Left - t, Top - t, Right + t, Bottom + t);
-                    foreach (var coin in coins)
-                    {
-                        coin.SetLoose();
-                        var angle = MathUtil.VectorToAngle(coin.Center - Center);
+                var coins = this.CollisionRectangles<Coin>(Left - t, Top - t, Right + t, Bottom + t);
+                foreach (var coin in coins)
+                {
+                    coin.SetLoose();
+                    var angle = MathUtil.VectorToAngle(coin.Center - Center);
 
-                        var lx = (float)MathUtil.LengthDirX(angle);
-                        var ly = (float)MathUtil.LengthDirY(angle);
+                    var lx = (float)MathUtil.LengthDirX(angle);
+                    var ly = (float)MathUtil.LengthDirY(angle);
 
-                        var sign = -1;
+                    var sign = -1;
 
-                        var ex = coin.XVel + lx * sign * succ;
-                        var ey = coin.YVel + ly * sign * succ;
+                    var ex = coin.XVel + lx * sign * succ;
+                    var ey = coin.YVel + ly * sign * succ;
 
-                        coin.XVel = MathUtil.AtMost(ex, 2);
-                        coin.YVel = MathUtil.AtMost(ey, 2);
-                    }
+                    coin.XVel = MathUtil.AtMost(ex, 2);
+                    coin.YVel = MathUtil.AtMost(ey, 2);
                 }
             }
 
@@ -196,7 +193,6 @@ namespace Leore.Objects.Projectiles
 
             emitter.Position = Position;
             
-            //if (Scale.X == maxScale)
             if(isStatic && Scale.X == 0)
             {
                 Destroy();
@@ -216,24 +212,12 @@ namespace Leore.Objects.Projectiles
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
-            //if (isStatic)
-            //{
-            //    for (var i = 0; i < 3; i++)
-            //    {
-            //        var angle = RND.Next * 360;
-
-            //        var lx = (float)MathUtil.LengthDirX(angle);
-            //        var ly = (float)MathUtil.LengthDirY(angle);
-
-            //        sb.DrawLightning(Position, Position + new Vector2(lx * Scale.X * 48, ly * Scale.X * 48), new Color(Color.Black, alpha), Depth - .0002f);
-            //    }
-            //}
+            //base.Draw(sb, gameTime);
 
             angle1 += .1f;
             angle2 += .2f;
             angle3 += .3f;
-
-            //base.Draw(sb, gameTime);
+            
             sb.Draw(AssetManager.VoidCircle[0], Position, null, new Color(Color, alpha * .3f), angle1, DrawOffset, Scale, SpriteEffects.None, Depth + .00001f);
             sb.Draw(AssetManager.VoidCircle[1], Position, null, new Color(Color, alpha * .5f), angle2, DrawOffset, Scale, SpriteEffects.None, Depth + .00002f);
             sb.Draw(AssetManager.VoidCircle[2], Position, null, new Color(Color, alpha * .8f), angle3, DrawOffset, Scale, SpriteEffects.None, Depth + .00003f);
@@ -243,8 +227,6 @@ namespace Leore.Objects.Projectiles
 
         public override void HandleCollision(GameObject obj)
         {
-            //throw new NotImplementedException();
-
             if (hitTimer == 0)
                 hitTimer = delay;
 
@@ -262,7 +244,7 @@ namespace Leore.Objects.Projectiles
         public override void HandleCollisionFromDestroyBlock(DestroyBlock block)
         {
             //base.HandleCollisionFromDestroyBlock(block);
-            block.Hit(Damage, Element);
+            block.Hit(this);
         }
         
     }

@@ -63,8 +63,7 @@ namespace Leore.Objects.Level
                 }
 
                 if (projectile.Element == SpellElement.ICE 
-                    || projectile.Element == SpellElement.DARK
-                    || projectile.Element == SpellElement.WIND)
+                    || projectile.Element == SpellElement.DARK)
                 {
                     if (Active)
                         new SingularEffect(Center.X, Center.Y, 7);

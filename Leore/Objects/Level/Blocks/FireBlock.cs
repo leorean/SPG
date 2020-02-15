@@ -50,15 +50,15 @@ namespace Leore.Objects.Level.Blocks
             }            
         }
 
-        public override bool Hit(int damage, SpellElement element)
+        public override bool Hit(PlayerProjectile projectile)
         {
-            if (damage == 0 || hp == 0)
+            if (projectile.Damage == 0 || hp == 0)
                 return false;
 
-            if (element != SpellElement.ICE)// && element != SpellElement.ROLLDAMAGE)
+            if (projectile.Element != SpellElement.ICE)
                 return false;
 
-            var dmg = damage / 10f;
+            var dmg = .5f;//damage / 10f;
 
             hp = Math.Max(hp - dmg, 0);
 
@@ -77,15 +77,6 @@ namespace Leore.Objects.Level.Blocks
             //HP = Math.Max(HP - damage, 0);
             
             return true;
-        }
-
-        //public override void Draw(SpriteBatch sb, GameTime gameTime)
-        //{
-        //    base.Draw(sb, gameTime);
-
-        //    var alpha =(HP - 1) / maxHp;
-        //    var col = new Color(Color, 1f - alpha);
-        //    sb.Draw(AssetManager.Particles[12], Position + new Vector2(8), null, col, Angle, new Vector2(8), Scale, SpriteEffects.None, Depth + .0001f);
-        //}
+        }        
     }
 }
