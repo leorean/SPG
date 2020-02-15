@@ -118,6 +118,8 @@ namespace Leore.Main
 
             // ++++ Maps +++++
 
+            GameManager.Current.AddGameMap(ContentUtil.GetResourceStream("debug"));
+
             GameManager.Current.AddGameMap(ContentUtil.GetResourceStream("sanctuary"));
             GameManager.Current.AddGameMap(ContentUtil.GetResourceStream("lybianna"));
             GameManager.Current.AddGameMap(ContentUtil.GetResourceStream("tealglade_woods"));
@@ -133,10 +135,7 @@ namespace Leore.Main
             //GameManager.Current.AddGameMap("great_cavern");
             //GameManager.Current.AddGameMap("nethervault_temple");
             //GameManager.Current.AddGameMap("pine_woods");
-
-            // debug maps:
-            //GameManager.Current.AddGameMap("worldMap");
-
+                        
             HUD = new HUD();
             HUD.Texture = AssetManager.HUD;
 
@@ -229,6 +228,11 @@ namespace Leore.Main
                         Debug.WriteLine("Saved.");
                     }
 
+                    if (Input.IsKeyPressed(Keys.L, Input.State.Pressed))
+                    {
+                        RoomCamera.Current.ChangeRoomsToPosition(new Vector2(2 * Globals.T - 8, 8 * Globals.T - 8), Objects.Effects.Transition.TransitionType.LIGHT, Direction.NONE, "debug", null);
+                    }
+
                     //if (Input.IsKeyPressed(Keys.D5, Input.State.Pressed))
                     //{
                     //    RoomCamera.Current.Zoom -= .1f;
@@ -289,7 +293,8 @@ namespace Leore.Main
                             GameManager.Current.AddSpell(SpellType.FIRE);
 
                             //GameManager.Current.RemoveSpell(SpellType.NONE);
-                            //GameManager.Current.AddSpell(SpellType.VOID);
+
+                            GameManager.Current.AddSpell(SpellType.VOID);
 
                             //GameManager.Current.Player.Stats.MaxHP = 5;
                             //GameManager.Current.Player.Stats.MaxMP = 30;

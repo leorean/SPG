@@ -81,84 +81,102 @@ namespace Leore.Objects.Projectiles
 
             if (delay == 0)
             {
-
-                player.MP = Math.Max(player.MP - GameResources.MPCost[SpellType.FIRE][level], 0);
-
+                
                 switch (level)
                 {
                     case SpellLevel.ONE:
                         {
-                            FireBallProjectile proj = null;
-                            if (iteration == 0)
+                            if (player.MP > 0)
                             {
-                                proj = new FireBallProjectile(X, Y);
-                                proj.XVel = Math.Sign((int)player.Direction) * 1.5f;
-                                proj.YVel = -1f;
-                            }
-                            if (iteration == 1)
-                            {
-                                proj = new FireBallProjectile(X, Y);
-                                proj.XVel = Math.Sign((int)player.Direction) * 1.5f;
-                                proj.YVel = -1.5f;
-                            }
-                            if (iteration == 2)
-                            {
-                                proj = new FireBallProjectile(X, Y);
-                                proj.XVel = Math.Sign((int)player.Direction) * 1.35f;
-                                proj.YVel = -1.75f;
-                            }
-
-                            if (proj != null)
-                            {
-                                if (player.LookDirection == Direction.UP)
+                                FireBallProjectile proj = null;
+                                if (iteration == 0)
                                 {
-                                    proj.XVel *= .5f;
-                                    proj.YVel -= .5f;
+                                    SubtractMP();
+                                    proj = new FireBallProjectile(X, Y);
+                                    proj.XVel = Math.Sign((int)player.Direction) * 1.5f;
+                                    proj.YVel = -1f;
                                 }
-                                if (player.LookDirection == Direction.DOWN)
+                                if (iteration == 1)
                                 {
-                                    proj.XVel *= .5f;
-                                    proj.YVel += 1f;
-                                }                                
-                            }
+                                    SubtractMP();
+                                    proj = new FireBallProjectile(X, Y);
+                                    proj.XVel = Math.Sign((int)player.Direction) * 1.5f;
+                                    proj.YVel = -1.5f;
+                                }
+                                if (iteration == 2)
+                                {
+                                    SubtractMP();
+                                    proj = new FireBallProjectile(X, Y);
+                                    proj.XVel = Math.Sign((int)player.Direction) * 1.35f;
+                                    proj.YVel = -1.75f;
+                                }
 
-                            iteration = (iteration + 1) % 6;
-                            delay = 8;
+                                if (proj != null)
+                                {
+                                    if (player.LookDirection == Direction.UP)
+                                    {
+                                        proj.XVel *= .5f;
+                                        proj.YVel -= .5f;
+                                    }
+                                    if (player.LookDirection == Direction.DOWN)
+                                    {
+                                        proj.XVel *= .5f;
+                                        proj.YVel += 1f;
+                                    }
+                                }
+
+                                iteration = (iteration + 1) % 6;
+                                delay = 8;
+                            }
+                            else
+                                Destroy();
                         }
                         break;
                     case SpellLevel.TWO:
                         {
-                            if (ArcProjectiles.Count < 3)
+
+                            bool enoughMP = player.MP >= GameResources.MPCost[SpellType.FIRE][level];
+                            if (ArcProjectiles.Count < 3 && enoughMP)
                             {
+                                SubtractMP();
 
                                 var proj = new FireArcProjectile(X, Y, this);
                                 delay = 30;
                                 ArcProjectiles.Add(proj);
                             }
-                            else
-                            {
-                                player.MP = Math.Min(player.MP + GameResources.MPCost[SpellType.FIRE][level], player.Stats.MaxMP);
-                            }
                         }
                         break;
                     case SpellLevel.THREE:
                         {
-                            var proj = new FlameThrowerProjectile(X, Y);
-                            proj.XVel = Math.Sign((int)player.Direction) * (1.75f + 1.5f * Power) + player.XVel;
-                            proj.YVel = -.3f * (float)Math.Sin(t) + player.YVel + 1f * (int)player.LookDirection;
+                            SubtractMP();
 
-                            delay = (int)((.5f - .25f * Power) * 15);
+                            if (player.MP > 0)
+                            {
+
+                                var proj = new FlameThrowerProjectile(X, Y);
+                                proj.XVel = Math.Sign((int)player.Direction) * (1.75f + 1.5f * Power) + player.XVel;
+                                proj.YVel = -.3f * (float)Math.Sin(t) + player.YVel + 1f * (int)player.LookDirection;
+
+                                delay = (int)((.5f - .25f * Power) * 15);
+                            }
+                            else
+                                Destroy();
                         }
                         break;
                 }
             }
             
-            if (orb.State != OrbState.ATTACK || orb.Type != SpellType.FIRE || level != orb.Level || player.MP < GameResources.MPCost[SpellType.FIRE][level])
+            if (orb.State != OrbState.ATTACK || orb.Type != SpellType.FIRE || level != orb.Level)
             {
-                new SaveBurstEmitter(orb.X, orb.Y) { ParticleColors = GameResources.FireColors };
                 Destroy();
             }            
         }
+
+        private void SubtractMP()
+        {
+            player.MP = Math.Max(player.MP - GameResources.MPCost[SpellType.FIRE][level], 0);
+        }
+
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
@@ -167,6 +185,8 @@ namespace Leore.Objects.Projectiles
         
         public override void Destroy(bool callGC = false)
         {
+            new SaveBurstEmitter(orb.X, orb.Y) { ParticleColors = GameResources.FireColors };
+
             orb.Visible = true;
             instance = null;
             base.Destroy(callGC);

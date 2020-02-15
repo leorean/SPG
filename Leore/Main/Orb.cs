@@ -40,19 +40,19 @@ namespace Leore.Main
 
     public enum SpellType
     {
-        NONE,                   // = SpellElement.NONE,
-        CRIMSON_ARC,            // = SpellElement.NONE,
-        SNATCH_KEYS,            // = SpellElement.NONE,
+        NONE = 0,                   // = SpellElement.NONE,
+        CRIMSON_ARC = 2,            // = SpellElement.NONE,
+        SNATCH_KEYS = 4,            // = SpellElement.NONE,
 
-        STAR,                   // = SpellElement.LIGHT,
-        VOID,                   // = SpellElement.DARK,
+        STAR = 1,                   // = SpellElement.LIGHT,
+        VOID = 3,                   // = SpellElement.DARK,
 
-        FIRE,                   // = SpellElement.FIRE,
-        ICE,                    // = SpellElement.ICE
+        FIRE = 5,                   // = SpellElement.FIRE,
+        ICE = 6,                    // = SpellElement.ICE
 
-        ROCK,                   // = SpellElement.NONE
-        PLANT,                  // = SpellElement.NONE
-        LIGHTNING               // = SpellElement.NONE
+        ROCK = 7,                   // = SpellElement.NONE
+        PLANT = 8,                  // = SpellElement.NONE
+        LIGHTNING = 9               // = SpellElement.NONE
     }
 
     public enum SpellLevel
@@ -128,6 +128,11 @@ namespace Leore.Main
                 alpha = Math.Min(alpha + .1f, 1);
 
             Scale = new Vector2(1, 1);
+
+            if (Type == SpellType.SNATCH_KEYS)
+            {
+                Scale = new Vector2((int)player.Direction, 1);
+            }
 
             // enable for bending orb
             //if (Type == SpellType.SNATCH_KEYS)
@@ -317,20 +322,19 @@ namespace Leore.Main
                                     break;
                             }
                         }
-                    } else
+                    }
+                    else
                     {
                         var shake = true;
 
-                        if (ObjectManager.Exists<CrimsonSpell>())
+                        if (ObjectManager.Exists<CrimsonSpell>() || ObjectManager.Exists<FireSpell>())
                             shake = false;
 
                         if (Type == SpellType.SNATCH_KEYS)
                         {
                             Cooldown++;
                         }
-
-                        //if (if (GameManager.Current.Player.MP >= GameResources.MPCost[SpellType.CRIMSON_ARC][Level]))
-
+                        
                         if (shake)
                         {
                             if (Cooldown == 0)
@@ -351,19 +355,9 @@ namespace Leore.Main
 
             lastPosition = Position;
         }
-
-        //public override void Destroy(bool callGC = false)
-        //{
-        //    light.Parent = null;
-        //    light.Destroy();
-        //    Parent = null;
-        //    base.Destroy(callGC);
-        //}
-
         public override void Draw(SpriteBatch sb, GameTime gameTime)
         {
             //base.Draw(sb, gameTime);
-
             sb.Draw(AssetManager.Orbs[(int)Type], Position, null, new Color(Color, alpha), Angle, DrawOffset, Scale, SpriteEffects.None, Depth);            
         }
 

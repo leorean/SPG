@@ -231,7 +231,7 @@ namespace Leore.Objects.Projectiles
             {
                 centerPos = orb.TargetPosition;
                 origin = centerPos;
-                if (orb.State != OrbState.ATTACK || orb.Level != level || player.MP <= GameResources.MPCost[SpellType.FIRE][level])
+                if (orb.State != OrbState.ATTACK || orb.Level != level)// || player.MP < GameResources.MPCost[SpellType.FIRE][level])
                 {
                     originalAngle = (float)MathUtil.VectorToAngle(new Vector2((int)player.Direction, Math.Sign((int)player.LookDirection)));
                     angle = originalAngle;

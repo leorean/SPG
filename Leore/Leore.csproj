@@ -273,7 +273,7 @@
     <None Include="app.manifest" />
     <EmbeddedResource Include="Content\worldMap.tmx" />
     <EmbeddedResource Include="Content\lybianna.tmx" />
-    <EmbeddedResource Include="Content\tutorial2.tmx" />
+    <EmbeddedResource Include="Content\debug.tmx" />
     <EmbeddedResource Include="Content\sanctuary.tmx" />
     <EmbeddedResource Include="Content\tealglade_woods.tmx" />
     <EmbeddedResource Include="Content\forest_temple.tmx" />

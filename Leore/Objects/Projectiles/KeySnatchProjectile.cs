@@ -45,7 +45,8 @@ namespace Leore.Objects.Projectiles
         {
             originalPosition = orb.TargetPosition;
 
-            //orb.Visible = false;
+            orb.Visible = false;
+
             Depth = orb.Depth + .0002f;
             BoundingBox = new RectF(-4, -4, 8, 8);
             DrawOffset = new Vector2(8);
@@ -71,6 +72,7 @@ namespace Leore.Objects.Projectiles
                 Damage = 1;
 
             Scale = new Vector2((int)direction, 1);
+            
             Angle = (float)MathUtil.VectorToAngle(new Vector2(1, yspd * Scale.X), true);
 
             if (!headBack)
@@ -135,6 +137,9 @@ namespace Leore.Objects.Projectiles
 
             maxPosition = orb.Position + new Vector2((int)direction * maxDist, yspd * maxDist);
 
+
+            Color = headBack ? Color.White : new Color(Color.White, 1 - 1.5f * (dist / maxDist) + .5f);
+
             //if (orb.State != OrbState.ATTACK || player.Direction != direction)
             if (player.Direction != direction)
             {
@@ -144,7 +149,8 @@ namespace Leore.Objects.Projectiles
 
         public override void Destroy(bool callGC = false)
         {
-            //orb.Visible = true;
+            orb.Visible = true;
+            
             instance = null;
             base.Destroy(callGC);
         }

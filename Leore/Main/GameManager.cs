@@ -24,7 +24,7 @@ namespace Leore.Main
 {
     public class GameManager
     {
-        public string DEFAULT_MAP_NAME => maps.First().Name;
+        public readonly string DEFAULT_MAP_NAME = "sanctuary";
 
         public List<Room> LoadedRooms { get; private set; } = new List<Room>();
         
