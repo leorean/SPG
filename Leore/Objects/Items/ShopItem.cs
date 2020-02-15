@@ -131,7 +131,7 @@ namespace Leore.Objects.Items
                             featherItem.ID = ID;
                             break;
                         case 1: // spell: crimson
-                            var crimsonItem = new AbilityItem(X, Y - Globals.T, Room, "Crimson Arc");
+                            var crimsonItem = new AbilityItem(X, Y - Globals.T, Room, Name);
                             crimsonItem.Texture = AssetManager.Items[6];
                             crimsonItem.OnObtain = () =>
                             {
@@ -163,8 +163,7 @@ namespace Leore.Objects.Items
 
                     }
                 }
-
-                //new MessageBox("Thank you!|..don't forget to take that item with you!");
+                
                 new MessageBox("Thank you!");
 
             } else

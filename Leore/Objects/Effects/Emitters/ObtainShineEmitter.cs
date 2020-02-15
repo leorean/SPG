@@ -19,7 +19,7 @@ namespace Leore.Objects.Effects.Emitters
 
             LifeTime = 120;
 
-            off = - new Vector2(1) + new Vector2((float)RND.Next * 2, (float)RND.Next * 2);
+            off = - new Vector2(1.5f) + new Vector2((float)RND.Next * 3, (float)RND.Next * 3);
 
             Scale = new Vector2(s);            
             Depth = emitter.Depth;

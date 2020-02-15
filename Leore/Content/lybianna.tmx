@@ -173022,7 +173022,7 @@ Lybianna #r</property>
   <object id="1442" type="shopItem" x="2528" y="1536" width="16" height="16">
    <properties>
     <property name="acquireText">Got the ~Feather Boots~!
-Prevents fall damage.</property>
+Now you don't need to be afraid to fall any more!</property>
     <property name="displayText">Magic boots with embedded feathers from a rare creature.
 It will prevent ~fall damage~.</property>
     <property name="itemName" value="Feather Boots"/>

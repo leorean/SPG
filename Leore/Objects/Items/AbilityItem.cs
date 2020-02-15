@@ -4,6 +4,7 @@ using Leore.Objects.Effects.Emitters;
 using System;
 using Leore.Objects.Level;
 using static Leore.Objects.Effects.Transition;
+using SPG.Util;
 
 namespace Leore.Objects.Items
 {
@@ -41,6 +42,8 @@ namespace Leore.Objects.Items
         private string appearCondition;
         private bool appeared;
 
+        private float angle;
+
         private LightSource light;
 
         public AbilityItem(float x, float y, Room room, string name = null, string setCondition = null, string appearCondition = null) : base(x, y, room, name)
@@ -65,6 +68,7 @@ namespace Leore.Objects.Items
             this.setCondition = setCondition;
             this.appearCondition = appearCondition;
 
+            angle = -4.5f;
         }
         
         public override void Update(GameTime gameTime)
@@ -93,6 +97,17 @@ namespace Leore.Objects.Items
             }
 
             light.Active = true;
+
+            if (state == State.IDLE)
+            {
+                angle += .5f * (float)Math.Sin(sin);
+            }
+            else
+            {
+                angle *= .9f;
+            }
+
+            Angle = (float)MathUtil.DegToRad(angle);
 
             if (state == State.IDLE)
             {
