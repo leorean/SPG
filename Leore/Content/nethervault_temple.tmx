@@ -32441,7 +32441,6 @@
     <property name="appearCondition" value=""/>
     <property name="itemName" value="Seraph Cape"/>
     <property name="itemType" type="int" value="4"/>
-    <property name="setCondition" value="hasDoubleJump"/>
     <property name="text">You found the ~Seraph Cape~.
 |Now you can perform a jump in mid-air!</property>
    </properties>

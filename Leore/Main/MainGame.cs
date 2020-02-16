@@ -126,6 +126,7 @@ namespace Leore.Main
             GameManager.Current.AddGameMap(ContentUtil.GetResourceStream("forest_temple"));
             GameManager.Current.AddGameMap(ContentUtil.GetResourceStream("great_cavern"));
             GameManager.Current.AddGameMap(ContentUtil.GetResourceStream("nethervault_temple"));
+            GameManager.Current.AddGameMap(ContentUtil.GetResourceStream("mount_ascent"));
             GameManager.Current.AddGameMap(ContentUtil.GetResourceStream("pine_woods"));
 
             //GameManager.Current.AddGameMap("sanctuary");
@@ -135,7 +136,7 @@ namespace Leore.Main
             //GameManager.Current.AddGameMap("great_cavern");
             //GameManager.Current.AddGameMap("nethervault_temple");
             //GameManager.Current.AddGameMap("pine_woods");
-                        
+
             HUD = new HUD();
             HUD.Texture = AssetManager.HUD;
 

@@ -280,6 +280,7 @@
     <EmbeddedResource Include="Content\great_cavern.tmx" />
     <EmbeddedResource Include="Content\nethervault_temple.tmx" />
     <EmbeddedResource Include="Content\pine_woods.tmx" />
+    <EmbeddedResource Include="Content\mount_ascent.tmx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

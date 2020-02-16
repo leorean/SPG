@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="160" height="63" tilewidth="16" tileheight="16" infinite="0" nextlayerid="127" nextobjectid="1472">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="160" height="63" tilewidth="16" tileheight="16" infinite="0" nextlayerid="127" nextobjectid="1473">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="3072" columns="64">
   <image source="tiles.png" width="1024" height="768"/>
  </tileset>
@@ -40498,19 +40498,6 @@
     <property name="ty" type="int" value="-8"/>
    </properties>
   </object>
-  <object id="1444" name="Spell: Snatch" type="item" x="672" y="944" width="16" height="16">
-   <properties>
-    <property name="appearCondition" value=""/>
-    <property name="itemName" value="Snatch"/>
-    <property name="itemType" type="int" value="3"/>
-    <property name="setCondition" value="hasSnatch"/>
-    <property name="text">Learned spell: ~Snatch~!
-With this, keys can be stored and will be used when needed.
-|Disclaimer:
-* &quot;[888888]~Keys can only be used in the same area.~&quot;
-* &quot;[888888]~Use ~#u[888888]~ or ~#d[888888]~ to direct the spell.~&quot;</property>
-   </properties>
-  </object>
   <object id="1445" type="door" x="592" y="960" width="16" height="16">
    <properties>
     <property name="tx" type="int" value="4"/>
@@ -40622,6 +40609,19 @@ Well.. you're on the right path - There's an ancient temple ahead.
     <property name="npcType" type="int" value="1"/>
     <property name="setCondition" value="ancientBeforeForestTemple"/>
     <property name="text" value="&quot;Blessed by the ~altars of light~, the path shall be revealed to the ~aspirant of the Ancients~.&quot;"/>
+   </properties>
+  </object>
+  <object id="1472" name="Spell: Snatch" type="item" x="672" y="944" width="16" height="16">
+   <properties>
+    <property name="appearCondition" value=""/>
+    <property name="itemName" value="Snatch"/>
+    <property name="itemType" type="int" value="3"/>
+    <property name="setCondition" value="hasSnatch"/>
+    <property name="text">Learned to cast ~Snatch~!
+|With this spell, keys can be stored and will be used when needed.
+|Disclaimer:
+* &quot;[888888]~Keys can only be used in the same area.~&quot;
+* &quot;[888888]~Use ~#u[888888]~ or ~#d[888888]~ to direct the spell.~&quot;</property>
    </properties>
   </object>
  </objectgroup>

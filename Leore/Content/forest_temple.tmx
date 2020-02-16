@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="160" height="54" tilewidth="16" tileheight="16" infinite="0" nextlayerid="135" nextobjectid="1478">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="160" height="54" tilewidth="16" tileheight="16" infinite="0" nextlayerid="135" nextobjectid="1479">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="3072" columns="64">
   <image source="tiles.png" width="1024" height="768"/>
  </tileset>
@@ -34760,14 +34760,6 @@
     <property name="ty" type="int" value="-10"/>
    </properties>
   </object>
-  <object id="1452" name="Spell: Star" type="item" x="1392" y="784" width="16" height="16">
-   <properties>
-    <property name="itemName" value="Shooting Star"/>
-    <property name="itemType" type="int" value="2"/>
-    <property name="setCondition" value="hasSpell"/>
-    <property name="text" value="Learned spell: ~Shooting Star~!"/>
-   </properties>
-  </object>
   <object id="1453" type="movingPlatform" x="2000" y="768" width="32" height="16">
    <properties>
     <property name="activatable" type="bool" value="false"/>
@@ -34855,6 +34847,14 @@
     <property name="textAfterTransition" value="Tealglade Woods"/>
     <property name="tx" type="int" value="77"/>
     <property name="ty" type="int" value="29"/>
+   </properties>
+  </object>
+  <object id="1478" name="Spell: Star" type="item" x="1392" y="784" width="16" height="16">
+   <properties>
+    <property name="itemName" value="Shooting Star"/>
+    <property name="itemType" type="int" value="2"/>
+    <property name="setCondition" value="hasSpell"/>
+    <property name="text" value="Learned to cast ~Shooting Star~!"/>
    </properties>
   </object>
  </objectgroup>

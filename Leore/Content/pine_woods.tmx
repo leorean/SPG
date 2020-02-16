@@ -43878,12 +43878,12 @@
    <tile/>
    <tile gid="1249"/>
    <tile gid="1251"/>
-   <tile gid="710"/>
-   <tile gid="966"/>
-   <tile gid="966"/>
-   <tile gid="966"/>
-   <tile/>
    <tile gid="1089"/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile gid="1249"/>
    <tile gid="1250"/>
@@ -44199,9 +44199,9 @@
    <tile gid="1313"/>
    <tile gid="1315"/>
    <tile gid="971"/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="709"/>
+   <tile gid="709"/>
+   <tile gid="709"/>
    <tile/>
    <tile gid="968"/>
    <tile gid="1249"/>
