@@ -173220,8 +173220,8 @@ Hm...
     <property name="centerText" type="bool" value="true"/>
     <property name="npcType" type="int" value="0"/>
     <property name="text">#l Lybianna
-#r Pine Woods
-#rd The Great Cavern</property>
+Pine Woods #r
+The Great Cavern #rd</property>
    </properties>
   </object>
   <object id="1479" type="door" x="3760" y="1520" width="16" height="16">
@@ -173281,7 +173281,7 @@ Hm...
    <properties>
     <property name="centerText" type="bool" value="true"/>
     <property name="npcType" type="int" value="0"/>
-    <property name="text" value="#r Mount Ascent"/>
+    <property name="text" value="Mount Ascent #r"/>
    </properties>
   </object>
   <object id="1489" type="door" x="3104" y="1136" width="16" height="16">
