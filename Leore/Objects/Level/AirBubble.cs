@@ -67,14 +67,18 @@ namespace Leore.Objects.Level
                 Destroy();
             }
 
-            if (Scale.X > .2f && this.CollisionBounds(GameManager.Current.Player, X, Y))
-            {
-                GameManager.Current.Player.Oxygen = GameManager.Current.Player.MaxOxygen + 60;
-                var fnt = new FollowFont(GameManager.Current.Player.X, GameManager.Current.Player.Y - 8, "+Air");
-                fnt.Color = GameResources.OxygenColors[0];
-                Destroy();
-            }
-
+            
+                if (Scale.X > .2f && this.CollisionBounds(GameManager.Current.Player, X, Y))
+                {
+                    if (!GameManager.Current.Player.Stats.Abilities.HasFlag(PlayerAbility.BREATHE_UNDERWATER))
+                    {
+                        GameManager.Current.Player.Oxygen = GameManager.Current.Player.MaxOxygen + 60;
+                        var fnt = new FollowFont(GameManager.Current.Player.X, GameManager.Current.Player.Y - 8, "+Air");
+                        fnt.Color = GameResources.OxygenColors[0];
+                    }
+                    Destroy();
+                }
+            
             alpha = Math.Min(alpha + .01f, 1);
             Scale = new Vector2(Math.Min(Scale.X + .003f, 1));
             Color = new Color(Color, alpha);

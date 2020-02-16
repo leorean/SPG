@@ -42,7 +42,8 @@ namespace Leore.Objects.Items
         private string appearCondition;
         private bool appeared;
 
-        private float angle;
+        private double angle;
+        private double angleSin;
 
         private LightSource light;
 
@@ -100,7 +101,8 @@ namespace Leore.Objects.Items
 
             if (state == State.IDLE)
             {
-                angle += .5f * (float)Math.Sin(sin);
+                angleSin = (angleSin + .03f) % (2 * Math.PI);
+                angle = 4 * Math.Sin(angleSin);
             }
             else
             {

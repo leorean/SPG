@@ -194,18 +194,20 @@ namespace Leore.Main
 
                             TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * (arcDst - .5f * Math.Abs(offY) / arcDst), offY);
                             break;
-                        case SpellType.SNATCH_KEYS:                            
+                        case SpellType.SNATCH_KEYS:
+                            TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 8, 2 * Math.Sign((int)player.LookDirection));
+                            
                             if (!ObjectManager.Exists<KeySnatchProjectile>() && Cooldown == 0) {
                                 new CrimsonBurstEmitter(X, Y)
                                 {
                                     ParticleColors = new List<Color> { Color.White },
                                     SpawnRate = 5
                                 };
-                                if (player.LookDirection != Direction.NONE)
-                                    new SingularEffect(X, Y, 10);
-                            }
-                            TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 8, 2 * Math.Sign((int)player.LookDirection));
-                            //Position = TargetPosition;
+                                //if (player.LookDirection != Direction.NONE)
+                                //    new SingularEffect(X, Y, 10);
+
+                                Position = TargetPosition;
+                            }                            
                             break;
                         case SpellType.FIRE:
                             TargetPosition = player.Position + new Vector2(Math.Sign((int)player.Direction) * 0, 0);
