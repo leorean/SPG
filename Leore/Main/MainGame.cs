@@ -309,7 +309,7 @@ namespace Leore.Main
 
                         if (Input.IsKeyPressed(Keys.D8, Input.State.Pressed))
                         {
-                            GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.DOUBLE_JUMP;
+                            //GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.DOUBLE_JUMP;
                             //GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.PUSH;
                             //GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.NO_FALL_DAMAGE;
 
@@ -318,9 +318,9 @@ namespace Leore.Main
                             GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.CLIMB_CEIL;
                             GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.ROLL;
 
-                            GameManager.Current.RemoveSpell(SpellType.VOID);
-                            GameManager.Current.RemoveSpell(SpellType.FIRE);
-                            GameManager.Current.AddSpell(SpellType.NONE);
+                            //GameManager.Current.RemoveSpell(SpellType.VOID);
+                            //GameManager.Current.RemoveSpell(SpellType.FIRE);
+                            //GameManager.Current.AddSpell(SpellType.NONE);
 
                             Debug.WriteLine("Removed abilities");
                         }
