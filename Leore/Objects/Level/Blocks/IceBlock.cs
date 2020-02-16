@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SPG.Objects;
+using SPG.Util;
 
 namespace Leore.Objects.Level.Blocks
 {
@@ -21,10 +22,18 @@ namespace Leore.Objects.Level.Blocks
         private float hp;
         private float cooldown;
 
+        private int shimmerTimer;
+
         public IceBlock(float x, float y, Room room) : base(x, y, room, 6)
         {
             maxHp = HP;
             this.hp = HP;
+
+            BoundingBox = new RectF(-8, -8, 16, 16);
+
+            DrawOffset = new Vector2(8);
+            
+            shimmerTimer = RND.Int(2 * 60);
         }
 
         public override void Update(GameTime gameTime)
@@ -41,6 +50,18 @@ namespace Leore.Objects.Level.Blocks
                 hp = Math.Min(hp + .1f, maxHp);
                 regenDelay = 10;
             }
+
+            shimmerTimer = Math.Max(shimmerTimer - 1, 0);
+            if (shimmerTimer == 0)
+            {
+                var eff = new SingularEffect(Center.X, Center.Y, 18);
+                eff.Depth = Depth + .0001f;
+
+                shimmerTimer = 60 + RND.Int(2 * 60);
+            }
+
+            Scale = new Vector2(Math.Min(Scale.X + .02f, 1));
+            //Angle *= .9f;
 
             if (hp == 0)
             {
@@ -59,17 +80,19 @@ namespace Leore.Objects.Level.Blocks
             
             if (hp <= dmg)
             {
-                new DestroyEmitter(X + 8, Y + 8, 4);                
+                new DestroyEmitter(X, Y, 4);                
             }
             else
             {
                 if (true)
                 {
-                    var eff = new SingularEffect(Center.X, Center.Y, 18);
-                    eff.Depth = Depth + .0001f;
+                    Scale = new Vector2(.9f);
+                    //Angle = (float)MathUtil.DegToRad(-6 + RND.Int(12));
+                    /*var eff = new SingularEffect(Center.X, Center.Y, 19);
+                    eff.Depth = Depth + .0001f;*/
                 }
             }
-
+            
             hp = Math.Max(hp - dmg, 0);
 
             return true;
@@ -83,7 +106,7 @@ namespace Leore.Objects.Level.Blocks
             {
                 var alpha = hp / maxHp;
                 var col = new Color(Color, .5f - .5f * alpha);
-                sb.Draw(AssetManager.Particles[11], Position + new Vector2(8), null, col, Angle, new Vector2(8), Scale, SpriteEffects.None, Depth + .0001f);
+                sb.Draw(AssetManager.Particles[11], Position, null, col, Angle, new Vector2(8), Scale, SpriteEffects.None, Depth + .0001f);
             }
         }
     }

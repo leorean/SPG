@@ -280,7 +280,7 @@ namespace Leore.Objects.Projectiles
         }
     }
 
-    // ++++ Level: 2 & 3 ++++
+    // ++++ Level: 3 ++++
 
     public class FlameThrowerProjectile : FireProjectile
     {
@@ -290,6 +290,7 @@ namespace Leore.Objects.Projectiles
         public FlameThrowerProjectile(float x, float y) : base(x, y, SpellLevel.THREE)
         {
             Scale = Vector2.One;
+            light.Scale = new Vector2(.2f);
 
             AnimationTexture = AssetManager.Projectiles;
             SetAnimation(24, 28, .15f, false);
@@ -310,9 +311,8 @@ namespace Leore.Objects.Projectiles
 
             Angle = (float)MathUtil.VectorToAngle(new Vector2(XVel, YVel), true);
 
-            //Scale = new Vector2(Math.Min(Scale.X + .02f, .8f));
-
-            light.Scale = Scale;
+            light.Scale = new Vector2(Math.Min(light.Scale.X + .03f, .8f));
+            //light.Scale = Scale;
 
             //if (Math.Abs(XVel) < .1f)
             //    Destroy();

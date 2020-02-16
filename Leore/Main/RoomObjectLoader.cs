@@ -228,7 +228,7 @@ namespace Leore.Main
                                 new FireBlock(i * Globals.T, j * Globals.T, room, (t.ID - 971 + 1)) { OriginalTextureID = t.ID };
                                 break;
                             case 964: // ice block
-                                new IceBlock(i * Globals.T, j * Globals.T, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
+                                new IceBlock(i * Globals.T + 8, j * Globals.T + 8, room) { Texture = GameManager.Current.Map.TileSet[t.ID] };
                                 break;
                             case 716: // enemy block
                                 new EnemyBlock(i * Globals.T, j * Globals.T, room);

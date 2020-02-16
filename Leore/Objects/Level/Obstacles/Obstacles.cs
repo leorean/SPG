@@ -20,7 +20,7 @@ namespace Leore.Objects.Level.Obstacles
     {
         public ObstacleBlock(float x, float y, Room room) : base(x, y, room)
         {
-            BoundingBox = new RectF(-1f, -1f, 18, 18);            
+            BoundingBox = new RectF(-1f, -1f, 18, 20);            
         }
     }
 

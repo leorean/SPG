@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="80" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="123" nextobjectid="1434">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="80" height="27" tilewidth="16" tileheight="16" infinite="0" nextlayerid="123" nextobjectid="1435">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="3072" columns="64">
   <image source="tiles.png" width="1024" height="768"/>
  </tileset>
@@ -7736,7 +7736,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="974"/>
    <tile/>
    <tile/>
    <tile/>
@@ -8756,15 +8756,23 @@ With their magical power, you're able to ~levitate~!</property>
     <property name="itemName" value="Ignis Petal"/>
     <property name="itemType" type="int" value="6"/>
     <property name="text">You found the ~Ignis Petal~!
-Its power gives you the strength to ~climb walls~!</property>
+With its power you are strong enough to ~climb walls~!</property>
    </properties>
   </object>
   <object id="1433" name="Ability: Climb Ceiling" type="item" x="880" y="208" width="16" height="16">
    <properties>
-    <property name="itemName" value="Gummy Root"/>
+    <property name="itemName" value="Yamori Root"/>
     <property name="itemType" type="int" value="7"/>
-    <property name="text">You found the ~Gummy Root~!
-Its glue-like ability allows you to ~stick to ceilings~!</property>
+    <property name="text">You found the ~Yamori Root~!
+Its sticky ability allows you to ~climb across ceilings~!</property>
+   </properties>
+  </object>
+  <object id="1434" name="Ability: Breathe Underwater" type="item" x="816" y="208" width="16" height="16">
+   <properties>
+    <property name="itemName" value="Pearl Bubble"/>
+    <property name="itemType" type="int" value="10"/>
+    <property name="text">You found the ~Pearl Bubble~!
+It allows you to ~breathe underwater~!</property>
    </properties>
   </object>
  </objectgroup>
