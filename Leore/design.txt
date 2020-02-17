@@ -29,7 +29,7 @@
 	- shoot balistic stones (strong but high cooldown?)
 
 - Ice Orb (DONE):
-	- ???
+	- similar to fire
 
 (Elements)
 
@@ -40,27 +40,6 @@
 - Stone:
 - Light:
 - Dark:
-
-~~~ Items ~~~
-
-#1 - Magic Gloves
-	- push ability
-#2 - Orb
-	- Activates spell casting
-#3 - Feather Shoes
-	- Prevent fall damage
-#4 - Seraph Cape
-	- Double jump
-#5 - Essence of Leon (1)
-	- Enables wall climbing
-#6 - Essence of Leon (2)
-	- Enables ceiling climbing
-#7 - Fish Scale
-	- Enables breathing underwater
-#8 - Stone Totem
-	- Enables rolling
-#9 - Leaf Totem
-	- Enables levitation
 
 ~~~ Playthrough / Objectives ~~~
 
@@ -89,21 +68,23 @@
 [Dungeon : Ability]
 
 SANCTUARY
-- Outset Shrine (#0) : Push
+- Outset Shrine (#0) : Push - Magic Gloves
 - Cave of Trials (#0) : Orb
 TEALGLADE WOODS
 - Forest Temple (#1) : Spell (Shooting Star)
 GREAT CAVERN
-- The Nethervault (#2) : Double Jump
+- The Nethervault (#2) : Double Jump - Seraph Cape
 MOUNT ASCENT
-- Temple of Leon Part 1 (#3) : Wall Climb / Spell (Fire)
-- Temple of Leon Part 2 (#4) : Ceil Climb / Spell (Ice)
+- Fire Cave: (#3) : Wall Climb - Ignis Petal
+- Temple of Leon (#3) : Spell (Fire)
+CYON'S EDGE:
+- Frozen Bulwark (#4) : Ceil Climb - Yamori Root
 OCEAN
-- Sunken Temple (#5) : Breathe underwater
+- Sunken Temple (#5) : Breathe underwater - Silver Pearl
 PINE WOODS
-- Torwyn Castle (#6) : Rolling / Earth Orb?
-CYON'S EDGE
-- Frozen Bulwark (#7) : Levitation
+- Torwyn Castle (#6) : Rolling - Earth Totem
+?????
+- ????? (#7) : Levitation - Leaf Wings
 
 Other:
 
@@ -111,52 +92,4 @@ LYBIANNA
 * Spell (Crimson Arc)
 * Spell (Vortex)
 
-???
-* Spell (Earth)
-
 ~~~ Story ~~~
-
-~~~ Enemies ~~~
-
-- Bat (DONE)
-	- Flies or hangs on the wall and waits to fly
-	
-- Voidling (partly done)
-	- Humanoid enemies that walk and run towards player
-	- 1: No weapon
-	- 2: Shield
-	- 3: Sword
-	- 4: Flail
-	
-- Grassy (DONE)
-	- Hides in ground, jumps out, runs towards player
-	
-- Slurp (DONE)
-	- Idles on a wall and shoots projectiles periodically
-	
-- Slime (DONE)
-	- splits or merges to get bigger
-	- 1: lava
-	- 2: water
-	- 3: ??
-	
-- Pillbug
-	- Rotates around blocks on the wall
-	- 1: No attack
-	- 2: Shoot projectiles
-
-- Jumper
-	- Jumps (if knocked back, will start jumping in a direction)
-
-- Mage
-	- Appears at random position, shoots projectile towards player, dissapears
-	
-- Eye
-	- when it sees player without block inbetween -> shoot laser
-	
-- Bird
-	- Idles (sine-wave), when it sees player, lunges 2 tiles towards him, then idles again
-	
-- 
-	
-~~~ Bosses ~~~
