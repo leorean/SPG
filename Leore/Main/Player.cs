@@ -290,6 +290,25 @@ namespace Leore.Main
             light.Active = true;
         }
 
+        public void CreateObjects()
+        {
+            if (Orb != null)
+            {
+                var orb = new Orb(this);
+                Orb.Parent = null;
+                Orb.Destroy();
+                Orb = orb;
+            }
+            if (light != null)
+            {
+                var l = new LightSource(this);
+                l.Active = true;
+                light.Parent = null;
+                light.Destroy();
+                light = l;
+            }
+        }
+
         ~Player()
         {
             AnimationComplete -= Player_AnimationComplete;            

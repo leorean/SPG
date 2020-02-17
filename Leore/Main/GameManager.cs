@@ -197,13 +197,7 @@ namespace Leore.Main
                 Player = tempPlayer;
                 tempPlayer = null;
 
-                if (Player.Orb != null)
-                {
-                    var orb = new Orb(Player);
-                    Player.Orb.Parent = null;
-                    Player.Orb.Destroy();
-                    Player.Orb = orb;
-                }
+                Player.CreateObjects();
             }
             
             // find starting room

@@ -107,7 +107,7 @@ namespace Leore.Objects.Enemies
                 directionAfterHit = (Direction)Math.Sign(GameManager.Current.Player.X - X);
                 if (onGround && knockbackTimer == 0)
                 {
-                    knockbackTimer = 60;
+                    knockbackTimer = 30;
                     XVel = -1 * Math.Sign(GameManager.Current.Player.X - X);
                     YVel = -1;
                     state = State.JUMP;

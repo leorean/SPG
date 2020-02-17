@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Leore.Main;
 using Leore.Objects.Effects;
 using Leore.Objects.Effects.Emitters;
+using Leore.Objects.Enemies;
 using Leore.Objects.Items;
 using Leore.Objects.Level;
 using Leore.Objects.Level.Blocks;
@@ -220,7 +221,7 @@ namespace Leore.Objects.Projectiles
                 return;
 
             cooldown = 10;
-            if (obj is FireBlock)
+            if (obj is FireBlock || obj is EnemyVoidling.Shield)
                 FinishUp();
         }
     }

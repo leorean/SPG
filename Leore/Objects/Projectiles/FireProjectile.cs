@@ -14,6 +14,7 @@ using Leore.Objects.Level;
 using Leore.Objects.Effects;
 using System.Diagnostics;
 using Leore.Resources;
+using Leore.Objects.Enemies;
 
 namespace Leore.Objects.Projectiles
 {
@@ -204,6 +205,8 @@ namespace Leore.Objects.Projectiles
 
         public override void HandleCollision(GameObject obj)
         {
+            if (obj is EnemyVoidling.Shield)
+                Destroy();
             //base.HandleCollision(obj);
             cooldown = 5;
         }
