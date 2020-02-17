@@ -24415,10 +24415,10 @@
    <tile gid="620"/>
    <tile gid="620"/>
    <tile gid="620"/>
-   <tile gid="620"/>
    <tile gid="621"/>
-   <tile/>
    <tile gid="619"/>
+   <tile gid="620"/>
+   <tile gid="620"/>
    <tile gid="620"/>
    <tile gid="620"/>
    <tile gid="620"/>
@@ -24730,15 +24730,15 @@
    <tile gid="469"/>
    <tile gid="602"/>
    <tile gid="470"/>
-   <tile gid="470"/>
+   <tile gid="539"/>
    <tile gid="471"/>
    <tile gid="684"/>
    <tile gid="684"/>
    <tile gid="684"/>
-   <tile gid="684"/>
    <tile gid="685"/>
-   <tile/>
    <tile gid="683"/>
+   <tile gid="684"/>
+   <tile gid="684"/>
    <tile gid="684"/>
    <tile gid="684"/>
    <tile gid="684"/>
@@ -25048,17 +25048,17 @@
    <tile gid="748"/>
    <tile gid="748"/>
    <tile gid="469"/>
-   <tile gid="470"/>
+   <tile gid="539"/>
    <tile gid="470"/>
    <tile gid="538"/>
    <tile gid="471"/>
    <tile gid="748"/>
    <tile gid="748"/>
    <tile gid="748"/>
-   <tile gid="748"/>
    <tile gid="749"/>
-   <tile/>
    <tile gid="747"/>
+   <tile gid="748"/>
+   <tile gid="748"/>
    <tile gid="748"/>
    <tile gid="748"/>
    <tile gid="748"/>
@@ -67615,13 +67615,13 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="427"/>
-   <tile gid="428"/>
-   <tile gid="428"/>
-   <tile gid="429"/>
+   <tile/>
    <tile gid="427"/>
    <tile gid="428"/>
    <tile gid="429"/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile gid="427"/>
    <tile gid="428"/>
@@ -67935,13 +67935,13 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="491"/>
-   <tile gid="492"/>
-   <tile gid="492"/>
-   <tile gid="493"/>
+   <tile/>
    <tile gid="491"/>
    <tile gid="492"/>
    <tile gid="493"/>
+   <tile gid="424"/>
+   <tile/>
+   <tile/>
    <tile gid="424"/>
    <tile gid="491"/>
    <tile gid="492"/>
@@ -68255,13 +68255,13 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="555"/>
-   <tile gid="556"/>
-   <tile gid="556"/>
-   <tile gid="557"/>
+   <tile/>
    <tile gid="555"/>
    <tile gid="556"/>
    <tile gid="557"/>
+   <tile gid="488"/>
+   <tile gid="423"/>
+   <tile/>
    <tile gid="488"/>
    <tile gid="555"/>
    <tile gid="556"/>
@@ -153060,9 +153060,9 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="1026"/>
    <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="600"/>
    <tile/>
    <tile/>
    <tile/>
@@ -153379,11 +153379,11 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="647"/>
+   <tile gid="647"/>
+   <tile gid="647"/>
+   <tile gid="647"/>
+   <tile gid="647"/>
    <tile/>
    <tile/>
    <tile/>
@@ -154989,7 +154989,7 @@
    <tile gid="296"/>
    <tile gid="296"/>
    <tile gid="296"/>
-   <tile gid="237"/>
+   <tile gid="40"/>
    <tile gid="296"/>
    <tile gid="296"/>
    <tile gid="296"/>
@@ -172893,13 +172893,13 @@
     <property name="appearCondition" value=""/>
     <property name="npcType" type="int" value="15"/>
     <property name="text">This is the foot of ~Mount Ascent~.
-|Hm?
-|You want to know how to get to the top?</property>
-    <property name="yesText">Alright.
+|Do you want to know how to get to the top?</property>
+    <property name="yesText">Alright, listen up.
 |According to old tales, ~fire sages~ used to live on top of the mountain.
 |They would not let anyone near the mountain top in order to ~protect their temple~.
 |However, there's a legend about a certain ~flower~ which the sages used for their practises.
-|The flower grows only in places of ~extreme heat~. But it might be the answer.</property>
+|Rumor has it that the flower grows in places of ~extreme heat~.
+If this is true, it might be the answer.</property>
    </properties>
   </object>
  </objectgroup>
