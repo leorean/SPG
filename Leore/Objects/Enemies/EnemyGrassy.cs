@@ -53,6 +53,11 @@ namespace Leore.Objects.Enemies
 
             seenTimer = Math.Max(seenTimer - 1, 0);
 
+            if (GameManager.Current.Map.CollisionTile(Position.X, Position.Y + YVel, GameMap.WATER_INDEX))
+            {
+                YVel = Math.Max(YVel - .2f, -1f);
+            }
+
             switch (state)
             {
                 case State.HIDING:
@@ -71,6 +76,7 @@ namespace Leore.Objects.Enemies
                     }
                     else
                     {
+                        YVel = Math.Max(YVel, -3);
                         SetAnimation(2, 2, 0, false);
                         if (stuck)
                         {

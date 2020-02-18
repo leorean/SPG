@@ -59,7 +59,7 @@ namespace Leore.Objects.Effects.Emitters
             XVel = XVel.Clamp(-.25f, .25f);
 
             var s = Math.Min(Scale.X + .015f, 2);
-            var a = Math.Min(Alpha + .015f, .5f);
+            var a = Math.Min(Alpha + .015f, .25f);
 
             Scale = new Vector2(s);
             Alpha = a;
