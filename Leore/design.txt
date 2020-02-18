@@ -93,3 +93,7 @@ LYBIANNA
 * Spell (Vortex)
 
 ~~~ Story ~~~
+
+~~~ Collectables ~~~
+
+4 hp, 3 mp, 3 regen
