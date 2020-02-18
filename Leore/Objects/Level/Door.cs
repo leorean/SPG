@@ -25,7 +25,7 @@ namespace Leore.Objects.Level
         
         public DoorDisabler(float x, float y, Room room, TriggerType type) : base(x, y, room)
         {
-            Depth = Globals.LAYER_BG + .00001f;
+            Depth = Globals.LAYER_BG + .000001f;
             this.Type = type;
             Visible = false;
 

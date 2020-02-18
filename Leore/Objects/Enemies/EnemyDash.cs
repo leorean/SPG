@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Leore.Main;
+using Leore.Objects.Effects;
+using Leore.Objects.Effects.Emitters;
 using Leore.Objects.Level;
 using Leore.Objects.Level.Obstacles;
 using Leore.Resources;
@@ -23,10 +25,16 @@ namespace Leore.Objects.Enemies
         private DashDirection dashDirection;
         private State state;
 
+        int hitTimer;
+        int stateTimer;
+
+        // to not interfere with the void suction
+        float xv, yv;
+
         public EnemyDash(float x, float y, Room room, DashDirection dashDirection) : base(x, y, room)
         {
             knockback = 0;
-
+            
             AnimationTexture = AssetManager.EnemyDash;
 
             HP = GameResources.EnemyDash.HP;
@@ -36,11 +44,9 @@ namespace Leore.Objects.Enemies
             this.dashDirection = dashDirection;
             state = State.IDLE;
 
-            DebugEnabled = true;
-            DrawOffset = new Vector2(16);
+            DrawOffset = new Vector2(16); //*
             BoundingBox = new RectF(-6, -6, 12, 12);
-            Visible = true;
-
+            
             switch (dashDirection)
             {
                 case DashDirection.VERTICAL:
@@ -56,14 +62,17 @@ namespace Leore.Objects.Enemies
         {
             base.Update(gameTime);
 
+            hitTimer = Math.Max(hitTimer - 1, 0);
+            stateTimer = Math.Max(stateTimer - 1, 0);
+
             switch (state)
             {
 
                 case State.IDLE:
                     
                     SetAnimation(0, 0, 0, false);
-                    XVel = 0;
-                    YVel = 0;
+                    xv = 0;
+                    yv = 0;
 
                     var castAng = 0;
 
@@ -75,56 +84,60 @@ namespace Leore.Objects.Enemies
                         case Direction.RIGHT: castAng = 0; break;
                     }
 
-                    var rayCastSolid = this.RayCast<Solid>(castAng, 3, 8 * Globals.T);
-                    var rayCastPlayer = this.RayCast<Player>(castAng, 3, 8 * Globals.T);
-
-                    if (rayCastPlayer.Item1 != null && (rayCastSolid.Item1 == null || rayCastSolid.Item2 > rayCastPlayer.Item2))
+                    if (stateTimer == 0)
                     {
-                        state = State.DASH;
-                        //Debug.WriteLine(rayCastPlayer.Item2);
+
+                        var rayCastSolid = this.RayCast<Solid>(castAng, 3, 8 * Globals.T);
+                        var rayCastPlayer = this.RayCast<Player>(castAng, 3, 8 * Globals.T);
+
+                        if (hit || (rayCastPlayer.Item1 != null && (rayCastSolid.Item1 == null || rayCastSolid.Item2 > rayCastPlayer.Item2)))
+                        {
+                            state = State.DASH;
+                        }
                     }
-
-
-            break;
+                    break;
                 case State.DASH:
                     SetAnimation(1, 1, 0, false);
 
                     var maxVel = 3f;
-                    var acc = .15f;
+                    var acc = .05f;
 
                     switch (Direction)
                     {
                         case Direction.DOWN:
-                            YVel = MathUtil.AtMost(YVel + acc, maxVel);                            
+                            yv = MathUtil.AtMost(yv + acc, maxVel);                            
                             break;
                         case Direction.UP:
-                            YVel = MathUtil.AtMost(YVel - acc, maxVel);
+                            yv = MathUtil.AtMost(yv - acc, maxVel);
                             break;
                         case Direction.LEFT:
-                            XVel = MathUtil.AtMost(XVel - acc, maxVel);
+                            xv = MathUtil.AtMost(xv - acc, maxVel);
                             break;
                         case Direction.RIGHT:
-                            XVel = MathUtil.AtMost(XVel + acc, maxVel);
+                            xv = MathUtil.AtMost(xv + acc, maxVel);
                             break;
                     }
 
-                    if (this.CollisionBoundsFirstOrDefault<Collider>(X + XVel, Y + YVel) != null)
+                    if (this.CollisionBoundsFirstOrDefault<Collider>(X + xv, Y + yv) != null)
                     {
-                        XVel = 0;
-                        YVel = 0;
+                        new SingularEffect(Center.X, Center.Y, 10);
+
+                        xv = 0;
+                        yv = 0;
                         float tx = Globals.T * MathUtil.Div(Center.X, Globals.T) + 8;
                         float ty = Globals.T * MathUtil.Div(Center.Y, Globals.T) + 8;
 
                         Position = new Vector2(tx, ty);
                         state = State.IDLE;
                         Direction = Direction.Reverse();
-                    }
 
-                    break;
+                        stateTimer = 30;
+                    }
+                    break;                    
             }
 
-            Move(XVel, YVel);
-
+            Move(xv, yv);
+            
             switch (Direction)
             {
                 case Direction.DOWN:
@@ -140,6 +153,8 @@ namespace Leore.Objects.Enemies
                     Angle = (float)MathUtil.DegToRad(180);
                     break;
             }
+            
+            DrawOffset = hitTimer == 0 ? new Vector2(16) : new Vector2(15 + RND.Int(1), 15 + RND.Int(1));
 
             if (this.IsOutsideCurrentRoom(2 * Globals.T))
                 Destroy();
@@ -147,6 +162,10 @@ namespace Leore.Objects.Enemies
 
         public override void Hit(int hitPoints, float degAngle)
         {
+            if (hitTimer > 0)
+                return;
+            hitTimer = 5;
+            
             base.Hit(hitPoints, degAngle);
 
         }
