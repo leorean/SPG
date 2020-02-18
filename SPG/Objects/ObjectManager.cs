@@ -82,40 +82,7 @@ namespace SPG.Objects
                     o.Destroy();
             }
         }
-
-        //[Obsolete]
-        //public static void SortByID()
-        //{
-        //    Objects.Sort(
-        //        delegate (GameObject o1, GameObject o2)
-        //        {
-        //            if (o1.ID < o2.ID) return -1;
-        //            if (o1.ID > o2.ID) return 1;
-        //            return 0;
-        //        }
-        //    );
-        //}
-        //[Obsolete]
-        //public static void SortByX(this List<GameObject> objects)
-        //{
-        //    objects.Sort(delegate (GameObject o1, GameObject o2)
-        //    {
-        //        if (o1.X < o2.X) return -1;
-        //        if (o1.X > o2.X) return 1;
-        //        return 0;
-        //    });
-        //}
-        //[Obsolete]
-        //public static void SortByY(this List<GameObject> objects)
-        //{
-        //    objects.Sort(delegate (GameObject o1, GameObject o2)
-        //    {
-        //        if (o1.Y < o2.Y) return -1;
-        //        if (o1.Y > o2.Y) return 1;
-        //        return 0;
-        //    });
-        //}
-
+        
         /// <summary>
         /// Returns the number of alive objects of a given type.
         /// </summary>
@@ -297,6 +264,31 @@ namespace SPG.Objects
             }
             return default(T);
         }
+
+        /// <summary>
+        /// Returns the first object hit by a raycast in a given angle within n steps at a maximum distance.
+        /// </summary>
+        /// <param name="degAngle"></param>
+        /// <param name="n"></param>
+        /// <param name="maxDist"></param>
+        /// <returns></returns>
+        public static (T, float) RayCast<T>(this GameObject obj, int degAngle, float n = 1, float maxDist = 9999) where T : ICollidable
+        {
+            var pos = obj.Center;
+            var kx = MathUtil.LengthDirX(degAngle);
+            var ky = MathUtil.LengthDirY(degAngle);
+
+            for (float i = 0; i < maxDist; i += n)
+            {
+                var collision = obj.CollisionPointFirstOrDefault<T>(pos.X + kx * i, pos.Y + ky * i);
+                if (collision != null)
+                {
+                    return (collision, i);
+                }
+            }
+            return (default(T), 0);
+        }
+        public static (ICollidable, float) RayCast(this GameObject obj, int degAngle, float n = 1, float maxDist = 9999) => RayCast<ICollidable>(obj, degAngle, n, maxDist);
 
         public static List<T> FindAll<T>() where T : GameObject
         {

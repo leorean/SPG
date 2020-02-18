@@ -81,6 +81,7 @@
     <Compile Include="Objects\Effects\Emitters\IceEmitter.cs" />
     <Compile Include="Objects\Effects\Emitters\StoryWarpEmitter.cs" />
     <Compile Include="Objects\Enemies\BossShadowLizard.cs" />
+    <Compile Include="Objects\Enemies\EnemyDash.cs" />
     <Compile Include="Objects\Items\Collectable.cs" />
     <Compile Include="Objects\Level\RollBouncer.cs" />
     <Compile Include="Objects\Level\StoryWarp.cs" />

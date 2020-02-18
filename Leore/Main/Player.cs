@@ -595,7 +595,7 @@ namespace Leore.Main
 
             InvincibleTimer = Math.Max(InvincibleTimer - 1, 0);
 
-            var obstacle = ObjectManager.CollisionBoundsFirstOrDefault<Obstacle>(this, X, Y);
+            var obstacle = this.CollisionBoundsFirstOrDefault<Obstacle>(X, Y);
 
             if (obstacle is EnemyProjectile)
             {

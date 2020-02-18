@@ -301,6 +301,12 @@ namespace Leore.Main
                             case 776:
                                 new EnemySlurp(i * Globals.T + 8, j * Globals.T + 8, room);
                                 break;
+                            case 777:
+                                new EnemyDash(i * Globals.T + 8, j * Globals.T + 8, room, EnemyDash.DashDirection.VERTICAL);
+                                break;
+                            case 778:
+                                new EnemyDash(i * Globals.T + 8, j * Globals.T + 8, room, EnemyDash.DashDirection.HORIZONTAL);
+                                break;
                             case 832: // teleporters
                                 new Teleporter(i * Globals.T + 8, j * Globals.T + 8, room);
                                 break;

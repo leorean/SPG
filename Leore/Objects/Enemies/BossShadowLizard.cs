@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework.Graphics;
 using SPG.Objects;
 using Leore.Objects.Level;
 using SPG.Draw;
+using Leore.Resources;
 
 namespace Leore.Objects.Enemies
 {
@@ -65,8 +66,10 @@ namespace Leore.Objects.Enemies
         
         public BossShadowLizard(float x, float y, Room room, string setCondition) : base(x, y, room, setCondition)
         {
-            HP = 140;
-            
+            HP = GameResources.BossShadowLizard.HP;
+            Damage = GameResources.BossShadowLizard.Damage;
+            EXP = GameResources.BossShadowLizard.EXP;
+
             AnimationTexture = AssetManager.BossShadowLizard;
             DrawOffset = new Vector2(48);
             BoundingBox = new SPG.Util.RectF(-16, -16, 32, 32);
@@ -109,7 +112,7 @@ namespace Leore.Objects.Enemies
         {
             base.Update(gameTime);
 
-            Damage = (alpha > minAlpha) ? 1 : 0;
+            Damage = (alpha > minAlpha) ? GameResources.BossShadowLizard.Damage : 0;
             IgnoreProjectiles = (Damage == 0);
             var hpPercent = (float)HP / (float)MaxHP;
 
