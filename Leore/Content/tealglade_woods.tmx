@@ -40537,6 +40537,7 @@ Why don't you try it out?</property>
   </object>
   <object id="1451" type="door" x="1056" y="784" width="16" height="16">
    <properties>
+    <property name="textAfterTransition" value="Tealglade Woods"/>
     <property name="tx" type="int" value="-7"/>
     <property name="ty" type="int" value="2"/>
    </properties>
@@ -40544,7 +40545,7 @@ Why don't you try it out?</property>
   <object id="1452" type="npc" x="656" y="832" width="16" height="16">
    <properties>
     <property name="centerText" type="bool" value="false"/>
-    <property name="disappearCondition" value="dungeon1complete"/>
+    <property name="disappearCondition" value="D1"/>
     <property name="npcType" type="int" value="7"/>
     <property name="setCondition" value=""/>
     <property name="text">I'm ~Wyshin~.

@@ -83,7 +83,7 @@ namespace SPG
         public Vector2 LeftStick()
         {
             if (!Enabled) return Vector2.Zero;
-            if (!GamePadEnabled) return Vector2.One;
+            if (!GamePadEnabled || IsAnyKeyPressed()) return Vector2.One;
 
             return _gamePadState.Value.ThumbSticks.Left;
         }
@@ -91,7 +91,7 @@ namespace SPG
         public Vector2 RightStick()
         {
             if (!Enabled) return Vector2.Zero;
-            if (!GamePadEnabled) return Vector2.One;
+            if (!GamePadEnabled || IsAnyKeyPressed()) return Vector2.One;
 
             return _gamePadState.Value.ThumbSticks.Right;
         }

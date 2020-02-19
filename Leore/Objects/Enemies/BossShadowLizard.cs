@@ -149,7 +149,7 @@ namespace Leore.Objects.Enemies
 
             deathAlpha = (state == State.DIE) ? Math.Min(deathAlpha + .005f, 1) : Math.Max(deathAlpha - .05f, 0);
 
-            if (hpPercent < .5f)
+            if (hpPercent < .25f)
             {
                 projectileTimer = Math.Max(projectileTimer - 1, 0);
                 if (projectileTimer == 0)
@@ -166,7 +166,7 @@ namespace Leore.Objects.Enemies
                     SetAnimation(0, 3, .1f, true);
 
                     XVel = 0;
-                    XVel = 0;
+                    YVel = 0;
                     
                     break;
                 case State.SNEAK:
@@ -463,8 +463,8 @@ namespace Leore.Objects.Enemies
                 return;
 
             invincibleTimer = 2;
-
-            base.Hit(hitPoints, degAngle);
+            
+            base.Hit(hitPoints, degAngle);            
         }
 
         public override void Destroy(bool callGC = false)

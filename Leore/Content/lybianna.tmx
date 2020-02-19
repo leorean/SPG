@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="180" tilewidth="16" tileheight="16" infinite="0" nextlayerid="125" nextobjectid="1500">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="180" tilewidth="16" tileheight="16" infinite="0" nextlayerid="125" nextobjectid="1501">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="3072" columns="64">
   <image source="tiles.png" width="1024" height="768"/>
  </tileset>
@@ -173318,6 +173318,15 @@ The Great Cavern #rd</property>
     <property name="levelName" value="mount_ascent"/>
     <property name="tx" type="int" value="2"/>
     <property name="ty" type="int" value="68"/>
+   </properties>
+  </object>
+  <object id="1500" type="npc" x="48" y="1408" width="16" height="16">
+   <properties>
+    <property name="appearCondition" value="woodPermit"/>
+    <property name="centerText" type="bool" value="false"/>
+    <property name="disappearCondition" value=""/>
+    <property name="npcType" type="int" value="13"/>
+    <property name="text" value="Alright. You may enter - but you're on your own."/>
    </properties>
   </object>
  </objectgroup>

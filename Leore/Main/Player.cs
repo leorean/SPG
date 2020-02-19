@@ -494,12 +494,9 @@ namespace Leore.Main
             k_LPressed = ctrl && InputMapping.KeyPressed(InputMapping.L, InputManager.State.Pressed);
             k_RPressed = ctrl && InputMapping.KeyPressed(InputMapping.R, InputManager.State.Pressed);
 
-            // TODO: overwrite when gamepad is used
             gamePadLeftXFactor = Math.Abs(InputMapping.GamePadXFactor);
             gamePadLeftYFactor = Math.Abs(InputMapping.GamePadYFactor);
-
-            Debug.WriteLine($"{gamePadLeftXFactor}, {gamePadLeftYFactor}");
-
+            
             // ++++ debug ++++
 
             if (Properties.Settings.Default.IsDebugBuild)

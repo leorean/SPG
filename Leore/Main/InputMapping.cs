@@ -31,11 +31,12 @@ namespace Leore.Main
                             return true;
                     }
                 }
-                else
+
+                if (input.IsKeyPressed(k.key.Value, state))
                 {
-                    if (input.IsKeyPressed(k.key.Value, state))
-                        return true;
-                }                
+                    return true;
+                }
+                                
             }            
             return false;
         }

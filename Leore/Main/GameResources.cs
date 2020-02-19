@@ -28,10 +28,10 @@ namespace Leore.Resources
              new EnemyStats { HP = 20, EXP = 25, Damage = 3 },
              new EnemyStats { HP = 30, EXP = 30, Damage = 3 }
         };
-
+        
         public static readonly EnemyStats BossMirrorSelf = new EnemyStats { HP = 1, EXP = 0, Damage = 0 }; // kind of an exception
 
-        public static readonly EnemyStats BossShadowLizard = new EnemyStats { HP = 140, EXP = 200, Damage = 0 };
+        public static readonly EnemyStats BossShadowLizard = new EnemyStats { HP = 140, EXP = 200, Damage = 1 };
 
         // orb stats
 
