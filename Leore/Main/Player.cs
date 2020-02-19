@@ -470,40 +470,42 @@ namespace Leore.Main
                 && Teleporter == null
                 && inputEnabled;
 
-            k_leftPressed = ctrl && InputMapping.KeyPressed(InputMapping.Left, Input.State.Pressed);
-            k_leftHolding = ctrl && InputMapping.KeyPressed(InputMapping.Left, Input.State.Holding);
-            k_leftReleased = ctrl && InputMapping.KeyPressed(InputMapping.Left, Input.State.Released);
+            k_leftPressed = ctrl && InputMapping.KeyPressed(InputMapping.Left, InputManager.State.Pressed);
+            k_leftHolding = ctrl && InputMapping.KeyPressed(InputMapping.Left, InputManager.State.Holding);
+            k_leftReleased = ctrl && InputMapping.KeyPressed(InputMapping.Left, InputManager.State.Released);
 
-            k_rightPressed = ctrl && InputMapping.KeyPressed(InputMapping.Right, Input.State.Pressed);
-            k_rightHolding = ctrl && InputMapping.KeyPressed(InputMapping.Right, Input.State.Holding);
-            k_rightReleased = ctrl && InputMapping.KeyPressed(InputMapping.Right, Input.State.Released);
+            k_rightPressed = ctrl && InputMapping.KeyPressed(InputMapping.Right, InputManager.State.Pressed);
+            k_rightHolding = ctrl && InputMapping.KeyPressed(InputMapping.Right, InputManager.State.Holding);
+            k_rightReleased = ctrl && InputMapping.KeyPressed(InputMapping.Right, InputManager.State.Released);
 
-            k_upPressed = ctrl && InputMapping.KeyPressed(InputMapping.Up, Input.State.Pressed);
-            k_upHolding = ctrl && InputMapping.KeyPressed(InputMapping.Up, Input.State.Holding);
+            k_upPressed = ctrl && InputMapping.KeyPressed(InputMapping.Up, InputManager.State.Pressed);
+            k_upHolding = ctrl && InputMapping.KeyPressed(InputMapping.Up, InputManager.State.Holding);
 
-            k_downPressed = ctrl && InputMapping.KeyPressed(InputMapping.Down, Input.State.Pressed);
-            k_downHolding = ctrl && InputMapping.KeyPressed(InputMapping.Down, Input.State.Holding);
+            k_downPressed = ctrl && InputMapping.KeyPressed(InputMapping.Down, InputManager.State.Pressed);
+            k_downHolding = ctrl && InputMapping.KeyPressed(InputMapping.Down, InputManager.State.Holding);
 
-            k_jumpPressed = ctrl && InputMapping.KeyPressed(InputMapping.Jump, Input.State.Pressed);
-            k_jumpHolding = ctrl && InputMapping.KeyPressed(InputMapping.Jump, Input.State.Holding);
+            k_jumpPressed = ctrl && InputMapping.KeyPressed(InputMapping.Jump, InputManager.State.Pressed);
+            k_jumpHolding = ctrl && InputMapping.KeyPressed(InputMapping.Jump, InputManager.State.Holding);
 
-            k_attackPressed = ctrl && InputMapping.KeyPressed(InputMapping.Attack, Input.State.Pressed);
-            k_attackHolding = ctrl && InputMapping.KeyPressed(InputMapping.Attack, Input.State.Holding);
-            k_attackReleased = ctrl && InputMapping.KeyPressed(InputMapping.Attack, Input.State.Released);
+            k_attackPressed = ctrl && InputMapping.KeyPressed(InputMapping.Attack, InputManager.State.Pressed);
+            k_attackHolding = ctrl && InputMapping.KeyPressed(InputMapping.Attack, InputManager.State.Holding);
+            k_attackReleased = ctrl && InputMapping.KeyPressed(InputMapping.Attack, InputManager.State.Released);
 
-            k_LPressed = ctrl && InputMapping.KeyPressed(InputMapping.L, Input.State.Pressed);
-            k_RPressed = ctrl && InputMapping.KeyPressed(InputMapping.R, Input.State.Pressed);
+            k_LPressed = ctrl && InputMapping.KeyPressed(InputMapping.L, InputManager.State.Pressed);
+            k_RPressed = ctrl && InputMapping.KeyPressed(InputMapping.R, InputManager.State.Pressed);
 
             // TODO: overwrite when gamepad is used
-            gamePadLeftXFactor = 1f;
-            gamePadLeftYFactor = 1f;
+            gamePadLeftXFactor = Math.Abs(InputMapping.GamePadXFactor);
+            gamePadLeftYFactor = Math.Abs(InputMapping.GamePadYFactor);
+
+            Debug.WriteLine($"{gamePadLeftXFactor}, {gamePadLeftYFactor}");
 
             // ++++ debug ++++
 
             if (Properties.Settings.Default.IsDebugBuild)
             {
 
-                if (InputMapping.KeyPressed(Keys.LeftShift, Input.State.Holding) || InputMapping.KeyPressed(Keys.RightShift, Input.State.Holding))
+                if (InputMapping.KeyPressed(InputMapping.LeftShift, InputManager.State.Holding))
                 {
                     if (k_leftPressed)
                         Position = new Vector2(Position.X - 16 * Globals.T, Position.Y);
@@ -519,7 +521,11 @@ namespace Leore.Main
             // gamepad overrides keyboard input if possible
             // TODO: MAPPING
 
-            //if (input.GamePadEnabled)
+            /*if (Properties.Settings.Default.InputType == "gamePad" && InputMapping.GamePadEnabled)
+            {
+                k_leftPressed = InputMapping.KeyPressed()
+            }*/
+
             //{
             //    k_leftPressed = input.DirectionPressedFromStick(Input.Direction.LEFT, Input.Stick.LeftStick, Input.State.Pressed);
             //    k_leftHolding = input.DirectionPressedFromStick(Input.Direction.LEFT, Input.Stick.LeftStick, Input.State.Holding);

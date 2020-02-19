@@ -91,5 +91,17 @@ namespace Leore.Properties {
                 this["HighResText"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool PreferGamePad {
+            get {
+                return ((bool)(this["PreferGamePad"]));
+            }
+            set {
+                this["PreferGamePad"] = value;
+            }
+        }
     }
 }

@@ -119,15 +119,14 @@ namespace Leore.Main
             }
             else
             {
-                //a = Math.Min(a + .0035f, 1);
                 a = Math.Min(a + .015f, 1);
                 spd = 0;
 
-                if (MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Down, SPG.Input.State.Pressed))
+                if(InputMapping.KeyPressed(InputMapping.Down, SPG.InputManager.State.Pressed))
                 {
                     cursor = (cursor + 1) % 2;
                 }
-                if (MainGame.Current.Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Up, SPG.Input.State.Pressed))
+                if (InputMapping.KeyPressed(InputMapping.Up, SPG.InputManager.State.Pressed))
                 {
                     cursor = (cursor + 3) % 2;
                 }

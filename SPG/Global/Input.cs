@@ -7,7 +7,14 @@ using System;
 
 namespace SPG
 {
-    public class Input
+    public struct Input
+    {
+        public (InputManager.Direction, InputManager.Stick)? direction;        
+        public Keys? key;
+        public Buttons? button;
+    }
+
+    public class InputManager
     {
         public enum State
         {
@@ -25,13 +32,13 @@ namespace SPG
             RightStick = 1
         }
 
-        public bool GamePadEnabled { get { return _gamePadState != null && _gamePadState.IsConnected; } }
+        public bool GamePadEnabled { get { return _gamePadState != null && _gamePadState.Value.IsConnected; } }
 
         private KeyboardState _keyboardState;
         private KeyboardState _lastKeyboardState;
 
-        private GamePadState _gamePadState;
-        private GamePadState _lastGamePadState;
+        private GamePadState? _gamePadState;
+        private GamePadState? _lastGamePadState;
 
         private Vector2[] _stickVector;
         private Vector2[] _lastStickVector;
@@ -48,14 +55,15 @@ namespace SPG
 
         public bool Enabled { get; set; }
 
-        public Input()
+        public bool PreferGamePad { get; set; }
+
+        private int gpIndex;
+
+        public InputManager()
         {
             _keyboardState = new KeyboardState();
             _lastKeyboardState = new KeyboardState();
-
-            _gamePadState = new GamePadState();
-            _lastGamePadState = new GamePadState();
-
+            
             _stickVector = new[] { Vector2.Zero, Vector2.Zero };
             _lastStickVector = new[] { Vector2.Zero, Vector2.Zero };
 
@@ -69,23 +77,23 @@ namespace SPG
             lastUp = new[] { false, false };
             lastDown = new[] { false, false };
 
-            Enabled = true;
+            Enabled = true;            
         }
 
         public Vector2 LeftStick()
         {
             if (!Enabled) return Vector2.Zero;
-            if (!GamePadEnabled) return Vector2.Zero;
+            if (!GamePadEnabled) return Vector2.One;
 
-            return _gamePadState.ThumbSticks.Left;
+            return _gamePadState.Value.ThumbSticks.Left;
         }
 
         public Vector2 RightStick()
         {
             if (!Enabled) return Vector2.Zero;
-            if (!GamePadEnabled) return Vector2.Zero;
+            if (!GamePadEnabled) return Vector2.One;
 
-            return _gamePadState.ThumbSticks.Right;
+            return _gamePadState.Value.ThumbSticks.Right;
         }
         
         public bool DirectionPressedFromStick(Direction direction, Stick stick, State keyState = State.Pressed)
@@ -141,6 +149,11 @@ namespace SPG
                 default: return false;
             }
         }
+        
+        public bool IsAnyInputPressed()
+        {
+            return IsAnyButtonPressed() || IsAnyButtonPressed();
+        }
 
         public bool IsAnyKeyPressed()
         {
@@ -148,8 +161,6 @@ namespace SPG
 
             var defaultState = new KeyboardState();
             return _keyboardState != defaultState;
-
-            //return _keyboardState.GetPressedKeys().Length > 0;
         }
 
         public bool IsKeyPressed(Keys key, State keyState = State.Holding)
@@ -189,11 +200,11 @@ namespace SPG
             switch (keyState)
             {
                 case State.Pressed:
-                    return _gamePadState.IsButtonDown(key) && !_lastGamePadState.IsButtonDown(key);
+                    return _gamePadState.Value.IsButtonDown(key) && !_lastGamePadState.Value.IsButtonDown(key);
                 case State.Released:
-                    return !_gamePadState.IsButtonDown(key) && _lastGamePadState.IsButtonDown(key);
+                    return !_gamePadState.Value.IsButtonDown(key) && _lastGamePadState.Value.IsButtonDown(key);
                 case State.Holding:
-                    return _gamePadState.IsButtonDown(key) && _lastGamePadState.IsButtonDown(key);
+                    return _gamePadState.Value.IsButtonDown(key) && _lastGamePadState.Value.IsButtonDown(key);
                 default: return false;
             }
         }
@@ -202,14 +213,42 @@ namespace SPG
         {
             _lastKeyboardState = _keyboardState;
             _keyboardState = Keyboard.GetState();
+            
+            gpIndex = 0;
+
+            for(var i = 0; i < GamePad.MaximumGamePadCount; i++)
+            {
+                if (GamePad.GetState(i).IsConnected)
+                {
+                    gpIndex = i;
+                    break;
+                }
+            }
 
             _lastGamePadState = _gamePadState;
-            _gamePadState = GamePad.GetState(0);
+            _gamePadState = GamePad.GetState(gpIndex);
 
+            // disconnect if gamepad is lost
+            
+            if (!GamePad.GetState(gpIndex).IsConnected)
+            {
+                _gamePadState = null;
+                _lastGamePadState = null;
+            }
+            else
+            {
+                // reconnect if no gamepad was there, but now it is
+                if (_gamePadState == null)
+                {
+                    _gamePadState = new GamePadState();
+                    _lastGamePadState = new GamePadState();
+                }
+            }
+            
             if (GamePadEnabled)
             {
-                _stickVector[0] = _gamePadState.ThumbSticks.Left;
-                _stickVector[1] = _gamePadState.ThumbSticks.Right;
+                _stickVector[0] = _gamePadState.Value.ThumbSticks.Left;
+                _stickVector[1] = _gamePadState.Value.ThumbSticks.Right;
                 
                 double thresh = 0.2f;
                 for (int i = 0; i < 2; i++)

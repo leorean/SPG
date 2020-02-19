@@ -46,10 +46,10 @@ namespace Leore.Main
 
         // visual unique objects belong to the MainGame
         public HUD HUD { get; private set; }
-        
+
         // input
 
-        public Input Input { get; private set; } = new Input();
+        public InputManager Input { get; private set; }
         
         private static MainGame instance;
         public static MainGame Current { get => instance; }
@@ -61,6 +61,9 @@ namespace Leore.Main
             Content.RootDirectory = "Content";
 
             // fundamental setup
+
+            Input = new InputManager();
+            Input.PreferGamePad = Properties.Settings.Default.PreferGamePad;
 
             instance = this;
 
@@ -219,7 +222,7 @@ namespace Leore.Main
                 if (Properties.Settings.Default.IsDebugBuild)
                 {
 
-                    if (Input.IsKeyPressed(Keys.D0, Input.State.Pressed))
+                    if (Input.IsKeyPressed(Keys.D0, InputManager.State.Pressed))
                     {
                         var posX = MathUtil.Div(GameManager.Current.Player.Position.X, Globals.T) * Globals.T + 8;
                         var posY = MathUtil.Div(GameManager.Current.Player.Position.Y, Globals.T) * Globals.T + 8;
@@ -229,7 +232,7 @@ namespace Leore.Main
                         Debug.WriteLine("Saved.");
                     }
 
-                    if (Input.IsKeyPressed(Keys.L, Input.State.Pressed))
+                    if (Input.IsKeyPressed(Keys.L, InputManager.State.Pressed))
                     {
                         RoomCamera.Current.ChangeRoomsToPosition(new Vector2(2 * Globals.T - 8, 8 * Globals.T - 8), Objects.Effects.Transition.TransitionType.LIGHT, Direction.NONE, "debug", null);
                     }
@@ -245,7 +248,7 @@ namespace Leore.Main
                     //    Debug.WriteLine(RoomCamera.Current.Zoom);
                     //}
 
-                    if (Input.IsKeyPressed(Keys.C, Input.State.Pressed))
+                    if (Input.IsKeyPressed(Keys.C, InputManager.State.Pressed))
                     {
                         var dialog = new MessageDialog("Delete save game?");
                         dialog.YesAction = () =>
@@ -259,13 +262,13 @@ namespace Leore.Main
                     {
 
 
-                        if (Input.IsKeyPressed(Keys.H, Input.State.Pressed))
+                        if (Input.IsKeyPressed(Keys.H, InputManager.State.Pressed))
                         {
                             GameManager.Current.Player.Hit(1);
                             GameManager.Current.Player.HP++;
                         }
 
-                        if (Input.IsKeyPressed(Keys.D9, Input.State.Pressed))
+                        if (Input.IsKeyPressed(Keys.D9, InputManager.State.Pressed))
                         {
                             //stats.Abilities = PlayerAbility.NONE;
 
@@ -307,7 +310,7 @@ namespace Leore.Main
                             Debug.WriteLine("Added abilities");
                         }
 
-                        if (Input.IsKeyPressed(Keys.D8, Input.State.Pressed))
+                        if (Input.IsKeyPressed(Keys.D8, InputManager.State.Pressed))
                         {
                             //GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.DOUBLE_JUMP;
                             //GameManager.Current.Player.Stats.Abilities &= ~PlayerAbility.PUSH;
@@ -325,7 +328,7 @@ namespace Leore.Main
                             Debug.WriteLine("Removed abilities");
                         }
 
-                        if (Input.IsKeyPressed(Keys.O, Input.State.Pressed))
+                        if (Input.IsKeyPressed(Keys.O, InputManager.State.Pressed))
                         {
                             Coin.Spawn(GameManager.Current.Player.X, GameManager.Current.Player.Y, RoomCamera.Current.CurrentRoom, 2000);
                             Debug.WriteLine($"{ObjectManager.Count<Coin>()} coins exist. (Blocks: {ObjectManager.Count<Solid>()}, active: {ObjectManager.ActiveObjects.Count}, overall: {ObjectManager.Count<GameObject>()})");
@@ -341,7 +344,7 @@ namespace Leore.Main
                             Debug.WriteLine("cleared saved lists!");
                         }
 
-                        if (Input.IsKeyPressed(Keys.M, Input.State.Pressed))
+                        if (Input.IsKeyPressed(Keys.M, InputManager.State.Pressed))
                         {
                             var dialog = new MessageDialog("Do you like message dialogs?");
 
@@ -364,7 +367,7 @@ namespace Leore.Main
                             }
                         }
 
-                        if (Input.IsKeyPressed(Keys.Space, Input.State.Holding))
+                        if (Input.IsKeyPressed(Keys.Space, InputManager.State.Holding))
                         {
                             ObjectManager.GameDelay = 120;
                             Debug.WriteLine("delay " + RND.Next);
