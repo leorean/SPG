@@ -75,10 +75,11 @@ TEALGLADE WOODS
 GREAT CAVERN
 - [D2] The Nethervault (#2) : Double Jump - Seraph Cape
 MOUNT ASCENT
-- Fire Cave: (#3) : Wall Climb - Ignis Petal
+- Ignis Cave: (#3) : Wall Climb - Ignis Petal
 - [D3] Temple of Leon (#3) : Spell (Fire)
 CYON'S EDGE:
-- Frozen Bulwark (#4) : Ceil Climb - Yamori Root
+- ???? (#4) : Ceil Climb - Yamori Root
+- Frozen Bulwark (#4) : Spell (Ice)
 OCEAN
 - Sunken Temple (#5) : Breathe underwater - Silver Pearl
 PINE WOODS
