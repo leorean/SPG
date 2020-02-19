@@ -73427,7 +73427,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="1362"/>
    <tile/>
    <tile/>
    <tile/>
@@ -159837,8 +159837,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="39"/>
-   <tile gid="40"/>
+   <tile gid="235"/>
+   <tile gid="236"/>
    <tile gid="40"/>
    <tile gid="104"/>
    <tile gid="104"/>
@@ -160154,10 +160154,10 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
    <tile gid="13"/>
    <tile gid="237"/>
-   <tile gid="167"/>
+   <tile gid="235"/>
+   <tile gid="236"/>
    <tile gid="104"/>
    <tile gid="104"/>
    <tile gid="104"/>
@@ -161457,22 +161457,22 @@
    <tile gid="104"/>
    <tile gid="104"/>
    <tile gid="104"/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="237"/>
+   <tile gid="237"/>
+   <tile gid="237"/>
+   <tile gid="237"/>
+   <tile gid="237"/>
+   <tile gid="237"/>
+   <tile gid="237"/>
+   <tile gid="237"/>
+   <tile gid="237"/>
+   <tile gid="237"/>
+   <tile gid="237"/>
+   <tile gid="237"/>
+   <tile gid="237"/>
+   <tile gid="237"/>
+   <tile gid="237"/>
+   <tile gid="237"/>
    <tile/>
    <tile/>
    <tile/>
@@ -161777,6 +161777,7 @@
    <tile/>
    <tile/>
    <tile gid="104"/>
+   <tile gid="237"/>
    <tile/>
    <tile/>
    <tile/>
@@ -161791,8 +161792,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="237"/>
    <tile/>
    <tile/>
    <tile/>
@@ -162097,6 +162097,7 @@
    <tile/>
    <tile/>
    <tile gid="104"/>
+   <tile gid="237"/>
    <tile/>
    <tile/>
    <tile/>
@@ -162111,8 +162112,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="237"/>
    <tile/>
    <tile/>
    <tile/>
@@ -162417,6 +162417,7 @@
    <tile/>
    <tile/>
    <tile gid="104"/>
+   <tile gid="237"/>
    <tile/>
    <tile/>
    <tile/>
@@ -162431,8 +162432,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="237"/>
    <tile/>
    <tile/>
    <tile/>
@@ -162736,7 +162736,6 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="104"/>
    <tile/>
    <tile/>
    <tile/>
@@ -162753,6 +162752,7 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="237"/>
    <tile/>
    <tile/>
    <tile/>
@@ -163056,7 +163056,6 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="104"/>
    <tile/>
    <tile/>
    <tile/>
@@ -163073,6 +163072,7 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="237"/>
    <tile/>
    <tile/>
    <tile/>
@@ -163377,6 +163377,7 @@
    <tile gid="104"/>
    <tile gid="104"/>
    <tile gid="104"/>
+   <tile gid="237"/>
    <tile/>
    <tile/>
    <tile/>
@@ -163391,8 +163392,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="237"/>
    <tile/>
    <tile/>
    <tile/>
@@ -163697,6 +163697,7 @@
    <tile gid="104"/>
    <tile gid="104"/>
    <tile gid="104"/>
+   <tile gid="237"/>
    <tile/>
    <tile/>
    <tile/>
@@ -163711,8 +163712,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="237"/>
    <tile/>
    <tile/>
    <tile/>
@@ -164017,10 +164017,7 @@
    <tile gid="104"/>
    <tile gid="104"/>
    <tile gid="104"/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="237"/>
    <tile/>
    <tile/>
    <tile/>
@@ -164035,6 +164032,7 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="237"/>
    <tile/>
    <tile/>
    <tile/>
@@ -164321,17 +164319,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="237"/>
-   <tile gid="237"/>
-   <tile gid="237"/>
-   <tile gid="237"/>
-   <tile gid="237"/>
-   <tile gid="237"/>
-   <tile gid="237"/>
    <tile/>
    <tile/>
-   <tile gid="237"/>
-   <tile gid="237"/>
    <tile gid="237"/>
    <tile gid="237"/>
    <tile gid="237"/>
@@ -164349,9 +164338,20 @@
    <tile gid="237"/>
    <tile gid="237"/>
    <tile gid="237"/>
-   <tile gid="237"/>
-   <tile gid="237"/>
-   <tile gid="237"/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile gid="237"/>
    <tile/>
    <tile/>
@@ -166888,6 +166888,8 @@
    <tile gid="237"/>
    <tile gid="237"/>
    <tile gid="237"/>
+   <tile/>
+   <tile/>
    <tile gid="237"/>
    <tile gid="237"/>
    <tile gid="237"/>
@@ -166904,8 +166906,6 @@
    <tile gid="237"/>
    <tile gid="237"/>
    <tile gid="237"/>
-   <tile/>
-   <tile/>
    <tile gid="237"/>
    <tile gid="237"/>
    <tile gid="237"/>
@@ -167208,6 +167208,8 @@
    <tile gid="237"/>
    <tile gid="237"/>
    <tile gid="237"/>
+   <tile/>
+   <tile/>
    <tile gid="237"/>
    <tile gid="237"/>
    <tile gid="237"/>
@@ -167224,8 +167226,6 @@
    <tile gid="237"/>
    <tile gid="237"/>
    <tile gid="237"/>
-   <tile/>
-   <tile/>
    <tile gid="237"/>
    <tile gid="237"/>
    <tile gid="237"/>
@@ -169458,7 +169458,6 @@
    <tile/>
    <tile gid="237"/>
    <tile gid="237"/>
-   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -169471,6 +169470,7 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="582"/>
    <tile/>
    <tile gid="237"/>
    <tile/>
@@ -171710,7 +171710,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="583"/>
    <tile/>
    <tile/>
    <tile/>
@@ -172941,18 +172941,20 @@
 |According to old tales, ~fire sages~ used to live on top of the mountain.
 |They would not let anyone near the mountain top in order to ~protect their temple~.
 |However, there's a legend about a certain ~flower~ which the sages used for their practises.
-|Rumor has it that the flower grows in places of ~extreme heat~.
+|Rumor has it that the flower grows in a place of ~extreme heat~.
 If this is true, it might be the answer.</property>
    </properties>
   </object>
   <object id="1510" type="door" x="2256" y="1200" width="16" height="16">
    <properties>
+    <property name="textAfterTransition" value="Ignis Cave"/>
     <property name="tx" type="int" value="8"/>
     <property name="ty" type="int" value="5"/>
    </properties>
   </object>
   <object id="1511" type="door" x="2384" y="1280" width="16" height="16">
    <properties>
+    <property name="textAfterTransition" value="Mount Ascent"/>
     <property name="tx" type="int" value="-8"/>
     <property name="ty" type="int" value="-5"/>
    </properties>
