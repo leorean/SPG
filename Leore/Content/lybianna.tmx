@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="180" tilewidth="16" tileheight="16" infinite="0" nextlayerid="125" nextobjectid="1503">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="180" tilewidth="16" tileheight="16" infinite="0" nextlayerid="125" nextobjectid="1505">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="3072" columns="64">
   <image source="tiles.png" width="1024" height="768"/>
  </tileset>
@@ -145389,7 +145389,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="720"/>
    <tile gid="720"/>
    <tile/>
    <tile/>
@@ -148524,7 +148524,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="197"/>
    <tile/>
    <tile/>
    <tile/>
@@ -148764,8 +148764,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="65"/>
-   <tile gid="66"/>
+   <tile gid="198"/>
+   <tile gid="199"/>
    <tile gid="66"/>
    <tile gid="66"/>
    <tile gid="130"/>
@@ -149004,8 +149004,8 @@
    <tile gid="69"/>
    <tile gid="70"/>
    <tile gid="66"/>
-   <tile gid="130"/>
-   <tile gid="130"/>
+   <tile gid="262"/>
+   <tile gid="263"/>
    <tile gid="130"/>
    <tile gid="130"/>
    <tile gid="130"/>
@@ -173117,7 +173117,7 @@ It will prevent ~fall damage~.</property>
   <object id="1453" type="npc" x="2672" y="1376" width="16" height="16">
    <properties>
     <property name="centerText" type="bool" value="false"/>
-    <property name="disappearCondition" value=""/>
+    <property name="disappearCondition" value="D1"/>
     <property name="npcType" type="int" value="6"/>
     <property name="text">Sometimes, I feel a chilling presence when I go berry-picking outside the village.
 |I'm sure it's just my imagination..</property>
@@ -173126,6 +173126,7 @@ It will prevent ~fall damage~.</property>
   <object id="1454" type="npc" x="2800" y="1280" width="16" height="16">
    <properties>
     <property name="centerText" type="bool" value="false"/>
+    <property name="disappearCondition" value="D1"/>
     <property name="npcType" type="int" value="3"/>
     <property name="text">I'm Berry.
 Sometimes, Tas is picking on me outside the village.
@@ -173165,7 +173166,7 @@ Hm...
   </object>
   <object id="1458" type="movingPlatform" x="2480" y="1232" width="32" height="16">
    <properties>
-    <property name="activatable" type="bool" value="true"/>
+    <property name="activatable" type="bool" value="false"/>
     <property name="timeOut" type="int" value="60"/>
     <property name="xRange" type="int" value="4"/>
     <property name="xVel" type="float" value="-0.5"/>
@@ -173336,6 +173337,23 @@ The Great Cavern #rd</property>
     <property name="disappearCondition" value=""/>
     <property name="npcType" type="int" value="12"/>
     <property name="text" value="Ah, you've returned. Have you found ~Wyshin~? How's he doing?"/>
+   </properties>
+  </object>
+  <object id="1503" type="npc" x="2832" y="1360" width="16" height="16">
+   <properties>
+    <property name="appearCondition" value="D1"/>
+    <property name="centerText" type="bool" value="false"/>
+    <property name="npcType" type="int" value="3"/>
+    <property name="text" value="Don't be scared, Tas. I'm sure it was nothing!"/>
+   </properties>
+  </object>
+  <object id="1504" type="npc" x="2816" y="1360" width="16" height="16">
+   <properties>
+    <property name="appearCondition" value="D1"/>
+    <property name="centerText" type="bool" value="false"/>
+    <property name="disappearCondition" value=""/>
+    <property name="npcType" type="int" value="6"/>
+    <property name="text" value="Th-there was an e-earthquake!"/>
    </properties>
   </object>
  </objectgroup>

@@ -31,6 +31,9 @@ namespace Leore.Objects.Level
         float xScale = 0;
         float warpY;
 
+        bool init;
+        bool firstTimeUse;
+
         private StoryWarpEmitter emitter;
 
         public StoryWarp(float x, float y, Room room, string setCondition, int tx, int ty, string text, Direction direction = Direction.NONE, string levelName = null, string textAfterTransition = null) : base(x, y, room)
@@ -61,6 +64,8 @@ namespace Leore.Objects.Level
             
             warpY = Y;
 
+            firstTimeUse = true;
+
             emitter = new StoryWarpEmitter(X, Y + 8);
         }
 
@@ -68,8 +73,16 @@ namespace Leore.Objects.Level
         {
             base.Update(gameTime);
 
-            if (GameManager.Current.HasStoryFlag(setCondition))
-                return;
+            if (!init)
+            {
+                init = true;
+                if (GameManager.Current.HasStoryFlag(setCondition))
+                {
+                    xScale = 1;
+                    alpha = .25f;
+                    firstTimeUse = false;
+                }
+            }
 
             if (!touched)
             {
@@ -100,26 +113,15 @@ namespace Leore.Objects.Level
                     player.SetControlsEnabled(true);
                     GameManager.Current.AddStoryFlag(setCondition);
 
-                    var msg = new MessageBox(text, textSpeed: MessageBox.TextSpeed.SLOW);
-                    //msg.CompleteActionDelay = 3 * 60;
-                    msg.OnCompleted = Complete;
-
-                    //var msg = new MessageBox(text);
-                    //msg.CompleteActionDelay = 3 * 60;
-                    //msg.OnCompleted = () =>
-                    //{
-                    //    var saveMsg = new MessageDialog("Do you want to save?");
-                    //    saveMsg.YesAction = () =>
-                    //    {
-                    //        player.Direction = direction;
-                    //        GameManager.Current.Save(targetPos.X, targetPos.Y, levelName);
-                    //        Complete();
-                    //    };
-                    //    saveMsg.NoAction = () =>
-                    //    {
-                    //        Complete();
-                    //    };
-                    //};
+                    if (firstTimeUse)
+                    {
+                        var msg = new MessageBox(text, textSpeed: MessageBox.TextSpeed.SLOW);
+                        msg.OnCompleted = Complete;
+                    }
+                    else
+                    {
+                        Complete();
+                    }
                 }
             }
         }
