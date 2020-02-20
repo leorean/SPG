@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="180" tilewidth="16" tileheight="16" infinite="0" nextlayerid="125" nextobjectid="1501">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="180" tilewidth="16" tileheight="16" infinite="0" nextlayerid="125" nextobjectid="1503">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="3072" columns="64">
   <image source="tiles.png" width="1024" height="768"/>
  </tileset>
@@ -150014,7 +150014,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="843"/>
    <tile/>
    <tile gid="129"/>
    <tile gid="130"/>
@@ -150211,7 +150211,7 @@
    <tile gid="130"/>
    <tile gid="131"/>
    <tile/>
-   <tile/>
+   <tile gid="843"/>
    <tile/>
    <tile/>
    <tile/>
@@ -150382,7 +150382,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="843"/>
    <tile/>
    <tile gid="129"/>
    <tile gid="131"/>
@@ -152835,7 +152835,7 @@
    <tile gid="350"/>
    <tile gid="131"/>
    <tile/>
-   <tile/>
+   <tile gid="843"/>
    <tile/>
    <tile/>
    <tile gid="577"/>
@@ -173148,7 +173148,7 @@ Hm...
   <object id="1456" type="npc" x="2480" y="1376" width="16" height="16">
    <properties>
     <property name="centerText" type="bool" value="false"/>
-    <property name="disappearCondition" value=""/>
+    <property name="disappearCondition" value="D1"/>
     <property name="npcType" type="int" value="12"/>
     <property name="text">Do you know ~Wyshin~? He is our oldest resident. Or, shall I say, was.
 |He moved to the ~Tealglade Woods~ years ago, saying something about a prophecy or something..</property>
@@ -173327,6 +173327,15 @@ The Great Cavern #rd</property>
     <property name="disappearCondition" value=""/>
     <property name="npcType" type="int" value="13"/>
     <property name="text" value="Alright. You may enter - but you're on your own."/>
+   </properties>
+  </object>
+  <object id="1501" type="npc" x="2464" y="1376" width="16" height="16">
+   <properties>
+    <property name="appearCondition" value="D1"/>
+    <property name="centerText" type="bool" value="false"/>
+    <property name="disappearCondition" value=""/>
+    <property name="npcType" type="int" value="12"/>
+    <property name="text" value="Ah, you've returned. Have you found ~Wyshin~? How's he doing?"/>
    </properties>
   </object>
  </objectgroup>

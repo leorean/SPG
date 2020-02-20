@@ -58,8 +58,26 @@ namespace Leore.Objects.Enemies
             hitFont.Color = new Color(255, 0, 0);
         }
 
-        public virtual void Hit(int hitPoints, float degAngle)
+        /// <summary>
+        /// Hits the enemy with an object (playerprojectile) or simply a damage number in a certain angle.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="hitObj"></param>
+        /// <param name="degAngle"></param>
+        public virtual void Hit<T>(T hitObj, float degAngle)
         {
+            int hitPoints = 0;
+
+            if (hitObj is int h)
+            {
+                hitPoints = h;
+            }
+
+            if (hitObj is PlayerProjectile projectile)
+            {
+                hitPoints = projectile.Damage;
+            }
+
             if (hitPoints == 0)
                 return;
 
@@ -68,10 +86,7 @@ namespace Leore.Objects.Enemies
             var hpPrev = HP;
 
             HP = Math.Max(HP - hitPoints, 0);
-
-            // should come from the projectile, not the enemy
-            //new SingularEffect(Center.X - 4 + (float)(RND.Next * 8), Center.Y - 4 + (float)(RND.Next * 8), 5);
-
+            
             new FallingFont(Center.X, Center.Y, $"-{hitPoints}", new Color(255, 0, 55), new Color(255, 255, 0));
 
             var ldx = MathUtil.LengthDirX((float)degAngle) * knockback;
@@ -112,7 +127,7 @@ namespace Leore.Objects.Enemies
                     {
                         var vec = Position - (projectile.Position + new Vector2(0, 0));
                         var angle = vec.VectorToAngle();
-                        Hit(projectile.Damage, (float)angle);
+                        Hit(projectile, (float)angle);
 
                         projectile.HandleCollision(this);
                     }

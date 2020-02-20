@@ -457,14 +457,14 @@ namespace Leore.Objects.Enemies
             }
         }
 
-        public override void Hit(int hitPoints, float degAngle)
+        public override void Hit<T>(T hitObj, float degAngle)
         {
             if (invincibleTimer != 0)
                 return;
 
             invincibleTimer = 2;
             
-            base.Hit(hitPoints, degAngle);            
+            base.Hit(hitObj, degAngle);            
         }
 
         public override void Destroy(bool callGC = false)

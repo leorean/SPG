@@ -98,13 +98,13 @@ namespace Leore.Objects.Enemies
             new SlimeEmitter(x, y, type, radius) { SpawnRate = spawnRate, Color = particleColor, Alpha = particleColor.A / 255f, Depth = Depth - .0001f, Scale = new Vector2(Math.Min(.5f * scale, 1.5f)) };
         }
 
-        public override void Hit(int hitPoints, float degAngle)
+        public override void Hit<T>(T hitObj, float degAngle)
         {
             regenTimer = 60;
 
             SpawnParticles(Center.X, Center.Y, 5);
             
-            base.Hit(hitPoints, degAngle);
+            base.Hit(hitObj, degAngle);
             if (onGround)
             {
                 YVel = -1f;

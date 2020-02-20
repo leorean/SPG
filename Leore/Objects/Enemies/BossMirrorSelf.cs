@@ -16,6 +16,7 @@ using Leore.Util;
 using SPG.Util;
 using Leore.Objects.Items;
 using System.Diagnostics;
+using Leore.Objects.Projectiles;
 
 namespace Leore.Objects.Enemies
 {
@@ -35,6 +36,8 @@ namespace Leore.Objects.Enemies
 
         private int aliveTimer;
         private bool touching;
+
+        private bool deadFromOwnSpell;
 
         public BossMirrorSelf(float x, float y, Room room, string setCondition) : base(x, y, room, setCondition)
         {
@@ -133,10 +136,25 @@ namespace Leore.Objects.Enemies
                 player.Orb.Position = new Vector2(Math.Min(player.Orb.X, Room.X + .5f * Room.BoundingBox.Width - 8), player.Orb.Y);
             }
 
+            if (deadFromOwnSpell)
+            {
+                if (aliveTimer > 0)
+                {
+                    player.State = Player.PlayerState.HIT_AIR;
+                    player.YVel = -.115f;
+                    player.SetControlsEnabled(false);
+                    player.XVel = -.2f + (float)RND.Next * .4f;
+                }
+                else
+                {
+                    player.SetControlsEnabled(true);
+                }
+            }
+
             var px = (player.X - Room.X);
             Position = new Vector2(Room.X + Room.BoundingBox.Width - px, player.Y);
             
-            if (!this.CollisionBounds(player, X, Y))
+            if (!this.CollisionBounds(player, X, Y) && !deadFromOwnSpell)
             {
                 HP = Math.Max(player.HP, 1);
                 touching = false;                
@@ -173,16 +191,35 @@ namespace Leore.Objects.Enemies
             base.OnDeath();            
         }
         
-        public override void Hit(int hitPoints, float degAngle)
+        public override void Hit<T>(T hitObj, float degAngle)
         {
             if (invincible > 0)
                 return;
+            
+            if (hitObj is PlayerProjectile proj)
+            {
+                if (proj.Element != SpellElement.DARK)
+                {
+                    base.Hit(hitObj, degAngle);
 
-            base.Hit(hitPoints, degAngle);            
-            player.Hit(hitPoints);
-            player.XVel -= 1;
-            player.YVel -= .5f;
-            invincible = 60;
+                    player.Hit(proj.Damage);
+                    player.XVel -= 1;
+                    player.YVel -= .5f;
+                    invincible = 60;
+                }
+                else
+                {
+                    ((PlayerProjectile)(object)hitObj).Destroy();
+                    aliveTimer = 3 * 60;
+                    deadFromOwnSpell = true;
+                    player.Position = new Vector2(player.Position.X, player.Position.Y - 1);
+
+                    //new FlashEmitter(X, Y, 1 * 60, false);
+                    //new FlashEmitter(X, Y, 2 * 60, false);
+                    //new FlashEmitter(X, Y, 2 * 60 + 30, false);
+                    //new FlashEmitter(X, Y, 3 * 60, false);
+                }
+            }            
         }
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)
@@ -217,7 +254,18 @@ namespace Leore.Objects.Enemies
                     player.Orb.Position = new Vector2(Math.Min(player.Orb.X, Room.X + .5f * Room.BoundingBox.Width), player.Orb.Y);                    
                 }
             }
-            
+
+            if (deadFromOwnSpell)
+            {
+                var ang1 = (float)RND.Next * 2 * Math.PI;
+                var ang2 = (float)RND.Next * 2 * Math.PI;
+                var pos1 = Position + new Vector2(32 * (float)MathUtil.LengthDirX(MathUtil.RadToDeg(ang1)), 32 * (float)MathUtil.LengthDirY(MathUtil.RadToDeg(ang1)));
+                var pos2 = Position + new Vector2(32 * (float)MathUtil.LengthDirX(MathUtil.RadToDeg(ang2)), 32 * (float)MathUtil.LengthDirY(MathUtil.RadToDeg(ang2)));
+
+                sb.DrawLightning(player.Orb.Position, pos1, Color.White, Depth + .0001f);
+                sb.DrawLightning(player.Orb.Position, pos2, Color.Black, Depth + .0001f);
+            }
+
             // bg
             sb.Draw(AssetManager.MirrorBossBG[0], new Vector2(Room.X, Room.Y), null, new Color(Color.White, bgAlpha), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Globals.LAYER_FG + .0002f);
             sb.Draw(AssetManager.MirrorBossBG[1], new Vector2(Room.X, Room.Y), null, new Color(Color.White, bgAlpha), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth + .0002f);

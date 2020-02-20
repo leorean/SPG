@@ -86,43 +86,7 @@ namespace Leore.Main
             texts.Add($"...|" +
                 $".....|" +
                 $"...wake up.");
-
-            //// 0:
-            //texts.Add($"In the beginning, there was a dull, but vast celestial body, drifting through the [{voidColor}]~Void~." +
-            //    $"|It was given the name ~Leore~.");
-            //// 1:
-            //texts.Add($"When the [{sunColor}]~sun, source of all energy~, came to be, life was created." +
-            //    $"|Every living being is born as a child of the [{sunColor}]~sun~, holding part of it's energy within." +
-            //    $"|This energy is called [{magicColor}]~magic~.");
-            //// 2:
-            //texts.Add($"Eons passed and life was flourishing on ~Leore~. And so, in time, civilizations formed and thrived. " +
-            //    $"|But eventually, the apex of life was reached.");
-            //// 3:
-            //texts.Add($"The [{sunColor}]~sun~ became weaker, drifting slowly away and ~Leore~ would eventually face a cold dark death.");
-            //// 4:
-            //texts.Add($"There were the protectors of the world called ~Ancients~, who defied the apocalypse." +
-            //    $"|They found a solution that should prevent the inevitable destiny of ~Leore~.");
-            //// 5:
-            //texts.Add($"The ~Ancients~ built towers across the world that would create a vast [{magicColor}]~magic barrier~.");
-
-            //// 6:
-            //texts.Add($"This barrier would maintain equilibrium between [{sunColor}]~light~ and [{voidColor}]~darkness~." +
-            //    $"|For centuries, this has been proven true and life was protected, not knowing the actual truth.");
-            //// 7:
-            //texts.Add($"Eventually, the [{voidColor}]~Void~ found a way to break through..");
-
-            //// 8:
-            //texts.Add($"It corrupted the towers turning them from [{sunColor}]~sacred sites~ into [{voidColor}]~structures of darkness~." +
-            //    $"|The ~Ancients~ were forced to seal the towers, ~removing them from the physical world~.");
-
-            //// 9:
-            //texts.Add($"In their final act, they emplaced their power into an ~Orb~ that would awaken the rightful heir.");
-
-            //// 10
-            //texts.Add($"...|" +
-            //    $".....|" +
-            //    $"...wake up.");
-
+            
             // ---- ENDING 1 ----
 
             // 8:

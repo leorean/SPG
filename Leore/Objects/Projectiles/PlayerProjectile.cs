@@ -41,8 +41,8 @@ namespace Leore.Objects.Projectiles
                 HandleCollisionFromDestroyBlock(destBlock);
             }
 
-            if (!(this is IKeepAliveBetweenRooms) && this.IsOutsideCurrentRoom(2 * Globals.T))
-                Destroy();
+            //if (!(this is IKeepAliveBetweenRooms) && this.IsOutsideCurrentRoom(2 * Globals.T))
+            //    Destroy();
 
         }
 

@@ -32788,7 +32788,7 @@
    <tile gid="74"/>
    <tile gid="75"/>
    <tile/>
-   <tile/>
+   <tile gid="843"/>
    <tile/>
    <tile gid="715"/>
    <tile/>
@@ -32812,7 +32812,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="843"/>
    <tile/>
    <tile gid="73"/>
    <tile gid="74"/>
@@ -34977,7 +34977,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="577"/>
    <tile/>
    <tile/>
    <tile gid="1026"/>
@@ -38404,7 +38404,7 @@
    <tile gid="74"/>
    <tile gid="75"/>
    <tile/>
-   <tile/>
+   <tile gid="843"/>
    <tile/>
    <tile/>
    <tile gid="73"/>
@@ -39989,7 +39989,7 @@
    <tile gid="350"/>
    <tile gid="1163"/>
    <tile gid="1164"/>
-   <tile/>
+   <tile gid="843"/>
    <tile/>
    <tile/>
    <tile gid="268"/>
@@ -40537,7 +40537,6 @@ Why don't you try it out?</property>
   </object>
   <object id="1451" type="door" x="1056" y="784" width="16" height="16">
    <properties>
-    <property name="textAfterTransition" value="Tealglade Woods"/>
     <property name="tx" type="int" value="-7"/>
     <property name="ty" type="int" value="2"/>
    </properties>
@@ -40609,7 +40608,9 @@ Well.. you're on the right path - There's an ancient temple ahead.
     <property name="disappearCondition" value="ancientBeforeForestTemple"/>
     <property name="npcType" type="int" value="1"/>
     <property name="setCondition" value="ancientBeforeForestTemple"/>
-    <property name="text" value="&quot;Blessed by the ~altars of light~, the path shall be revealed to the ~aspirant of the Ancients~.&quot;"/>
+    <property name="text">You've reached the ~Forest Temple~. Inside, you'll find the first ~altar of light~.
+|This temple also happened to be a library for mages. Now, it is a dark and forsaken place.
+|Be careful.</property>
    </properties>
   </object>
   <object id="1472" name="Spell: Snatch" type="item" x="672" y="944" width="16" height="16">

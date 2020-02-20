@@ -76,8 +76,15 @@ namespace Leore.Objects.Items
 
                     break;
                 case PotionType.MP:
-                    player.MP = Math.Min(player.MP + amount, GameManager.Current.SaveGame.gameStats.MaxMP);
+                    //player.MP = Math.Min(player.MP + amount, GameManager.Current.SaveGame.gameStats.MaxMP);
 
+                    //var fntMp = new FollowFont(player.X, player.Y - Globals.T, $"+{amount} MP");
+                    //fntMp.Target = player;
+
+                    //fntMp.Color = GameResources.MpColors.First();
+
+                    SpellEXP.Spawn(Center.X, Center.Y, amount);
+                    
                     var fntMp = new FollowFont(player.X, player.Y - Globals.T, $"+{amount} MP");
                     fntMp.Target = player;
 

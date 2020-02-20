@@ -13,6 +13,7 @@ using System.Diagnostics;
 using Leore.Objects.Effects;
 using Microsoft.Xna.Framework.Graphics;
 using SPG.Objects;
+using Leore.Objects.Projectiles;
 
 namespace Leore.Objects.Enemies
 {
@@ -211,11 +212,14 @@ namespace Leore.Objects.Enemies
             }
         }
 
-        public override void Hit(int hitPoints, float degAngle)
+        public override void Hit<T>(T hitObj, float degAngle)
         {
-            damageTaken += hitPoints;
-            
-            base.Hit(hitPoints, degAngle);            
+            if (hitObj is PlayerProjectile proj)
+            {
+                damageTaken += proj.Damage;
+            }
+
+            base.Hit(hitObj, degAngle);            
         }
 
         public override void Destroy(bool callGC = false)

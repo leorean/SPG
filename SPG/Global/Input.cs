@@ -152,7 +152,7 @@ namespace SPG
         
         public bool IsAnyInputPressed()
         {
-            return IsAnyButtonPressed() || IsAnyButtonPressed();
+            return IsAnyKeyPressed() || IsAnyButtonPressed();
         }
 
         public bool IsAnyKeyPressed()

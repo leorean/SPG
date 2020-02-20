@@ -22,9 +22,9 @@ namespace Leore.Objects.Enemies
             MainGame.Current.HUD.Boss = this;
         }
 
-        public override void Hit(int hitPoints, float degAngle)
+        public override void Hit<T>(T hitObj, float degAngle)
         {
-            base.Hit(hitPoints, degAngle);
+            base.Hit(hitObj, degAngle);
             MainGame.Current.HUD.Boss = this;
         }
 

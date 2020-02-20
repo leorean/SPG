@@ -160,13 +160,13 @@ namespace Leore.Objects.Enemies
                 Destroy();
         }
 
-        public override void Hit(int hitPoints, float degAngle)
+        public override void Hit<T>(T hitObj, float degAngle)
         {
             if (hitTimer > 0)
                 return;
             hitTimer = 5;
             
-            base.Hit(hitPoints, degAngle);
+            base.Hit(hitObj, degAngle);
 
         }
     }

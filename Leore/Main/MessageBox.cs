@@ -326,16 +326,8 @@ namespace Leore.Main
             kLeftPressed = InputMapping.KeyPressed(InputMapping.Left);
             kRightPressed = InputMapping.KeyPressed(InputMapping.Right);
 
-            var kAny = InputMapping.IsAnyKeyPressed();
-
-            // TODO: GAMEPAD
-            //if (input.GamePadEnabled)
-            //{
-            //    kPrevPressed = input.IsButtonPressed(Buttons.X) || input.IsButtonPressed(Buttons.Y);
-            //    kNextPressed = input.IsButtonPressed(Buttons.B) || input.IsButtonPressed(Buttons.A) || input.IsButtonPressed(Buttons.Start);
-            //    kAny = input.IsAnyButtonPressed();
-            //}
-
+            var kAny = InputMapping.IsAnyInputPressed();
+            
             if (kNextPressed)
             {
                 if (page == texts.Count - 1)

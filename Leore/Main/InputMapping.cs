@@ -83,6 +83,6 @@ namespace Leore.Main
         //public static Keys[] MessageNext { get; } = new[] { Jump, Enter };
         //public static Keys MessagePrev { get; } = Attack;
 
-        public static bool IsAnyKeyPressed() => input != null && input.IsAnyInputPressed();
+        public static bool IsAnyInputPressed() => input != null && input.IsAnyInputPressed();
     }
 }

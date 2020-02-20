@@ -574,7 +574,7 @@ namespace Leore.Main
             
             // ++++ idle timer ++++
 
-            if (!InputMapping.IsAnyKeyPressed())
+            if (!InputMapping.IsAnyInputPressed())
             {
                 idleTimer = Math.Min(idleTimer + 1, 999999999);
             }
