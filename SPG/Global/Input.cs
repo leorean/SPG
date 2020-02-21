@@ -200,11 +200,11 @@ namespace SPG
             switch (keyState)
             {
                 case State.Pressed:
-                    return _gamePadState.Value.IsButtonDown(key) && !_lastGamePadState.Value.IsButtonDown(key);
+                    return _gamePadState.Value.IsButtonDown(key) && _lastGamePadState != null && !_lastGamePadState.Value.IsButtonDown(key);
                 case State.Released:
-                    return !_gamePadState.Value.IsButtonDown(key) && _lastGamePadState.Value.IsButtonDown(key);
+                    return !_gamePadState.Value.IsButtonDown(key) && _lastGamePadState != null && _lastGamePadState.Value.IsButtonDown(key);
                 case State.Holding:
-                    return _gamePadState.Value.IsButtonDown(key) && _lastGamePadState.Value.IsButtonDown(key);
+                    return _gamePadState.Value.IsButtonDown(key) && _lastGamePadState != null && _lastGamePadState.Value.IsButtonDown(key);
                 default: return false;
             }
         }

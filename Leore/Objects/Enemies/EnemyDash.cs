@@ -50,10 +50,10 @@ namespace Leore.Objects.Enemies
             switch (dashDirection)
             {
                 case DashDirection.VERTICAL:
-                    Direction = (this.CollisionBoundsFirstOrDefault<Collider>(X, Y - 8) != null) ? Direction.DOWN : Direction.UP;
+                    Direction = (this.CollisionBoundsFirstOrDefault<Solid>(X, Y - 8) != null) ? Direction.DOWN : Direction.UP;
                     break;
                 case DashDirection.HORIZONTAL:
-                    Direction = (this.CollisionBoundsFirstOrDefault<Collider>(X - 8, Y) != null) ? Direction.RIGHT : Direction.LEFT;
+                    Direction = (this.CollisionBoundsFirstOrDefault<Solid>(X - 8, Y) != null) ? Direction.RIGHT : Direction.LEFT;
                     break;
             }
         }
@@ -118,7 +118,7 @@ namespace Leore.Objects.Enemies
                             break;
                     }
 
-                    if (this.CollisionBoundsFirstOrDefault<Collider>(X + xv, Y + yv) != null)
+                    if (this.CollisionBoundsFirstOrDefault<Solid>(X + xv, Y + yv) != null)
                     {
                         new SingularEffect(Center.X, Center.Y, 10);
 

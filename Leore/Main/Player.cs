@@ -494,8 +494,10 @@ namespace Leore.Main
             k_LPressed = ctrl && InputMapping.KeyPressed(InputMapping.L, InputManager.State.Pressed);
             k_RPressed = ctrl && InputMapping.KeyPressed(InputMapping.R, InputManager.State.Pressed);
 
-            gamePadLeftXFactor = Math.Abs(InputMapping.GamePadXFactor);
-            gamePadLeftYFactor = Math.Abs(InputMapping.GamePadYFactor);
+            gamePadLeftXFactor = Math.Max(Math.Abs(InputMapping.GamePadXFactor), .3f);
+            gamePadLeftYFactor = Math.Max(Math.Abs(InputMapping.GamePadYFactor), .3f);
+
+            gamePadLeftXFactor = Math.Min(1, (float)MathUtil.Euclidean(Vector2.Zero, new Vector2(gamePadLeftXFactor, gamePadLeftYFactor)));
             
             // ++++ debug ++++
 
@@ -2400,6 +2402,7 @@ namespace Leore.Main
 
                 if (groundCollider != null 
                     && !(groundCollider is FallingPlatform || groundCollider is IMovable || groundCollider is PushBlock || groundCollider is MovingPlatform)
+                    && this.CollisionPointFirstOrDefault<SwitchBlock>(tmp.X, tmp.Y + 8) == null
                     && Bottom < RoomCamera.Current.ViewY + RoomCamera.Current.ViewHeight - 1 * Globals.T)
                     safePosition = new Vector2(MathUtil.Div(X, Globals.T) * Globals.T + 8, MathUtil.Div(Y, Globals.T) * Globals.T + 8);
             }

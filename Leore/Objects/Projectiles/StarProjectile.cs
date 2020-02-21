@@ -16,6 +16,8 @@ namespace Leore.Objects.Projectiles
 
         private LightSource light;
 
+        private Orb orb => GameManager.Current.Player.Orb;
+
         public StarProjectile(float x, float y, SpellLevel level) : base(x, y, level)
         {            
             BoundingBox = new RectF(-2, -2, 4, 4);
@@ -27,16 +29,19 @@ namespace Leore.Objects.Projectiles
                     Texture = AssetManager.Projectiles[0];
                     maxDist = 3 * Globals.T;
                     Damage = 1;
+                    orb.Cooldown = 15;
                     break;
                 case SpellLevel.TWO:
                     Texture = AssetManager.Projectiles[1];
                     maxDist = 5 * Globals.T;
                     Damage = 2;
+                    orb.Cooldown = 15;
                     break;
                 case SpellLevel.THREE:
                     Texture = AssetManager.Projectiles[2];
                     maxDist = 8 * Globals.T;
                     Damage = 1;
+                    orb.Cooldown = 8;
                     break;
             }
 

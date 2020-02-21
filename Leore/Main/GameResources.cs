@@ -110,7 +110,7 @@ namespace Leore.Resources
                 new Dictionary<SpellLevel, float> {
                     {SpellLevel.ONE, 1 },
                     {SpellLevel.TWO, 2 },
-                    {SpellLevel.THREE, 1 }
+                    {SpellLevel.THREE, .5f }
                 }
             },
             {

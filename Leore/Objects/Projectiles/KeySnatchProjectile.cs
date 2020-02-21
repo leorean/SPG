@@ -79,9 +79,15 @@ namespace Leore.Objects.Projectiles
             {
 
                 var coins = this.CollisionBounds<Coin>(X, Y);
-                foreach(var coin in coins)
+                foreach (var coin in coins)
                 {
                     coin.Take(player);
+                }
+
+                var potions = this.CollisionBounds<Potion>(X, Y);
+                foreach (var potion in potions)
+                {
+                    potion.Take(player);
                 }
 
                 if (key == null)

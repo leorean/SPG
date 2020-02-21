@@ -138,10 +138,8 @@ namespace Leore.Objects.Level
         {
             if (Texture != null)
             {
-                sb.Draw(Texture, Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Globals.LAYER_BG + 0.0001f);
-                //sb.Draw(AnimationTexture[0], Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Globals.LAYER_FG - 0.0001f);
-                //sb.Draw(AnimationTexture[0], Position, null, new Color(Color, 0.5f), Angle, DrawOffset, Scale, SpriteEffects.None, Globals.LAYER_FG + 0.0001f);
-                sb.Draw(AnimationTexture[0], Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Globals.LAYER_FG + 0.0001f);
+                sb.Draw(Texture, Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Globals.LAYER_BG + 0.00005f);
+                sb.Draw(AnimationTexture[0], Position, null, Color, Angle, DrawOffset, Scale, SpriteEffects.None, Globals.LAYER_BG + 0.00006f);
             }
 
         }
