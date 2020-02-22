@@ -8695,7 +8695,7 @@
     <property name="itemName" value="Earth Totem"/>
     <property name="itemType" type="int" value="8"/>
     <property name="text">You found the ~Earth Totem~!
-Press #d + #r / #l to ~roll~.</property>
+Press #D or #b to ~roll~.</property>
    </properties>
   </object>
   <object id="1424" name="Ability: Levitate" type="item" x="944" y="208" width="16" height="16">

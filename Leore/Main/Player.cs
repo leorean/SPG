@@ -173,6 +173,8 @@ namespace Leore.Main
 
         bool k_LPressed, k_RPressed;
 
+        bool k_rollPressed;
+
         float gamePadLeftXFactor;
         float gamePadLeftYFactor;
 
@@ -245,6 +247,7 @@ namespace Leore.Main
         private float rollAngle;
         private int doubleTapTimer;
         private int rollTimeout;
+        //private int rollStateTimer;
         private float maxVelRoll = 3f;
         private float noRollGravityTimer;
         private readonly float maxNoRollGravityTimer = 20;
@@ -494,6 +497,8 @@ namespace Leore.Main
             k_LPressed = ctrl && InputMapping.KeyPressed(InputMapping.L, InputManager.State.Pressed);
             k_RPressed = ctrl && InputMapping.KeyPressed(InputMapping.R, InputManager.State.Pressed);
 
+            k_rollPressed = ctrl && InputMapping.KeyPressed(InputMapping.Roll, InputManager.State.Pressed);
+            
             gamePadLeftXFactor = Math.Max(Math.Abs(InputMapping.GamePadXFactor), .3f);
             gamePadLeftYFactor = Math.Max(Math.Abs(InputMapping.GamePadYFactor), .3f);
 
@@ -1435,6 +1440,8 @@ namespace Leore.Main
                 rollAngle = (rollAngle + (5 * XVel)) % 360;
                 Angle = (float)((rollAngle / 360) * (2 * Math.PI));
 
+                rollTimeout = Math.Max(rollTimeout - 1, 0);
+
                 // escape-the-state
                 if (!k_leftHolding && !k_rightHolding)
                 {
@@ -1443,7 +1450,7 @@ namespace Leore.Main
                         XVel = Math.Sign(XVel) * Math.Max(Math.Abs(XVel) - .03f, 0);
                         if (Math.Abs(XVel) < .05f)
                         {
-                            rollTimeout = Math.Max(rollTimeout - 1, 0);
+                            //rollTimeout = Math.Max(rollTimeout - 1, 0);
                             if (rollTimeout == 0)
                             {
                                 State = PlayerState.IDLE;
@@ -1451,10 +1458,10 @@ namespace Leore.Main
                         }
                     }
                 }
-                else
-                {
-                    rollTimeout = 5;
-                }
+                //else
+                //{
+                //    rollTimeout = 5;
+                //}
             
                 if (Math.Abs(XVel) > .5f && !onWall)
                 {
@@ -1647,24 +1654,25 @@ namespace Leore.Main
 
                     if (!k_attackHolding)
                     {
-                        if (k_downPressed)
+                        if (k_rollPressed)
                         {
-                            if ((Direction == Direction.LEFT && k_leftHolding)
-                                || (Direction == Direction.RIGHT && k_rightHolding))
+                            //if ((Direction == Direction.LEFT && k_leftHolding)
+                            //    || (Direction == Direction.RIGHT && k_rightHolding))
                             {
                                 enableRollState = true;
+                                rollTimeout = 60;
                             }
                         }
                         else
                         {
-                            if (k_downHolding)
-                            {
-                                if ((Direction == Direction.LEFT && k_leftPressed)
-                                || (Direction == Direction.RIGHT && k_rightPressed))
-                                {
-                                    enableRollState = true;
-                                }
-                            }
+                            //if (k_rollPressed)
+                            //{
+                            //    if ((Direction == Direction.LEFT && k_leftPressed)
+                            //    || (Direction == Direction.RIGHT && k_rightPressed))
+                            //    {
+                            //        enableRollState = true;
+                            //    }
+                            //}
                         }
                     }
 

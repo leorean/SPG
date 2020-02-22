@@ -18,6 +18,9 @@ namespace Leore.Main
             if (input == null) return false;
             foreach (var k in keys) {
 
+                if (k == null)
+                    continue;
+
                 if (input.PreferGamePad && input.GamePadEnabled && k.button != null || k.direction != null)
                 {
                     if (k.button == null)
@@ -32,17 +35,17 @@ namespace Leore.Main
                     }
                 }
 
-                if (input.IsKeyPressed(k.key.Value, state))
+                if (k.key != null && input.IsKeyPressed(k.key.Value, state))
                 {
                     return true;
                 }
-                                
-            }            
+
+            }
             return false;
         }
 
         public static float GamePadXFactor => input.LeftStick().X;
-        public static float GamePadYFactor =>  input.LeftStick().Y;
+        public static float GamePadYFactor => input.LeftStick().Y;
 
         public static Input Left { get; set; } = new Input { key = Keys.Left, direction = (InputManager.Direction.LEFT, InputManager.Stick.LeftStick) };
         public static Input Right { get; set; } = new Input { key = Keys.Right, direction = (InputManager.Direction.RIGHT, InputManager.Stick.LeftStick) };
@@ -51,8 +54,13 @@ namespace Leore.Main
 
         public static Input Jump { get; set; } = new Input { key = Keys.A, button = Buttons.A };
         public static Input Attack { get; set; } = new Input { key = Keys.S, button = Buttons.X };
+
         public static Input L { get; set; } = new Input { key = Keys.Q, button = Buttons.LeftShoulder };
         public static Input R { get; set; } = new Input { key = Keys.E, button = Buttons.RightShoulder };
+        //public static Input LT { get; set; } = new Input { key = Keys.D, button = Buttons.LeftTrigger };
+        //public static Input RT { get; set; } = new Input { key = Keys.D, button = Buttons.RightTrigger };
+
+        public static Input Roll { get; set; } = new Input { key = Keys.D, button = Buttons.B };
 
         public static Input Enter { get; set; } = new Input { key = Keys.Enter, button = Buttons.Start };
         public static Input ResetLevel { get; set; } = new Input { key = Keys.R };

@@ -138,6 +138,10 @@ namespace Leore.Main
         /// #ld ... left-down
         /// #ru ... right-up
         /// #rd ... right-down
+        ///
+        /// #D ... D key
+        /// #lt ... left-trigger
+        /// #rt ... right-trigger
         /// 
         /// 
         /// </summary>
@@ -169,6 +173,10 @@ namespace Leore.Main
             text = text.Replace("#ru", ((char)139).ToString());
             text = text.Replace("#ld", ((char)140).ToString());
             text = text.Replace("#rd", ((char)141).ToString());
+
+            text = text.Replace("#D", ((char)142).ToString());
+            text = text.Replace("#lt", ((char)143).ToString());
+            text = text.Replace("#rt", ((char)144).ToString());
 
             text = text.Replace("#l", ((char)128).ToString());
             text = text.Replace("#r", ((char)129).ToString());

@@ -295,6 +295,7 @@ namespace Leore.Main
                             GameManager.Current.AddSpell(SpellType.CRIMSON_ARC);
 
                             GameManager.Current.AddSpell(SpellType.FIRE);
+                            GameManager.Current.AddSpell(SpellType.ICE);
 
                             //GameManager.Current.RemoveSpell(SpellType.NONE);
 

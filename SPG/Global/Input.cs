@@ -7,7 +7,7 @@ using System;
 
 namespace SPG
 {
-    public struct Input
+    public class Input
     {
         public (InputManager.Direction, InputManager.Stick)? direction;        
         public Keys? key;
