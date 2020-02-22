@@ -40,7 +40,7 @@ namespace Leore.Objects.Items
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
+            
             if (!initialized)
             {
                 if (Save && GameManager.Current.Player.Stats.Items.ContainsKey(ID))

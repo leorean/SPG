@@ -173318,7 +173318,7 @@ The Great Cavern #rd</property>
    <properties>
     <property name="levelName" value="mount_ascent"/>
     <property name="tx" type="int" value="2"/>
-    <property name="ty" type="int" value="68"/>
+    <property name="ty" type="int" value="113"/>
    </properties>
   </object>
   <object id="1500" type="npc" x="48" y="1408" width="16" height="16">

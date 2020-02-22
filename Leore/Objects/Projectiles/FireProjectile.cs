@@ -234,26 +234,28 @@ namespace Leore.Objects.Projectiles
             {
                 centerPos = orb.TargetPosition;
                 origin = centerPos;
+                arcDist = 6 + spell.Power * 14;
+
                 if (orb.State != OrbState.ATTACK || orb.Level != level)// || player.MP < GameResources.MPCost[SpellType.FIRE][level])
                 {
                     originalAngle = (float)MathUtil.VectorToAngle(new Vector2((int)player.Direction, Math.Sign((int)player.LookDirection)));
                     angle = originalAngle;
 
                     spd = 2;
-                    
+
+                    arcDist = arcDist * ((spell.ArcProjectiles.Count + 1) / 3);
+
                     shot = true;
                 }
 
                 var off = spell.ArcProjectiles.Count > 0 ? ((float)(spell.ArcProjectiles.IndexOf(this) + 1) / (float)(spell.ArcProjectiles.Count)) * 360 : 0;
-                offAngle = spell.ArcAngle + ((int)off);
-
-                arcDist = 6 + spell.Power * 14;
+                offAngle = spell.ArcAngle + ((int)off);                
             }
             else
             {
                 offAngle = (offAngle + spell.ArcSpeed) % 360;
             }
-            
+
             var xpos = (float)MathUtil.LengthDirX(offAngle) * arcDist;
             var ypos = (float)MathUtil.LengthDirY(offAngle) * arcDist;
             

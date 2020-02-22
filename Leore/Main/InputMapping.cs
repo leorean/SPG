@@ -15,6 +15,9 @@ namespace Leore.Main
         public static bool KeyPressed(Input k, InputManager.State state = InputManager.State.Pressed) => KeyPressed(new[] { k }, state);
         public static bool KeyPressed(Input[] keys, InputManager.State state = InputManager.State.Pressed)
         {
+            if (!MainGame.Current.IsActive)
+                return false;
+
             if (input == null) return false;
             foreach (var k in keys) {
 

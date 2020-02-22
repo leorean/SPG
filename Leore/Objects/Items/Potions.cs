@@ -64,6 +64,8 @@ namespace Leore.Objects.Items
 
         public override void Take(Player player)
         {
+            Taken = true;
+
             switch (Type)
             {
                 case PotionType.HP:
@@ -75,29 +77,16 @@ namespace Leore.Objects.Items
                     fntHp.Color = GameResources.HpColors.First();
 
                     break;
-                case PotionType.MP:
-                    //player.MP = Math.Min(player.MP + amount, GameManager.Current.SaveGame.gameStats.MaxMP);
-
-                    //var fntMp = new FollowFont(player.X, player.Y - Globals.T, $"+{amount} MP");
-                    //fntMp.Target = player;
-
-                    //fntMp.Color = GameResources.MpColors.First();
-
-                    SpellEXP.Spawn(Center.X, Center.Y, amount);
-                    
+                case PotionType.MP:                    
+                    SpellEXP.Spawn(Center.X, Center.Y, amount);                    
                     var fntMp = new FollowFont(player.X, player.Y - Globals.T, $"+{amount} MP");
                     fntMp.Target = player;
-
-                    fntMp.Color = GameResources.MpColors.First();
-
-                    //player.MP = GameManager.Current.SaveGame.gameStats.MaxMP;
+                    fntMp.Color = GameResources.MpColors.First();                    
                     break;
             }
             
             var emitter = new PotionBurstEmitter(Center.X, Center.Y, Type);
-            var eff = new SingularEffect(Center.X, Center.Y, 1);
-            
-            Destroy();
+            var eff = new SingularEffect(Center.X, Center.Y, 1);            
         }        
     }
 }

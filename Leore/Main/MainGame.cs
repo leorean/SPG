@@ -25,7 +25,7 @@ namespace Leore.Main
     public class MainGame : Microsoft.Xna.Framework.Game
     {
         // 
-
+        
         public enum GameState
         {
             InTitleMenu,
@@ -99,9 +99,24 @@ namespace Leore.Main
 
                 Debug.WriteLine($"Size changed to {w}x{h}.");
             };
+
+            this.Activated += MainGame_Activated;
+            this.Deactivated += MainGame_Deactivated;
         }
-        
-        
+
+        private void MainGame_Deactivated(object sender, System.EventArgs args)
+        {
+            if (State == GameState.Running)
+                State = GameState.Paused;
+        }
+
+        private void MainGame_Activated(object sender, System.EventArgs args)
+        {
+            if (State == GameState.Paused)
+                State = GameState.Running;
+        }
+
+
 
         /// <summary>
         /// called BEFORE initialize
@@ -211,6 +226,13 @@ namespace Leore.Main
                 else if (State == GameState.Paused)
                     State = GameState.Running;
             }
+            
+            if (!this.IsActive)
+            {
+
+            }
+            var wasPaused = State == GameState.Paused;
+            
 
             // STATE-dependent logic here:
 
