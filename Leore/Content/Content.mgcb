@@ -61,6 +61,12 @@
 /processorParam:TextureFormat=Color
 /build:chest.png
 
+#begin coin0.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:coin0.ogg
+
 #begin coins.png
 /importer:TextureImporter
 /processor:TextureProcessor

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using SPG.Draw;
@@ -94,7 +95,12 @@ namespace Leore.Main
         public static Font DamageFont { get; private set; }
         public static Font HUDFont { get; private set; }
         public static Font HUDFontSmall { get; private set; }
-        
+
+        // sounds
+
+        public static SoundEffect Coin0 { get; private set; }
+
+        // music
 
         public static void InitializeContent(ContentManager content)
         {
@@ -185,6 +191,12 @@ namespace Leore.Main
             DamageFont = new Font(damageFont, ' ');
             HUDFont = new Font(hudFont, ' ');
             HUDFontSmall = new Font(hudFontSmall, ' ');
+
+            // sounds
+
+            Coin0 = content.Load<SoundEffect>("coin0");
+
+            // music
 
         }
     }

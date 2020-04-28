@@ -9,9 +9,14 @@ namespace SPG.Util
     {
         private static Random r = new System.Random();
         
-        public static double Next
+        //public static double Next
+        //{
+        //    get => r.NextDouble();
+        //}
+
+        public static float Next
         {
-            get => r.NextDouble();
+            get => (float) r.NextDouble();
         }
 
         public static double RandomGauss(double mu = 0, double sigma = 1)

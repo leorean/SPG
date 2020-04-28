@@ -266,9 +266,6 @@ namespace Leore.Objects.Items
             if (!initialized)
                 return;
 
-            //if (isLoose)
-            //    return;
-
             if (takeDelay > 0)
                 return;
 
@@ -280,7 +277,9 @@ namespace Leore.Objects.Items
 
                 player.Stats.Coins += Value.Value;
                 player.CoinCounter += Value.Value;
-                Taken = true;                
+                Taken = true;
+
+                SoundManager.Play(AssetManager.Coin0);
             }
         }        
     }

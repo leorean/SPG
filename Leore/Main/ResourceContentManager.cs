@@ -23,6 +23,11 @@ namespace Leore.Main
         protected override Stream OpenStream(string assetName)
         {
             var assembly = Assembly.GetExecutingAssembly();
+            if (assetName == "coin0")
+            {
+                var files = assembly.GetManifestResourceNames();
+            }
+
             assetName = assembly.GetName().Name + ".Content." + assetName.Replace('\\', '.') + ".xnb";
             var stream = assembly.GetManifestResourceStream(assetName);
             

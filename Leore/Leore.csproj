@@ -15,6 +15,7 @@
     <MonoGamePlatform>DesktopGL</MonoGamePlatform>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -27,7 +28,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -75,6 +75,7 @@
     <Compile Include="Main\RoomCamera.cs" />
     <Compile Include="Main\RoomObjectLoader.cs" />
     <Compile Include="Main\SaveGame.cs" />
+    <Compile Include="Main\SoundManager.cs" />
     <Compile Include="Main\StoryScene.cs" />
     <Compile Include="Main\TitleMenu.cs" />
     <Compile Include="Objects\Effects\Ambience\LevelTextDisplay.cs" />
