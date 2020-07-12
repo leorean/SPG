@@ -142,7 +142,8 @@ namespace Leore.Main
         /// #D ... D key
         /// #lt ... left-trigger
         /// #rt ... right-trigger
-        /// 
+        /// #Q ... Q
+        /// #E ... E
         /// 
         /// </summary>
         /// <param name="x"></param>
@@ -177,6 +178,8 @@ namespace Leore.Main
             text = text.Replace("#D", ((char)142).ToString());
             text = text.Replace("#lt", ((char)143).ToString());
             text = text.Replace("#rt", ((char)144).ToString());
+            text = text.Replace("#Q", ((char)145).ToString());
+            text = text.Replace("#E", ((char)146).ToString());
 
             text = text.Replace("#l", ((char)128).ToString());
             text = text.Replace("#r", ((char)129).ToString());

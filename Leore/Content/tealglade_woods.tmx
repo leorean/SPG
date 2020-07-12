@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="160" height="63" tilewidth="16" tileheight="16" infinite="0" nextlayerid="127" nextobjectid="1473">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="160" height="63" tilewidth="16" tileheight="16" infinite="0" nextlayerid="127" nextobjectid="1475">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="3072" columns="64">
   <image source="tiles.png" width="1024" height="768"/>
  </tileset>
@@ -18294,7 +18294,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="153"/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -18453,8 +18453,8 @@
    <tile/>
    <tile/>
    <tile gid="278"/>
-   <tile gid="153"/>
    <tile/>
+   <tile gid="153"/>
    <tile/>
    <tile/>
    <tile/>
@@ -38622,8 +38622,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="25"/>
-   <tile gid="281"/>
+   <tile/>
+   <tile gid="149"/>
    <tile gid="150"/>
    <tile gid="150"/>
    <tile gid="282"/>
@@ -40519,13 +40519,13 @@
   </object>
   <object id="1448" type="npc" x="592" y="960" width="16" height="16">
    <properties>
-    <property name="appearCondition" value="hasSnatch"/>
+    <property name="appearCondition" value="wyshinLodgeAppear"/>
     <property name="centerText" type="bool" value="false"/>
     <property name="disappearCondition" value="wyshinLeavesLodge"/>
     <property name="npcType" type="int" value="7"/>
     <property name="setCondition" value=""/>
-    <property name="text">I see, you've found my spell.
-Why don't you try it out?</property>
+    <property name="text">I must say.. you've proven your power back there.
+|Let this spell be my gift to you - it shall make your life a lot easier.</property>
     <property name="yesText" value=""/>
    </properties>
   </object>
@@ -40624,6 +40624,19 @@ Well.. you're on the right path - There's an ancient temple ahead.
 |Disclaimer:
 * &quot;[888888]~Keys can only be used in the same area.~&quot;
 * &quot;[888888]~Use ~#u[888888]~ or ~#d[888888]~ to direct the spell.~&quot;</property>
+   </properties>
+  </object>
+  <object id="1473" type="storyTrigger" x="640" y="912" width="16" height="64">
+   <properties>
+    <property name="setCondition" value="wyshinLodgeAppear"/>
+   </properties>
+  </object>
+  <object id="1474" type="npc" x="1904" y="240" width="16" height="16">
+   <properties>
+    <property name="centerText" type="bool" value="true"/>
+    <property name="npcType" type="int" value="0"/>
+    <property name="text">~- Hint -~
+Switch spells with #lt #rt or #Q #E.</property>
    </properties>
   </object>
  </objectgroup>

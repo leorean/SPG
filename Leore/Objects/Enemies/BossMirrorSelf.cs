@@ -53,17 +53,24 @@ namespace Leore.Objects.Enemies
             player.XVel = 0;
             //new MessageBox("[973bba]~Consume...~", textSpeed:TextSpeed.SLOW).AppearDelay = 4 * 60;
             //new MessageBox("Where there is light, [973bba]~darkness~ shall take over.").AppearDelay = 2 * 60;
+
+            new MessageBox("[973bba]~Do not resist us.~", textSpeed:TextSpeed.NORMAL).AppearDelay = 2 * 60;
         }
 
         public override void BeginUpdate(GameTime gameTime)
         {
             base.BeginUpdate(gameTime);
             
-            Scale = new Vector2(player.Scale.X * -1, 1);
             BoundingBox = player.BoundingBox;
             DrawOffset = player.DrawOffset;
             Depth = player.Depth + .0003f;
-            Texture = player.Texture;
+            
+            if (player.Stats.Abilities.HasFlag(PlayerAbility.ORB))
+            {
+                Scale = new Vector2(player.Scale.X * -1, 1);
+                Texture = player.Texture;
+            }
+                
             Color = Color.Black;
         }
 
@@ -78,7 +85,7 @@ namespace Leore.Objects.Enemies
 
             Direction = player.Direction.Reverse();
 
-            eyeEmitter.Active = (player.HP > 0 && bgAlpha == 1);
+            eyeEmitter.Active = (player.HP > 0 && bgAlpha == 1) && player.State != Player.PlayerState.HIT_GROUND && player.State != Player.PlayerState.OBTAIN && player.Stats.Abilities.HasFlag(PlayerAbility.ORB);
             
             // limit player
             player.Position = new Vector2(Math.Min(Math.Max(player.X, Room.X + player.BoundingBox.Width), X - BoundingBox.Width + 4), player.Y);
@@ -122,7 +129,7 @@ namespace Leore.Objects.Enemies
                             {
                                 player.Stats.Abilities |= PlayerAbility.ORB;
                                 GameManager.Current.AddSpell(SpellType.VOID);
-                                GameManager.Current.AddStoryFlag("hasVoidOrb"); // maybe important for later...
+                                GameManager.Current.AddStoryFlag("hasVoidOrb"); // maybe important for later...                                
                             };
                             item.Text = "Learned spell: [973bba]~Vortex~";
                         }
@@ -151,8 +158,11 @@ namespace Leore.Objects.Enemies
                 }
             }
 
-            var px = (player.X - Room.X);
-            Position = new Vector2(Room.X + Room.BoundingBox.Width - px, player.Y);
+            if (player.Stats.Abilities.HasFlag(PlayerAbility.ORB))
+            {
+                var px = (player.X - Room.X);
+                Position = new Vector2(Room.X + Room.BoundingBox.Width - px, player.Y);
+            }
             
             if (!this.CollisionBounds(player, X, Y) && !deadFromOwnSpell)
             {
@@ -185,7 +195,6 @@ namespace Leore.Objects.Enemies
             player.YVel = -1f;
             player.State = Player.PlayerState.HIT_AIR;
 
-            //new MessageBox("You.. can't.. stop.. it...", textSpeed: TextSpeed.SLOW);
             new MessageBox("...you feel strange.").AppearDelay = 3 * 60;
 
             base.OnDeath();            
