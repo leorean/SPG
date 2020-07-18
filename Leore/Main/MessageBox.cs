@@ -43,8 +43,9 @@ namespace Leore.Main
         protected Font.VerticalAlignment valign;
 
         protected bool kLeftPressed, kRightPressed, kPrevPressed, kNextPressed;
-
         protected float alpha;
+
+        protected bool showBorder;
 
         public enum MessageState { FADE_IN, SHOW, FADE_OUT }
         protected MessageState state;
@@ -150,7 +151,7 @@ namespace Leore.Main
         /// <param name="y"></param>
         /// <param name="text"></param>
         /// <param name="name"></param>
-        public MessageBox(string text, bool centerText = false, string name = null, Color? hiColor = null, TextSpeed textSpeed = TextSpeed.NORMAL) : base(0, 0, name)
+        public MessageBox(string text, bool centerText = false, string name = null, Color? hiColor = null, TextSpeed textSpeed = TextSpeed.NORMAL, bool showBorder = true) : base(0, 0, name)
         {
             if (Properties.Settings.Default.HighResText == true)
             {
@@ -225,8 +226,8 @@ namespace Leore.Main
             Texture = AssetManager.MessageBox;
 
             this.hiColor = hiColor;
-
             this.textSpeed = textSpeed;
+            this.showBorder = showBorder;
 
             Visible = true;
             
@@ -451,8 +452,11 @@ namespace Leore.Main
             }
 
             Color = new Color(Color, alpha);
-            
-            sb.Draw(Texture, Position, new Rectangle(0,0, RoomCamera.Current.ViewWidth, 3 * Globals.T), Color, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth);
+
+            if (showBorder)
+            {
+                sb.Draw(Texture, Position, new Rectangle(0, 0, RoomCamera.Current.ViewWidth, 3 * Globals.T), Color, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Depth);
+            }
 
             DrawActionIcons(sb);
 

@@ -22,7 +22,7 @@ namespace Leore.Main
         private Font font = AssetManager.DefaultFont;
         
         private int cursor = 0;
-        private List<string> texts = new List<string>();
+        private List<(string, bool, bool)> texts = new List<(string, bool, bool)>();
 
         float alpha = 0;
         
@@ -42,6 +42,11 @@ namespace Leore.Main
         string voidColor => GameResources.VoidColor.ToHex();
         string magicColor => GameResources.MagicColor.ToHex();
 
+        void AddText(string text, bool showBorder = false, bool center = false)
+        {
+            texts.Add((text, showBorder, center));
+        }
+
         public StoryScene(int startFrame, int endFrame) : base(0, 0, null)
         {
             position = new Vector2(camera.ViewX, camera.ViewY);
@@ -49,48 +54,87 @@ namespace Leore.Main
             // ---- INTRO ----
 
             // 0:
-            texts.Add($"In the [{voidColor}]~Void~, there was a world floating through time and space.|This world was called ~Leore~.");
+            AddText($"This is the tale of ~Leore~.", center: true);
             // 1:
-            texts.Add($"Then came the [{sunColor}]~Sun~." +
-                $"|It created life." +
-                $"|Years, decades, centuries, even millenia passed and life evolved.");
+            AddText($"A world, born with a sun and destined to die without one.");
             // 2:
-            texts.Add($"And so, in time, civilizations formed and thrived. " +
+            AddText($"And so, in time, civilizations formed and thrived. " +
                 $"|But eventually, the apex was reached.");
             // 3:
-            texts.Add($"Eventually, the [{sunColor}]~Sun~ became weaker and would drift away, yielding a cold death to the creatures of  ~Leore~.");
+            AddText($"Eventually, the [{sunColor}]~Sun~ became weaker and would drift away, yielding a cold death to the creatures of  ~Leore~.");
             // 4:
-            texts.Add($"There were the protectors of the world - called ~Ancients~ - who defied this apocalypse." +
+            AddText($"There were the protectors of the world - called ~Ancients~ - who defied this apocalypse." +
                 $"|They discovered a way that would prevent the inevitable doom of ~Leore~.");
             // 5:
-            texts.Add($"The ~Ancients~ built [{sunColor}]~holy structures~ across the world. \nThese would create a vast [{magicColor}]~magic barrier~.");
+            AddText($"The ~Ancients~ built [{sunColor}]~holy structures~ across the world. \nThese would create a vast [{magicColor}]~magic barrier~.");
 
             // 6:
-            texts.Add($"This barrier would maintain equilibrium between [{sunColor}]~light~ and [{voidColor}]~darkness~." +
+            AddText($"This barrier would maintain equilibrium between [{sunColor}]~light~ and [{voidColor}]~darkness~." +
                 $"|For centuries, this has been proven true and life was protected.|Only a few would even know of this actuality.");
             // 7:
-            texts.Add($"But light cannot exist without darkness.\nThe [{sunColor}]~Sun~ could not exist without the [{voidColor}]~Void~.");
-            
+            AddText($"But light cannot exist without darkness.\nThe [{sunColor}]~Sun~ could not exist without the [{voidColor}]~Void~.");
+
             // 8:
-            texts.Add($"And eventually, the [{voidColor}]~Void~ found a way to break through the barrier.");
+            AddText($"And eventually, the [{voidColor}]~Void~ found a way to break through the barrier.");
 
             // 9:
-            texts.Add($"The [{sunColor}]~sacred sites~ were corrupted and turned into [{voidColor}]~structures of darkness~." +
+            AddText($"The [{sunColor}]~sacred sites~ were corrupted and turned into [{voidColor}]~structures of darkness~." +
                 $"|The ~Ancients~ were able to ~seal them~ just in time before the barrier would give in completely." +
                 $"|But they had to pay an ultimate price..");
 
             // 10:
-            texts.Add($"In their final act, they emplaced their power into an ~Orb~ that would awaken the rightful heir.");
+            AddText($"In their final act, they emplaced their power into an ~Orb~ that would awaken the rightful heir.");
 
             // 11
-            texts.Add($"...|" +
+            AddText($"...|" +
                 $".....|" +
-                $"...wake up.");
+                $"...wake up.", true);
+
+            // ---- INTRO (old) ----
+
+            //// 0:
+            //AddText($"In the [{voidColor}]~Void~, there was a world floating through time and space.|This world was called ~Leore~.");
+            //// 1:
+            //AddText($"Then came the [{sunColor}]~Sun~." +
+            //    $"|It created life." +
+            //    $"|Years, decades, centuries, even millenia passed and life evolved.");
+            //// 2:
+            //AddText($"And so, in time, civilizations formed and thrived. " +
+            //    $"|But eventually, the apex was reached.");
+            //// 3:
+            //AddText($"Eventually, the [{sunColor}]~Sun~ became weaker and would drift away, yielding a cold death to the creatures of  ~Leore~.");
+            //// 4:
+            //AddText($"There were the protectors of the world - called ~Ancients~ - who defied this apocalypse." +
+            //    $"|They discovered a way that would prevent the inevitable doom of ~Leore~.");
+            //// 5:
+            //AddText($"The ~Ancients~ built [{sunColor}]~holy structures~ across the world. \nThese would create a vast [{magicColor}]~magic barrier~.");
+
+            //// 6:
+            //AddText($"This barrier would maintain equilibrium between [{sunColor}]~light~ and [{voidColor}]~darkness~." +
+            //    $"|For centuries, this has been proven true and life was protected.|Only a few would even know of this actuality.");
+            //// 7:
+            //AddText($"But light cannot exist without darkness.\nThe [{sunColor}]~Sun~ could not exist without the [{voidColor}]~Void~.");
+            
+            //// 8:
+            //AddText($"And eventually, the [{voidColor}]~Void~ found a way to break through the barrier.");
+
+            //// 9:
+            //AddText($"The [{sunColor}]~sacred sites~ were corrupted and turned into [{voidColor}]~structures of darkness~." +
+            //    $"|The ~Ancients~ were able to ~seal them~ just in time before the barrier would give in completely." +
+            //    $"|But they had to pay an ultimate price..");
+
+            //// 10:
+            //AddText($"In their final act, they emplaced their power into an ~Orb~ that would awaken the rightful heir.");
+
+            //// 11
+            //AddText($"...|" +
+            //    $".....|" +
+            //    $"...wake up.");
             
             // ---- ENDING 1 ----
 
             // 8:
-            texts.Add("");
+            AddText("");
             
             if (startFrame > endFrame) throw new ArgumentOutOfRangeException("startFrame");
             if (endFrame > texts.Count) throw new ArgumentOutOfRangeException("endFrame");
@@ -113,13 +157,13 @@ namespace Leore.Main
             switch (state)
             {
                 case StoryState.FadeIn:
-                    alpha = Math.Min(alpha + .01f, 1);
+                    alpha = Math.Min(alpha + .02f, 1);
 
                     if (alpha == 1)
                     {
                         if (messageBox == null)
                         {
-                            messageBox = new MessageBox(texts[cursor]);
+                            messageBox = new MessageBox(texts[cursor].Item1, showBorder: texts[cursor].Item2, centerText: texts[cursor].Item3);
                             messageBox.OnCompleted = () =>
                             {
                                 state = StoryState.Showing;
@@ -138,7 +182,7 @@ namespace Leore.Main
                     }
                     break;
                 case StoryState.FadeOut:
-                    alpha = Math.Max(alpha - .01f, 0);
+                    alpha = Math.Max(alpha - .02f, 0);
                     if (alpha == 0)
                     {
                         cursor += 1;
