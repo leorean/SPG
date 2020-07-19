@@ -54,9 +54,12 @@ namespace Leore.Main
             // ---- INTRO ----
 
             // 0:
-            AddText($"This is the tale of ~Leore~.", center: true);
+            AddText($"This is one of many tales of which the people speak...", center: true);
             // 1:
-            AddText($"A world, born with a sun and destined to die without one.");
+            AddText($"Long ago, there existed a land, vast and bright.|" +
+                $"Earth and sky so golden, whelmed with warmth and light.|" +
+                $"With the sun revolving, creating day and night, " +
+                $"a kingdom was born to ascending might.");            
             // 2:
             AddText($"And so, in time, civilizations formed and thrived. " +
                 $"|But eventually, the apex was reached.");

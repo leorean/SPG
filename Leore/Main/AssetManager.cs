@@ -97,8 +97,8 @@ namespace Leore.Main
         public static Font HUDFontSmall { get; private set; }
 
         // sounds
-
         public static SoundEffect Coin0 { get; private set; }
+        public static SoundEffect MsgChar { get; private set; }
 
         // music
 
@@ -195,6 +195,8 @@ namespace Leore.Main
             // sounds
 
             Coin0 = content.Load<SoundEffect>("coin0");
+            
+            MsgChar = content.Load<SoundEffect>("msgChar");
 
             // music
 

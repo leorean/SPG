@@ -384,8 +384,9 @@ namespace Leore.Main
                     while (inColorFindingMode && newChar != ']')
                     {
                         newChar = texts[page].ElementAt(curText.Length);
-                        curText = curText + newChar;
+                        curText += newChar;                        
                     }
+                    SoundManager.Play(AssetManager.MsgChar);
                 }
 
                 timeOut = (int)textSpeed;

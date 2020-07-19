@@ -403,6 +403,12 @@
 /processorParam:TextureFormat=Color
 /build:movingPlatform.png
 
+#begin msgChar.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:msgChar.ogg
+
 #begin npc.png
 /importer:TextureImporter
 /processor:TextureProcessor
