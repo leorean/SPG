@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Leore.Objects.Effects.Emitters;
 using SPG.Util;
 using System;
+using Leore.Main;
 
 namespace Leore.Objects.Level
 {
@@ -21,8 +22,11 @@ namespace Leore.Objects.Level
         public void Bounce()
         {
             if (!bounced)
+            {
                 new StarEmitter(Center.X, Center.Y);
-            bounced = true;            
+                SoundManager.Play(AssetManager.Boing);
+            }
+            bounced = true;
         }
 
         public override void Update(GameTime gameTime)

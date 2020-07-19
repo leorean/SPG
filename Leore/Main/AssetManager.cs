@@ -106,6 +106,9 @@ namespace Leore.Main
         public static SoundEffect Jump { get; private set; }
         public static SoundEffect Hurt { get; private set; }
         public static SoundEffect HitGround { get; private set; }
+        public static SoundEffect Boing { get; private set; }
+        public static SoundEffect Snap { get; private set; }
+        public static SoundEffect LetGo { get; private set; }
 
         // music
 
@@ -212,6 +215,9 @@ namespace Leore.Main
             Jump = content.Load<SoundEffect>("jump");
             Hurt = content.Load<SoundEffect>("hurt");
             HitGround = content.Load<SoundEffect>("hitGround");
+            Boing = content.Load<SoundEffect>("boing");
+            Snap = content.Load<SoundEffect>("snap");
+            LetGo = content.Load<SoundEffect>("letGo");
 
             // music
 

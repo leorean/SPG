@@ -22,6 +22,14 @@ namespace Leore.Main
             return false;
         }
 
+        public static void Stop(SoundEffect sound)
+        {
+            if (IsPlaying(sound))
+            {
+                soundInst[sound.Name].Stop();
+            }
+        }
+
         public static void Play(SoundEffect sound, float pitch = 0, float pan = 0)
         {
             if (!soundInst.ContainsKey(sound.Name))

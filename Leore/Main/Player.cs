@@ -709,7 +709,8 @@ namespace Leore.Main
                     ||
                     State == PlayerState.JUMP_DOWN)
                 {
-                    if (!k_attackHolding && ((Direction == Direction.LEFT && k_leftHolding)
+                    if (!k_attackHolding && 
+                        ((Direction == Direction.LEFT && k_leftHolding)
                         ||
                         (Direction == Direction.RIGHT && k_rightHolding))
                     )
@@ -717,6 +718,7 @@ namespace Leore.Main
                         lastGroundYbeforeWall = lastGroundY;
                         lastGroundY = Y;
                         State = PlayerState.WALL_IDLE;
+                        SoundManager.Play(AssetManager.Snap);
                     }
                 }
             }
@@ -727,6 +729,8 @@ namespace Leore.Main
                     (k_jumpHolding || k_upHolding)
                     && !k_downHolding && !k_attackHolding)
                 {
+                    SoundManager.Stop(AssetManager.Jump);
+                    SoundManager.Play(AssetManager.Snap);
                     State = PlayerState.CEIL_IDLE;
                 }
             }
@@ -1888,9 +1892,13 @@ namespace Leore.Main
                 YVel = -Gravity + iceWallVel;
                 
                 var wallJumpVel = -2.2f;
-                
+
                 if (!onWall)
+                {
+                    if (!hit)
+                        SoundManager.Play(AssetManager.LetGo);
                     State = PlayerState.JUMP_DOWN;
+                }
 
                 if (k_upHolding || k_downHolding)
                     State = PlayerState.WALL_CLIMB;
@@ -2044,6 +2052,7 @@ namespace Leore.Main
                     XVel = 0;
                     YVel = 0;
                     State = PlayerState.JUMP_DOWN;
+                    SoundManager.Play(AssetManager.LetGo);
                 }
                 if (hit)
                 {

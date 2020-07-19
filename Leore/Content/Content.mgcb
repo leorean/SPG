@@ -451,6 +451,24 @@
 /processorParam:Quality=Best
 /build:hitGround.ogg
 
+#begin boing.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:boing.ogg
+
+#begin snap.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:snap.ogg
+
+#begin letGo.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:letGo.ogg
+
 #begin npc.png
 /importer:TextureImporter
 /processor:TextureProcessor
