@@ -433,6 +433,24 @@
 /processorParam:Quality=Best
 /build:msgNextPage.ogg
 
+#begin jump.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:jump.ogg
+
+#begin hurt.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:hurt.ogg
+
+#begin hitGround.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:hitGround.ogg
+
 #begin npc.png
 /importer:TextureImporter
 /processor:TextureProcessor

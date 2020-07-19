@@ -1387,7 +1387,10 @@ namespace Leore.Main
                         if (State == PlayerState.ROLL || State == PlayerState.ROLL_JUMP)
                             State = PlayerState.ROLL_JUMP;
                         else
+                        {
+                            SoundManager.Play(AssetManager.Jump, pitch: (jumps - 1) * .2f);
                             State = PlayerState.JUMP_UP;
+                        }
 
                         k_jumpPressed = false;
                     }
@@ -2359,6 +2362,7 @@ namespace Leore.Main
                     || State == PlayerState.CARRYOBJECT_IDLE
                     || State == PlayerState.CARRYOBJECT_WALK)
                 {
+                    SoundManager.Play(AssetManager.HitGround);
                     if (lastGroundY < Y - 9 * Globals.T && !Stats.Abilities.HasFlag(PlayerAbility.NO_FALL_DAMAGE))
                     {
                         var eff = new SingularEffect(X, Y + 8);

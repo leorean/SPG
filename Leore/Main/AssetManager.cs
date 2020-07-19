@@ -103,6 +103,9 @@ namespace Leore.Main
         public static SoundEffect MsgSelectYes { get; private set; }
         public static SoundEffect MsgSelectNo { get; private set; }
         public static SoundEffect MsgNextPage { get; private set; }
+        public static SoundEffect Jump { get; private set; }
+        public static SoundEffect Hurt { get; private set; }
+        public static SoundEffect HitGround { get; private set; }
 
         // music
 
@@ -206,6 +209,9 @@ namespace Leore.Main
             MsgSelectYes = content.Load<SoundEffect>("msgSelectYes");
             MsgSelectNo = content.Load<SoundEffect>("msgSelectNo");
             MsgNextPage = content.Load<SoundEffect>("msgNextPage");
+            Jump = content.Load<SoundEffect>("jump");
+            Hurt = content.Load<SoundEffect>("hurt");
+            HitGround = content.Load<SoundEffect>("hitGround");
 
             // music
 

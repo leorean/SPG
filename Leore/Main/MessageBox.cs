@@ -370,7 +370,7 @@ namespace Leore.Main
 
                     page = Math.Min(page + 1, texts.Count - 1);
 
-                    SoundManager.Play(AssetManager.MsgNextPage);
+                    //SoundManager.Play(AssetManager.MsgNextPage);
                 }
             }
             else if (kAny)
