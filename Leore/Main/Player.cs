@@ -438,6 +438,8 @@ namespace Leore.Main
             }
             hit = true;
             InvincibleTimer = 60;
+
+            SoundManager.Play(AssetManager.Hurt);
         }
 
         public void HurtAndSpawnBack()
@@ -1392,7 +1394,7 @@ namespace Leore.Main
                             State = PlayerState.ROLL_JUMP;
                         else
                         {
-                            SoundManager.Play(AssetManager.Jump, pitch: (jumps - 1) * .2f);
+                            SoundManager.Play(AssetManager.Jump, pitch: (jumps - 1) * .25f);
                             State = PlayerState.JUMP_UP;
                         }
 
@@ -1895,8 +1897,6 @@ namespace Leore.Main
 
                 if (!onWall)
                 {
-                    if (!hit)
-                        SoundManager.Play(AssetManager.LetGo);
                     State = PlayerState.JUMP_DOWN;
                 }
 
@@ -1940,6 +1940,8 @@ namespace Leore.Main
                 
                 if (jumpOff)
                 {
+                    SoundManager.Play(AssetManager.LetGo);
+
                     // switch back the ground Y
                     lastGroundY = Math.Min(lastGroundY, lastGroundYbeforeWall);
                     jumps++;
