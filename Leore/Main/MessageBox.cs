@@ -348,13 +348,12 @@ namespace Leore.Main
                 {
                     if (curText.Length == texts[page].Length)
                     {
-                        if (this is MessageDialog dialog && dialog.option == 0)
+                        if (this is MessageDialog dialog)
                         {
-                            SoundManager.Play(AssetManager.MsgSelectNo);
-                        }
-                        else
-                        {
-                            SoundManager.Play(AssetManager.MsgSelectYes);
+                            if (dialog.option == 0)
+                                SoundManager.Play(AssetManager.MsgSelectNo);
+                            else
+                                SoundManager.Play(AssetManager.MsgSelectYes);
                         }
 
                         state = MessageState.FADE_OUT;
