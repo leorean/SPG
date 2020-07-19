@@ -99,6 +99,10 @@ namespace Leore.Main
         // sounds
         public static SoundEffect Coin0 { get; private set; }
         public static SoundEffect MsgChar { get; private set; }
+        public static SoundEffect MsgChoose { get; private set; }
+        public static SoundEffect MsgSelectYes { get; private set; }
+        public static SoundEffect MsgSelectNo { get; private set; }
+        public static SoundEffect MsgNextPage { get; private set; }
 
         // music
 
@@ -194,9 +198,14 @@ namespace Leore.Main
 
             // sounds
 
+            // if a sound fails to load here, build the project with "release", then with "debug" again
+
             Coin0 = content.Load<SoundEffect>("coin0");
-            
             MsgChar = content.Load<SoundEffect>("msgChar");
+            MsgChoose = content.Load<SoundEffect>("msgChoose");
+            MsgSelectYes = content.Load<SoundEffect>("msgSelectYes");
+            MsgSelectNo = content.Load<SoundEffect>("msgSelectNo");
+            MsgNextPage = content.Load<SoundEffect>("msgNextPage");
 
             // music
 

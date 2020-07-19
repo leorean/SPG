@@ -19,7 +19,9 @@ namespace Leore.Main
             SLOW = 10
         }
 
-        //private readonly int maxTextWidthPerLine = 224;
+        public int AppearDelay { get; set; }
+
+        private int soundTimeout;
 
         private TextSpeed textSpeed;
 
@@ -47,13 +49,13 @@ namespace Leore.Main
 
         protected bool showBorder;
 
+        protected int option = 1; // just used for dialog
+
         public enum MessageState { FADE_IN, SHOW, FADE_OUT }
         protected MessageState state;
 
         float cursorAlpha = 0;
-
-        public int AppearDelay { get; set; }
-
+        
         private List<string> CutString(string str, int maxWidth)
         {
             List<string> list = new List<string>();
@@ -346,6 +348,15 @@ namespace Leore.Main
                 {
                     if (curText.Length == texts[page].Length)
                     {
+                        if (this is MessageDialog dialog && dialog.option == 0)
+                        {
+                            SoundManager.Play(AssetManager.MsgSelectNo);
+                        }
+                        else
+                        {
+                            SoundManager.Play(AssetManager.MsgSelectYes);
+                        }
+
                         state = MessageState.FADE_OUT;
                         return;
                     }
@@ -358,12 +369,16 @@ namespace Leore.Main
                         curText = texts[page];
 
                     page = Math.Min(page + 1, texts.Count - 1);
+
+                    SoundManager.Play(AssetManager.MsgNextPage);
                 }
             }
             else if (kAny)
             {
                 if (textSpeed == TextSpeed.NORMAL)
+                {
                     timeOut = 0;
+                }
                 else
                 {
                     if (timeOut > 0)
@@ -371,13 +386,14 @@ namespace Leore.Main
                 }
             }
 
+            soundTimeout = Math.Max(soundTimeout - 1, 0);
             timeOut = Math.Max(timeOut - 1, 0);
             if (timeOut == 0)
             {
                 if (curText.Length < texts[page].Length)
                 {
                     var newChar = texts[page].ElementAt(curText.Length);
-                    curText = curText + newChar;
+                    curText += newChar;
 
                     var inColorFindingMode = newChar == '[';
 
@@ -386,9 +402,14 @@ namespace Leore.Main
                         newChar = texts[page].ElementAt(curText.Length);
                         curText += newChar;                        
                     }
-                    SoundManager.Play(AssetManager.MsgChar);
-                }
 
+                    if (soundTimeout == 0 && newChar != ' ')
+                    {
+                        soundTimeout = 3;
+                        SoundManager.Play(AssetManager.MsgChar);
+                    }
+                }
+                
                 timeOut = (int)textSpeed;
             }
 

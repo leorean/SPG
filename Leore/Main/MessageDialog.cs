@@ -9,8 +9,6 @@ namespace Leore.Main
         public Action YesAction;
         public Action NoAction;
 
-        int option = 1;
-
         public MessageDialog(string text, bool centerText = false, string name = null, Color? hiColor = null) : base(text, centerText, name, hiColor)
         {
             /*if (text.Contains('|'))
@@ -25,11 +23,18 @@ namespace Leore.Main
 
             if (curText.Length == texts[page].Length && page == texts.Count - 1)
             {
+                var tmpOption = option;
+
                 if (option == 1 && kRightPressed)
                     option = 0;
 
                 if (option == 0 && kLeftPressed)
                     option = 1;
+
+                if (tmpOption != option)
+                {
+                    SoundManager.Play(AssetManager.MsgChoose);
+                }
             }
         }
 

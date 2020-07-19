@@ -409,6 +409,30 @@
 /processorParam:Quality=Best
 /build:msgChar.ogg
 
+#begin msgChoose.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:msgChoose.ogg
+
+#begin msgSelectYes.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:msgSelectYes.ogg
+
+#begin msgSelectNo.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:msgSelectNo.ogg
+
+#begin msgNextPage.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:msgNextPage.ogg
+
 #begin npc.png
 /importer:TextureImporter
 /processor:TextureProcessor

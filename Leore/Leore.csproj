@@ -224,10 +224,12 @@
     <EmbeddedResource Include="Icon.ico" />
     <EmbeddedResource Include="Icon.bmp" />
   </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+	  <EmbeddedResource Include="Content\bin\DesktopGL\**\*.*">
+		  <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
+		</EmbeddedResource>
+  </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\bin\DesktopGL\**\*.*">
-      <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
-    </EmbeddedResource>
     <MonoGameContentReference Include="Content\Content.mgcb" />
     <None Include="$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\x86\SDL2.dll">
       <Link>x86\SDL2.dll</Link>
