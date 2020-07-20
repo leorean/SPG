@@ -56,14 +56,20 @@ namespace Leore.Main
             // 0:
             AddText($"This is one of many tales of which the people speak...", center: true);
             // 1:
-            AddText($"Long ago, there existed a land, vast and bright.|" +
-                $"Earth and sky so golden, whelmed with warmth and light.|" +
-                $"With the sun revolving, creating day and night, " +
-                $"a kingdom was born to ascending might.");            
+            AddText($"Long ago, a land existed, vast and bright.|" +
+                $"Earth and sky whelmed golden light.|" +
+                $"The sun proclaimed the gift of life,\n" +
+                $"so eons passed and kingdoms thrived.");
             // 2:
-            AddText($"And so, in time, civilizations formed and thrived. " +
-                $"|But eventually, the apex was reached.");
+
+            AddText($"Until the day the sun went cold,\n" +
+                $"the land would fall and life would fold.|" +
+                $"For when the source of light had dwindled,\n" +
+                $"the darkest void was once rekindled.");
             // 3:
+            AddText("In midst the darkest force emerged\n" +
+                "the ancients ");
+
             AddText($"Eventually, the [{sunColor}]~Sun~ became weaker and would drift away, yielding a cold death to the creatures of  ~Leore~.");
             // 4:
             AddText($"There were the protectors of the world - called ~Ancients~ - who defied this apocalypse." +
