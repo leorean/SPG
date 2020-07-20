@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using SPG.Draw;
 using SPG.Map;
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -27,6 +28,7 @@ namespace Leore.Main
         public static SoundEffect LetGo { get; private set; }
         public static SoundEffect WaterSplash { get; private set; }
         public static SoundEffect WaterSwim { get; private set; }
+        public static SoundEffect WaterSplashBubble { get; private set; }
 
         public static void Load(SoundEffect sound) 
         {
@@ -220,20 +222,26 @@ namespace Leore.Main
 
             // if a sound fails to load here, build the project with "release", then with "debug" again
 
-            Sounds.Load(content.Load<SoundEffect>("coin0"));
-            Sounds.Load(content.Load<SoundEffect>("msgChar"));
-            Sounds.Load(content.Load<SoundEffect>("msgChoose"));
-            Sounds.Load(content.Load<SoundEffect>("msgSelectYes"));
-            Sounds.Load(content.Load<SoundEffect>("msgSelectNo"));
-            Sounds.Load(content.Load<SoundEffect>("msgNextPage"));
-            Sounds.Load(content.Load<SoundEffect>("jump"));
-            Sounds.Load(content.Load<SoundEffect>("hurt"));
-            Sounds.Load(content.Load<SoundEffect>("hitGround"));
-            Sounds.Load(content.Load<SoundEffect>("boing"));
-            Sounds.Load(content.Load<SoundEffect>("snap"));
-            Sounds.Load(content.Load<SoundEffect>("letGo"));
-            Sounds.Load(content.Load<SoundEffect>("waterSplash"));
-            Sounds.Load(content.Load<SoundEffect>("waterSwim"));
+            foreach(var prop in typeof(Sounds).GetProperties())
+            {
+                var lowerFirstString = Char.ToLowerInvariant(prop.Name[0]) + prop.Name.Substring(1);
+                Sounds.Load(content.Load<SoundEffect>(lowerFirstString));
+            }
+
+            //Sounds.Load(content.Load<SoundEffect>("coin0"));
+            //Sounds.Load(content.Load<SoundEffect>("msgChar"));
+            //Sounds.Load(content.Load<SoundEffect>("msgChoose"));
+            //Sounds.Load(content.Load<SoundEffect>("msgSelectYes"));
+            //Sounds.Load(content.Load<SoundEffect>("msgSelectNo"));
+            //Sounds.Load(content.Load<SoundEffect>("msgNextPage"));
+            //Sounds.Load(content.Load<SoundEffect>("jump"));
+            //Sounds.Load(content.Load<SoundEffect>("hurt"));
+            //Sounds.Load(content.Load<SoundEffect>("hitGround"));
+            //Sounds.Load(content.Load<SoundEffect>("boing"));
+            //Sounds.Load(content.Load<SoundEffect>("snap"));
+            //Sounds.Load(content.Load<SoundEffect>("letGo"));
+            //Sounds.Load(content.Load<SoundEffect>("waterSplash"));
+            //Sounds.Load(content.Load<SoundEffect>("waterSwim"));
 
             // music
 

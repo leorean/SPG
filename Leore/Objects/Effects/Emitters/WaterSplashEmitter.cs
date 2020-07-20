@@ -37,7 +37,9 @@ namespace Leore.Objects.Effects.Emitters
 
             var inWater = GameManager.Current.Map.CollisionTile(Position.X, Position.Y, GameMap.WATER_INDEX);
             if (GameManager.Current.Map.CollisionTile(Position.X, Position.Y))
+            {                
                 LifeTime = 0;
+            }
 
             if (inWater)
             {
@@ -56,6 +58,11 @@ namespace Leore.Objects.Effects.Emitters
                 LifeTime = 0;
 
             visible = true;
+
+            //if (LifeTime == 0)
+            //{
+            //    SoundManager.Play(Sounds.WaterSplashBubble, pitch: -.2f + RND.Next * .4f);
+            //}
         }
 
         public override void Draw(SpriteBatch sb, GameTime gameTime)

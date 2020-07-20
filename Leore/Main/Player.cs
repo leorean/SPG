@@ -799,7 +799,7 @@ namespace Leore.Main
                     YVel = -1.3f;
                     State = PlayerState.JUMP_UP;
 
-                    SoundManager.Play(Sounds.WaterSplash, pitch: .2f);
+                    SoundManager.Play(Sounds.WaterSplashBubble, pitch: .2f);
                     var splash = new WaterSplashEmitter(X, Y, XVel);
                 }
             }
@@ -2177,7 +2177,7 @@ namespace Leore.Main
                             YVel -= Gravity;
                     }
 
-                    if (!SoundManager.IsPlaying(Sounds.WaterSwim) && !SoundManager.IsPlaying(Sounds.WaterSplash))
+                    if (!SoundManager.IsPlaying(Sounds.WaterSwim) && !SoundManager.IsPlaying(Sounds.WaterSplashBubble))
                         SoundManager.Play(Sounds.WaterSwim, pitch: -.1f + RND.Next * .2f);
                 }
                 
@@ -2366,6 +2366,7 @@ namespace Leore.Main
                     && State != PlayerState.WALL_IDLE)
                 {
                     new SingularEffect(X + XVel, Y, 12);
+                    SoundManager.Play(Sounds.HitGround);
                 }
 
                 onGround = true;
@@ -2377,8 +2378,7 @@ namespace Leore.Main
                     || State == PlayerState.LEVITATE
                     || State == PlayerState.CARRYOBJECT_IDLE
                     || State == PlayerState.CARRYOBJECT_WALK)
-                {
-                    SoundManager.Play(Sounds.HitGround);
+                {                    
                     if (lastGroundY < Y - 9 * Globals.T && !Stats.Abilities.HasFlag(PlayerAbility.NO_FALL_DAMAGE))
                     {
                         var eff = new SingularEffect(X, Y + 8);

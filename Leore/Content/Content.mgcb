@@ -481,6 +481,12 @@
 /processorParam:Quality=Best
 /build:waterSwim.ogg
 
+#begin waterSplashBubble.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:waterSplashBubble.ogg
+
 #begin npc.png
 /importer:TextureImporter
 /processor:TextureProcessor
