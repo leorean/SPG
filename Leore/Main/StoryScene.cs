@@ -56,45 +56,31 @@ namespace Leore.Main
             // 0:
             AddText($"This is one of many tales of which the people speak...", center: true);
             // 1:
-            AddText($"Long ago, a land existed, vast and bright.|" +
-                $"Earth and sky whelmed golden light.|" +
-                $"The sun proclaimed the gift of life,\n" +
-                $"so eons passed and kingdoms thrived.");
+            AddText($"Long ago, there existed a land, vast and bright.|" +
+                $"Golden light touched the earth and the skies.|" +
+                $"With the sun, the gift of life was given.|" +
+                $"Eons have passed and kingdoms thrived.|" +
+                $"But eventually...");
+            //AddText($"Long ago, a land existed, vast and bright.|" +
+            //    $"The skies were whelmed by golden light.|" +
+            //    $"The sun endowed the gift of life,\n" +
+            //    $"so, eons passed and kingdoms thrived.");
             // 2:
-
-            AddText($"Until the day the sun went cold,\n" +
-                $"the land would fall and life would fold.|" +
-                $"For when the source of light had dwindled,\n" +
-                $"the darkest void was once rekindled.");
+            AddText($"One fateful day, the sun went dark.|" +
+                $"When the sky turned black, an evil force emerged.|" +
+                $"The void was born and threatened to swallow the world.");
+            //AddText($"Until one day the sun went cold,\n" +
+            //    $"the land would wither, skies would fold.|" +
+            //    $"For, once the source of light had gone,\n" +
+            //    $"the darkest era was to come.");
             // 3:
-            AddText("In midst the darkest force emerged\n" +
-                "the ancients ");
-
-            AddText($"Eventually, the [{sunColor}]~Sun~ became weaker and would drift away, yielding a cold death to the creatures of  ~Leore~.");
+            AddText("There were the protectors of the world - called ~Ancients~ - that defied the apocalypse.|" +
+                "With their magic powers, they fended off the void and kindled the light once more.|" +
+                "When the deed was done, they vanished, never to be seen again...");
             // 4:
-            AddText($"There were the protectors of the world - called ~Ancients~ - who defied this apocalypse." +
-                $"|They discovered a way that would prevent the inevitable doom of ~Leore~.");
-            // 5:
-            AddText($"The ~Ancients~ built [{sunColor}]~holy structures~ across the world. \nThese would create a vast [{magicColor}]~magic barrier~.");
-
-            // 6:
-            AddText($"This barrier would maintain equilibrium between [{sunColor}]~light~ and [{voidColor}]~darkness~." +
-                $"|For centuries, this has been proven true and life was protected.|Only a few would even know of this actuality.");
-            // 7:
-            AddText($"But light cannot exist without darkness.\nThe [{sunColor}]~Sun~ could not exist without the [{voidColor}]~Void~.");
-
-            // 8:
-            AddText($"And eventually, the [{voidColor}]~Void~ found a way to break through the barrier.");
-
-            // 9:
-            AddText($"The [{sunColor}]~sacred sites~ were corrupted and turned into [{voidColor}]~structures of darkness~." +
-                $"|The ~Ancients~ were able to ~seal them~ just in time before the barrier would give in completely." +
-                $"|But they had to pay an ultimate price..");
-
-            // 10:
             AddText($"In their final act, they emplaced their power into an ~Orb~ that would awaken the rightful heir.");
 
-            // 11
+            // 5
             AddText($"...|" +
                 $".....|" +
                 $"...wake up.", true);
