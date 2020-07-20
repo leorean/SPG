@@ -56,30 +56,23 @@ namespace Leore.Main
             // 0:
             AddText($"This is one of many tales of which the people speak...", center: true);
             // 1:
-            AddText($"Long ago, there existed a land, vast and bright.|" +
+            AddText($"Long ago, there existed a land, vast and bright. " +
                 $"Golden light touched the earth and the skies.|" +
-                $"With the sun, the gift of life was given.|" +
-                $"Eons have passed and kingdoms thrived.|" +
-                $"But eventually...");
-            //AddText($"Long ago, a land existed, vast and bright.|" +
-            //    $"The skies were whelmed by golden light.|" +
-            //    $"The sun endowed the gift of life,\n" +
-            //    $"so, eons passed and kingdoms thrived.");
+                $"Over eons, life flourished in prosperity and kingdoms thrived.");
             // 2:
-            AddText($"One fateful day, the sun went dark.|" +
-                $"When the sky turned black, an evil force emerged.|" +
-                $"The void was born and threatened to swallow the world.");
-            //AddText($"Until one day the sun went cold,\n" +
-            //    $"the land would wither, skies would fold.|" +
-            //    $"For, once the source of light had gone,\n" +
-            //    $"the darkest era was to come.");
+            AddText($"Eventually...|" +
+                $"On a fateful day, the sun went dark.|" +
+                $"It is told that when the skies turned black, an evil force " +
+                $"was born into this world and emerged, " +
+                $"destined to swallow the land.");
             // 3:
-            AddText("There were the protectors of the world - called ~Ancients~ - that defied the apocalypse.|" +
-                "With their magic powers, they fended off the void and kindled the light once more.|" +
-                "When the deed was done, they vanished, never to be seen again...");
+            AddText("There were the ancient protectors of the world that defied the apocalypse.|" +
+                "With their magic powers, they banished the void and kindled the light once more.|" +
+                "To keep away the dark, holy structures were built across the land, forming a powerful barrier.");                
             // 4:
-            AddText($"In their final act, they emplaced their power into an ~Orb~ that would awaken the rightful heir.");
-
+            AddText($"When the deed was done, the Ancients vanished, never to be seen again...|" +
+                "In their final act, they emplaced their power into an ~Orb~." +
+                "Word has it, that, shall it be of need, it would call for its rightful heir.");
             // 5
             AddText($"...|" +
                 $".....|" +
