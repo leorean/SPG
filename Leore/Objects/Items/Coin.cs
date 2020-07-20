@@ -279,7 +279,7 @@ namespace Leore.Objects.Items
                 player.CoinCounter += Value.Value;
                 Taken = true;
 
-                SoundManager.Play(AssetManager.Coin0);
+                SoundManager.Play(Sounds.Coin0, pitch: -.06f + RND.Next * .12f);
             }
         }        
     }

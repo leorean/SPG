@@ -351,9 +351,9 @@ namespace Leore.Main
                         if (this is MessageDialog dialog)
                         {
                             if (dialog.option == 0)
-                                SoundManager.Play(AssetManager.MsgSelectNo);
+                                SoundManager.Play(Sounds.MsgSelectNo);
                             else
-                                SoundManager.Play(AssetManager.MsgSelectYes);
+                                SoundManager.Play(Sounds.MsgSelectYes);
                         }
 
                         state = MessageState.FADE_OUT;
@@ -405,7 +405,7 @@ namespace Leore.Main
                     if (soundTimeout == 0 && newChar != ' ')
                     {
                         soundTimeout = 3;
-                        SoundManager.Play(AssetManager.MsgChar);
+                        SoundManager.Play(Sounds.MsgChar);
                     }
                 }
                 

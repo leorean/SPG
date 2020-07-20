@@ -33,7 +33,7 @@ namespace Leore.Main
 
                 if (tmpOption != option)
                 {
-                    SoundManager.Play(AssetManager.MsgChoose);
+                    SoundManager.Play(Sounds.MsgChoose);
                 }
             }
         }

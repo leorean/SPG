@@ -469,6 +469,18 @@
 /processorParam:Quality=Best
 /build:letGo.ogg
 
+#begin waterSplash.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:waterSplash.ogg
+
+#begin waterSwim.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:waterSwim.ogg
+
 #begin npc.png
 /importer:TextureImporter
 /processor:TextureProcessor

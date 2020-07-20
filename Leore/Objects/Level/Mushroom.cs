@@ -24,7 +24,7 @@ namespace Leore.Objects.Level
             if (!bounced)
             {
                 new StarEmitter(Center.X, Center.Y);
-                SoundManager.Play(AssetManager.Boing);
+                SoundManager.Play(Sounds.Boing);
             }
             bounced = true;
         }

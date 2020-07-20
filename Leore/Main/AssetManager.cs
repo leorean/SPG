@@ -4,9 +4,39 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using SPG.Draw;
 using SPG.Map;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace Leore.Main
 {
+    public static class Sounds
+    {
+        // sounds
+        public static SoundEffect Coin0 { get; private set; }
+        public static SoundEffect MsgChar { get; private set; }
+        public static SoundEffect MsgChoose { get; private set; }
+        public static SoundEffect MsgSelectYes { get; private set; }
+        public static SoundEffect MsgSelectNo { get; private set; }
+        public static SoundEffect MsgNextPage { get; private set; }
+        public static SoundEffect Jump { get; private set; }
+        public static SoundEffect Hurt { get; private set; }
+        public static SoundEffect HitGround { get; private set; }
+        public static SoundEffect Boing { get; private set; }
+        public static SoundEffect Snap { get; private set; }
+        public static SoundEffect LetGo { get; private set; }
+        public static SoundEffect WaterSplash { get; private set; }
+        public static SoundEffect WaterSwim { get; private set; }
+
+        public static void Load(SoundEffect sound) 
+        {
+            var prop = typeof(Sounds).GetProperties().Where(x => x.Name.Equals(sound.Name, System.StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            if (prop != null)
+            {
+                prop.SetValue(null, sound);
+            }
+        }
+    }
     public static class AssetManager
     {
         // common textures & objects
@@ -95,22 +125,6 @@ namespace Leore.Main
         public static Font DamageFont { get; private set; }
         public static Font HUDFont { get; private set; }
         public static Font HUDFontSmall { get; private set; }
-
-        // sounds
-        public static SoundEffect Coin0 { get; private set; }
-        public static SoundEffect MsgChar { get; private set; }
-        public static SoundEffect MsgChoose { get; private set; }
-        public static SoundEffect MsgSelectYes { get; private set; }
-        public static SoundEffect MsgSelectNo { get; private set; }
-        public static SoundEffect MsgNextPage { get; private set; }
-        public static SoundEffect Jump { get; private set; }
-        public static SoundEffect Hurt { get; private set; }
-        public static SoundEffect HitGround { get; private set; }
-        public static SoundEffect Boing { get; private set; }
-        public static SoundEffect Snap { get; private set; }
-        public static SoundEffect LetGo { get; private set; }
-
-        // music
 
         public static void InitializeContent(ContentManager content)
         {
@@ -206,18 +220,20 @@ namespace Leore.Main
 
             // if a sound fails to load here, build the project with "release", then with "debug" again
 
-            Coin0 = content.Load<SoundEffect>("coin0");
-            MsgChar = content.Load<SoundEffect>("msgChar");
-            MsgChoose = content.Load<SoundEffect>("msgChoose");
-            MsgSelectYes = content.Load<SoundEffect>("msgSelectYes");
-            MsgSelectNo = content.Load<SoundEffect>("msgSelectNo");
-            MsgNextPage = content.Load<SoundEffect>("msgNextPage");
-            Jump = content.Load<SoundEffect>("jump");
-            Hurt = content.Load<SoundEffect>("hurt");
-            HitGround = content.Load<SoundEffect>("hitGround");
-            Boing = content.Load<SoundEffect>("boing");
-            Snap = content.Load<SoundEffect>("snap");
-            LetGo = content.Load<SoundEffect>("letGo");
+            Sounds.Load(content.Load<SoundEffect>("coin0"));
+            Sounds.Load(content.Load<SoundEffect>("msgChar"));
+            Sounds.Load(content.Load<SoundEffect>("msgChoose"));
+            Sounds.Load(content.Load<SoundEffect>("msgSelectYes"));
+            Sounds.Load(content.Load<SoundEffect>("msgSelectNo"));
+            Sounds.Load(content.Load<SoundEffect>("msgNextPage"));
+            Sounds.Load(content.Load<SoundEffect>("jump"));
+            Sounds.Load(content.Load<SoundEffect>("hurt"));
+            Sounds.Load(content.Load<SoundEffect>("hitGround"));
+            Sounds.Load(content.Load<SoundEffect>("boing"));
+            Sounds.Load(content.Load<SoundEffect>("snap"));
+            Sounds.Load(content.Load<SoundEffect>("letGo"));
+            Sounds.Load(content.Load<SoundEffect>("waterSplash"));
+            Sounds.Load(content.Load<SoundEffect>("waterSwim"));
 
             // music
 

@@ -439,7 +439,7 @@ namespace Leore.Main
             hit = true;
             InvincibleTimer = 60;
 
-            SoundManager.Play(AssetManager.Hurt);
+            SoundManager.Play(Sounds.Hurt);
         }
 
         public void HurtAndSpawnBack()
@@ -720,7 +720,7 @@ namespace Leore.Main
                         lastGroundYbeforeWall = lastGroundY;
                         lastGroundY = Y;
                         State = PlayerState.WALL_IDLE;
-                        SoundManager.Play(AssetManager.Snap);
+                        SoundManager.Play(Sounds.Snap);
                     }
                 }
             }
@@ -731,8 +731,8 @@ namespace Leore.Main
                     (k_jumpHolding || k_upHolding)
                     && !k_downHolding && !k_attackHolding)
                 {
-                    SoundManager.Stop(AssetManager.Jump);
-                    SoundManager.Play(AssetManager.Snap);
+                    SoundManager.Stop(Sounds.Jump);
+                    SoundManager.Play(Sounds.Snap);
                     State = PlayerState.CEIL_IDLE;
                 }
             }
@@ -775,7 +775,8 @@ namespace Leore.Main
                         {
                             State = PlayerState.SWIM_DIVE_IN;
                             YVel = 2;
-                            
+
+                            SoundManager.Play(Sounds.WaterSplash);
                             var splash = new WaterSplashEmitter(X, Y, XVel);
                         }
 
@@ -797,7 +798,8 @@ namespace Leore.Main
                 {
                     YVel = -1.3f;
                     State = PlayerState.JUMP_UP;
-                    
+
+                    SoundManager.Play(Sounds.WaterSplash, pitch: .2f);
                     var splash = new WaterSplashEmitter(X, Y, XVel);
                 }
             }
@@ -1394,7 +1396,7 @@ namespace Leore.Main
                             State = PlayerState.ROLL_JUMP;
                         else
                         {
-                            SoundManager.Play(AssetManager.Jump, pitch: (jumps - 1) * .25f);
+                            SoundManager.Play(Sounds.Jump, pitch: (jumps - 1) * .25f);
                             State = PlayerState.JUMP_UP;
                         }
 
@@ -1940,7 +1942,7 @@ namespace Leore.Main
                 
                 if (jumpOff)
                 {
-                    SoundManager.Play(AssetManager.LetGo);
+                    SoundManager.Play(Sounds.LetGo);
 
                     // switch back the ground Y
                     lastGroundY = Math.Min(lastGroundY, lastGroundYbeforeWall);
@@ -2054,7 +2056,7 @@ namespace Leore.Main
                     XVel = 0;
                     YVel = 0;
                     State = PlayerState.JUMP_DOWN;
-                    SoundManager.Play(AssetManager.LetGo);
+                    SoundManager.Play(Sounds.LetGo);
                 }
                 if (hit)
                 {
@@ -2174,6 +2176,9 @@ namespace Leore.Main
                         if (YVel > Gravity)
                             YVel -= Gravity;
                     }
+
+                    if (!SoundManager.IsPlaying(Sounds.WaterSwim) && !SoundManager.IsPlaying(Sounds.WaterSplash))
+                        SoundManager.Play(Sounds.WaterSwim, pitch: -.1f + RND.Next * .2f);
                 }
                 
                 swimAngle = (float)new Vector2(Math.Sign((int)Direction) * Math.Max(Math.Abs(sx), 1), sy).VectorToAngle() + 90;
@@ -2373,7 +2378,7 @@ namespace Leore.Main
                     || State == PlayerState.CARRYOBJECT_IDLE
                     || State == PlayerState.CARRYOBJECT_WALK)
                 {
-                    SoundManager.Play(AssetManager.HitGround);
+                    SoundManager.Play(Sounds.HitGround);
                     if (lastGroundY < Y - 9 * Globals.T && !Stats.Abilities.HasFlag(PlayerAbility.NO_FALL_DAMAGE))
                     {
                         var eff = new SingularEffect(X, Y + 8);
