@@ -54,25 +54,24 @@ namespace Leore.Main
             // ---- INTRO ----
 
             // 0:
-            AddText($"This is one of many tales of which the people speak...", center: true);
+            AddText($"This is but one of many tales, delivered throughout generations...", center: true);
             // 1:
             AddText($"Long ago, there existed a land, vast and bright. " +
                 $"Golden light touched the earth and the skies.|" +
                 $"Over eons, life flourished in prosperity and kingdoms thrived.");
             // 2:
-            AddText($"Eventually...|" +
-                $"On a fateful day, the sun went dark.|" +
-                $"It is told that when the skies turned black, an evil force " +
-                $"was born into this world and emerged, " +
-                $"destined to swallow the land.");
+            AddText($"That was, until the [{magicColor}]~era of magic~ dawned.|" +
+                $"When [{magicColor}]~magic~ was proclaimed and given to the people, the world was brought out of balance.|" +
+                $"What seemed like a blessing, turned out to be the greatest curse.");
             // 3:
-            AddText("There were the ancient protectors of the world that defied the apocalypse.|" +
-                "With their magic powers, they banished the void and kindled the light once more.|" +
-                "To keep away the dark, holy structures were built across the land, forming a powerful barrier.");                
+            AddText($"Ultimately, the order of the ~Ancients~, protectors of this world, put an end to the era of magic.|" +
+                $"As the centuries passed, kingdoms fell into ruins and became mere legends.|" +
+                $"Life remained, humble and detached, and light prevailed.");
             // 4:
-            AddText($"When the deed was done, the Ancients vanished, never to be seen again...|" +
-                "In their final act, they emplaced their power into an ~Orb~." +
-                "Word has it, that, shall it be of need, it would call for its rightful heir.");
+            AddText($"When the deed was done, the ~Ancients~ vanished, never to be seen again...|" +
+                "As a final act, their power was emplaced into an ~Orb~.|" +
+                "Would the light begin to fade once more, the rightful heir shall wake.\n" +
+                "So it is told...");
             // 5
             AddText($"...|" +
                 $".....|" +
