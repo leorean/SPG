@@ -86605,7 +86605,7 @@
     <property name="npcType" type="int" value="1"/>
     <property name="setCondition" value=""/>
     <property name="text">So, you have awakened.
-You can't remember anything, do you?</property>
+You can't remember anything, can you?</property>
    </properties>
   </object>
   <object id="1438" type="chest" x="1344" y="400" width="16" height="16">

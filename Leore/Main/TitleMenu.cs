@@ -166,7 +166,7 @@ namespace Leore.Main
                                 };
                                 dialog.YesAction = () =>
                                 {
-                                    new StoryScene(0, 7).OnCompleted = () =>
+                                    new StoryScene(0, 8).OnCompleted = () =>
                                     {
                                         GameManager.Current.ReloadLevel();
                                     };

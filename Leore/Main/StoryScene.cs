@@ -26,7 +26,7 @@ namespace Leore.Main
 
         float alpha = 0;
         
-        enum StoryState { FadeIn, Showing, FadeOut, Hiding }
+        enum StoryState { FadeIn, Showing, FadeOut }
 
         StoryState state = StoryState.FadeIn;
         
@@ -59,22 +59,24 @@ namespace Leore.Main
             AddText($"Long ago, there existed a land, vast and bright. " +
                 $"Golden light touched the earth and the skies.");
             // 2:
-            AddText($"Over eons, life flourished in prosperity and kingdoms thrived.|" +
-                $"That was, until the [{magicColor}]~era of magic~ dawned.");
+            AddText($"Life flourished in prosperity and kingdoms thrived.|" +
+                $"Centuries had passed and these ancient times were to be remembered as the golden age.|" +
+                $"Until the era of magic dawned.");
             // 3:
             AddText($"When [{magicColor}]~magic~ was proclaimed and given to the people, the world was brought out of balance.|" +
                 $"What seemed like a blessing, turned out to be the greatest curse.");
             // 4:
-            AddText($"Ultimately, the order of the ~Ancients~, protectors of this world, put an end to the era of magic.|" +
-                $"As the centuries passed, kingdoms fell into ruins and became mere legends.");
+            AddText($"Ultimately, the order of the ~Ancients~, protectors of this world, put an end to the era of magic.");
             // 5:
+            AddText($"As the centuries passed, kingdoms fell into ruins and became mere legends.");
+            // 6:
             AddText($"Life remained, humble and detached, and light prevailed.|" +
                 $"When the deed was done, the ~Ancients~ vanished, never to be seen again...");
-            // 6:
+            // 7:
             AddText($"As a final act, their power was emplaced into an ~Orb~.|" +
                 "Would the light begin to fade once more, the rightful heir shall wake.|" +
                 "So it is told...");
-            // 7:
+            // 8:
             AddText($"...|" +
                 $".....|" +
                 $"...wake up.", true);
@@ -150,45 +152,48 @@ namespace Leore.Main
 
                     if (alpha == 1)
                     {
-                        if (messageBox == null)
+                        if (timer == 0)
                         {
-                            messageBox = new MessageBox(texts[cursor].Item1, showBorder: texts[cursor].Item2, centerText: texts[cursor].Item3);
-                            messageBox.OnCompleted = () =>
+                            if (messageBox == null)
                             {
-                                state = StoryState.Showing;
-                                messageBox = null;
-                            };
+                                messageBox = new MessageBox(texts[cursor].Item1, showBorder: texts[cursor].Item2, centerText: texts[cursor].Item3);
+                                messageBox.OnCompleted = () =>
+                                {
+                                    state = StoryState.Showing;
+                                    messageBox = null;
+                                    timer = 30;
+                                };
+                            }                            
                         }
-                        timer = 30;
-                        //state = StoryState.Showing;
+                    }
+                    else
+                    {
+                        timer++;
                     }
                     
                     break;
                 case StoryState.Showing:                    
                     if (timer == 0)
                     {
-                        state = StoryState.FadeOut;
+                        alpha = 0;
+                        cursor += 1;
+                        if (cursor > endFrame)
+                        {
+                            state = StoryState.FadeOut;
+                        }
+                        else
+                        {
+                            timer = 60; // <- tweak this
+                            state = StoryState.FadeIn;
+                        }
                     }
                     break;
                 case StoryState.FadeOut:
                     alpha = Math.Max(alpha - .02f, 0);
                     if (alpha == 0)
                     {
-                        cursor += 1;
-
-                        if (cursor > endFrame)
-                        {
-                            OnCompleted?.Invoke();
-                            Destroy();
-                        }
-                        timer = 60;
-                        state = StoryState.Hiding;
-                    }
-                    break;
-                case StoryState.Hiding:                    
-                    if (timer == 0)
-                    {
-                        state = StoryState.FadeIn;
+                        OnCompleted?.Invoke();
+                        Destroy();                        
                     }
                     break;
             }            
@@ -199,10 +204,12 @@ namespace Leore.Main
             base.Draw(sb, gameTime);
 
             // draw darkness
-            sb.Draw(AssetManager.Transition[0], position, null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0f);
-
+            sb.Draw(AssetManager.Transition[0], position, null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0f);            
+            if (cursor > startFrame)
+                sb.Draw(image[cursor - 1], position, null, new Color(Color.White, 1 - alpha), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.00001f);
+            
             // draw scene background
-            sb.Draw(image[cursor], position, null, new Color(Color.White, alpha), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.00001f);
+            sb.Draw(image[cursor], position, null, new Color(Color.White, alpha), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.00002f);
             
             // text
             //font.Halign = Font.HorizontalAlignment.Center;
