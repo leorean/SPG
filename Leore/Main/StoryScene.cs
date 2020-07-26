@@ -56,10 +56,10 @@ namespace Leore.Main
             // 0:
             AddText($"This is but one of many tales, delivered throughout generations...", center: true);
             // 1:
-            AddText($"Long ago, there existed a land, vast and bright. " +
-                $"Golden light touched the earth and the skies.");
+            AddText($"Long ago, there existed a land, vast and bright.|" +
+                $"As golden light touched the earth and the skies, the world was kept in a seemingly everlasting state of prosperity.");
             // 2:
-            AddText($"Life flourished in prosperity and kingdoms thrived.|" +
+            AddText($"As life flourished, settlements became villages, villages became towns, towns became kingdoms.|" +
                 $"Centuries had passed and these ancient times were to be remembered as the golden age.|" +
                 $"Until the era of magic dawned.");
             // 3:
