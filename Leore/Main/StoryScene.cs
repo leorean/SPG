@@ -59,24 +59,25 @@ namespace Leore.Main
             AddText($"Long ago, there existed a land, vast and bright.|" +
                 $"As golden light touched the earth and the skies, the world was kept in a seemingly everlasting state of prosperity.");
             // 2:
-            AddText($"As life flourished, settlements became villages, villages became towns, towns became kingdoms.|" +
-                $"Centuries had passed and these ancient times were to be remembered as the golden age.|" +
-                $"Until the era of magic dawned.");
+            AddText($"As life flourished, settlements became villages. From villages came towns, from towns emerged the kingdoms.|" +
+                $"Centuries had passed and these ancient times were to be remembered as the golden age.");
             // 3:
-            AddText($"When [{magicColor}]~magic~ was proclaimed and given to the people, the world was brought out of balance.|" +
-                $"What seemed like a blessing, turned out to be the greatest curse.");
+            AddText($"Until the era of magic dawned.");
             // 4:
-            AddText($"Ultimately, the order of the ~Ancients~, protectors of this world, put an end to the era of magic.");
+            AddText($"When ~magic~ was proclaimed and given to the people, the world was brought out of balance.|" +
+                $"What seemed like a blessing, turned out to be the greatest curse.");
             // 5:
-            AddText($"As the centuries passed, kingdoms fell into ruins and became mere legends.");
+            AddText($"Ultimately, the order of the ~Ancients~, protectors of this world, put an end to the era of magic.");
             // 6:
+            AddText($"As the centuries passed, kingdoms fell into ruins and became mere legends.");
+            // 7:
             AddText($"Life remained, humble and detached, and light prevailed.|" +
                 $"When the deed was done, the ~Ancients~ vanished, never to be seen again...");
-            // 7:
+            // 8:
             AddText($"As a final act, their power was emplaced into an ~Orb~.|" +
                 "Would the light begin to fade once more, the rightful heir shall wake.|" +
                 "So it is told...");
-            // 8:
+            // 9:
             AddText($"...|" +
                 $".....|" +
                 $"...wake up.", true);
