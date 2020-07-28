@@ -59,15 +59,17 @@ namespace Leore.Main
             AddText($"Long ago, there existed a land, vast and bright.|" +
                 $"As golden light touched the earth and the skies, the world was kept in a seemingly everlasting state of prosperity.");
             // 2:
-            AddText($"As life flourished, settlements became villages. From villages came towns, from towns emerged the kingdoms.|" +
+            AddText($"As life flourished, settlements became villages. Villages grew to towns, from towns emerged kingdoms.|" +
                 $"Centuries had passed and these ancient times were to be remembered as the golden age.");
             // 3:
             AddText($"Until the era of magic dawned.");
             // 4:
             AddText($"When magic was proclaimed and given to the people, everything was brought out of balance.|" +
-                $"What had seemed like a blessing at first, turned out to be the inevitable doom of the world.");
+                $"What had seemed like a blessing at first, turned out to be the inevitable doom of the world.|" +
+                $"Consuming magic, using the sun as a source of energy, the lands would fall into an eternal winter.");
             // 5:
-            AddText($"Ultimately, the order of the Ancients, protectors of this world, put an end to the era of magic.");
+            AddText($"Ultimately, the order of the Ancients, protectors of this world, put an end to the era of magic.|" +
+                $"");
             // 6:
             AddText($"When the deed was done, the Ancients vanished, never to be seen again...|" +
                 $"As a final act, their power was emplaced into an Orb." +
