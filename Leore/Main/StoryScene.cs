@@ -60,20 +60,18 @@ namespace Leore.Main
                 $"As golden light touched the earth and the skies, the world was kept in a seemingly everlasting state of prosperity.");
             // 2:
             AddText($"As life flourished, settlements became villages. Villages grew to towns, from towns emerged kingdoms.|" +
-                $"Centuries had passed and these ancient times were to be remembered as the golden age.");
+                $"Centuries had passed and these ancient times are to be remembered as the golden age.");
             // 3:
             AddText($"Until the era of magic dawned.");
             // 4:
             AddText($"When magic was proclaimed and given to the people, everything was brought out of balance.|" +
-                $"What had seemed like a blessing at first, turned out to be the inevitable doom of the world.|" +
-                $"Consuming magic, using the sun as a source of energy, the lands would fall into an eternal winter.");
+                $"It had seemed like a blessing, yet it turned out to lead the world towards an era of darkness.");
             // 5:
-            AddText($"Ultimately, the order of the Ancients, protectors of this world, put an end to the era of magic.|" +
-                $"");
+            AddText($"When the world was at its darkest, the order of the Ancients, protectors of this world, came forth.|" +
+                $"It is owed to them that the world was brought back on the path of light.");
             // 6:
             AddText($"When the deed was done, the Ancients vanished, never to be seen again...|" +
-                $"As a final act, their power was emplaced into an Orb." +
-                $"");
+                $"As a final act, their power was emplaced into an Orb.");
             // 7:
             AddText($"As the centuries passed, kingdoms fell into ruins and became mere legends.|" +
                 $"But life remained, humble and detached, and light prevailed.");
