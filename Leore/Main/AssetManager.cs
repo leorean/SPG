@@ -29,6 +29,7 @@ namespace Leore.Main
         public static SoundEffect WaterSplash { get; private set; }
         public static SoundEffect WaterSwim { get; private set; }
         public static SoundEffect WaterSplashBubble { get; private set; }
+        public static SoundEffect Walk { get; private set; }
 
         public static void Load(SoundEffect sound) 
         {

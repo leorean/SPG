@@ -65,21 +65,19 @@ namespace Leore.Main
             AddText($"Until the era of magic dawned.");
             // 4:
             AddText($"When magic was proclaimed and given to the people, everything was brought out of balance.|" +
-                $"It had seemed like a blessing, yet it turned out to lead the world towards an era of darkness.");
+                $"It had seemed like a blessing, yet it would throw the world into an era of darkness.");
             // 5:
             AddText($"When the world was at its darkest, the order of the Ancients, protectors of this world, came forth.|" +
                 $"It is owed to them that the world was brought back on the path of light.");
             // 6:
-            AddText($"When the deed was done, the Ancients vanished, never to be seen again...|" +
-                $"As a final act, their power was emplaced into an Orb.");
+            AddText($"As centuries passed, kingdoms dispersed, becoming mere legends.|" +
+                $"But life remained, humble and detached, and light prevailed.|" +
+                $"And the Ancients had long been gone...");
             // 7:
-            AddText($"As the centuries passed, kingdoms fell into ruins and became mere legends.|" +
-                $"But life remained, humble and detached, and light prevailed.");
+            AddText($"What remained of the Ancients was merely the tale of a relic, depicted as an orb.|" +
+                $"Legend has it that when the light of the world would start to fade, it shall call to its heir.|" +
+                $"So it is told...");            
             // 8:
-            AddText($"" +
-                "Would the light begin to fade once more, the rightful heir shall wake.|" +
-                "So it is told...");
-            // 9:
             AddText($"...|" +
                 $".....|" +
                 $"...wake up.", true);

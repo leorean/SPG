@@ -475,6 +475,12 @@
 /processorParam:Quality=Best
 /build:waterSplash.ogg
 
+#begin walk.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:walk.ogg
+
 #begin waterSwim.ogg
 /importer:OggImporter
 /processor:SoundEffectProcessor

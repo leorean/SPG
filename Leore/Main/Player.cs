@@ -799,7 +799,8 @@ namespace Leore.Main
                     YVel = -1.3f;
                     State = PlayerState.JUMP_UP;
 
-                    SoundManager.Play(Sounds.WaterSplashBubble, pitch: .2f);
+                    SoundManager.Stop(Sounds.WaterSwim);
+                    SoundManager.Play(Sounds.WaterSplash, pitch: .3f);
                     var splash = new WaterSplashEmitter(X, Y, XVel);
                 }
             }
@@ -2177,8 +2178,8 @@ namespace Leore.Main
                             YVel -= Gravity;
                     }
 
-                    if (!SoundManager.IsPlaying(Sounds.WaterSwim) && !SoundManager.IsPlaying(Sounds.WaterSplashBubble))
-                        SoundManager.Play(Sounds.WaterSwim, pitch: -.1f + RND.Next * .2f);
+                    if (!SoundManager.IsPlaying(Sounds.WaterSwim) && !SoundManager.IsPlaying(Sounds.WaterSplash))
+                        SoundManager.Play(Sounds.WaterSwim);
                 }
                 
                 swimAngle = (float)new Vector2(Math.Sign((int)Direction) * Math.Max(Math.Abs(sx), 1), sy).VectorToAngle() + 90;
