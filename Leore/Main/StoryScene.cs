@@ -64,11 +64,13 @@ namespace Leore.Main
             // 3:
             AddText($"Until the era of magic dawned.");
             // 4:
-            AddText($"When magic was proclaimed and given to the people, everything was brought out of balance.|" +
-                $"It had seemed like a blessing, yet it would throw the world into an era of darkness.");
+            AddText($"With the advent of magic, the very fabric of the world became unbalanced.|" +
+                $"Though it had seemed like a blessing, magic was the cause that would eventually throw the world into an era of darkness.");
             // 5:
             AddText($"When the world was at its darkest, the order of the Ancients, protectors of this world, came forth.|" +
-                $"It is owed to them that the world was brought back on the path of light.");
+                $"It is owed to them that the world was brought back on a path of light.|" +
+                $"They had created bindings that would seal magic and keep the world from falling apart.|" +
+                $"After the deed was done, the Ancients had retreated.");
             // 6:
             AddText($"As centuries passed, kingdoms dispersed, becoming mere legends.|" +
                 $"But life remained, humble and detached, and light prevailed.|" +
