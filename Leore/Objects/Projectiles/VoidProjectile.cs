@@ -72,19 +72,22 @@ namespace Leore.Objects.Projectiles
                 case SpellLevel.ONE:
                     maxScale = .35f;
                     delay = 15;
-                    succ = .2f;
+                    succ = .2f;                    
                     break;
                 case SpellLevel.TWO:
                     maxScale = .5f;
                     delay = 10;
-                    succ = .4f;
+                    succ = .4f;                    
                     break;
                 case SpellLevel.THREE:
                     maxScale = .75f;
                     delay = 5;
-                    succ = .6f;
+                    succ = .6f;                    
                     break;
-            }            
+            }
+
+            GameManager.Current.Player.MP = Math.Max(GameManager.Current.Player.MP - 5, 0);
+            //GameManager.Current.Player.MP -= 10 * GameResources.MPCost[SpellType.VOID][orb.Level];
         }
 
         public override void Update(GameTime gameTime)

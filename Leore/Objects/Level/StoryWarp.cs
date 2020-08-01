@@ -34,6 +34,8 @@ namespace Leore.Objects.Level
         bool init;
         bool firstTimeUse;
 
+        private MessageBox msgBox;
+
         private StoryWarpEmitter emitter;
 
         public StoryWarp(float x, float y, Room room, string setCondition, int tx, int ty, string text, Direction direction = Direction.NONE, string levelName = null, string textAfterTransition = null) : base(x, y, room)
@@ -115,8 +117,11 @@ namespace Leore.Objects.Level
 
                     if (firstTimeUse)
                     {
-                        var msg = new MessageBox(text, textSpeed: MessageBox.TextSpeed.SLOW);
-                        msg.OnCompleted = Complete;
+                        if (msgBox == null)
+                        {
+                            msgBox = new MessageBox(text, textSpeed: MessageBox.TextSpeed.SLOW);
+                            msgBox.OnCompleted = Complete;
+                        }
                     }
                     else
                     {

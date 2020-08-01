@@ -200,6 +200,11 @@ namespace Leore.Objects.Projectiles
             }
         }
 
+        public override void HandleCollisionFromDestroyBlock(DestroyBlock block)
+        {
+            //base.HandleCollisionFromDestroyBlock(block);
+        }
+
         public override void HandleCollision(GameObject obj)
         {
             if (cooldown == 0)

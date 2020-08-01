@@ -65,20 +65,21 @@ namespace Leore.Main
             AddText($"Until the era of magic dawned.");
             // 4:
             AddText($"With the advent of magic, the very fabric of the world became unbalanced.|" +
-                $"Though it had seemed like a blessing, magic was the cause that would eventually throw the world into an era of darkness.");
+                $"Though it had seemed like a blessing, magic was the cause that would eventually throw the world into an era of darkness.|" +
+                $"Not only was magic used to wage wars, but there was even a much darker nuance to it, known only to a few.");
             // 5:
-            AddText($"When the world was at its darkest, the order of the Ancients, protectors of this world, came forth.|" +
-                $"It is owed to them that the world was brought back on a path of light.|" +
-                $"They had created bindings that would seal magic and keep the world from falling apart.|" +
-                $"After the deed was done, the Ancients had retreated.");
+            AddText($"On the verge of despair, the order of the ~Ancients~, protectors of Leore, came forth.|" +
+                $"They cast a vigorous spell to seal the darkness and ceased the era of magic in a single blow.|" +
+                $"So it is owed to the Ancients that the world was brought back on a path of light.|" +
+                $"The magic seal exists until this day, bound to the ~Altars of Light~.");
             // 6:
-            AddText($"As centuries passed, kingdoms dispersed, becoming mere legends.|" +
+            AddText($"Without magic, as centuries passed, the kingdoms eventually dispersed, becoming mere legends.|" +
                 $"But life remained, humble and detached, and light prevailed.|" +
                 $"And the Ancients had long been gone...");
             // 7:
-            AddText($"What remained of the Ancients was merely the tale of a relic, depicted as an orb.|" +
-                $"Legend has it that when the light of the world would start to fade, it shall call to its heir.|" +
-                $"So it is told...");            
+            AddText($"What remained of the Ancients was merely the tale of a relic, depicted as an ~Orb~.|" +
+                $"Legend has it that when the light of the world would be threatened, the orb shall call to its heir.|" +
+                $"So it is told...");
             // 8:
             AddText($"...|" +
                 $".....|" +

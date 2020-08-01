@@ -236,20 +236,7 @@ namespace Leore.Main
                             switch (Type)
                             {
                                 case SpellType.STAR: // ++++ STAR ++++
-                                    { // <- because reusing names
-                                        //switch (Level)
-                                        //{
-                                        //    case SpellLevel.ONE:
-                                        //        Cooldown = 20;
-                                        //        break;
-                                        //    case SpellLevel.TWO:
-                                        //        Cooldown = 15;
-                                        //        break;
-                                        //    case SpellLevel.THREE:
-                                        //        Cooldown = 8;
-                                        //        break;
-                                        //}
-                                        
+                                    {
                                         var proj = new StarProjectile(TargetPosition.X, Y, Level);
                                         var starDegAngle = MathUtil.VectorToAngle(new Vector2(TargetPosition.X - player.X, 0));
 

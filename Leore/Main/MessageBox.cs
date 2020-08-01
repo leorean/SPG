@@ -399,12 +399,12 @@ namespace Leore.Main
                     while (inColorFindingMode && newChar != ']')
                     {
                         newChar = texts[page].ElementAt(curText.Length);
-                        curText += newChar;                        
+                        curText += newChar;
                     }
 
                     if (soundTimeout == 0 && newChar != ' ')
-                    {
-                        soundTimeout = 3;
+                    {                        
+                        soundTimeout = 3;                        
                         SoundManager.Play(Sounds.MsgChar);
                     }
                 }
