@@ -71,7 +71,7 @@ namespace Leore.Main
             AddText($"On the verge of despair, the order of the ~Ancients~, protectors of Leore, came forth.|" +
                 $"They cast a vigorous spell to seal the darkness and ceased the era of magic in a single blow.|" +
                 $"So it is owed to the Ancients that the world was brought back on a path of light.|" +
-                $"The magic seal exists until this day, bound to the ~Altars of Light~.");
+                $"The magic seals exist until this day, bound to the ~Altars of Light~.");
             // 6:
             AddText($"Without magic, as centuries passed, the kingdoms eventually dispersed, becoming mere legends.|" +
                 $"But life remained, humble and detached, and light prevailed.|" +
