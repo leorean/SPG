@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using SPG.Draw;
 using SPG.Objects;
 using SPG.Save;
+using SPG.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -22,8 +23,8 @@ namespace Leore.Main
 
         private Font font = AssetManager.DefaultFont;
 
-        double t;
-        float z;
+        double t1, t2;
+        float z1, z2;
         float y;
         float yMax;
         float a;
@@ -40,11 +41,11 @@ namespace Leore.Main
 
         public TitleMenu(float x, float y, string name = null) : base(x, y, name)
         {
-            saveExists = checkSaveFileExists();
+            saveExists = CheckSaveFileExists();
             Reset();
         }
 
-        public bool checkSaveFileExists()
+        public bool CheckSaveFileExists()
         {
             saveGame = new SaveGame("save.dat");
             return SaveManager.Load(ref saveGame);
@@ -54,10 +55,10 @@ namespace Leore.Main
         {
             hasFlashed = false;
             y = 0;
-            t = 0;
-            z = 0;
+            t1 = 0; t2 = 0;
+            z1 = 0; z2 = 0;
             yMax = -AssetManager.TitleMenu.Height + 144;
-            a = -2;
+            a = -1;
             cursor = 0;
             spd = .2f;
             py = 144;
@@ -83,9 +84,11 @@ namespace Leore.Main
             
             pos = new Vector2(camera.ViewX, camera.ViewY);
 
-            t = (t + .025f);
-            z = (float)(2 * Math.Sin(t));
-            
+            t1 = (t1 + .02f);
+            t2 = (t2 + .025f);
+            z1 = (float)(1 * Math.Sin(t1));
+            z2 = (float)(2 * Math.Sin(t2));
+
             y = Math.Max(y - spd, yMax);
 
             //if (Math.Abs(y - yMax) < 2)
@@ -98,8 +101,8 @@ namespace Leore.Main
 
             // TODO: doesn't work with gamepad
 
-            if (Math.Abs(y - yMax) < 144)
-                py = Math.Max(0, py - 1);
+            if (Math.Abs(y - yMax) < 288)
+                py = Math.Max(0, py - 1f);
 
             if (y != yMax)
             {
@@ -119,7 +122,7 @@ namespace Leore.Main
             }
             else
             {
-                a = Math.Min(a + .015f, 1);
+                a = Math.Min(a + .0075f, 1);
                 spd = 0;
 
                 if(InputMapping.KeyPressed(InputMapping.Down, SPG.InputManager.State.Pressed))
@@ -193,7 +196,7 @@ namespace Leore.Main
                                     isShowingDialog = false;
 
                                 };
-                                saveExists = checkSaveFileExists();
+                                saveExists = CheckSaveFileExists();
                             };
                         }
                     }
@@ -219,14 +222,14 @@ namespace Leore.Main
             // title
             if (py == 0)
             {
-                sb.Draw(AssetManager.TitleMenu, pos + new Vector2(0, z), new Rectangle(0, 0, 256, 144), new Color(Color.White, a), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0001f);
+                sb.Draw(AssetManager.TitleMenu, pos + new Vector2(0, z1), new Rectangle(0, 0, 256, 144), new Color(Color.White, a), 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0001f);
             }
 
             // cliff
             sb.Draw(AssetManager.TitleMenu, pos + new Vector2(0, py), new Rectangle(0, 288, 256, 144), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0002f);
 
             // title orb
-            sb.Draw(AssetManager.TitleMenu, pos + new Vector2(0, z + py), new Rectangle(0, 144, 256, 144), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0001f);
+            sb.Draw(AssetManager.TitleMenu, pos + new Vector2(0, z2 + py), new Rectangle(0, 144, 256, 144), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.0001f);
 
             if (y == yMax)
             {
