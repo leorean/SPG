@@ -25398,16 +25398,16 @@
    <tile/>
    <tile gid="389"/>
    <tile gid="390"/>
-   <tile/>
+   <tile gid="5"/>
    <tile gid="2"/>
+   <tile gid="5"/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile gid="3"/>
+   <tile gid="5"/>
+   <tile gid="5"/>
    <tile gid="2"/>
    <tile/>
    <tile/>
@@ -32193,7 +32193,7 @@
    <tile gid="517"/>
    <tile gid="518"/>
    <tile/>
-   <tile gid="5"/>
+   <tile/>
    <tile/>
    <tile/>
    <tile gid="412"/>
@@ -33652,7 +33652,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="412"/>
    <tile/>
    <tile/>
    <tile/>
@@ -33892,7 +33892,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="412"/>
    <tile/>
    <tile/>
    <tile gid="77"/>
@@ -68846,16 +68846,16 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="65"/>
+   <tile gid="69"/>
    <tile gid="66"/>
-   <tile gid="66"/>
+   <tile gid="70"/>
    <tile gid="66"/>
    <tile gid="66"/>
    <tile gid="67"/>
    <tile gid="262"/>
    <tile gid="263"/>
-   <tile gid="65"/>
-   <tile gid="66"/>
+   <tile gid="69"/>
+   <tile gid="70"/>
    <tile gid="66"/>
    <tile gid="66"/>
    <tile gid="66"/>
@@ -72389,7 +72389,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="580"/>
    <tile/>
    <tile/>
    <tile/>
@@ -72998,8 +72998,8 @@
    <tile gid="706"/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="388"/>
+   <tile gid="388"/>
    <tile gid="1"/>
    <tile gid="133"/>
    <tile gid="134"/>
@@ -75399,9 +75399,9 @@
    <tile gid="1025"/>
    <tile/>
    <tile/>
+   <tile/>
+   <tile/>
    <tile gid="513"/>
-   <tile/>
-   <tile/>
    <tile/>
    <tile/>
    <tile gid="1"/>
@@ -75641,10 +75641,10 @@
    <tile gid="69"/>
    <tile gid="71"/>
    <tile gid="1"/>
-   <tile gid="136"/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="197"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
+   <tile gid="1"/>
    <tile gid="193"/>
    <tile gid="195"/>
    <tile/>
@@ -76860,7 +76860,7 @@
    <tile/>
    <tile gid="198"/>
    <tile gid="199"/>
-   <tile/>
+   <tile gid="1"/>
    <tile/>
    <tile/>
    <tile/>
@@ -77100,7 +77100,7 @@
    <tile/>
    <tile gid="262"/>
    <tile gid="263"/>
-   <tile/>
+   <tile gid="1"/>
    <tile/>
    <tile/>
    <tile/>
@@ -86750,7 +86750,7 @@ Cave of Trials #r</property>
    <properties>
     <property name="disappearCondition" value="offIsland"/>
     <property name="npcType" type="int" value="1"/>
-    <property name="text">You've entered the ~Cave of Trials~.|The only way off this island is through here.
+    <property name="text">Welcome to the ~Cave of Trials~.|The only way off this island is through here.
 ~Your test begins now~.|Good luck.</property>
    </properties>
   </object>
@@ -86910,7 +86910,7 @@ An eternal bond has been established.</property>
     <property name="disappearCondition" value="offIsland,hasOrbDialog"/>
     <property name="npcType" type="int" value="1"/>
     <property name="setCondition" value="hasOrbDialog"/>
-    <property name="text" value="It seems like the ~Ancients~ have chosen you.|Even though that ~Orb~ is very powerful, it is of little use if you don't hold any ~spells~."/>
+    <property name="text" value="It seems like the ~Ancients~ have chosen you.|Even though that ~Orb~ is very powerful, it is of little use if you don't know any ~spells~."/>
    </properties>
   </object>
   <object id="1512" type="door" x="2080" y="944" width="16" height="16">
