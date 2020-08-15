@@ -9,6 +9,7 @@ using System.Linq;
 using SPG.Map;
 using Leore.Resources;
 using Leore.Main;
+using Leore.Objects.Level.Obstacles;
 
 namespace Leore.Objects.Enemies
 {

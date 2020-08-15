@@ -7,6 +7,7 @@ using Leore.Objects.Enemies;
 using SPG.Objects;
 using SPG.Util;
 using Leore.Objects.Effects;
+using Leore.Objects.Projectiles;
 
 namespace Leore.Objects.Level.Blocks
 {
@@ -144,9 +145,20 @@ namespace Leore.Objects.Level.Blocks
                 var colY = this.CollisionRectangleFirstOrDefault<Collider>(X + 8, Y + 8, X + 8, Y + 16);
                 if (colY != null)
                 {
+                    if (colY is DestroyBlock block)
+                    {
+                        block.Hit(null);
+                        if (block.HP > 0)
+                            IsFalling = false;
+                    }
+                    else
+                    {
+                        IsFalling = false;
+                    }
+
                     YVel = 0;
                     Position = new Vector2(X, MathUtil.Div(Y, Globals.T) * Globals.T);
-                    IsFalling = false;
+                    
                     new SingularEffect(Center.X, Center.Y, 12);
                 }
             }

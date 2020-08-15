@@ -29,15 +29,22 @@ namespace Leore.Objects.Level.Blocks
 
         public virtual bool Hit(PlayerProjectile projectile)
         {
-            if (projectile.Damage == 0 || HP == 0)
-                return false;
+            int dmg = 1;
 
-            if (HP > projectile.Damage)
+            if (projectile != null)
+            {
+                if (projectile.Damage == 0 || HP == 0)
+                    return false;
+
+                dmg = projectile.Damage;
+            }
+
+            if (HP > dmg)
                 new SingularEffect(Center.X - 4 + (float)(RND.Next * 8), Center.Y - 4 + (float)(RND.Next * 8), 5);
             else
                 new DestroyEmitter(X + 8, Y + 8);
             
-            HP = Math.Max(HP - projectile.Damage, 0);
+            HP = Math.Max(HP - dmg, 0);
 
             if (HP == 1) Texture = tex1;
             if (HP == 2) Texture = tex2;

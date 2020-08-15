@@ -114,9 +114,17 @@ namespace Leore.Objects.Enemies
             {
                 var obstacle = this.CollisionBoundsFirstOrDefault<Obstacle>(X, Y);
 
-                if (!(this is Boss) && (obstacle is Lava || obstacle is BigSpike))
+                if (!(this is Boss) && obstacle != null && HP > 0)
                 {
-                    Hit(999, 90);
+                    var hitByObstacle = true;
+
+                    if (!(obstacle is Lava || obstacle is SpikeObstacle || obstacle is BigSpike))
+                        hitByObstacle = false;
+                    if (obstacle is TrapSpike trapSpike && !trapSpike.IsOut)
+                        hitByObstacle = false;
+
+                    if (hitByObstacle)
+                        Hit(999, 90);
                 }
 
                 if (!IgnoreProjectiles)
