@@ -207816,7 +207816,7 @@
    <tile/>
    <tile/>
    <tile gid="301"/>
-   <tile/>
+   <tile gid="515"/>
    <tile/>
    <tile/>
    <tile gid="167"/>
@@ -208136,7 +208136,7 @@
    <tile/>
    <tile/>
    <tile gid="365"/>
-   <tile/>
+   <tile gid="515"/>
    <tile/>
    <tile/>
    <tile/>
@@ -230764,7 +230764,7 @@ With its power you are strong enough to ~climb walls~!</property>
     <property name="disappearCondition" value="canClimbWalls"/>
     <property name="noText" value="Suit yourself."/>
     <property name="npcType" type="int" value="15"/>
-    <property name="text">This is the base of ~Mount Ascent~.
+    <property name="text">Oh, hello there! Welcome to the base of ~Mount Ascent~.
 |Do you want to know how to get to the top?</property>
     <property name="yesText">Alright, listen up.
 |According to old tales, ~fire sages~ used to live near the mountain summit.
@@ -230797,8 +230797,9 @@ If this is true, it might be the answer.</property>
   <object id="1564" type="npc" x="2448" y="1616" width="16" height="16">
    <properties>
     <property name="npcType" type="int" value="16"/>
-    <property name="text">We are the [ff0000]~fire sages~.
-|Our coven was once great, but now, only few of us are left.
+    <property name="text">...Who am I?
+|I'm but one of the few [ff0000]~fire sages~ left.
+|Our coven used to be great, but that was a long time ago...
 </property>
    </properties>
   </object>

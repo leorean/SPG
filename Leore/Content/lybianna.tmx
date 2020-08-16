@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="180" tilewidth="16" tileheight="16" infinite="0" nextlayerid="125" nextobjectid="1505">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="240" height="180" tilewidth="16" tileheight="16" infinite="0" nextlayerid="125" nextobjectid="1506">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="3072" columns="64">
   <image source="tiles.png" width="1024" height="768"/>
  </tileset>
@@ -60661,7 +60661,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="280"/>
+   <tile/>
    <tile/>
    <tile/>
    <tile gid="223"/>
@@ -60901,7 +60901,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="280"/>
+   <tile/>
    <tile gid="280"/>
    <tile/>
    <tile/>
@@ -61141,7 +61141,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="280"/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -61381,7 +61381,7 @@
    <tile gid="326"/>
    <tile/>
    <tile/>
-   <tile gid="280"/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -61621,7 +61621,7 @@
    <tile gid="390"/>
    <tile/>
    <tile/>
-   <tile gid="280"/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -62119,7 +62119,7 @@
    <tile/>
    <tile gid="2"/>
    <tile/>
-   <tile/>
+   <tile gid="1361"/>
    <tile/>
    <tile/>
    <tile/>
@@ -144911,8 +144911,8 @@
    <tile/>
    <tile gid="149"/>
    <tile gid="150"/>
-   <tile gid="214"/>
-   <tile gid="214"/>
+   <tile gid="150"/>
+   <tile gid="150"/>
    <tile gid="282"/>
    <tile gid="22"/>
    <tile gid="23"/>
@@ -145151,9 +145151,9 @@
    <tile gid="21"/>
    <tile gid="281"/>
    <tile gid="214"/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="214"/>
+   <tile gid="214"/>
+   <tile gid="215"/>
    <tile/>
    <tile/>
    <tile/>
@@ -145389,10 +145389,10 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="720"/>
-   <tile gid="720"/>
    <tile/>
+   <tile gid="641"/>
    <tile/>
+   <tile gid="641"/>
    <tile/>
    <tile/>
    <tile/>
@@ -145631,7 +145631,7 @@
    <tile gid="25"/>
    <tile gid="281"/>
    <tile gid="86"/>
-   <tile gid="86"/>
+   <tile gid="513"/>
    <tile gid="86"/>
    <tile gid="282"/>
    <tile gid="26"/>
@@ -145871,7 +145871,7 @@
    <tile gid="345"/>
    <tile gid="149"/>
    <tile gid="150"/>
-   <tile gid="150"/>
+   <tile gid="86"/>
    <tile gid="150"/>
    <tile gid="151"/>
    <tile gid="346"/>
@@ -146360,7 +146360,7 @@
    <tile gid="195"/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="715"/>
    <tile gid="129"/>
    <tile gid="130"/>
    <tile gid="130"/>
@@ -146599,7 +146599,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="715"/>
    <tile gid="65"/>
    <tile gid="130"/>
    <tile gid="130"/>
@@ -148035,7 +148035,7 @@
    <tile gid="647"/>
    <tile gid="647"/>
    <tile gid="647"/>
-   <tile/>
+   <tile gid="721"/>
    <tile/>
    <tile/>
    <tile/>
@@ -148269,7 +148269,6 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="1"/>
    <tile/>
    <tile/>
    <tile/>
@@ -148277,6 +148276,7 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="721"/>
    <tile/>
    <tile/>
    <tile/>
@@ -148517,7 +148517,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="721"/>
    <tile/>
    <tile/>
    <tile/>
@@ -148759,7 +148759,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="721"/>
    <tile/>
    <tile/>
    <tile/>
@@ -173354,6 +173354,13 @@ The Great Cavern #rd</property>
     <property name="disappearCondition" value=""/>
     <property name="npcType" type="int" value="6"/>
     <property name="text" value="Th-there was an e-earthquake!"/>
+   </properties>
+  </object>
+  <object id="1505" type="npc" x="2752" y="1280" width="16" height="16">
+   <properties>
+    <property name="centerText" type="bool" value="true"/>
+    <property name="npcType" type="int" value="0"/>
+    <property name="text" value="Mount Ascent #ru"/>
    </properties>
   </object>
  </objectgroup>
