@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="320" height="180" tilewidth="16" tileheight="16" infinite="0" nextlayerid="141" nextobjectid="1575">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="320" height="180" tilewidth="16" tileheight="16" infinite="0" nextlayerid="141" nextobjectid="1576">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="3072" columns="64">
   <image source="tiles.png" width="1024" height="768"/>
  </tileset>
@@ -30875,9 +30875,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="43"/>
+   <tile gid="44"/>
+   <tile gid="45"/>
    <tile/>
    <tile/>
    <tile/>
@@ -31195,9 +31195,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="107"/>
+   <tile gid="108"/>
+   <tile gid="109"/>
    <tile/>
    <tile/>
    <tile/>
@@ -31515,10 +31515,10 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="171"/>
+   <tile gid="108"/>
+   <tile gid="108"/>
+   <tile gid="45"/>
    <tile/>
    <tile/>
    <tile/>
@@ -31836,9 +31836,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="107"/>
+   <tile gid="108"/>
+   <tile gid="109"/>
    <tile/>
    <tile/>
    <tile/>
@@ -32156,9 +32156,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="107"/>
+   <tile gid="174"/>
+   <tile gid="109"/>
    <tile/>
    <tile/>
    <tile/>
@@ -32476,10 +32476,10 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="107"/>
+   <tile gid="108"/>
+   <tile gid="108"/>
+   <tile gid="45"/>
    <tile/>
    <tile/>
    <tile/>
@@ -32796,10 +32796,10 @@
    <tile/>
    <tile gid="44"/>
    <tile gid="44"/>
-   <tile gid="44"/>
-   <tile gid="44"/>
-   <tile gid="44"/>
-   <tile/>
+   <tile gid="108"/>
+   <tile gid="108"/>
+   <tile gid="108"/>
+   <tile gid="108"/>
    <tile/>
    <tile/>
    <tile/>
@@ -87519,6 +87519,9 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="427"/>
+   <tile gid="428"/>
+   <tile gid="429"/>
    <tile/>
    <tile/>
    <tile/>
@@ -87836,12 +87839,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="491"/>
+   <tile gid="492"/>
+   <tile gid="493"/>
    <tile/>
    <tile/>
    <tile/>
@@ -88158,10 +88158,10 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="487"/>
+   <tile gid="555"/>
+   <tile gid="556"/>
+   <tile gid="557"/>
    <tile/>
    <tile/>
    <tile/>
@@ -88481,9 +88481,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="427"/>
+   <tile gid="428"/>
+   <tile gid="429"/>
    <tile/>
    <tile/>
    <tile/>
@@ -88801,9 +88801,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="491"/>
+   <tile gid="492"/>
+   <tile gid="493"/>
    <tile/>
    <tile/>
    <tile/>
@@ -89121,9 +89121,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="555"/>
+   <tile gid="556"/>
+   <tile gid="557"/>
    <tile/>
    <tile/>
    <tile/>
@@ -89755,6 +89755,7 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="424"/>
    <tile/>
    <tile/>
    <tile/>
@@ -89764,6 +89765,7 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="487"/>
    <tile/>
    <tile/>
    <tile/>
@@ -89772,6 +89774,7 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="679"/>
    <tile/>
    <tile/>
    <tile/>
@@ -90072,19 +90075,16 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="488"/>
+   <tile gid="423"/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="487"/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="304"/>
    <tile/>
    <tile/>
    <tile/>
@@ -91042,10 +91042,10 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="238"/>
+   <tile gid="239"/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="1003"/>
    <tile/>
    <tile/>
    <tile/>
@@ -91361,9 +91361,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="304"/>
+   <tile gid="302"/>
+   <tile gid="303"/>
    <tile/>
    <tile/>
    <tile/>
@@ -203685,11 +203685,11 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="231"/>
+   <tile gid="40"/>
+   <tile gid="40"/>
+   <tile gid="40"/>
+   <tile gid="233"/>
    <tile/>
    <tile/>
    <tile/>
@@ -204006,9 +204006,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="167"/>
+   <tile gid="168"/>
+   <tile gid="169"/>
    <tile/>
    <tile/>
    <tile/>
@@ -204649,9 +204649,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="231"/>
+   <tile gid="232"/>
+   <tile gid="233"/>
    <tile/>
    <tile/>
    <tile gid="103"/>
@@ -205280,9 +205280,9 @@
    <tile gid="577"/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="39"/>
+   <tile gid="40"/>
+   <tile gid="41"/>
    <tile/>
    <tile/>
    <tile/>
@@ -205600,9 +205600,9 @@
    <tile gid="237"/>
    <tile gid="237"/>
    <tile gid="40"/>
-   <tile gid="40"/>
-   <tile gid="40"/>
-   <tile gid="40"/>
+   <tile gid="104"/>
+   <tile gid="104"/>
+   <tile gid="104"/>
    <tile gid="40"/>
    <tile gid="40"/>
    <tile gid="40"/>
@@ -230794,13 +230794,11 @@ If this is true, it might be the answer.</property>
 </property>
    </properties>
   </object>
-  <object id="1564" type="npc" x="2448" y="1616" width="16" height="16">
+  <object id="1564" type="npc" x="2400" y="1520" width="16" height="16">
    <properties>
     <property name="npcType" type="int" value="16"/>
-    <property name="text">...Who am I?
-|I'm but one of the few [ff0000]~fire sages~ left.
-|Our coven used to be great, but that was a long time ago...
-</property>
+    <property name="text">...So, you must be one that the elder sage expects.
+|Our temple lies ahead - follow the mountain trail.</property>
    </properties>
   </object>
   <object id="1567" type="chest" x="4544" y="816" width="16" height="16">
@@ -230834,6 +230832,11 @@ If this is true, it might be the answer.</property>
     <property name="text">Summit #ru
 - Altitute: 1420m -
 </property>
+   </properties>
+  </object>
+  <object id="1575" type="coinStatue" x="4656" y="960" width="16" height="16">
+   <properties>
+    <property name="amount" type="int" value="250"/>
    </properties>
   </object>
  </objectgroup>
